@@ -12,6 +12,7 @@ function writeContent(fixture: {
   ingredients: Record<string, FixtureIngredient>;
   pairings: unknown[];
   cuisines?: unknown[];
+  formulas?: unknown[];
 }): string {
   const dir = mkdtempSync(join(tmpdir(), "kitchen-"));
   mkdirSync(join(dir, "ingredients"));
@@ -23,6 +24,7 @@ function writeContent(fixture: {
   }
   writeFileSync(join(dir, "pairings.yaml"), stringify(fixture.pairings));
   writeFileSync(join(dir, "cuisines.yaml"), stringify(fixture.cuisines ?? []));
+  writeFileSync(join(dir, "formulas.yaml"), stringify(fixture.formulas ?? []));
   return dir;
 }
 
@@ -133,6 +135,118 @@ describe("loadKitchen", () => {
     expect(pairing.citations).toEqual([citation]);
   });
 
+  describe("a Combination", () => {
+    const ingredients = {
+      lemon,
+      garlic,
+      thyme,
+      basil: { name: "Basil" },
+      tomato: { name: "Tomato" },
+    };
+
+    it("keeps known Ingredients in order and drops duplicates", async () => {
+      const kitchen = await expectKitchen(writeContent({ ingredients, pairings: [] }));
+
+      const combination = kitchen.combination(["garlic", "lemon", "garlic"]);
+
+      expect(combination.ingredients.map(({ id }) => id)).toEqual(["garlic", "lemon"]);
+      expect(combination.unknown).toEqual([]);
+      expect(combination.overLimit).toEqual([]);
+    });
+
+    it("drops unknown ids and reports them", async () => {
+      const kitchen = await expectKitchen(writeContent({ ingredients, pairings: [] }));
+
+      const combination = kitchen.combination(["lemon", "unicorn", "garlic"]);
+
+      expect(combination.ingredients.map(({ id }) => id)).toEqual(["lemon", "garlic"]);
+      expect(combination.unknown).toEqual(["unicorn"]);
+    });
+
+    it("holds at most four Ingredients and reports the rest", async () => {
+      const kitchen = await expectKitchen(writeContent({ ingredients, pairings: [] }));
+
+      const combination = kitchen.combination(["lemon", "garlic", "thyme", "basil", "tomato"]);
+
+      expect(combination.ingredients.map(({ id }) => id)).toEqual([
+        "lemon",
+        "garlic",
+        "thyme",
+        "basil",
+      ]);
+      expect(combination.overLimit.map(({ id }) => id)).toEqual(["tomato"]);
+    });
+  });
+
+  describe("suggest", () => {
+    const fixture = {
+      ingredients: {
+        lemon: { ...lemon, slotTypes: ["acid"] },
+        garlic: { ...garlic, slotTypes: ["aromatic"] },
+        thyme: { ...thyme, slotTypes: ["herb"] },
+        basil: { name: "Basil", slotTypes: ["herb"] },
+      },
+      pairings: [],
+      formulas: [
+        {
+          id: "pan-sauce",
+          name: "Pan sauce",
+          description: "A quick sauce from the pan.",
+          slots: [
+            { id: "aromatic", role: "an aromatic", accepts: "aromatic" },
+            { id: "acid", role: "an acid", accepts: "acid" },
+            { id: "herb", role: "a herb", accepts: "herb", required: false },
+          ],
+          method: ["Soften {aromatic}, add {acid}, finish with {herb}."],
+        },
+        {
+          id: "herb-salad",
+          name: "Herb salad",
+          description: "Two herbs, dressed.",
+          slots: [
+            { id: "first-herb", role: "a herb", accepts: "herb" },
+            { id: "second-herb", role: "another herb", accepts: "herb" },
+            { id: "acid", role: "an acid", accepts: "acid" },
+          ],
+          method: ["Toss {first-herb} and {second-herb} with {acid}."],
+        },
+      ],
+    };
+
+    function fills(suggestion: { formula: { id: string }; slots: { slot: { id: string }; ingredient?: { id: string } }[] }) {
+      return [
+        suggestion.formula.id,
+        Object.fromEntries(suggestion.slots.map(({ slot, ingredient }) => [slot.id, ingredient?.id])),
+      ];
+    }
+
+    it("fills each Formula's Slots from the Combination, in order, one Slot per Ingredient", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      const suggestions = kitchen.suggest(kitchen.combination(["basil", "lemon", "thyme"]).ingredients, []);
+
+      expect(suggestions.map(fills)).toEqual([
+        ["pan-sauce", { aromatic: undefined, acid: "lemon", herb: "basil" }],
+        ["herb-salad", { "first-herb": "basil", "second-herb": "thyme", acid: "lemon" }],
+      ]);
+      expect(suggestions[0].method).toEqual(["Soften an aromatic, add lemon, finish with basil."]);
+      expect(suggestions[1].slots.map(({ source }) => source)).toEqual([
+        "combination",
+        "combination",
+        "combination",
+      ]);
+    });
+
+    it("gives the same Suggestions every time for the same Combination", async () => {
+      const suggestFrom = async () => {
+        const kitchen = await expectKitchen(writeContent(fixture));
+        return kitchen.suggest(kitchen.combination(["thyme", "garlic", "basil"]).ingredients, []);
+      };
+
+      expect(await suggestFrom()).toEqual(await suggestFrom());
+    });
+  });
+
   describe("rejects content", () => {
     it("when a Pairing refers to an unknown Ingredient", async () => {
       const errors = await expectErrors(
@@ -173,6 +287,51 @@ describe("loadKitchen", () => {
       );
 
       expect(errors).toEqual(['Ingredient lemon refers to unknown Cuisine "asian".']);
+    });
+
+    it("when a Formula has a Slot no Ingredient can fill", async () => {
+      const errors = await expectErrors(
+        writeContent({
+          ingredients: { lemon: { ...lemon, slotTypes: ["acid"] } },
+          pairings: [],
+          formulas: [
+            {
+              id: "dressing",
+              name: "Dressing",
+              description: "A sharp dressing.",
+              slots: [
+                { id: "acid", role: "an acid", accepts: "acid" },
+                { id: "oil", role: "an oil", accepts: "fat" },
+              ],
+              method: ["Whisk {acid} into {oil}."],
+            },
+          ],
+        }),
+      );
+
+      expect(errors).toEqual([
+        'Formula dressing has a Slot "oil" that no Ingredient can fill (it accepts "fat").',
+      ]);
+    });
+
+    it("when a Formula's method refers to a Slot it doesn't have", async () => {
+      const errors = await expectErrors(
+        writeContent({
+          ingredients: { lemon: { ...lemon, slotTypes: ["acid"] } },
+          pairings: [],
+          formulas: [
+            {
+              id: "dressing",
+              name: "Dressing",
+              description: "A sharp dressing.",
+              slots: [{ id: "acid", role: "an acid", accepts: "acid" }],
+              method: ["Whisk {acid} into {oil}."],
+            },
+          ],
+        }),
+      );
+
+      expect(errors).toEqual(['Formula dressing\'s method refers to unknown Slot "{oil}".']);
     });
 
     it("when an Ingredient has no essay", async () => {

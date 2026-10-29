@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AddToCombination, CombinationLink } from "../../combination";
 import { getKitchen } from "../../kitchen";
 
 type Props = { params: Promise<{ id: string }> };
@@ -25,12 +25,18 @@ export default async function IngredientPage({ params }: Props) {
 
   return (
     <>
-      <h1>{ingredient.name}</h1>
+      <div className="title">
+        <h1>{ingredient.name}</h1>
+        <AddToCombination ingredientId={ingredient.id} />
+      </div>
       <h2>Pairs well with</h2>
       <ul className="pairings">
         {kitchen.pairingsFor(id).map(({ ingredient: paired, reasons }) => (
           <li key={paired.id}>
-            <Link href={`/ingredients/${paired.id}`}>{paired.name}</Link>
+            <div className="title">
+              <CombinationLink href={`/ingredients/${paired.id}`}>{paired.name}</CombinationLink>
+              <AddToCombination ingredientId={paired.id} />
+            </div>
             {reasons.map((reason) => (
               <p key={reason.note}>{reason.note}</p>
             ))}

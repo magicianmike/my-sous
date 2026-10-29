@@ -100,6 +100,7 @@ window.VARIANTS.push({
       .ga-tray li { border-radius: 14px; padding: 6px 4px 6px 10px; }
     }
   `,
+  // Round 3 variants reuse this render and CSS and override parts of them.
   render(S, st) {
     const ing = S.ingredient;
     const inCombo = (id) => st.combination.includes(id);

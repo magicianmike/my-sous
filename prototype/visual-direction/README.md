@@ -1,5 +1,16 @@
 # PROTOTYPE: visual direction (issue #4)
 
+## Round 3: refining Garden colour
+
+**Round 3 question:** B1 is the direction. What's still open in it? Each variant builds on B1's code and changes one thing, with B1 on the board as the baseline.
+
+| Key | Variant | Branch | What it changes |
+| --- | --- | --- | --- |
+| garden | B1, round 2 | `prototype/botanical-garden` | Baseline |
+| flood | R3a · Ingredient flood | `prototype/garden-flood` | The Ingredient owns the page: its colour fills a full-width header band, with the drawing large beside the name. Two columns below instead of three. |
+| serif | R3b · Soft serif | `prototype/garden-serif` | Type: headings in Fraunces at its softest, body stays Nunito. Tests whether some of round 1's editorial warmth belongs here. |
+| fridge | R3c · Fridge first | `prototype/garden-fridge` | Phone at the fridge: a compact header, the essay behind "About lime", tighter rows and a slim tray, so the Pairings start on the first screen. |
+
 ## Round 2: refining Botanical line
 
 **Round 1 verdict (2026-10-29):** the author chose **B, Botanical line**. A (Editorial cookbook) and C (Modern utility) lost; they stay on `prototype/editorial-cookbook` and `prototype/modern-utility`, and their files are removed from this branch. Reasons are still to be recorded.

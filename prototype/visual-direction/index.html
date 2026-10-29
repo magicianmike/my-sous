@@ -8,7 +8,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Visual direction r2 · MySous prototype</title>
+  <title>Visual direction r3 · MySous prototype</title>
   <style>
     :root { color-scheme: light dark; --bg: #f4f4f5; --fg: #18181b; --muted: #52525b; --card: #fff; --line: #d4d4d8; --ok: #166534; --bad: #b91c1c; }
     @media (prefers-color-scheme: dark) { :root { --bg: #18181b; --fg: #fafafa; --muted: #a1a1aa; --card: #27272a; --line: #3f3f46; --ok: #4ade80; --bad: #f87171; } }
@@ -38,7 +38,7 @@
 </head>
 <body>
   <header>
-    <h1>MySous visual direction, round 2: refining Botanical line</h1>
+    <h1>MySous visual direction, round 3: refining Garden colour</h1>
     <p>Prototype for issue #4. Each frame is the live page at real width, scaled down. Every frame runs a WCAG 2.2 AA text contrast audit (4.5:1 body, 3:1 large) on all rendered text. Click a title to open the variant full size, where ← and → switch variants.</p>
   </header>
   <div class="controls">
@@ -56,10 +56,10 @@
 
   <script>
     const VARIANTS = [
-      { key: "botanical", name: "B · Botanical line (round 1 winner)" },
-      { key: "garden", name: "B1 · Garden colour" },
-      { key: "herbarium", name: "B2 · Herbarium" },
-      { key: "quiet", name: "B3 · Quiet line" },
+      { key: "garden", name: "B1 · Garden colour (round 2 winner)" },
+      { key: "flood", name: "R3a · Ingredient flood" },
+      { key: "serif", name: "R3b · Soft serif" },
+      { key: "fridge", name: "R3c · Fridge first" },
     ];
     const VIEWS = [
       { key: "phone-light", label: "Phone · light", w: 390, h: 844, theme: "light" },

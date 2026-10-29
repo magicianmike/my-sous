@@ -1,8 +1,8 @@
 <!doctype html>
 <!--
   PROTOTYPE (issue #4), throwaway. Not production code.
-  Round 2: refinements of the round-1 winner, Botanical line, switchable via
-  ?variant=botanical|garden|herbarium|quiet. Also: ?theme=light|dark (default: system),
+  Round 3: refinements of the round-2 winner, B1 Garden colour, switchable via
+  ?variant=garden|flood|serif|fridge. Also: ?theme=light|dark (default: system),
   ?chrome=0 hides the switcher bar, ?audit=1 runs the WCAG contrast audit.
 -->
 <html lang="en">
@@ -20,11 +20,12 @@
   <script>window.VARIANTS = [];</script>
   <script src="botanical-art.js"></script>
   <!-- Each variant lives in its own file (and its own prototype/<name> branch).
-       Round 1's losers (editorial, utility) stay on their round-1 branches. -->
-  <script src="variant-botanical.js"></script>
+       Earlier rounds' losers stay on their own branches. Round 3 variants
+       build on B1, so variant-garden.js loads first. -->
   <script src="variant-garden.js"></script>
-  <script src="variant-herbarium.js"></script>
-  <script src="variant-quiet.js"></script>
+  <script src="variant-flood.js"></script>
+  <script src="variant-serif.js"></script>
+  <script src="variant-fridge.js"></script>
   <script src="shell.js"></script>
 </body>
 </html>

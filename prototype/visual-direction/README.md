@@ -2,6 +2,8 @@
 
 ## Round 3: refining Garden colour
 
+**Round 3 verdict (2026-10-29), final direction:** the author chose **R3b, Soft serif**: B1 Garden colour with headings in Fraunces at SOFT 100. In the author's words, "the serif lends credibility and gives it an editorial authority." R3a (Ingredient flood) and R3c (Fridge first) lost; they stay on `prototype/garden-flood` and `prototype/garden-fridge`.
+
 **Round 3 question:** B1 is the direction. What's still open in it? Each variant builds on B1's code and changes one thing, with B1 on the board as the baseline.
 
 | Key | Variant | Branch | What it changes |

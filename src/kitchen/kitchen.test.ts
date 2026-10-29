@@ -5,8 +5,17 @@ import { describe, expect, it } from "vitest";
 import { stringify } from "yaml";
 import { loadKitchen, type Kitchen, type Suggestion, type SuggestResult } from "./index";
 
-/** Frontmatter for one Ingredient file, plus its essay body. Required fields get defaults. */
-type FixtureIngredient = { name: string; body?: string } & Record<string, unknown>;
+/**
+ * Frontmatter for one Ingredient file, plus its essay body and drawing (`null` for none).
+ * Required fields get defaults.
+ */
+type FixtureIngredient = { name: string; body?: string; drawing?: string | null } & Record<
+  string,
+  unknown
+>;
+
+const defaultColour = { wash: "#dcebc4", washDark: "#26361a", stroke: "#2f5714", strokeDark: "#c3e39a" };
+const defaultDrawing = '<circle cx="24" cy="24" r="17"/>';
 
 function writeContent(fixture: {
   ingredients: Record<string, FixtureIngredient>;
@@ -16,11 +25,14 @@ function writeContent(fixture: {
 }): string {
   const dir = mkdtempSync(join(tmpdir(), "kitchen-"));
   mkdirSync(join(dir, "ingredients"));
-  for (const [id, { body = "An essay.", ...frontmatter }] of Object.entries(fixture.ingredients)) {
+  for (const [id, { body = "An essay.", drawing = defaultDrawing, ...frontmatter }] of Object.entries(
+    fixture.ingredients,
+  )) {
     writeFileSync(
       join(dir, "ingredients", `${id}.md`),
-      `---\n${stringify({ category: "produce", tip: "A tip.", ...frontmatter })}---\n${body}\n`,
+      `---\n${stringify({ category: "produce", tip: "A tip.", colour: defaultColour, ...frontmatter })}---\n${body}\n`,
     );
+    if (drawing !== null) writeFileSync(join(dir, "ingredients", `${id}.svg`), drawing);
   }
   writeFileSync(join(dir, "pairings.yaml"), stringify(fixture.pairings));
   writeFileSync(join(dir, "cuisines.yaml"), stringify(fixture.cuisines ?? []));
@@ -107,6 +119,8 @@ describe("loadKitchen", () => {
       tip: "Bloom it in olive oil.",
       culturalContext: "Often eaten with bread and olive oil.",
       essay: "A tangy, herbal blend.\n\nIt burns quickly.",
+      colour: defaultColour,
+      drawing: defaultDrawing,
     });
   });
 
@@ -783,6 +797,39 @@ describe("loadKitchen", () => {
       expect(result.errors).toEqual([
         { file: expect.stringMatching(/pairings\.yaml$/), message: expect.stringMatching(/line 2/) },
       ]);
+    });
+
+    it("when an Ingredient has no drawing", async () => {
+      const errors = await expectErrors(
+        writeContent({ ingredients: { lemon: { ...lemon, drawing: null } }, pairings: [] }),
+      );
+
+      expect(errors).toEqual(["Ingredient lemon needs a drawing in ingredients/lemon.svg."]);
+    });
+
+    it.each([
+      ['<script>alert(1)</script>'],
+      ['<path d="M0 0" onload="alert(1)"/>'],
+      ['<image href="https://example.com/x.png"/>'],
+    ])("when a drawing uses more than simple shapes: %s", async (drawing) => {
+      const errors = await expectErrors(
+        writeContent({ ingredients: { lemon: { ...lemon, drawing } }, pairings: [] }),
+      );
+
+      expect(errors).toEqual([
+        "Ingredient lemon's drawing may only use path, circle, ellipse, line, polyline and rect, with geometry attributes.",
+      ]);
+    });
+
+    it("when an Ingredient's colour isn't a hex colour", async () => {
+      const errors = await expectErrors(
+        writeContent({
+          ingredients: { lemon: { ...lemon, colour: { ...defaultColour, stroke: "green" } } },
+          pairings: [],
+        }),
+      );
+
+      expect(errors).toEqual([expect.stringMatching(/^colour\.stroke: /)]);
     });
 
     it("when an Ingredient has no essay", async () => {

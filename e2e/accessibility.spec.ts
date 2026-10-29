@@ -11,6 +11,7 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   [`/suggestions${combination}`, (page) => page.getByRole("link", { name: "Pan sauce" })],
   [`/formulas/pan-sauce${combination}`, (page) => page.getByRole("heading", { name: "Method" })],
   ["/ingredients/gremolata", (page) => page.getByRole("heading", { name: "Typically includes" })],
+  ["/design", (page) => page.getByRole("heading", { name: "Combination tray" })],
   ["/ingredients/mango", (page) => page.getByRole("heading", { name: "This isn’t in MySous yet" })],
   [
     "/suggestions?with=chicken-thigh,basil,ginger",

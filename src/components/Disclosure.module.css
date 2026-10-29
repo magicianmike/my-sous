@@ -1,0 +1,33 @@
+.disclosure summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--target);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure summary::after {
+  content: "";
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.disclosure[open] summary::after {
+  transform: rotate(-135deg) translate(-2px, 0);
+}
+
+.body > :first-child {
+  margin-top: 0;
+}

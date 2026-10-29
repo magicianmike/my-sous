@@ -34,9 +34,11 @@ test("arrow keys move through matches, and Escape closes then clears", async ({ 
   await expect(page.getByRole("option")).toHaveText(["Lime", "Garlic", "Scallion"]);
   await search(page).press("ArrowDown");
   await search(page).press("ArrowDown");
+  const garlic = page.getByRole("option", { name: "Garlic" });
+  await expect(garlic).toHaveAttribute("aria-selected", "true");
   await expect(search(page)).toHaveAttribute(
     "aria-activedescendant",
-    "ingredient-search-garlic",
+    (await garlic.getAttribute("id"))!,
   );
   await search(page).press("ArrowUp");
   await expect(page.getByRole("option", { name: "Lime" })).toHaveAttribute("aria-selected", "true");

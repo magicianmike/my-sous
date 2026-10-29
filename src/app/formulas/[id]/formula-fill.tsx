@@ -1,6 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Button } from "@/components/Button";
+import { Disclosure } from "@/components/Disclosure";
+import { IngredientMark } from "@/components/IngredientMark";
+import { ListRow } from "@/components/ListRow";
 import type { FilledSlot, Ingredient, Suggestion } from "@/kitchen/kitchen";
 import { useCombination, useKitchen, withSearchParams } from "../../combination";
 
@@ -56,41 +60,44 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
     <>
       <div className="title">
         <h2>What goes in</h2>
-        <button ref={undoButton} type="button" aria-disabled={!canUndo} onClick={undo}>
+        <Button ref={undoButton} aria-disabled={!canUndo} onClick={undo}>
           Undo swap
-        </button>
+        </Button>
       </div>
       <p role="status" className="notice">
         {status}
       </p>
-      <ul className="slots">
+      <ul className="slots stack">
         {current.suggestion.slots.map((filled) => {
           const { slot, ingredient, alternatives } = filled;
           return (
             <li key={slot.id}>
-              <h3>
-                {slot.role}
-                {!slot.required && " (optional)"}
-              </h3>
-              <p className="slot-fill">{ingredient ? ingredient.name : "Not filled yet"}</p>
-              <p className="slot-why">{filled.reason}</p>
-              {alternatives.length > 0 && (
-                // Keyed by the fill, so a swap closes the list.
-                <details key={ingredient?.id}>
-                  <summary>
-                    Swap<span className="visually-hidden"> {slot.role}</span>
-                  </summary>
-                  <ul>
-                    {alternatives.map((alternative) => (
-                      <li key={alternative.id}>
-                        <button type="button" onClick={() => swap(filled, alternative)}>
-                          Use {alternative.name}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              )}
+              <ListRow
+                mark={ingredient && <IngredientMark ingredient={ingredient} size="sm" />}
+                title={
+                  <>
+                    <h3 className="slot-role">
+                      {slot.role}
+                      {!slot.required && " (optional)"}
+                    </h3>
+                    <p className="slot-fill">{ingredient ? ingredient.name : "Not filled yet"}</p>
+                  </>
+                }
+              >
+                <p className="muted">{filled.reason}</p>
+                {alternatives.length > 0 && (
+                  // Keyed by the fill, so a swap closes the list.
+                  <Disclosure key={ingredient?.id} summary="Swap" hiddenSummary={slot.role}>
+                    <ul className="actions">
+                      {alternatives.map((alternative) => (
+                        <li key={alternative.id}>
+                          <Button onClick={() => swap(filled, alternative)}>Use {alternative.name}</Button>
+                        </li>
+                      ))}
+                    </ul>
+                  </Disclosure>
+                )}
+              </ListRow>
             </li>
           );
         })}

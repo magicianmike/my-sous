@@ -9,6 +9,16 @@ export const cuisineSchema = z.object({
   description: z.string().min(1),
 });
 
+const hex = z.string().regex(/^#[0-9a-f]{6}$/i, "use a six-digit hex colour, such as #2f5714");
+
+/** An Ingredient's own colours: its drawing's stroke sits on its wash, in each theme. */
+const ingredientColourSchema = z.object({
+  wash: hex,
+  washDark: hex,
+  stroke: hex,
+  strokeDark: hex,
+});
+
 export const ingredientSchema = z.object({
   name: z.string().min(1),
   category: z.string().min(1),
@@ -19,6 +29,9 @@ export const ingredientSchema = z.object({
   tip: z.string().min(1),
   culturalContext: z.string().min(1).optional(),
   essay: z.string().min(1, "the Ingredient needs an essay below its frontmatter"),
+  colour: ingredientColourSchema,
+  /** Single-line drawing on a 48-unit grid: the inside of an <svg viewBox="0 0 48 48">. */
+  drawing: z.string(),
 });
 
 const pairingReasonSchema = z.object({

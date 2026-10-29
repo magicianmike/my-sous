@@ -21,7 +21,7 @@
 
   window.VARIANTS.push({
     key: "botanical",
-    name: "Botanical line",
+    name: "Botanical line (round 1)",
     fonts: "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400..800;1,400&display=swap",
     css: `
       :root {

@@ -1,8 +1,8 @@
 <!doctype html>
 <!--
   PROTOTYPE (issue #4), throwaway. Not production code.
-  Three variants of the Ingredient Pairings screen (Lime), switchable via
-  ?variant=editorial|botanical|utility. Also: ?theme=light|dark (default: system),
+  Round 2: refinements of the round-1 winner, Botanical line, switchable via
+  ?variant=botanical|garden|herbarium|quiet. Also: ?theme=light|dark (default: system),
   ?chrome=0 hides the switcher bar, ?audit=1 runs the WCAG contrast audit.
 -->
 <html lang="en">
@@ -18,10 +18,13 @@
   <div id="live" class="proto-sr" aria-live="polite"></div>
   <script src="data.js"></script>
   <script>window.VARIANTS = [];</script>
-  <!-- Each variant lives in its own file (and its own prototype/<name> branch). -->
-  <script src="variant-editorial.js"></script>
+  <script src="botanical-art.js"></script>
+  <!-- Each variant lives in its own file (and its own prototype/<name> branch).
+       Round 1's losers (editorial, utility) stay on their round-1 branches. -->
   <script src="variant-botanical.js"></script>
-  <script src="variant-utility.js"></script>
+  <script src="variant-garden.js"></script>
+  <script src="variant-herbarium.js"></script>
+  <script src="variant-quiet.js"></script>
   <script src="shell.js"></script>
 </body>
 </html>

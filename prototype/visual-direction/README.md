@@ -1,10 +1,27 @@
-# PROTOTYPE: visual direction, round 1 (issue #4)
+# PROTOTYPE: visual direction (issue #4)
+
+## Round 2: refining Botanical line
+
+**Round 1 verdict (2026-10-29):** the author chose **B, Botanical line**. A (Editorial cookbook) and C (Modern utility) lost; they stay on `prototype/editorial-cookbook` and `prototype/modern-utility`, and their files are removed from this branch. Reasons are still to be recorded.
+
+**Round 2 question:** which refinement of Botanical line? The three variants keep B's voice and differ on the decisions the journal has to record: how far illustration goes, how colour is used, and how motion feels. The round-1 B stays on the board as the baseline.
+
+| Key | Variant | Branch | Illustration | Colour | Motion | Type |
+| --- | --- | --- | --- | --- | --- | --- |
+| botanical | B, round 1 | `prototype/botanical-line` | Hero + every row | One leaf green | None | Nunito |
+| garden | B1 · Garden colour | `prototype/botanical-garden` | Hero + every row | Each Ingredient's own hue | Line draws on, rows settle in | Nunito |
+| herbarium | B2 · Herbarium | `prototype/botanical-herbarium` | Large: a specimen tile per Pairing | Monochrome ink on paper | Still | Nunito |
+| quiet | B3 · Quiet line | `prototype/botanical-quiet` | Hero and tray only; rows are text | A colour per Pairing Reason | Springy add | Figtree |
+
+Run it the same way: double-click `index.html`.
+
+## Round 1
 
 Throwaway. Not production code, and it never merges to `main`.
 
 **Question:** what should MySous look like? Three variants of the Ingredient Pairings screen (Lime), each structurally different, not only restyled.
 
-**Run:** double-click `index.html` (the side-by-side board), or open `variant.html?variant=editorial|botanical|utility` for one variant at full size. Use ← and → to switch variants, and the ◐ button to cycle the theme between system, light and dark. Fonts load from Google Fonts, so the first open needs a network connection.
+**Run (round 1, from `prototype/visual-direction`):** double-click `index.html` (the side-by-side board), or open `variant.html?variant=editorial|botanical|utility` for one variant at full size. Use ← and → to switch variants, and the ◐ button to cycle the theme between system, light and dark. Fonts load from Google Fonts, so the first open needs a network connection.
 
 | Key | Variant | Branch | Structure |
 | --- | --- | --- | --- |

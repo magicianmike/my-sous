@@ -28,6 +28,8 @@
     expanded: new Set(),
     filter: "all",
     notice: "",
+    renders: 0, // lets a variant animate only on first paint
+    lastAdded: null, // lets a variant animate the Ingredient just added
   };
 
   const live = document.getElementById("live");
@@ -44,6 +46,7 @@
         return;
       }
       state.combination.push(id);
+      state.lastAdded = id;
       announce(S.names[id] + " added to Combination, " + state.combination.length + " of 4");
     },
     remove(id) {
@@ -84,6 +87,8 @@
       el && el.focus();
     }
     state.notice = "";
+    state.lastAdded = null;
+    state.renders++;
   }
 
   // Variants use data-act="add|remove|expand|filter" + data-id for interaction.

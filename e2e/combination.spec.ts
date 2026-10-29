@@ -4,12 +4,17 @@ function tray(page: Page) {
   return page.getByRole("complementary", { name: /Your Combination/ });
 }
 
-/** What a Formula's Slot is filled with, found by the Slot's role. */
-function slot(page: Page, role: string) {
+/** A Formula's Slot, found by the heading that names its role. */
+function slotItem(page: Page, role: string) {
   return page
-    .locator(".slots div")
-    .filter({ has: page.getByRole("term").filter({ hasText: role }) })
-    .getByRole("definition");
+    .getByRole("main")
+    .getByRole("listitem")
+    .filter({ has: page.getByRole("heading", { level: 3, name: role }) });
+}
+
+/** What a Formula's Slot is filled with. */
+function slot(page: Page, role: string) {
+  return slotItem(page, role).locator(".slot-fill");
 }
 
 async function expectCombination(page: Page, names: string[]) {
@@ -41,7 +46,7 @@ test("a Cook builds a Combination, sees Suggestions and opens a Formula", async 
   await expect(page.getByRole("heading", { level: 1, name: "Pan sauce" })).toBeVisible();
   await expect(slot(page, "something to sear")).toHaveText("Chicken thigh");
   await expect(slot(page, "an aromatic")).toHaveText("Garlic");
-  await expect(slot(page, "an acid")).toHaveText("Not filled yet");
+  await expect(slot(page, "an acid")).toHaveText("Lemon");
   await expect(page.getByRole("listitem").filter({ hasText: /^Season chicken thigh/ })).toBeVisible();
   const formulaUrl = page.url();
 
@@ -71,6 +76,33 @@ test("Suggestions are ranked by how well their Ingredients pair, with a reason",
   await expect(suggestions.getByRole("heading")).toHaveText(["Sheet-pan roast", "Pan sauce"]);
   await expect(suggestions.nth(0)).toContainText("Everything here pairs with garlic.");
   await expect(suggestions.nth(1)).toContainText("Chicken thigh and garlic pair well.");
+});
+
+test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const acid = slotItem(page, "an acid");
+  await expect(slot(page, "an acid")).toHaveText("Lemon");
+  await expect(acid).toContainText(
+    "Pairs with chicken thigh: Lemon's acid balances the rich fat of chicken thigh.",
+  );
+  await expect(slotItem(page, "a soft herb (optional)")).toBeVisible();
+
+  await acid.getByText("Swap").click();
+  await acid.getByRole("button", { name: "Use Lime" }).click();
+
+  await expect(slot(page, "an acid")).toHaveText("Lime");
+  await expect(page.getByRole("main").getByRole("status")).toHaveText(
+    "Lime is now an acid. Undo brings back lemon.",
+  );
+  await expect(page.getByText(/then add lime a little at a time/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Undo swap" })).toBeFocused();
+
+  await page.getByRole("button", { name: "Undo swap" }).click();
+  await expect(slot(page, "an acid")).toHaveText("Lemon");
+  await expect(page.getByRole("main").getByRole("status")).toHaveText(
+    "Undone: Lemon is an acid again.",
+  );
+  await expect(page.getByText(/then add lemon a little at a time/)).toBeVisible();
 });
 
 test("unknown Ingredients in a link are dropped with a notice", async ({ page }) => {
@@ -121,4 +153,14 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await page.keyboard.press("Enter");
   await expect(page.getByRole("heading", { level: 1, name: "Pan sauce" })).toBeVisible();
   await expect(slot(page, "an aromatic")).toHaveText("Garlic");
+
+  // Swap and undo, still by keyboard.
+  await tabTo(page, page.getByText("Swap an acid"));
+  await page.keyboard.press("Enter");
+  await tabTo(page, page.getByRole("button", { name: "Use Lime" }));
+  await page.keyboard.press("Enter");
+  await expect(slot(page, "an acid")).toHaveText("Lime");
+  await expect(page.getByRole("button", { name: "Undo swap" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(slot(page, "an acid")).toHaveText("Lemon");
 });

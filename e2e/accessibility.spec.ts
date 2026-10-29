@@ -10,6 +10,8 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   [`/ingredients/lemon${combination}`, (page) => page.getByRole("button", { name: "Remove Garlic from Combination" })],
   [`/suggestions${combination}`, (page) => page.getByRole("link", { name: "Pan sauce" })],
   [`/formulas/pan-sauce${combination}`, (page) => page.getByRole("heading", { name: "Method" })],
+  ["/ingredients/gremolata", (page) => page.getByRole("heading", { name: "Typically includes" })],
+  ["/ingredients/mango", (page) => page.getByRole("heading", { name: "This isn’t in MySous yet" })],
   [
     "/suggestions?with=chicken-thigh,basil,ginger",
     (page) => page.getByRole("heading", { name: "Not everything pairs yet" }),
@@ -34,6 +36,24 @@ for (const colorScheme of ["light", "dark"] as const) {
         await expectNoViolations(page);
       });
     }
+
+    test("an open search, a no-match search and an expanded Pairing have no axe violations", async ({
+      page,
+    }) => {
+      await page.goto("/");
+      const search = page.getByRole("combobox", { name: "Find an ingredient" });
+      await search.fill("l");
+      await search.press("ArrowDown");
+      await expect(page.getByRole("listbox")).toBeVisible();
+      await expectNoViolations(page);
+      await search.fill("mango");
+      await expect(page.getByText("browse every ingredient")).toBeVisible();
+      await expectNoViolations(page);
+
+      await page.goto("/ingredients/lemon");
+      await page.getByText("More about lemon and garlic, contrast").click();
+      await expectNoViolations(page);
+    });
 
     test("a Formula with an empty Slot, an open Swap list and a swap made has no axe violations", async ({
       page,

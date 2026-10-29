@@ -135,6 +135,109 @@ describe("loadKitchen", () => {
     expect(pairing.citations).toEqual([citation]);
   });
 
+  it("groups an Ingredient's Pairings by Pairing Reason category, in a fixed order", async () => {
+    const kitchen = await expectKitchen(
+      writeContent({
+        ingredients: { lemon, garlic, thyme, basil: { name: "Basil" } },
+        pairings: [
+          {
+            ingredients: ["lemon", "garlic"],
+            reasons: [
+              { category: "tradition", note: "Garlic and lemon, traditionally." },
+              { category: "contrast", note: "Lemon cuts garlic." },
+            ],
+          },
+          {
+            ingredients: ["thyme", "lemon"],
+            reasons: [{ category: "aromatic bridge", note: "Thyme and lemon share a resinous note." }],
+          },
+          { ingredients: ["lemon", "basil"], reasons: [{ category: "contrast", note: "Lemon lifts basil." }] },
+        ],
+      }),
+    );
+
+    expect(
+      kitchen
+        .pairingsByReason("lemon")
+        .map(({ category, pairings }) => [
+          category,
+          pairings.map(({ ingredient, reasons }) => [ingredient.id, reasons.map(({ note }) => note)]),
+        ]),
+    ).toEqual([
+      [
+        "contrast",
+        [
+          ["garlic", ["Lemon cuts garlic."]],
+          ["basil", ["Lemon lifts basil."]],
+        ],
+      ],
+      ["aromatic bridge", [["thyme", ["Thyme and lemon share a resinous note."]]]],
+      // No texture Pairings, so no texture group.
+      ["tradition", [["garlic", ["Garlic and lemon, traditionally."]]]],
+    ]);
+  });
+
+  it("lists what a Blend typically includes, linking components that are Ingredients", async () => {
+    const kitchen = await expectKitchen(
+      writeContent({
+        ingredients: { thyme, zaatar: { name: "Za'atar", typicallyIncludes: ["thyme", "sumac", "sesame"] } },
+        pairings: [],
+      }),
+    );
+
+    expect(
+      kitchen.blendComponents("zaatar").map(({ name, ingredient }) => [name, ingredient?.id]),
+    ).toEqual([
+      ["Thyme", "thyme"],
+      ["sumac", undefined],
+      ["sesame", undefined],
+    ]);
+    expect(kitchen.blendComponents("thyme")).toEqual([]);
+  });
+
+  describe("search", () => {
+    const names = ["Lemon", "Lime", "Chicken thigh", "Fresh chile", "Basil", "Scallion", "Za'atar", "Jalapeño"];
+    const ingredients = Object.fromEntries(
+      names.map((name, i) => [`ingredient-${i}`, { name }]),
+    );
+
+    async function search(query: string) {
+      const kitchen = await expectKitchen(writeContent({ ingredients, pairings: [] }));
+      return kitchen.search(query).map(({ name }) => name);
+    }
+
+    it("matches part of a name, ignoring case and surrounding spaces", async () => {
+      expect(await search("  LEM ")).toEqual(["Lemon"]);
+      expect(await search("li")).toEqual(["Lime", "Scallion"]);
+    });
+
+    it("puts names that start with the query first, then words that do, then the rest", async () => {
+      expect(await search("ch")).toEqual(["Chicken thigh", "Fresh chile"]);
+      // Within each group, alphabetical.
+      expect(await search("l")).toEqual([
+        "Lemon",
+        "Lime",
+        "Basil",
+        "Fresh chile",
+        "Jalapeño",
+        "Scallion",
+      ]);
+    });
+
+    it("ignores accents, apostrophes, extra spaces and word order", async () => {
+      expect(await search("zaatar")).toEqual(["Za'atar"]);
+      expect(await search("Za’atar")).toEqual(["Za'atar"]);
+      expect(await search("jalapeno")).toEqual(["Jalapeño"]);
+      expect(await search("chicken   thigh")).toEqual(["Chicken thigh"]);
+      expect(await search("thigh chicken")).toEqual(["Chicken thigh"]);
+    });
+
+    it("finds nothing for an empty query or a name not in MySous", async () => {
+      expect(await search("   ")).toEqual([]);
+      expect(await search("mango")).toEqual([]);
+    });
+  });
+
   describe("a Combination", () => {
     const ingredients = {
       lemon,
@@ -667,6 +770,19 @@ describe("loadKitchen", () => {
       );
 
       expect(errors).toEqual(['Formula dressing\'s method refers to unknown Slot "{oil}".']);
+    });
+
+    it("when a YAML file can't be read, naming the file and line", async () => {
+      const dir = writeContent({ ingredients: { lemon }, pairings: [] });
+      writeFileSync(join(dir, "pairings.yaml"), "- ingredients: [lemon, garlic]\n  note: a: b\n");
+
+      const result = await loadKitchen(dir);
+
+      expect(result.ok).toBe(false);
+      if (result.ok) return;
+      expect(result.errors).toEqual([
+        { file: expect.stringMatching(/pairings\.yaml$/), message: expect.stringMatching(/line 2/) },
+      ]);
     });
 
     it("when an Ingredient has no essay", async () => {

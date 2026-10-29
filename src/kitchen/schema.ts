@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PAIRING_REASON_CATEGORIES } from "./categories";
 
 /** The content format, as checked at build time. */
 
@@ -21,7 +22,7 @@ export const ingredientSchema = z.object({
 });
 
 const pairingReasonSchema = z.object({
-  category: z.enum(["contrast", "aromatic bridge", "texture", "tradition"]),
+  category: z.enum(PAIRING_REASON_CATEGORIES),
   note: z.string().min(1),
   detail: z.string().min(1).optional(),
 });

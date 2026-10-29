@@ -61,6 +61,24 @@ export type Suggestion = {
   rankReason: string;
 };
 
+/** Two Combination Ingredients with no Pairing between them. */
+export type Tension = { ingredients: [Ingredient, Ingredient] };
+
+/**
+ * The next step for one Ingredient in a tension: swap it for `replacement`, which pairs with
+ * all the rest of the Combination, or, when nothing does, remove it.
+ */
+export type CombinationFix = { ingredient: Ingredient; replacement?: Ingredient };
+
+/** What `suggest` gives for a Combination: ranked Suggestions, never empty while Formulas exist. */
+export type SuggestResult = {
+  suggestions: Suggestion[];
+  /** Pairs of Combination Ingredients with no Pairing between them, in Combination order. */
+  tensions: Tension[];
+  /** One fix for each Ingredient in a tension, in Combination order. */
+  fixes: CombinationFix[];
+};
+
 export type Kitchen = {
   /** The validated content this Kitchen was built from, to rebuild it in the browser. */
   content: KitchenContent;
@@ -77,7 +95,7 @@ export type Kitchen = {
    * number of Pairings among the Ingredients the Cook chose, from the Combination or Pantry, not
    * those suggested by Pairing), with ties in content order. Deterministic.
    */
-  suggest(combination: Ingredient[], pantry: Ingredient[]): Suggestion[];
+  suggest(combination: Ingredient[], pantry: Ingredient[]): SuggestResult;
   /** The same Suggestion with one Slot holding the Cook's choice; every other fill is kept. */
   swap(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
 };
@@ -107,7 +125,7 @@ function explainFill(slot: Slot, fill: Fill, justification: PairingView | undefi
 }
 
 /** How an Ingredient is named mid-sentence, as in "season chicken thigh". */
-function inSentence(ingredient: Ingredient): string {
+export function inSentence(ingredient: Ingredient): string {
   return ingredient.name.toLowerCase();
 }
 
@@ -195,6 +213,34 @@ export function createKitchen(content: KitchenContent): Kitchen {
       .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, rest) }))
       .sort((a, b) => b.score - a.score);
 
+  /**
+   * Tensions in a Combination, and one fix per Ingredient involved. A swap must share a Slot
+   * type with the Ingredient it replaces (so it plays the same role), not be in the Combination
+   * already, and pair with all the rest, so accepting it leaves that Ingredient in no tension.
+   * The first such Ingredient in content order is proposed; with none, the fix is removal.
+   */
+  function findTensions(combination: Ingredient[]): Pick<SuggestResult, "tensions" | "fixes"> {
+    const tensions = combination.flatMap((a, i) =>
+      combination
+        .slice(i + 1)
+        .filter((b) => !arePaired(a, b))
+        .map((b): Tension => ({ ingredients: [a, b] })),
+    );
+    const fixes = combination
+      .filter((ingredient) => tensions.some(({ ingredients }) => ingredients.includes(ingredient)))
+      .map((ingredient): CombinationFix => {
+        const rest = combination.filter((other) => other !== ingredient);
+        const replacement = [...ingredients.values()].find(
+          (candidate) =>
+            !combination.includes(candidate) &&
+            candidate.slotTypes.some((type) => ingredient.slotTypes.includes(type)) &&
+            rest.every((other) => arePaired(candidate, other)),
+        );
+        return { ingredient, replacement };
+      });
+    return { tensions, fixes };
+  }
+
   /** Everything derived from a Formula's fills: justifications, alternatives, method, rank. */
   function deriveSuggestion(
     formula: Formula,
@@ -268,7 +314,12 @@ export function createKitchen(content: KitchenContent): Kitchen {
         return deriveSuggestion(formula, fills);
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
-      return suggestions.sort((a, b) => b.coherence - a.coherence).map(({ suggestion }) => suggestion);
+      return {
+        suggestions: suggestions
+          .sort((a, b) => b.coherence - a.coherence)
+          .map(({ suggestion }) => suggestion),
+        ...findTensions(combination),
+      };
     },
 
     swap(suggestion, slotId, ingredientId) {

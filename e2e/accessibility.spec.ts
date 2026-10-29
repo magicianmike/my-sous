@@ -10,6 +10,10 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   [`/ingredients/lemon${combination}`, (page) => page.getByRole("button", { name: "Remove Garlic from Combination" })],
   [`/suggestions${combination}`, (page) => page.getByRole("link", { name: "Pan sauce" })],
   [`/formulas/pan-sauce${combination}`, (page) => page.getByRole("heading", { name: "Method" })],
+  [
+    "/suggestions?with=chicken-thigh,basil,ginger",
+    (page) => page.getByRole("heading", { name: "Not everything pairs yet" }),
+  ],
 ];
 
 async function expectNoViolations(page: Page) {

@@ -14,6 +14,7 @@ export const FormulaFill = withSearchParams(function FormulaFill({
   const { combination } = useCombination();
   const suggestion = kitchen
     .suggest(combination.ingredients, [])
+    .suggestions
     .find(({ formula }) => formula.id === formulaId)!;
   // A new Combination starts a fresh swap history.
   const combinationKey = combination.ingredients.map(({ id }) => id).join(",");

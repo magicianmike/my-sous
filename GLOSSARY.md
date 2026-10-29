@@ -62,6 +62,10 @@ _Avoid_: Placeholder, component
 A Formula recommended for a Combination, with its Slots filled and a stated reason for its rank. A Suggestion is **makeable** when the Combination and Pantry together fill every required Slot.
 _Avoid_: Result, match, recommendation
 
+**Tension**:
+Two Ingredients in a Combination that have no Pairing between them. MySous names each tension and offers one fix for every Ingredient involved: a swap for an Ingredient that pairs with all the rest of the Combination, or, when none does, removing it.
+_Avoid_: Conflict, clash, mismatch
+
 **Showcase Recipe**:
 A complete, fixed recipe that serves as a worked example of a Formula filled in.
 _Avoid_: Sample recipe, example

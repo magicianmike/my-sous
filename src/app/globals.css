@@ -260,3 +260,68 @@ button[aria-disabled="true"] {
   margin-bottom: 0;
   font-size: 1.25rem;
 }
+
+.cuisines {
+  color: var(--muted);
+}
+
+.essay p {
+  font-size: 1.125rem;
+}
+
+.components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.components li {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.search {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.search label {
+  font-weight: 600;
+}
+
+.search input {
+  min-height: 44px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--muted);
+  border-radius: 0.5rem;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+.search input:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
+
+[role="listbox"] {
+  margin: 0;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+}
+
+[role="option"] {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  cursor: pointer;
+}
+
+[role="option"][aria-selected="true"] {
+  outline: 2px solid var(--link);
+  outline-offset: -2px;
+  font-weight: 600;
+}

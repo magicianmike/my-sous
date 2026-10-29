@@ -49,7 +49,15 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
 
   async function readYamlList<T>(name: string, schema: z.ZodType<T>): Promise<T[]> {
     const file = join(contentDir, name);
-    return check(z.array(schema), parse(await readFile(file, "utf8")), file) ?? [];
+    let data: unknown;
+    try {
+      data = parse(await readFile(file, "utf8"));
+    } catch (error) {
+      // YAML syntax errors say where they are ("at line 2, column 9"); pass that on.
+      errors.push({ file, message: error instanceof Error ? error.message.split("\n")[0] : String(error) });
+      return [];
+    }
+    return check(z.array(schema), data, file) ?? [];
   }
 
   const ingredients: RawContent["ingredients"] = [];

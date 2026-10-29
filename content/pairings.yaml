@@ -7,83 +7,105 @@
   reasons:
     - category: tradition
       note: Basil's sweet, peppery aroma often finishes ripe tomatoes in Southern Italian cooking.
+      detail: "Tear the basil over warm or raw tomatoes right before serving; its aroma fades with long cooking, while the tomato's acidity and sweetness carry it."
 
 - ingredients: [tomato, garlic]
   cuisines: [southern-italian]
   reasons:
     - category: tradition
       note: Garlic softened in oil is a common base for a quick tomato sauce.
+      detail: "Cook the garlic gently in oil until fragrant but still pale, then add the tomatoes; browned garlic turns bitter and that bitterness runs through the whole sauce."
 
 - ingredients: [basil, garlic]
   cuisines: [ligurian]
   reasons:
     - category: tradition
       note: Pounded together with oil, they form the base of Ligurian pesto.
+      detail: "Raw garlic is sharp, so a small amount goes a long way against a large handful of basil; pounding rather than blending keeps the basil from turning dark and grassy."
 
 - ingredients: [garlic, lemon]
   reasons:
     - category: contrast
       note: Lemon's sharpness cuts through the richness of garlic cooked in oil or butter.
+      detail: "Add the lemon off the heat or at the very end: its fresh sharpness fades with cooking, and it's what balances the rounder, sweeter taste of cooked garlic."
 
 - ingredients: [lemon, chicken-thigh]
   reasons:
     - category: contrast
       note: Lemon's acid balances the rich fat of chicken thigh.
+      detail: "Squeeze lemon over the chicken once it's cooked, or deglaze the pan with it; zest added at the end brings aroma without more sourness."
 
 - ingredients: [garlic, chicken-thigh]
   reasons:
     - category: tradition
       note: Whole garlic cloves roast alongside chicken thighs in the same pan, turning soft and mellow.
+      detail: "Unpeeled cloves can go in for the whole roast and turn soft and sweet; chopped garlic burns faster, so add it in the last few minutes."
 
 - ingredients: [lime, cilantro]
   reasons:
     - category: tradition
       note: Usually added together at the end, as in many salsas, to brighten a dish.
+      detail: "Both are at their best raw, so add them together off the heat; the lime's acidity also keeps chopped cilantro tasting fresh for longer."
 
 - ingredients: [lime, chicken-thigh]
   reasons:
     - category: contrast
       note: Lime's acid sharpens rich, browned chicken thigh.
+      detail: "Lime can go into a marinade or over the cooked chicken; added at the end, its sharpness stands out more against the rich, browned skin."
 
 - ingredients: [cilantro, chicken-thigh]
   reasons:
     - category: contrast
       note: Fresh, green cilantro lifts the deep savoury flavour of cooked chicken thigh.
+      detail: "Scatter the leaves and tender stems over the chicken after cooking; heat dulls cilantro's bright aroma quickly."
 
 - ingredients: [ginger, scallion]
   cuisines: [cantonese]
   reasons:
     - category: tradition
       note: Sizzled with hot oil, they make a ginger-scallion sauce often served with poached chicken in Cantonese cooking.
+      detail: "Pour very hot oil over finely chopped ginger and scallion with a pinch of salt; the heat takes the raw edge off both and releases their aroma into the oil."
 
 - ingredients: [ginger, garlic]
   cuisines: [cantonese]
   reasons:
     - category: tradition
       note: Often cooked together at the start of a stir-fry to season the oil.
+      detail: "Chop them finely and add them to hot oil for a few seconds before the other ingredients; they burn quickly, so keep them moving."
 
 - ingredients: [scallion, chicken-thigh]
   reasons:
     - category: contrast
       note: Raw scallion's sharp bite contrasts with tender, rich chicken thigh.
+      detail: "Use thinly sliced green tops raw over the finished chicken; the white parts can cook alongside it for a gentler onion flavour."
 
 - ingredients: [ginger, chicken-thigh]
   reasons:
     - category: contrast
       note: Ginger's clean heat cuts the richness of chicken thigh in braises and soups.
+      detail: "Sliced ginger can simmer with the chicken and be lifted out; grated ginger added near the end gives a sharper, fresher heat."
 
 - ingredients: [chile, lime]
   reasons:
     - category: contrast
       note: Lime's acid sharpens and balances the heat of fresh chile.
+      detail: "Taste as you go: lime makes chile heat seem brighter and shorter, so a squeeze can balance a dish that's turned out hotter than you meant."
 
 - ingredients: [chile, garlic]
   cuisines: [southern-italian]
   reasons:
     - category: tradition
       note: Warmed together in olive oil, they're usually the base of aglio, olio e peperoncino, a Southern Italian pasta.
+      detail: "Warm sliced garlic and chile in olive oil over low heat until the garlic is pale gold; the oil carries both flavours through the pasta."
 
 - ingredients: [chile, cilantro]
   reasons:
     - category: tradition
       note: Chopped fresh, they're often paired in salsas.
+      detail: "Chop them together with a little salt; the salt draws out juice and helps the two blend into a fresh, punchy mix."
+
+- ingredients: [chicken-thigh, gremolata]
+  reasons:
+    - category: contrast
+      note: Gremolata's fresh, sharp lift cuts through rich, slow-cooked chicken thigh.
+      detail: "Scatter it over the chicken right before serving; the lemon zest and raw garlic lose their edge if they sit in the heat for long."

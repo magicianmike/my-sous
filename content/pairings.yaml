@@ -4,7 +4,7 @@
 - ingredients: [tomato, basil]
   reasons:
     - category: tradition
-      note: Basil's sweet, peppery aroma is the usual finishing herb for ripe tomatoes in Italian cooking.
+      note: Basil's sweet, peppery aroma often finishes ripe tomatoes in Southern Italian cooking.
 
 - ingredients: [tomato, garlic]
   reasons:
@@ -34,7 +34,7 @@
 - ingredients: [lime, cilantro]
   reasons:
     - category: tradition
-      note: Usually added together at the end, as in Mexican salsas, to brighten a dish.
+      note: Usually added together at the end, as in many salsas, to brighten a dish.
 
 - ingredients: [lime, chicken-thigh]
   reasons:
@@ -49,7 +49,7 @@
 - ingredients: [ginger, scallion]
   reasons:
     - category: tradition
-      note: Sizzled with hot oil, they make the Cantonese ginger-scallion sauce served with poached chicken.
+      note: Sizzled with hot oil, they make a ginger-scallion sauce often served with poached chicken in Cantonese cooking.
 
 - ingredients: [ginger, garlic]
   reasons:
@@ -74,9 +74,9 @@
 - ingredients: [chile, garlic]
   reasons:
     - category: tradition
-      note: Warmed together in olive oil, they make the Southern Italian pasta aglio, olio e peperoncino.
+      note: Warmed together in olive oil, they're usually the base of aglio, olio e peperoncino, a Southern Italian pasta.
 
 - ingredients: [chile, cilantro]
   reasons:
     - category: tradition
-      note: Chopped fresh, they're usually paired in Mexican salsas.
+      note: Chopped fresh, they're often paired in salsas.

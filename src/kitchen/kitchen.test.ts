@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { stringify } from "yaml";
 import { loadKitchen, type Kitchen } from "./index";
 
-type FixtureIngredient = { name: string; category?: string; body?: string };
+type FixtureIngredient = { name: string; category?: string };
 
 function writeContent(fixture: {
   ingredients: Record<string, FixtureIngredient>;
@@ -13,12 +13,12 @@ function writeContent(fixture: {
 }): string {
   const dir = mkdtempSync(join(tmpdir(), "kitchen-"));
   mkdirSync(join(dir, "ingredients"));
-  for (const [id, { name, category = "produce", body = "" }] of Object.entries(
+  for (const [id, { name, category = "produce" }] of Object.entries(
     fixture.ingredients,
   )) {
     writeFileSync(
       join(dir, "ingredients", `${id}.md`),
-      `---\n${stringify({ name, category })}---\n${body}\n`,
+      `---\n${stringify({ name, category })}---\n`,
     );
   }
   writeFileSync(join(dir, "pairings.yaml"), stringify(fixture.pairings));

@@ -14,7 +14,7 @@ Milestone: #8 (part of #2). A Formula arrives with every Slot it can justify alr
 
 **Undo is a history of Suggestions on the Formula screen.** Each swap pushes the new Suggestion along with the Slot it changed; Undo pops it and announces what came back. The history lives in the screen, not the URL, and a new Combination starts a fresh one. The Undo button is always present (marked unavailable when there's nothing to undo), so keyboard focus can land on it after a swap and stay on it after an undo. Each change is announced in a live region.
 
-**Best-pairing fills count toward ranking.** Coherence counts Pairings among all filled Ingredients (#2's rule), so a Formula whose suggested additions pair well now ranks higher. On today's content, Sheet-pan roast outranks Pan sauce for chicken thigh and garlic, and garlic, which pairs with most Ingredients, becomes the hub of many rank reasons.
+**Ranking counts only the Ingredients the Cook chose.** #2 defines coherence as the Pairings "among the filled Ingredients". Once best-pairing fill existed, that let Ingredients MySous suggested raise a Formula's rank, and they pair by construction. On today's content, Sheet-pan roast outranked Pan sauce for chicken thigh and garlic, and garlic, which pairs with most Ingredients, became the hub of many rank reasons the Cook never chose. The author decided coherence and rank reasons count only Ingredients from the Combination, the Pantry or a swap. Suggested fills still show, each with its reason.
 
 ## Alternatives considered
 

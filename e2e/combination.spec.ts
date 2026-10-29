@@ -38,8 +38,8 @@ test("a Cook builds a Combination, sees Suggestions and opens a Formula", async 
   await tray(page).getByRole("link", { name: "See what to make" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "What to make" })).toBeVisible();
   await expect(page.getByRole("main").getByRole("heading", { level: 2 })).toHaveText([
-    "Sheet-pan roast",
     "Pan sauce",
+    "Sheet-pan roast",
   ]);
 
   await page.getByRole("link", { name: "Pan sauce" }).click();
@@ -75,7 +75,7 @@ test("Suggestions are ranked by how well their Ingredients pair, with a reason",
   const suggestions = page.getByRole("main").getByRole("listitem");
   await expect(suggestions.getByRole("heading")).toHaveText(["Sheet-pan roast", "Pan sauce"]);
   await expect(suggestions.nth(0)).toContainText("Everything here pairs with garlic.");
-  await expect(suggestions.nth(1)).toContainText("Everything here pairs with garlic.");
+  await expect(suggestions.nth(1)).toContainText("Chicken thigh and garlic pair well.");
 });
 
 test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page }) => {

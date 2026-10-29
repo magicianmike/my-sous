@@ -74,7 +74,8 @@ export type Kitchen = {
    * Suggestions for a Combination, one per Formula. Slots fill from the Combination first, then
    * the Pantry (each Ingredient filling at most one Slot), then the Ingredient that pairs with
    * most of the fill; a Slot that no Pairing can justify stays empty. Ranked by coherence (the
-   * number of Pairings among the filled Ingredients), with ties in content order. Deterministic.
+   * number of Pairings among the Ingredients the Cook chose, from the Combination or Pantry, not
+   * those suggested by Pairing), with ties in content order. Deterministic.
    */
   suggest(combination: Ingredient[], pantry: Ingredient[]): Suggestion[];
   /** The same Suggestion with one Slot holding the Cook's choice; every other fill is kept. */
@@ -222,10 +223,12 @@ export function createKitchen(content: KitchenContent): Kitchen {
         return ingredient ? inSentence(ingredient) : slot.role;
       }),
     );
-    const pairs = used.flatMap((a, i) =>
-      used.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
+    // Rank by what the Cook chose: Ingredients suggested by Pairing pair by construction.
+    const chosen = usedIn(fills.filter((fill) => fill?.source !== "pairing"));
+    const pairs = chosen.flatMap((a, i) =>
+      chosen.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
     );
-    const rankReason = explainRank(used, arePaired, pairs);
+    const rankReason = explainRank(chosen, arePaired, pairs);
     return { suggestion: { formula, slots, method, rankReason }, coherence: pairs.length };
   }
 

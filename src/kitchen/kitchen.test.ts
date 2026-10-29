@@ -445,6 +445,19 @@ describe("loadKitchen", () => {
       expect(suggestions.map(({ formula }) => formula.id)).toEqual(["tight", "middling", "loose"]);
     });
 
+    it("ranks and explains by the Ingredients the Cook chose, not those suggested by Pairing", async () => {
+      const suggestions = await rank(
+        // Lamb fills "with-extra" by Pairing, since it pairs with mint and lemon.
+        [formula("with-extra", ["mint", "lemon", "lamb"]), formula("chosen-pair", ["lemon", "garlic"])],
+        ["mint", "lemon", "garlic"],
+      );
+
+      expect(suggestions.map(({ formula, rankReason }) => [formula.id, rankReason])).toEqual([
+        ["chosen-pair", "Lemon and garlic pair well."],
+        ["with-extra", "Mint and lemon don't have a Pairing in MySous yet."],
+      ]);
+    });
+
     it("breaks ties by the order Formulas appear in the content", async () => {
       const suggestions = await rank(
         [formula("second-in-name", ["lamb", "mint"]), formula("a-first-in-name", ["lamb", "lemon"])],

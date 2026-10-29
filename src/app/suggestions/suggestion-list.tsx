@@ -17,7 +17,7 @@ export const SuggestionList = withSearchParams(
 
     return (
       <ul className="suggestions">
-        {kitchen.suggest(combination.ingredients, []).map(({ formula, slots }) => {
+        {kitchen.suggest(combination.ingredients, []).map(({ formula, slots, rankReason }) => {
           const used = slots.flatMap(({ ingredient }) => ingredient?.name ?? []);
           const needs = slots.filter(({ slot, ingredient }) => slot.required && !ingredient);
           return (
@@ -25,6 +25,7 @@ export const SuggestionList = withSearchParams(
               <h2>
                 <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
               </h2>
+              <p className="rank-reason">{rankReason}</p>
               <p>{formula.description}</p>
               <p>Uses {used.length > 0 ? used.join(", ") : "none of your Combination yet"}.</p>
               {needs.length > 0 && (

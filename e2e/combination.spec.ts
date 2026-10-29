@@ -62,6 +62,17 @@ test("a Cook builds a Combination, sees Suggestions and opens a Formula", async 
   await expectCombination(reopened, ["Chicken thigh", "Garlic"]);
 });
 
+test("Suggestions are ranked by how well their Ingredients pair, with a reason", async ({
+  page,
+}) => {
+  await page.goto("/suggestions?with=chicken-thigh,garlic,tomato");
+
+  const suggestions = page.getByRole("main").getByRole("listitem");
+  await expect(suggestions.getByRole("heading")).toHaveText(["Sheet-pan roast", "Pan sauce"]);
+  await expect(suggestions.nth(0)).toContainText("Everything here pairs with garlic.");
+  await expect(suggestions.nth(1)).toContainText("Chicken thigh and garlic pair well.");
+});
+
 test("unknown Ingredients in a link are dropped with a notice", async ({ page }) => {
   await page.goto("/suggestions?with=lemon,unicorn");
   await expectCombination(page, ["Lemon"]);

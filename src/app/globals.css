@@ -209,7 +209,7 @@ summary:focus-visible {
   outline-offset: 2px;
 }
 
-details ul {
+.slots details ul {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;

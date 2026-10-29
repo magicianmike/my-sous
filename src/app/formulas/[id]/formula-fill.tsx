@@ -16,31 +16,25 @@ export const FormulaFill = withSearchParams(function FormulaFill({
     .suggest(combination.ingredients, [])
     .find(({ formula }) => formula.id === formulaId)!;
   // A new Combination starts a fresh swap history.
-  const key = combination.ingredients.map(({ id }) => id).join(",");
-  return <SlotEditor key={key} initial={suggestion} />;
+  const combinationKey = combination.ingredients.map(({ id }) => id).join(",");
+  return <SlotEditor key={combinationKey} initial={suggestion} />;
 });
 
-/** Why a Slot holds its Ingredient, in one line. */
-function why({ ingredient, source, justification }: FilledSlot): string {
-  if (!ingredient) return "Nothing in MySous pairs with the rest of this fill yet.";
-  if (justification) {
-    return `Pairs with ${justification.ingredient.name.toLowerCase()}: ${justification.reasons[0].note}`;
-  }
-  if (source === "combination") return "From your Combination.";
-  if (source === "pantry") return "From your Pantry.";
-  return "Your choice.";
-}
+/** A Suggestion as it stood after a swap, and the Slot that swap changed. */
+type Step = { suggestion: Suggestion; swapped?: FilledSlot };
 
 function SlotEditor({ initial }: { initial: Suggestion }) {
   const { kitchen } = useKitchen();
-  const [history, setHistory] = useState([initial]);
+  const [history, setHistory] = useState<Step[]>([{ suggestion: initial }]);
   const [status, setStatus] = useState("");
   const undoButton = useRef<HTMLButtonElement>(null);
   const current = history.at(-1)!;
   const canUndo = history.length > 1;
 
-  function swap({ slot, ingredient: previous }: FilledSlot, ingredient: Ingredient) {
-    setHistory([...history, kitchen.swap(current, slot.id, ingredient.id)]);
+  function swap(filled: FilledSlot, ingredient: Ingredient) {
+    const { slot, ingredient: previous } = filled;
+    const suggestion = kitchen.swap(current.suggestion, slot.id, ingredient.id);
+    setHistory([...history, { suggestion, swapped: filled }]);
     setStatus(
       `${ingredient.name} is now ${slot.role}.` +
         (previous ? ` Undo brings back ${previous.name.toLowerCase()}.` : ""),
@@ -50,11 +44,10 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
 
   function undo() {
     if (!canUndo) return;
-    const previous = history.at(-2)!;
-    const changed = previous.slots.find(({ ingredient }, i) => ingredient !== current.slots[i].ingredient)!;
+    const { slot, ingredient } = current.swapped!;
     setHistory(history.slice(0, -1));
     setStatus(
-      `Undone: ${changed.ingredient ? `${changed.ingredient.name} is ${changed.slot.role} again` : `${changed.slot.role} is empty again`}.`,
+      `Undone: ${ingredient ? `${ingredient.name} is ${slot.role} again` : `${slot.role} is empty again`}.`,
     );
   }
 
@@ -70,7 +63,7 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
         {status}
       </p>
       <ul className="slots">
-        {current.slots.map((filled) => {
+        {current.suggestion.slots.map((filled) => {
           const { slot, ingredient, alternatives } = filled;
           return (
             <li key={slot.id}>
@@ -79,7 +72,7 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
                 {!slot.required && " (optional)"}
               </h3>
               <p className="slot-fill">{ingredient ? ingredient.name : "Not filled yet"}</p>
-              <p className="slot-why">{why(filled)}</p>
+              <p className="slot-why">{filled.reason}</p>
               {alternatives.length > 0 && (
                 // Keyed by the fill, so a swap closes the list.
                 <details key={ingredient?.id}>
@@ -103,8 +96,9 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
       </ul>
       <h2>Method</h2>
       <ol className="method">
-        {current.method.map((step) => (
-          <li key={step}>{step}</li>
+        {current.suggestion.method.map((step, i) => (
+          // Steps can repeat once filled in, and their order never changes.
+          <li key={i}>{step}</li>
         ))}
       </ol>
     </>

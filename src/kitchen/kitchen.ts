@@ -47,6 +47,8 @@ export type FilledSlot = {
   justification?: PairingView;
   /** Other Ingredients that could fill the Slot, best-pairing with the rest of the fill first. */
   alternatives: Ingredient[];
+  /** Why the Slot holds what it does (or nothing), in one line for the Cook. */
+  reason: string;
 };
 
 /** A Formula recommended for a Combination, with its Slots filled and a stated reason for its rank. */
@@ -80,6 +82,28 @@ export type Kitchen = {
 };
 
 type Fill = { ingredient: Ingredient; source: FillSource } | undefined;
+
+const usedIn = (fills: Fill[]) => fills.flatMap((fill) => fill?.ingredient ?? []);
+const fits = (slot: Slot) => (ingredient: Ingredient) => ingredient.slotTypes.includes(slot.accepts);
+
+/** Why a Slot holds its Ingredient, or why it's empty. */
+function explainFill(slot: Slot, fill: Fill, justification: PairingView | undefined): string {
+  if (justification) {
+    return `Pairs with ${inSentence(justification.ingredient)}: ${justification.reasons[0].note}`;
+  }
+  switch (fill?.source) {
+    case undefined:
+      return `No Pairing here points to ${slot.role} yet.`;
+    case "combination":
+      return "From your Combination.";
+    case "pantry":
+      return "From your Pantry.";
+    case "pairing":
+      return "Suggested earlier. It doesn't pair with anything else here now.";
+    case "swap":
+      return "Your choice. It doesn't pair with anything else here yet.";
+  }
+}
 
 /** How an Ingredient is named mid-sentence, as in "season chicken thigh". */
 function inSentence(ingredient: Ingredient): string {
@@ -164,19 +188,22 @@ export function createKitchen(content: KitchenContent): Kitchen {
     others.filter((other) => arePaired(ingredient, other)).length;
 
   /** Ingredients that fit a Slot and aren't used, best-pairing with `rest` first; ties in content order. */
-  const candidates = (slot: Slot, used: Ingredient[], rest: Ingredient[]) =>
+  const rankByPairing = (slot: Slot, used: Ingredient[], rest: Ingredient[]) =>
     [...ingredients.values()]
-      .filter((i) => i.slotTypes.includes(slot.accepts) && !used.includes(i))
+      .filter((i) => fits(slot)(i) && !used.includes(i))
       .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, rest) }))
       .sort((a, b) => b.score - a.score);
 
   /** Everything derived from a Formula's fills: justifications, alternatives, method, rank. */
-  function build(formula: Formula, fills: Fill[]): { suggestion: Suggestion; coherence: number } {
-    const used = fills.flatMap((fill) => fill?.ingredient ?? []);
+  function deriveSuggestion(
+    formula: Formula,
+    fills: Fill[],
+  ): { suggestion: Suggestion; coherence: number } {
+    const used = usedIn(fills);
     const slots = formula.slots.map((slot, i): FilledSlot => {
       const fill = fills[i];
       const rest = used.filter((other) => other !== fill?.ingredient);
-      // The first Ingredient in fill order that this one pairs with.
+      // The first Ingredient, in Slot order, that this one pairs with.
       const partner = fill && rest.find((other) => arePaired(fill.ingredient, other));
       const justification =
         partner &&
@@ -185,7 +212,8 @@ export function createKitchen(content: KitchenContent): Kitchen {
         slot,
         ...fill,
         justification,
-        alternatives: candidates(slot, used, rest).map(({ ingredient }) => ingredient),
+        alternatives: rankByPairing(slot, used, rest).map(({ ingredient }) => ingredient),
+        reason: explainFill(slot, fill, justification),
       };
     });
     const method = formula.method.map((step) =>
@@ -213,8 +241,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
     suggest(combination, pantry) {
       const suggestions = content.formulas.map((formula) => {
         const fills: Fill[] = formula.slots.map(() => undefined);
-        const used = () => fills.flatMap((fill) => fill?.ingredient ?? []);
-        const fits = (slot: Slot) => (ingredient: Ingredient) => ingredient.slotTypes.includes(slot.accepts);
+        const used = () => usedIn(fills);
 
         for (const [source, pool] of [["combination", combination], ["pantry", pantry]] as const) {
           const unused = pool.filter((ingredient) => !used().includes(ingredient));
@@ -223,24 +250,36 @@ export function createKitchen(content: KitchenContent): Kitchen {
             if (index !== -1) fills[i] = { ingredient: unused.splice(index, 1)[0], source };
           });
         }
-        formula.slots.forEach((slot, i) => {
-          const [best] = fills[i] ? [] : candidates(slot, used(), used());
-          if (best?.score > 0) fills[i] = { ingredient: best.ingredient, source: "pairing" };
-        });
+        // Repeat until nothing changes: a fill can give an earlier Slot its first Pairing.
+        for (let changed = true; changed; ) {
+          changed = false;
+          formula.slots.forEach((slot, i) => {
+            const [best] = fills[i] ? [] : rankByPairing(slot, used(), used());
+            if (best?.score > 0) {
+              fills[i] = { ingredient: best.ingredient, source: "pairing" };
+              changed = true;
+            }
+          });
+        }
 
-        return build(formula, fills);
+        return deriveSuggestion(formula, fills);
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
       return suggestions.sort((a, b) => b.coherence - a.coherence).map(({ suggestion }) => suggestion);
     },
 
     swap(suggestion, slotId, ingredientId) {
+      const slot = suggestion.formula.slots.find(({ id }) => id === slotId);
+      const chosen = ingredients.get(ingredientId);
+      if (!slot || !chosen || !fits(slot)(chosen)) {
+        throw new Error(`${ingredientId} can't fill Slot "${slotId}" in ${suggestion.formula.id}`);
+      }
       const fills: Fill[] = suggestion.slots.map(({ slot, ingredient, source }) =>
         slot.id === slotId
-          ? { ingredient: ingredients.get(ingredientId)!, source: "swap" }
+          ? { ingredient: chosen, source: "swap" as const }
           : ingredient && source && { ingredient, source },
       );
-      return build(suggestion.formula, fills).suggestion;
+      return deriveSuggestion(suggestion.formula, fills).suggestion;
     },
 
     combination(ids) {

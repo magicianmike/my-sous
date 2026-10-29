@@ -270,6 +270,7 @@ describe("loadKitchen", () => {
         pairing("lemon", "mint", "Lemon sharpens mint."),
         pairing("lamb", "parsley", "Parsley freshens lamb."),
         pairing("chicken", "lime", "Lime brightens chicken."),
+        pairing("lime", "basil", "Basil softens lime."),
       ],
       formulas: [
         {
@@ -325,6 +326,37 @@ describe("loadKitchen", () => {
         ["acid", "vinegar", "combination"],
         ["herb", undefined, undefined],
       ]);
+    });
+
+    it("fills a Slot once a later fill gives it a Pairing", async () => {
+      const { suggestion } = await plate(["basil"]);
+
+      // Nothing pairs with basil as a protein, but lime does as an acid, and chicken pairs with lime.
+      expect(fill(suggestion)).toEqual([
+        ["protein", "chicken", "pairing"],
+        ["acid", "lime", "pairing"],
+        ["herb", "basil", "combination"],
+      ]);
+    });
+
+    it("says in one line why each Slot holds what it does", async () => {
+      const { kitchen, suggestion } = await plate(["vinegar", "lamb"]);
+      const reasons = (s: Suggestion) => s.slots.map(({ reason }) => reason);
+
+      expect(reasons(suggestion)).toEqual([
+        "Pairs with mint: Mint's coolness lifts rich lamb.",
+        "From your Combination.",
+        "Pairs with lamb: Mint's coolness lifts rich lamb.",
+      ]);
+      // Swapping lamb out leaves mint, which was there for lamb, without a Pairing.
+      expect(reasons(kitchen.swap(suggestion, "protein", "chicken"))).toEqual([
+        "Your choice. It doesn't pair with anything else here yet.",
+        "From your Combination.",
+        "Suggested earlier. It doesn't pair with anything else here now.",
+      ]);
+      expect(reasons((await plate(["vinegar"])).suggestion)[0]).toBe(
+        "No Pairing here points to something to sear yet.",
+      );
     });
 
     it("gives each filled Slot the Pairing that justifies it", async () => {

@@ -4,6 +4,8 @@
 
 **Round 1 verdict (2026-10-29):** the author chose **B, Botanical line**. A (Editorial cookbook) and C (Modern utility) lost; they stay on `prototype/editorial-cookbook` and `prototype/modern-utility`, and their files are removed from this branch. Reasons are still to be recorded.
 
+**Round 2 verdict (2026-10-29):** the author chose **B1, Garden colour**. That means illustration on the hero and on every row, each Ingredient's own colour, gentle motion (the drawing draws itself on first load, rows ease in, an added Ingredient grows into the tray, all off under reduced motion) and Nunito. B2 (Herbarium) and B3 (Quiet line) lost; they stay on `prototype/botanical-herbarium` and `prototype/botanical-quiet`. Reasons are still to be recorded.
+
 **Round 2 question:** which refinement of Botanical line? The three variants keep B's voice and differ on the decisions the journal has to record: how far illustration goes, how colour is used, and how motion feels. The round-1 B stays on the board as the baseline.
 
 | Key | Variant | Branch | Illustration | Colour | Motion | Type |

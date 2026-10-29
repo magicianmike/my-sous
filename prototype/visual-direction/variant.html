@@ -1,0 +1,27 @@
+<!doctype html>
+<!--
+  PROTOTYPE (issue #4), throwaway. Not production code.
+  Three variants of the Ingredient Pairings screen (Lime), switchable via
+  ?variant=editorial|botanical|utility. Also: ?theme=light|dark (default: system),
+  ?chrome=0 hides the switcher bar, ?audit=1 runs the WCAG contrast audit.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lime · MySous prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+  <div id="app"></div>
+  <div id="live" class="proto-sr" aria-live="polite"></div>
+  <script src="data.js"></script>
+  <script>window.VARIANTS = [];</script>
+  <!-- Each variant lives in its own file (and its own prototype/<name> branch). -->
+  <script src="variant-editorial.js"></script>
+  <script src="variant-botanical.js"></script>
+  <script src="variant-utility.js"></script>
+  <script src="shell.js"></script>
+</body>
+</html>

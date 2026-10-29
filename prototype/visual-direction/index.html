@@ -1,0 +1,125 @@
+<!doctype html>
+<!--
+  PROTOTYPE (issue #4), throwaway. Side-by-side board: every variant in light
+  and dark at phone (390px) and desktop (1280px) widths, each frame audited for
+  WCAG 2.2 AA text contrast. Open by double-clicking; no server needed.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visual direction · MySous prototype</title>
+  <style>
+    :root { color-scheme: light dark; --bg: #f4f4f5; --fg: #18181b; --muted: #52525b; --card: #fff; --line: #d4d4d8; --ok: #166534; --bad: #b91c1c; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #18181b; --fg: #fafafa; --muted: #a1a1aa; --card: #27272a; --line: #3f3f46; --ok: #4ade80; --bad: #f87171; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.45 ui-sans-serif, system-ui, sans-serif; }
+    header { padding: 20px 24px 8px; }
+    h1 { font-size: 18px; margin: 0 0 4px; }
+    header p { margin: 0; color: var(--muted); max-width: 70ch; }
+    .controls { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 24px; align-items: center; }
+    .controls label { display: flex; gap: 6px; align-items: center; }
+    section { padding: 8px 24px 28px; }
+    h2 { font-size: 15px; margin: 8px 0 12px; display: flex; gap: 10px; align-items: baseline; }
+    h2 a { font-weight: 400; font-size: 13px; color: var(--muted); }
+    .row { display: flex; gap: 18px; overflow-x: auto; padding-bottom: 8px; align-items: flex-start; }
+    figure { margin: 0; flex: none; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
+    figcaption { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; margin-bottom: 6px; color: var(--muted); }
+    .clip { overflow: hidden; border-radius: 6px; border: 1px solid var(--line); }
+    iframe { border: 0; transform-origin: 0 0; display: block; }
+    .badge { font-weight: 600; }
+    .badge.ok { color: var(--ok); }
+    .badge.bad { color: var(--bad); }
+    details { font-size: 12px; margin-top: 6px; max-width: 100%; }
+    details ul { margin: 4px 0 0; padding-left: 16px; }
+    table { border-collapse: collapse; margin: 8px 24px 32px; background: var(--card); }
+    th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MySous visual direction, round 1: Ingredient Pairings (Lime)</h1>
+    <p>Prototype for issue #4. Each frame is the live page at real width, scaled down. Every frame runs a WCAG 2.2 AA text contrast audit (4.5:1 body, 3:1 large) on all rendered text. Click a title to open the variant full size, where ← and → switch variants.</p>
+  </header>
+  <div class="controls">
+    <label>Group by
+      <select id="group">
+        <option value="variant">variant</option>
+        <option value="view">theme and width</option>
+      </select>
+    </label>
+    <label>Scale <input id="scale" type="range" min="0.3" max="1" step="0.05" value="0.5" /></label>
+  </div>
+  <div id="board"></div>
+  <h2 style="padding: 0 24px">Contrast summary</h2>
+  <table id="summary"><thead><tr><th>Variant</th><th>Frame</th><th>Text elements</th><th>Lowest ratio</th><th>Result</th></tr></thead><tbody></tbody></table>
+
+  <script>
+    const VARIANTS = [
+      { key: "editorial", name: "A · Editorial cookbook" },
+      { key: "botanical", name: "B · Botanical line" },
+      { key: "utility", name: "C · Modern utility" },
+    ];
+    const VIEWS = [
+      { key: "phone-light", label: "Phone · light", w: 390, h: 844, theme: "light" },
+      { key: "phone-dark", label: "Phone · dark", w: 390, h: 844, theme: "dark" },
+      { key: "desktop-light", label: "Desktop · light", w: 1280, h: 860, theme: "light" },
+      { key: "desktop-dark", label: "Desktop · dark", w: 1280, h: 860, theme: "dark" },
+    ];
+    const reports = {};
+    const board = document.getElementById("board");
+    const groupSel = document.getElementById("group");
+    const scaleIn = document.getElementById("scale");
+
+    function frame(v, view) {
+      const id = v.key + "--" + view.key;
+      const src = `variant.html?variant=${v.key}&theme=${view.theme}&chrome=0&audit=1&frame=${id}`;
+      const s = +scaleIn.value * (view.w > 600 ? 0.6 : 1);
+      return `<figure>
+        <figcaption><span>${groupSel.value === "variant" ? view.label : v.name}</span><span class="badge" id="b-${id}">auditing…</span></figcaption>
+        <div class="clip" style="width:${view.w * s}px;height:${view.h * s}px">
+          <iframe title="${v.name}, ${view.label}" src="${src}" width="${view.w}" height="${view.h}" style="transform:scale(${s})"></iframe>
+        </div>
+        <details id="d-${id}" hidden><summary>failures</summary><ul></ul></details>
+      </figure>`;
+    }
+    function draw() {
+      if (groupSel.value === "variant") {
+        board.innerHTML = VARIANTS.map((v) => `<section><h2>${v.name} <a href="variant.html?variant=${v.key}">open full size</a></h2><div class="row">${VIEWS.map((view) => frame(v, view)).join("")}</div></section>`).join("");
+      } else {
+        board.innerHTML = VIEWS.map((view) => `<section><h2>${view.label}</h2><div class="row">${VARIANTS.map((v) => frame(v, view)).join("")}</div></section>`).join("");
+      }
+      for (const id in reports) paint(id);
+    }
+    function paint(id) {
+      const r = reports[id];
+      const b = document.getElementById("b-" + id);
+      if (!b) return;
+      const ok = r.failures.length === 0;
+      b.className = "badge " + (ok ? "ok" : "bad");
+      b.textContent = ok ? `AA pass · min ${r.min.toFixed(2)}:1` : `${r.failures.length} fail · min ${r.min.toFixed(2)}:1`;
+      const d = document.getElementById("d-" + id);
+      d.hidden = ok;
+      d.querySelector("ul").innerHTML = r.failures.slice(0, 12).map((f) => `<li>${f.value}:1 (needs ${f.need}) “${f.text}”</li>`).join("");
+    }
+    function summary() {
+      const rows = [];
+      for (const v of VARIANTS) for (const view of VIEWS) {
+        const r = reports[v.key + "--" + view.key];
+        rows.push(`<tr><td>${v.name}</td><td>${view.label}</td><td>${r ? r.checked : "…"}</td><td>${r ? r.min.toFixed(2) + ":1" : "…"}</td><td>${r ? (r.failures.length ? "✗ " + r.failures.length + " failing" : "✓ AA") : "…"}</td></tr>`);
+      }
+      document.querySelector("#summary tbody").innerHTML = rows.join("");
+    }
+    addEventListener("message", (e) => {
+      if (!e.data || e.data.type !== "proto-audit") return;
+      reports[e.data.frame] = e.data.report;
+      paint(e.data.frame);
+      summary();
+    });
+    groupSel.addEventListener("change", draw);
+    scaleIn.addEventListener("change", draw);
+    draw();
+    summary();
+  </script>
+</body>
+</html>

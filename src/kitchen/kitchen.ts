@@ -20,6 +20,9 @@ export type PairingView = {
   citations: Citation[];
 };
 
+/** How a method step refers to a Slot: {slotId}. */
+export const SLOT_REFERENCE = /\{([^}]+)\}/g;
+
 /** The most Ingredients a Combination holds, so Suggestions stay focused. */
 export const COMBINATION_LIMIT = 4;
 
@@ -43,6 +46,8 @@ export type FilledSlot = {
 export type Suggestion = {
   formula: Formula;
   slots: FilledSlot[];
+  /** The Formula's method, naming each Slot's Ingredient, or its role while it's empty. */
+  method: string[];
 };
 
 export type Kitchen = {
@@ -52,6 +57,7 @@ export type Kitchen = {
   ingredient(id: string): Ingredient | undefined;
   pairingsFor(id: string): PairingView[];
   combination(ids: string[]): Combination;
+  formulas(): Formula[];
   formula(id: string): Formula | undefined;
   /**
    * Suggestions for a Combination, one per Formula, in content order. Each Slot takes the first
@@ -87,6 +93,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
     ingredient: (id) => ingredients.get(id),
     pairingsFor: (id) => pairingsByIngredient.get(id) ?? [],
 
+    formulas: () => content.formulas,
     formula: (id) => content.formulas.find((formula) => formula.id === id),
 
     suggest(combination) {
@@ -98,7 +105,14 @@ export function createKitchen(content: KitchenContent): Kitchen {
           const [ingredient] = unused.splice(index, 1);
           return { slot, ingredient, source: "combination" };
         });
-        return { formula, slots };
+        const fills = new Map(slots.map((filled) => [filled.slot.id, filled]));
+        const method = formula.method.map((step) =>
+          step.replace(SLOT_REFERENCE, (_, id: string) => {
+            const { slot, ingredient } = fills.get(id)!;
+            return ingredient ? ingredient.name.toLowerCase() : slot.role;
+          }),
+        );
+        return { formula, slots, method };
       });
     },
 

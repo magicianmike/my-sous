@@ -55,7 +55,7 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
           </CombinationLink>
         </>
       )}
-      <p role="status" className="visually-hidden">
+      <p role="status" className="notice">
         {status}
       </p>
     </aside>

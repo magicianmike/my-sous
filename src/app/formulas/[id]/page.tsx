@@ -9,7 +9,7 @@ type Props = { params: Promise<{ id: string }> };
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  return (await getKitchen()).content.formulas.map(({ id }) => ({ id }));
+  return (await getKitchen()).formulas().map(({ id }) => ({ id }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

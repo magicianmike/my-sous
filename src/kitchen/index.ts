@@ -3,7 +3,7 @@ import { basename, join } from "node:path";
 import matter from "gray-matter";
 import { parse } from "yaml";
 import { z } from "zod";
-import { createKitchen, type Kitchen } from "./kitchen";
+import { createKitchen, SLOT_REFERENCE, type Kitchen } from "./kitchen";
 import {
   cuisineSchema,
   formulaSchema,
@@ -14,9 +14,6 @@ import {
 } from "./schema";
 
 export * from "./kitchen";
-
-/** How a method step refers to a Slot: {slotId}. */
-const SLOT_REFERENCE = /\{([^}]+)\}/g;
 
 export type ContentError = { file: string; message: string };
 

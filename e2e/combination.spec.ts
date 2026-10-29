@@ -74,6 +74,7 @@ test("a full Combination says why nothing more can be added", async ({ page }) =
   await expect(page.getByRole("status")).toHaveText(
     "Your Combination already holds 4 Ingredients, the most it can, so Suggestions stay focused. Remove one to add Garlic.",
   );
+  await expect(page.getByRole("status")).toBeVisible();
   await expectCombination(page, ["Lemon", "Lime", "Basil", "Tomato"]);
 });
 
@@ -97,6 +98,9 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await tabTo(page, page.getByRole("button", { name: "Add Chicken thigh to Combination" }));
   await page.keyboard.press("Enter");
   await expectCombination(page, ["Chicken thigh"]);
+  await expect(
+    page.getByRole("button", { name: "Remove Chicken thigh from Combination" }),
+  ).toBeFocused();
   await tabTo(page, page.getByRole("button", { name: "Add Garlic to Combination" }));
   await page.keyboard.press("Enter");
   await expectCombination(page, ["Chicken thigh", "Garlic"]);

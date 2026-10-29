@@ -229,6 +229,7 @@ describe("loadKitchen", () => {
         ["pan-sauce", { aromatic: undefined, acid: "lemon", herb: "basil" }],
         ["herb-salad", { "first-herb": "basil", "second-herb": "thyme", acid: "lemon" }],
       ]);
+      expect(suggestions[0].method).toEqual(["Soften an aromatic, add lemon, finish with basil."]);
       expect(suggestions[1].slots.map(({ source }) => source)).toEqual([
         "combination",
         "combination",
@@ -237,10 +238,12 @@ describe("loadKitchen", () => {
     });
 
     it("gives the same Suggestions every time for the same Combination", async () => {
-      const kitchen = await expectKitchen(writeContent(fixture));
-      const combination = kitchen.combination(["thyme", "garlic"]).ingredients;
+      const suggestFrom = async () => {
+        const kitchen = await expectKitchen(writeContent(fixture));
+        return kitchen.suggest(kitchen.combination(["thyme", "garlic", "basil"]).ingredients, []);
+      };
 
-      expect(kitchen.suggest(combination, [])).toEqual(kitchen.suggest(combination, []));
+      expect(await suggestFrom()).toEqual(await suggestFrom());
     });
   });
 

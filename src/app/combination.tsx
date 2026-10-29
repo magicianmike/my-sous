@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createContext, Suspense, useContext, useMemo, useState } from "react";
+import { createContext, Suspense, useContext, useEffect, useMemo, useState } from "react";
 import {
   COMBINATION_LIMIT,
   createKitchen,
@@ -19,9 +19,10 @@ export function hrefWith(path: string, ids: string[]): string {
   return ids.length > 0 ? `${path}?${PARAM}=${ids.join(",")}` : path;
 }
 
-type Shared = { kitchen: Kitchen; status: string; announce(message: string): void };
+/** The Kitchen, plus the latest status message about the Combination. */
+type KitchenState = { kitchen: Kitchen; status: string; announce(message: string): void };
 
-const SharedContext = createContext<Shared | null>(null);
+const KitchenContext = createContext<KitchenState | null>(null);
 
 /** Rebuilds the Kitchen in the browser from content validated at build time. */
 export function KitchenProvider({
@@ -33,17 +34,19 @@ export function KitchenProvider({
 }) {
   const kitchen = useMemo(() => createKitchen(content), [content]);
   const [status, setStatus] = useState("");
+  const pathname = usePathname();
+  useEffect(() => setStatus(""), [pathname]);
   return (
-    <SharedContext.Provider value={{ kitchen, status, announce: setStatus }}>
+    <KitchenContext.Provider value={{ kitchen, status, announce: setStatus }}>
       {children}
-    </SharedContext.Provider>
+    </KitchenContext.Provider>
   );
 }
 
-export function useKitchen(): Shared {
-  const shared = useContext(SharedContext);
-  if (!shared) throw new Error("useKitchen needs a KitchenProvider");
-  return shared;
+export function useKitchen(): KitchenState {
+  const state = useContext(KitchenContext);
+  if (!state) throw new Error("useKitchen needs a KitchenProvider");
+  return state;
 }
 
 /** The current Combination, read from the URL, and the ways to change it. */
@@ -55,30 +58,34 @@ export function useCombination() {
   const combination: Combination = kitchen.combination(param ? param.split(",") : []);
   const ids = combination.ingredients.map(({ id }) => id);
 
-  function go(next: string[]) {
-    router.push(hrefWith(pathname, next), { scroll: false });
+  function navigateTo(next: Ingredient[]) {
+    router.push(hrefWith(pathname, next.map(({ id }) => id)), { scroll: false });
   }
 
   return {
     combination,
     href: (path: string) => hrefWith(path, ids),
     add(ingredient: Ingredient) {
-      if (ids.length >= COMBINATION_LIMIT) {
+      const next = kitchen.combination([...ids, ingredient.id]);
+      if (next.overLimit.length > 0) {
         announce(
           `Your Combination already holds ${COMBINATION_LIMIT} Ingredients, the most it can, so Suggestions stay focused. Remove one to add ${ingredient.name}.`,
         );
         return;
       }
-      go([...ids, ingredient.id]);
-      announce(`${ingredient.name} added to Combination, ${ids.length + 1} of ${COMBINATION_LIMIT}.`);
+      navigateTo(next.ingredients);
+      announce(changed(ingredient, "added to", next.ingredients.length));
     },
     remove(ingredient: Ingredient) {
-      go(ids.filter((id) => id !== ingredient.id));
-      announce(
-        `${ingredient.name} removed from Combination, ${ids.length - 1} of ${COMBINATION_LIMIT}.`,
-      );
+      const next = combination.ingredients.filter((i) => i !== ingredient);
+      navigateTo(next);
+      announce(changed(ingredient, "removed from", next.length));
     },
   };
+}
+
+function changed(ingredient: Ingredient, change: string, size: number): string {
+  return `${ingredient.name} ${change} Combination, ${size} of ${COMBINATION_LIMIT}.`;
 }
 
 /** Wraps components that read the URL, which static pages can only do in the browser. */
@@ -111,14 +118,17 @@ export const AddToCombination = withSearchParams(function AddToCombination({
   ingredientId: string;
 }) {
   const { kitchen } = useKitchen();
-  const { combination, add } = useCombination();
+  const { combination, add, remove } = useCombination();
   const ingredient = kitchen.ingredient(ingredientId)!;
-  if (combination.ingredients.includes(ingredient)) {
-    return <span className="in-combination">In your Combination</span>;
-  }
+  const added = combination.ingredients.includes(ingredient);
+  // One button that changes its label, so keyboard focus stays on it after a press.
   return (
-    <button type="button" onClick={() => add(ingredient)}>
-      Add<span className="visually-hidden"> {ingredient.name} to Combination</span>
+    <button type="button" onClick={() => (added ? remove(ingredient) : add(ingredient))}>
+      {added ? "Remove" : "Add"}
+      <span className="visually-hidden">
+        {" "}
+        {ingredient.name} {added ? "from" : "to"} Combination
+      </span>
     </button>
   );
 });

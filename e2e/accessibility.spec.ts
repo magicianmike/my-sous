@@ -7,7 +7,7 @@ const combination = "?with=chicken-thigh,garlic";
 const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   ["/", (page) => page.getByRole("heading", { name: /Your Combination/ })],
   ["/ingredients/lemon", (page) => page.getByRole("button", { name: "Add Lemon to Combination" })],
-  [`/ingredients/lemon${combination}`, (page) => page.getByRole("button", { name: "Remove Garlic" })],
+  [`/ingredients/lemon${combination}`, (page) => page.getByRole("button", { name: "Remove Garlic from Combination" })],
   [`/suggestions${combination}`, (page) => page.getByRole("link", { name: "Pan sauce" })],
   [`/formulas/pan-sauce${combination}`, (page) => page.getByRole("heading", { name: "Method" })],
 ];

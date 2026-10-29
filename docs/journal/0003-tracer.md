@@ -12,13 +12,14 @@ Milestone: #5 (part of #2). The whole core journey, rough but real: from an Ingr
 
 **`suggest()` fills Slots from the Combination only, for now.** Each Slot takes the first Combination Ingredient that fits and hasn't filled another Slot. Formulas come in content order. The Pantry, best-pairing fills, ranking and rank reasons arrive in #7, #8 and #10; the `pantry` parameter is already in the interface so those tickets don't change its shape.
 
-**Method steps name Slots, not Ingredients.** A step reads `Season {protein} with salt…`, and the Formula screen fills in the chosen Ingredient, or the Slot's role ("an acid") when it's empty. The build fails if a step names a Slot the Formula doesn't have, or if any Slot can't be filled by any Ingredient.
+**Method steps name Slots, not Ingredients.** A step reads `Season {protein} with salt…`, and `suggest()` fills in the chosen Ingredient, or the Slot's role ("an acid") when it's empty. The build fails if a step names a Slot the Formula doesn't have, or if any Slot can't be filled by any Ingredient.
 
 ## Alternatives considered
 
 - **A client-side store (or localStorage) for the Combination.** Rejected: it breaks back/forward and shareable links, which #2 asks for, and the Case Study's deep links.
 - **Prerendering Suggestions for every Combination.** Rejected: with 100 Ingredients and up to four per Combination, there are millions of them.
-- **Disabling "Add" at the limit.** Rejected: a disabled button can't be focused or explain itself. The button stays active and announces why nothing was added.
+- **Disabling "Add" at the limit.** Rejected: a disabled button can't be focused or explain itself. The button stays active, and the tray shows and announces why nothing was added.
+- **Replacing "Add" with a plain "In your Combination" label.** Rejected after review: swapping the focused button for text dropped keyboard focus to the page. The same button now switches between "Add" and "Remove", so focus stays where the Cook left it.
 
 ## Evidence
 

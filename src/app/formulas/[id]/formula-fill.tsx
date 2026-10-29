@@ -13,7 +13,6 @@ export const FormulaFill = withSearchParams(function FormulaFill({
   const suggestion = kitchen
     .suggest(combination.ingredients, [])
     .find(({ formula }) => formula.id === formulaId)!;
-  const fills = new Map(suggestion.slots.map((filled) => [filled.slot.id, filled]));
 
   return (
     <>
@@ -31,13 +30,8 @@ export const FormulaFill = withSearchParams(function FormulaFill({
       </dl>
       <h2>Method</h2>
       <ol className="method">
-        {suggestion.formula.method.map((step) => (
-          <li key={step}>
-            {step.replace(/\{([^}]+)\}/g, (_, id: string) => {
-              const { slot, ingredient } = fills.get(id)!;
-              return ingredient ? ingredient.name.toLowerCase() : slot.role;
-            })}
-          </li>
+        {suggestion.method.map((step) => (
+          <li key={step}>{step}</li>
         ))}
       </ol>
     </>

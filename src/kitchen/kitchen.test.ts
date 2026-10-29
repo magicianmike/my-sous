@@ -247,6 +247,76 @@ describe("loadKitchen", () => {
     });
   });
 
+  describe("ranking Suggestions", () => {
+    const pairs = (...ids: [string, string][]) =>
+      ids.map((ingredients) => ({ ingredients, reasons: [reason("A note.")] }));
+    /** A Formula whose Slots each accept one Ingredient, by id. */
+    const formula = (id: string, slots: string[]) => ({
+      id,
+      name: id,
+      description: "A Formula.",
+      slots: slots.map((slot) => ({ id: slot, role: `some ${slot}`, accepts: slot })),
+      method: ["Cook."],
+    });
+    const fixture = {
+      ingredients: Object.fromEntries(
+        ["lamb", "mint", "lemon", "garlic", "chocolate"].map((id) => [
+          id,
+          { name: id[0].toUpperCase() + id.slice(1), slotTypes: [id] },
+        ]),
+      ),
+      pairings: pairs(["lamb", "mint"], ["lamb", "lemon"], ["lamb", "garlic"], ["lemon", "garlic"]),
+    };
+
+    async function rank(formulas: unknown[], ids: string[]) {
+      const kitchen = await expectKitchen(writeContent({ ...fixture, formulas }));
+      return kitchen.suggest(kitchen.combination(ids).ingredients, []);
+    }
+
+    it("puts Suggestions with more Pairings among their fills first", async () => {
+      const suggestions = await rank(
+        [
+          formula("loose", ["mint", "chocolate"]),
+          formula("tight", ["lamb", "lemon", "garlic"]),
+          formula("middling", ["lamb", "mint"]),
+        ],
+        ["lamb", "mint", "lemon", "garlic"],
+      );
+
+      expect(suggestions.map(({ formula }) => formula.id)).toEqual(["tight", "middling", "loose"]);
+    });
+
+    it("breaks ties by the order Formulas appear in the content", async () => {
+      const suggestions = await rank(
+        [formula("second-in-name", ["lamb", "mint"]), formula("a-first-in-name", ["lamb", "lemon"])],
+        ["lamb", "mint", "lemon"],
+      );
+
+      expect(suggestions.map(({ formula }) => formula.id)).toEqual([
+        "second-in-name",
+        "a-first-in-name",
+      ]);
+    });
+
+    it.each([
+      [["lamb", "mint", "lemon"], "Everything pairs with lamb."],
+      [["lamb", "mint"], "Lamb and mint pair well."],
+      [["lamb", "lemon", "garlic"], "Every Ingredient here pairs with every other."],
+      [["lemon", "garlic", "mint"], "Lemon and garlic pair well, but mint doesn't pair with the rest."],
+      [["mint", "chocolate"], "Mint and chocolate don't have a Pairing in MySous yet."],
+      [["mint", "chocolate", "garlic"], "None of these Ingredients pair with each other yet."],
+      [["mint"], "Only mint from your Combination fits this Formula so far."],
+      [[], "None of your Combination fits this Formula yet."],
+    ])("explains its rank when it uses %j", async (fills, expected) => {
+      const [suggestion] = await rank(
+        [formula("dish", ["lamb", "mint", "lemon", "garlic", "chocolate"])],
+        fills.length > 0 ? fills : ["nothing"],
+      );
+
+      expect(suggestion.rankReason).toBe(expected);
+    });
+  });
+
   describe("rejects content", () => {
     it("when a Pairing refers to an unknown Ingredient", async () => {
       const errors = await expectErrors(

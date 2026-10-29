@@ -167,6 +167,11 @@ button:focus-visible,
   margin-bottom: 0;
 }
 
+.rank-reason {
+  margin-top: 0.25rem;
+  font-weight: 600;
+}
+
 .slots div {
   display: flex;
   flex-wrap: wrap;

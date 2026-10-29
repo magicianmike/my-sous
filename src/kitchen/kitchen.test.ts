@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { stringify } from "yaml";
-import { loadKitchen, type Kitchen, type Suggestion } from "./index";
+import { loadKitchen, type Kitchen, type Suggestion, type Tension } from "./index";
 
 /** Frontmatter for one Ingredient file, plus its essay body. Required fields get defaults. */
 type FixtureIngredient = { name: string; body?: string } & Record<string, unknown>;
@@ -223,7 +223,10 @@ describe("loadKitchen", () => {
     it("fills each Formula's Slots from the Combination, in order, one Slot per Ingredient", async () => {
       const kitchen = await expectKitchen(writeContent(fixture));
 
-      const suggestions = kitchen.suggest(kitchen.combination(["basil", "lemon", "thyme"]).ingredients, []);
+      const { suggestions } = kitchen.suggest(
+        kitchen.combination(["basil", "lemon", "thyme"]).ingredients,
+        [],
+      );
 
       expect(suggestions.map(fills)).toEqual([
         ["pan-sauce", { aromatic: undefined, acid: "lemon", herb: "basil" }],
@@ -290,7 +293,7 @@ describe("loadKitchen", () => {
     async function plate(combination: string[], pantry: string[] = []) {
       const kitchen = await expectKitchen(writeContent(fixture));
       const ingredients = (ids: string[]) => kitchen.combination(ids).ingredients;
-      const [suggestion] = kitchen.suggest(ingredients(combination), ingredients(pantry));
+      const [suggestion] = kitchen.suggest(ingredients(combination), ingredients(pantry)).suggestions;
       return { kitchen, suggestion };
     }
 
@@ -406,6 +409,86 @@ describe("loadKitchen", () => {
     });
   });
 
+  describe("tensions", () => {
+    const ingredient = (name: string, slotType: string) => ({ name, slotTypes: [slotType] });
+    const pairing = (a: string, b: string) => ({ ingredients: [a, b], reasons: [reason("A note.")] });
+    const fixture = {
+      ingredients: {
+        chocolate: ingredient("Chocolate", "sweet"),
+        fig: ingredient("Fig", "sweet"),
+        honey: ingredient("Honey", "sweet"),
+        anchovy: ingredient("Anchovy", "salty"),
+        caper: ingredient("Caper", "salty"),
+        "sea-salt": ingredient("Sea salt", "salty"),
+        basil: ingredient("Basil", "herb"),
+        mint: ingredient("Mint", "herb"),
+      },
+      pairings: [
+        pairing("anchovy", "basil"),
+        pairing("fig", "anchovy"),
+        pairing("fig", "basil"),
+        pairing("honey", "basil"),
+        pairing("caper", "basil"),
+        pairing("sea-salt", "chocolate"),
+        pairing("mint", "chocolate"),
+      ],
+      formulas: [
+        {
+          id: "dessert",
+          name: "Dessert",
+          description: "Something sweet with a herb.",
+          slots: [
+            { id: "sweet", role: "something sweet", accepts: "sweet" },
+            { id: "herb", role: "a herb", accepts: "herb" },
+          ],
+          method: ["Serve {sweet} with {herb}."],
+        },
+      ],
+    };
+
+    async function suggestFor(ids: string[]) {
+      const kitchen = await expectKitchen(writeContent(fixture));
+      return kitchen.suggest(kitchen.combination(ids).ingredients, []);
+    }
+
+    const describeTensions = ({ tensions }: { tensions: Tension[] }) =>
+      tensions.map(({ ingredients, swaps }) => [
+        ingredients.map(({ id }) => id),
+        swaps.map(({ replace, with: replacement }) => `${replace.id} → ${replacement.id}`),
+      ]);
+
+    it("names each pair in the Combination with no Pairing, and proposes a swap for each side", async () => {
+      const result = await suggestFor(["chocolate", "anchovy", "basil"]);
+
+      expect(describeTensions(result)).toEqual([
+        // Fig pairs with anchovy and basil; caper and sea salt each pair with one, so content order.
+        [["chocolate", "anchovy"], ["chocolate → fig", "anchovy → caper"]],
+        // Mint pairs with chocolate; nothing of the same kind pairs with anchovy too.
+        [["chocolate", "basil"], ["chocolate → fig", "basil → mint"]],
+      ]);
+    });
+
+    it("reports no tensions when every Ingredient pairs with every other", async () => {
+      expect((await suggestFor(["anchovy", "basil"])).tensions).toEqual([]);
+    });
+
+    it("leaves out a swap when nothing of the same kind pairs with the rest", async () => {
+      const result = await suggestFor(["chocolate", "caper"]);
+
+      expect(describeTensions(result)).toEqual([[["chocolate", "caper"], ["caper → sea-salt"]]]);
+    });
+
+    it("still gives a Suggestion for every Formula when nothing fits or pairs", async () => {
+      const { suggestions, tensions } = await suggestFor(["anchovy", "caper", "sea-salt"]);
+
+      expect(suggestions.map(({ formula, rankReason }) => [formula.id, rankReason])).toEqual([
+        ["dessert", "None of your Combination fits this Formula yet."],
+      ]);
+      expect(suggestions[0].slots.map(({ ingredient }) => ingredient)).toEqual([undefined, undefined]);
+      expect(tensions).toHaveLength(3);
+    });
+  });
+
   describe("ranking Suggestions", () => {
     const pairs = (...ids: [string, string][]) =>
       ids.map((ingredients) => ({ ingredients, reasons: [reason("A note.")] }));
@@ -429,7 +512,7 @@ describe("loadKitchen", () => {
 
     async function rank(formulas: unknown[], ids: string[]) {
       const kitchen = await expectKitchen(writeContent({ ...fixture, formulas }));
-      return kitchen.suggest(kitchen.combination(ids).ingredients, []);
+      return kitchen.suggest(kitchen.combination(ids).ingredients, []).suggestions;
     }
 
     it("puts Suggestions with more Pairings among their fills first", async () => {

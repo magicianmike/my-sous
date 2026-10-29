@@ -81,6 +81,11 @@ export function useCombination() {
       navigateTo(next);
       announce(changed(ingredient, "removed from", next.length));
     },
+    /** Puts `replacement` where `ingredient` was, keeping the Combination's order. */
+    replace(ingredient: Ingredient, replacement: Ingredient) {
+      navigateTo(combination.ingredients.map((i) => (i === ingredient ? replacement : i)));
+      announce(`${ingredient.name} swapped for ${replacement.name.toLowerCase()} in your Combination.`);
+    },
   };
 }
 

@@ -61,6 +61,23 @@ export type Suggestion = {
   rankReason: string;
 };
 
+/** A proposal to swap one Combination Ingredient for another that pairs better with the rest. */
+export type CombinationSwap = { replace: Ingredient; with: Ingredient };
+
+/** Two Combination Ingredients with no Pairing between them, and swaps that would ease it. */
+export type Tension = {
+  ingredients: [Ingredient, Ingredient];
+  /** At most one per side: the same kind of Ingredient that pairs with most of the rest. */
+  swaps: CombinationSwap[];
+};
+
+/** What `suggest` gives for a Combination: ranked Suggestions, never empty while Formulas exist. */
+export type SuggestResult = {
+  suggestions: Suggestion[];
+  /** Pairs of Combination Ingredients with no Pairing between them, in Combination order. */
+  tensions: Tension[];
+};
+
 export type Kitchen = {
   /** The validated content this Kitchen was built from, to rebuild it in the browser. */
   content: KitchenContent;
@@ -77,7 +94,7 @@ export type Kitchen = {
    * number of Pairings among the Ingredients the Cook chose, from the Combination or Pantry, not
    * those suggested by Pairing), with ties in content order. Deterministic.
    */
-  suggest(combination: Ingredient[], pantry: Ingredient[]): Suggestion[];
+  suggest(combination: Ingredient[], pantry: Ingredient[]): SuggestResult;
   /** The same Suggestion with one Slot holding the Cook's choice; every other fill is kept. */
   swap(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
 };
@@ -195,6 +212,32 @@ export function createKitchen(content: KitchenContent): Kitchen {
       .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, rest) }))
       .sort((a, b) => b.score - a.score);
 
+  /**
+   * The Ingredient to propose in place of `replace`: one that shares a Slot type with it (so it
+   * plays the same role), isn't in the Combination, and pairs with most of the rest; ties in
+   * content order. None if nothing pairs with the rest at all.
+   */
+  function proposeSwap(replace: Ingredient, combination: Ingredient[]): CombinationSwap[] {
+    const rest = combination.filter((other) => other !== replace);
+    const [best] = [...ingredients.values()]
+      .filter((i) => !combination.includes(i) && i.slotTypes.some((t) => replace.slotTypes.includes(t)))
+      .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, rest) }))
+      .sort((a, b) => b.score - a.score);
+    return best?.score > 0 ? [{ replace, with: best.ingredient }] : [];
+  }
+
+  function findTensions(combination: Ingredient[]): Tension[] {
+    return combination.flatMap((a, i) =>
+      combination
+        .slice(i + 1)
+        .filter((b) => !arePaired(a, b))
+        .map((b): Tension => ({
+          ingredients: [a, b],
+          swaps: [...proposeSwap(a, combination), ...proposeSwap(b, combination)],
+        })),
+    );
+  }
+
   /** Everything derived from a Formula's fills: justifications, alternatives, method, rank. */
   function deriveSuggestion(
     formula: Formula,
@@ -268,7 +311,12 @@ export function createKitchen(content: KitchenContent): Kitchen {
         return deriveSuggestion(formula, fills);
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
-      return suggestions.sort((a, b) => b.coherence - a.coherence).map(({ suggestion }) => suggestion);
+      return {
+        suggestions: suggestions
+          .sort((a, b) => b.coherence - a.coherence)
+          .map(({ suggestion }) => suggestion),
+        tensions: findTensions(combination),
+      };
     },
 
     swap(suggestion, slotId, ingredientId) {

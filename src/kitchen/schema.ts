@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PAIRING_REASON_CATEGORIES } from "./kitchen";
+import { PAIRING_REASON_CATEGORIES } from "./categories";
 
 /** The content format, as checked at build time. */
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { inSentence, joinWithAnd, type Cuisine, type PairingGroup } from "@/kitchen/kitchen";
+import { commonIn, inSentence } from "@/kitchen/kitchen";
 import { AddToCombination, CombinationLink } from "../../combination";
 import { getKitchen } from "../../kitchen";
 
@@ -16,17 +16,6 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   return { title: (await getKitchen()).ingredient(id)?.name };
-}
-
-const CATEGORY_HEADINGS: Record<PairingGroup["category"], string> = {
-  contrast: "Contrast",
-  "aromatic bridge": "Aromatic bridge",
-  texture: "Texture",
-  tradition: "Tradition",
-};
-
-function commonIn(cuisines: Cuisine[]): string {
-  return `Common in ${joinWithAnd(cuisines.map(({ name }) => name))} cooking.`;
 }
 
 export default async function IngredientPage({ params }: Props) {
@@ -74,11 +63,11 @@ export default async function IngredientPage({ params }: Props) {
       )}
 
       <h2>Pairs well with</h2>
-      {kitchen.pairingsByReason(id).map(({ category, pairings }) => {
-        const headingId = `pairings-${category.replace(" ", "-")}`;
+      {kitchen.pairingsByReason(id).map(({ category, heading, pairings }) => {
+        const headingId = `pairings-${category.replaceAll(" ", "-")}`;
         return (
           <section key={category} aria-labelledby={headingId}>
-            <h3 id={headingId}>{CATEGORY_HEADINGS[category]}</h3>
+            <h3 id={headingId}>{heading}</h3>
             <ul className="pairings">
               {pairings.map(({ ingredient: paired, reasons, cuisines }) => (
                 <li key={paired.id}>
@@ -95,7 +84,7 @@ export default async function IngredientPage({ params }: Props) {
                             More
                             <span className="visually-hidden">
                               {" "}
-                              about {inSentence(ingredient)} and {inSentence(paired)}
+                              about {inSentence(ingredient)} and {inSentence(paired)}, {category}
                             </span>
                           </summary>
                           {reason.detail && <p>{reason.detail}</p>}

@@ -1,3 +1,8 @@
+import {
+  PAIRING_REASON_CATEGORIES,
+  PAIRING_REASON_HEADINGS,
+  type PairingReasonCategory,
+} from "./categories";
 import type {
   Citation,
   Cuisine,
@@ -20,11 +25,15 @@ export type PairingView = {
   citations: Citation[];
 };
 
-/** The kinds of Pairing Reason, in the order an Ingredient's Pairings are grouped. */
-export const PAIRING_REASON_CATEGORIES = ["contrast", "aromatic bridge", "texture", "tradition"] as const;
+export { PAIRING_REASON_CATEGORIES } from "./categories";
 
 /** An Ingredient's Pairings for one Pairing Reason category, each with only that category's reasons. */
-export type PairingGroup = { category: PairingReason["category"]; pairings: PairingView[] };
+export type PairingGroup = {
+  category: PairingReasonCategory;
+  /** The category as the Cook sees it, such as "Aromatic bridge". */
+  heading: string;
+  pairings: PairingView[];
+};
 
 /** One thing a Blend typically includes, linked to its Ingredient when that's in MySous. */
 export type BlendComponent = { name: string; ingredient?: Ingredient };
@@ -94,8 +103,9 @@ export type Kitchen = {
   ingredients(): Ingredient[];
   ingredient(id: string): Ingredient | undefined;
   /**
-   * Ingredients whose name contains `query`, ignoring case and surrounding spaces: names that
-   * start with it first, then names with a word that does, then the rest, each alphabetical.
+   * Ingredients whose name contains every word of `query`, in any order, ignoring case, accents,
+   * apostrophes and extra spaces. Names that start with the query come first, then names where
+   * every query word starts a word, then the rest; alphabetical within each.
    */
   search(query: string): Ingredient[];
   pairingsFor(id: string): PairingView[];
@@ -186,8 +196,24 @@ function capitalise(text: string): string {
   return text[0].toUpperCase() + text.slice(1);
 }
 
+/** A name or query reduced for matching: "Za’atar" and "zaatar" match, as do "Jalapeño" and "jalapeno". */
+function forSearch(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
+    .trim();
+}
+
 /** "a", "a and b", "a, b and c". */
-export function joinWithAnd(items: string[]): string {
+/** The hedged way MySous ties something to Cuisines: "Common in Southern Italian cooking." */
+export function commonIn(cuisines: Cuisine[]): string {
+  return `Common in ${joinWithAnd(cuisines.map(({ name }) => name))} cooking.`;
+}
+
+function joinWithAnd(items: string[]): string {
   return items.length <= 1 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
 }
 
@@ -302,14 +328,20 @@ export function createKitchen(content: KitchenContent): Kitchen {
     ingredient: (id) => ingredients.get(id),
 
     search(query) {
-      const q = query.trim().toLowerCase();
+      const q = forSearch(query);
       if (!q) return [];
-      const rank = (name: string) =>
-        name.startsWith(q) ? 0 : name.split(/\s+/).some((word) => word.startsWith(q)) ? 1 : 2;
+      const queryWords = q.split(" ");
+      const rank = (name: string) => {
+        if (name.startsWith(q)) return 0;
+        const words = name.split(" ");
+        return queryWords.every((qw) => words.some((word) => word.startsWith(qw))) ? 1 : 2;
+      };
       return [...ingredients.values()]
-        .map((ingredient) => ({ ingredient, name: ingredient.name.toLowerCase() }))
-        .filter(({ name }) => name.includes(q))
-        .sort((a, b) => rank(a.name) - rank(b.name) || a.name.localeCompare(b.name))
+        .map((ingredient) => ({ ingredient, name: forSearch(ingredient.name) }))
+        .filter(({ name }) => queryWords.every((word) => name.includes(word)))
+        .map((match) => ({ ...match, rank: rank(match.name) }))
+        // Plain code-point comparison, so the order is the same in Node and every browser.
+        .sort((a, b) => a.rank - b.rank || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
         .map(({ ingredient }) => ingredient);
     },
     pairingsFor: (id) => pairingsByIngredient.get(id) ?? [],
@@ -318,6 +350,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
       const views = pairingsByIngredient.get(id) ?? [];
       return PAIRING_REASON_CATEGORIES.map((category) => ({
         category,
+        heading: PAIRING_REASON_HEADINGS[category],
         pairings: views.flatMap((view) => {
           const reasons = view.reasons.filter((reason) => reason.category === category);
           return reasons.length > 0 ? [{ ...view, reasons }] : [];

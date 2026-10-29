@@ -51,7 +51,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       await expectNoViolations(page);
 
       await page.goto("/ingredients/lemon");
-      await page.getByText("More about lemon and garlic").click();
+      await page.getByText("More about lemon and garlic, contrast").click();
       await expectNoViolations(page);
     });
 

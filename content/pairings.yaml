@@ -14,14 +14,14 @@
   reasons:
     - category: tradition
       note: Garlic softened in oil is a common base for a quick tomato sauce.
-      detail: "Cook the garlic gently in oil until fragrant but still pale, then add the tomatoes; browned garlic turns bitter and that bitterness runs through the whole sauce."
+      detail: "Cook the garlic gently in oil until fragrant, then add the tomatoes; garlic that goes past golden can turn bitter, and that bitterness can run through the whole sauce."
 
 - ingredients: [basil, garlic]
   cuisines: [ligurian]
   reasons:
     - category: tradition
       note: Pounded together with oil, they form the base of Ligurian pesto.
-      detail: "Raw garlic is sharp, so a small amount goes a long way against a large handful of basil; pounding rather than blending keeps the basil from turning dark and grassy."
+      detail: "Raw garlic is sharp, so a small amount usually goes a long way against a large handful of basil. Many cooks pound the two in a mortar, and some find it gives a sweeter result than a blender."
 
 - ingredients: [garlic, lemon]
   reasons:
@@ -45,7 +45,7 @@
   reasons:
     - category: tradition
       note: Usually added together at the end, as in many salsas, to brighten a dish.
-      detail: "Both are at their best raw, so add them together off the heat; the lime's acidity also keeps chopped cilantro tasting fresh for longer."
+      detail: "Both are usually added raw, off the heat, since cooking dulls cilantro's aroma and the fresh sharpness of lime juice."
 
 - ingredients: [lime, chicken-thigh]
   reasons:
@@ -89,7 +89,7 @@
   reasons:
     - category: contrast
       note: Lime's acid sharpens and balances the heat of fresh chile.
-      detail: "Taste as you go: lime makes chile heat seem brighter and shorter, so a squeeze can balance a dish that's turned out hotter than you meant."
+      detail: "Taste as you go: many cooks find a squeeze of lime helps balance a dish that's turned out hotter than they meant."
 
 - ingredients: [chile, garlic]
   cuisines: [southern-italian]

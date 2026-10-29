@@ -196,9 +196,9 @@ describe("loadKitchen", () => {
   });
 
   describe("search", () => {
-    const names = ["Lemon", "Lime", "Chicken thigh", "Fresh chile", "Basil", "Scallion"];
+    const names = ["Lemon", "Lime", "Chicken thigh", "Fresh chile", "Basil", "Scallion", "Za'atar", "Jalapeño"];
     const ingredients = Object.fromEntries(
-      names.map((name) => [name.toLowerCase().replace(" ", "-"), { name }]),
+      names.map((name, i) => [`ingredient-${i}`, { name }]),
     );
 
     async function search(query: string) {
@@ -214,7 +214,22 @@ describe("loadKitchen", () => {
     it("puts names that start with the query first, then words that do, then the rest", async () => {
       expect(await search("ch")).toEqual(["Chicken thigh", "Fresh chile"]);
       // Within each group, alphabetical.
-      expect(await search("l")).toEqual(["Lemon", "Lime", "Basil", "Fresh chile", "Scallion"]);
+      expect(await search("l")).toEqual([
+        "Lemon",
+        "Lime",
+        "Basil",
+        "Fresh chile",
+        "Jalapeño",
+        "Scallion",
+      ]);
+    });
+
+    it("ignores accents, apostrophes, extra spaces and word order", async () => {
+      expect(await search("zaatar")).toEqual(["Za'atar"]);
+      expect(await search("Za’atar")).toEqual(["Za'atar"]);
+      expect(await search("jalapeno")).toEqual(["Jalapeño"]);
+      expect(await search("chicken   thigh")).toEqual(["Chicken thigh"]);
+      expect(await search("thigh chicken")).toEqual(["Chicken thigh"]);
     });
 
     it("finds nothing for an empty query or a name not in MySous", async () => {

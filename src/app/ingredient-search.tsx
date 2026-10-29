@@ -35,12 +35,15 @@ export const IngredientSearch = withSearchParams(
     }
 
     function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      if ((event.key === "ArrowDown" || event.key === "ArrowUp") && results.length > 0) {
         event.preventDefault();
         setOpen(true);
-        const step = event.key === "ArrowDown" ? 1 : -1;
-        setActive((current) => Math.min(Math.max(current + step, 0), results.length - 1));
-      } else if (event.key === "Enter" && results.length > 0) {
+        // From no selection, Down goes to the first match and Up to the last; both wrap.
+        const n = results.length;
+        setActive((current) =>
+          event.key === "ArrowDown" ? (current + 1) % n : current <= 0 ? n - 1 : current - 1,
+        );
+      } else if (event.key === "Enter" && expanded) {
         event.preventDefault();
         choose(results[Math.max(active, 0)]);
       } else if (event.key === "Escape") {
@@ -66,6 +69,7 @@ export const IngredientSearch = withSearchParams(
             setActive(-1);
           }}
           onKeyDown={onKeyDown}
+          onFocus={() => setOpen(true)}
           onBlur={() => setOpen(false)}
         />
         <ul id={LISTBOX} role="listbox" aria-label="Matching ingredients" hidden={!expanded}>
@@ -86,9 +90,11 @@ export const IngredientSearch = withSearchParams(
         <p role="status" className="notice">
           {!typed
             ? ""
-            : results.length > 0
-              ? `${results.length} ${results.length === 1 ? "ingredient" : "ingredients"} found.`
-              : `“${typed}” isn’t in MySous yet.`}
+            : results.length === 0
+              ? `“${typed}” isn’t in MySous yet.`
+              : expanded
+                ? `${results.length} ${results.length === 1 ? "ingredient" : "ingredients"} found.`
+                : ""}
         </p>
         {typed && results.length === 0 && (
           <p>

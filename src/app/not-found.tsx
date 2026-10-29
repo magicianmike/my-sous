@@ -5,8 +5,8 @@ export default function NotFound() {
     <>
       <h1>This isn’t in MySous yet</h1>
       <p>
-        MySous covers a curated set of ingredients, and this one isn’t among them yet.{" "}
-        <CombinationLink href="/">Find an ingredient that is</CombinationLink>.
+        MySous covers a curated set of ingredients and dishes, and this page isn’t among them yet.{" "}
+        <CombinationLink href="/">Find an ingredient</CombinationLink>.
       </p>
     </>
   );

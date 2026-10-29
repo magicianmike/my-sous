@@ -29,10 +29,13 @@ body {
   font: 1.0625rem/1.55 system-ui, sans-serif;
 }
 
-header,
+header {
+  max-width: 64rem;
+  margin: 0 auto 1rem;
+}
+
 main {
   max-width: 40rem;
-  margin: 0 auto;
 }
 
 header {
@@ -71,4 +74,124 @@ ul {
 .pairings p {
   margin: 0;
   color: var(--muted);
+}
+
+.app {
+  max-width: 64rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 56rem) {
+  .app {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    align-items: start;
+  }
+
+  .tray {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+main {
+  margin: 0;
+  min-width: 0;
+}
+
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+}
+
+button,
+a.primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--link);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--link);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.primary {
+  background: var(--link);
+  color: var(--bg);
+}
+
+button:focus-visible,
+[tabindex="-1"]:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
+
+.in-combination,
+.count,
+.notice {
+  color: var(--muted);
+}
+
+.tray {
+  padding: 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+}
+
+.tray h2 {
+  margin-top: 0;
+  font-size: 1.125rem;
+}
+
+.tray li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-block: 0.25rem;
+}
+
+.suggestions li {
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.suggestions h2 {
+  margin-bottom: 0;
+}
+
+.slots div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+}
+
+.slots dt::after {
+  content: ":";
+}
+
+.slots dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.method li {
+  margin-bottom: 0.5rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

@@ -3,83 +3,42 @@ import { basename, join } from "node:path";
 import matter from "gray-matter";
 import { parse } from "yaml";
 import { z } from "zod";
+import { createKitchen, type Kitchen } from "./kitchen";
+import {
+  cuisineSchema,
+  formulaSchema,
+  ingredientSchema,
+  pairingSchema,
+  type IngredientContent,
+  type KitchenContent,
+} from "./schema";
 
-const cuisineSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  description: z.string().min(1),
-});
+export * from "./kitchen";
 
-const ingredientSchema = z.object({
-  name: z.string().min(1),
-  category: z.string().min(1),
-  /** For a Blend: what it typically includes, in plain words. */
-  typicallyIncludes: z.array(z.string().min(1)).optional(),
-  cuisines: z.array(z.string()).default([]),
-  slotTypes: z.array(z.string().min(1)).default([]),
-  tip: z.string().min(1),
-  culturalContext: z.string().min(1).optional(),
-  essay: z.string().min(1, "the Ingredient needs an essay below its frontmatter"),
-});
-
-const pairingReasonSchema = z.object({
-  category: z.enum(["contrast", "aromatic bridge", "texture", "tradition"]),
-  note: z.string().min(1),
-  detail: z.string().min(1).optional(),
-});
-
-const citationSchema = z.object({
-  title: z.string().min(1),
-  url: z.url().optional(),
-});
-
-const pairingSchema = z.object({
-  ingredients: z.tuple([z.string(), z.string()]),
-  reasons: z.array(pairingReasonSchema).default([]),
-  cuisines: z.array(z.string()).default([]),
-  citations: z.array(citationSchema).default([]),
-});
-
-export type Cuisine = z.infer<typeof cuisineSchema>;
-export type PairingReason = z.infer<typeof pairingReasonSchema>;
-export type Citation = z.infer<typeof citationSchema>;
-export type Ingredient = { id: string } & Omit<z.infer<typeof ingredientSchema>, "cuisines"> & {
-  cuisines: Cuisine[];
-};
-
-/** A Pairing seen from one of its Ingredients: the other Ingredient and why they work. */
-export type PairingView = {
-  ingredient: Ingredient;
-  reasons: PairingReason[];
-  cuisines: Cuisine[];
-  citations: Citation[];
-};
-
-export type Kitchen = {
-  ingredients(): Ingredient[];
-  ingredient(id: string): Ingredient | undefined;
-  pairingsFor(id: string): PairingView[];
-};
+/** How a method step refers to a Slot: {slotId}. */
+const SLOT_REFERENCE = /\{([^}]+)\}/g;
 
 export type ContentError = { file: string; message: string };
 
 export type LoadResult = { ok: true; kitchen: Kitchen } | { ok: false; errors: ContentError[] };
 
-type RawIngredient = { id: string; file: string } & z.infer<typeof ingredientSchema>;
-type RawPairing = z.infer<typeof pairingSchema>;
-type RawContent = { cuisines: Cuisine[]; ingredients: RawIngredient[]; pairings: RawPairing[] };
+/** Content as read, before its references are checked; each Ingredient keeps its file for errors. */
+type RawContent = Omit<KitchenContent, "ingredients"> & {
+  ingredients: (IngredientContent & { file: string })[];
+};
 
 /**
  * Reads and validates the curated content in `contentDir`: every Cuisine in `cuisines.yaml`,
  * one Markdown file per Ingredient under `ingredients/` (frontmatter plus an essay), and every
- * Pairing, stored once, in `pairings.yaml`.
+ * Pairing, stored once, in `pairings.yaml`, and every Formula in `formulas.yaml`.
  */
 export async function loadKitchen(contentDir: string): Promise<LoadResult> {
   const errors: ContentError[] = [];
   const content = await readContent(contentDir, errors);
   if (errors.length === 0) checkReferences(contentDir, content, errors);
   if (errors.length > 0) return { ok: false, errors };
-  return { ok: true, kitchen: buildKitchen(content) };
+  const ingredients = content.ingredients.map(({ file: _file, ...ingredient }) => ingredient);
+  return { ok: true, kitchen: createKitchen({ ...content, ingredients }) };
 }
 
 async function readContent(contentDir: string, errors: ContentError[]): Promise<RawContent> {
@@ -96,7 +55,7 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
     return check(z.array(schema), parse(await readFile(file, "utf8")), file) ?? [];
   }
 
-  const ingredients: RawIngredient[] = [];
+  const ingredients: RawContent["ingredients"] = [];
   const ingredientsDir = join(contentDir, "ingredients");
   for (const name of (await readdir(ingredientsDir)).filter((f) => f.endsWith(".md")).sort()) {
     const file = join(ingredientsDir, name);
@@ -109,6 +68,7 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
     cuisines: await readYamlList("cuisines.yaml", cuisineSchema),
     ingredients,
     pairings: await readYamlList("pairings.yaml", pairingSchema),
+    formulas: await readYamlList("formulas.yaml", formulaSchema),
   };
 }
 
@@ -141,31 +101,24 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
     if (a === b) report("pairs an Ingredient with itself.");
     if (reasons.length === 0) report("has no Pairing Reason.");
   }
-}
 
-function buildKitchen(content: RawContent): Kitchen {
-  const cuisines = new Map(content.cuisines.map((cuisine) => [cuisine.id, cuisine]));
-  const toCuisines = (ids: string[]) => ids.map((id) => cuisines.get(id)!);
-
-  const ingredients = new Map<string, Ingredient>(
-    content.ingredients.map(({ file: _file, ...ingredient }) => [
-      ingredient.id,
-      { ...ingredient, cuisines: toCuisines(ingredient.cuisines) },
-    ]),
-  );
-
-  const pairingsByIngredient = new Map<string, PairingView[]>();
-  for (const { ingredients: [a, b], reasons, cuisines, citations } of content.pairings) {
-    for (const [from, to] of [[a, b], [b, a]] as const) {
-      const views = pairingsByIngredient.get(from) ?? [];
-      views.push({ ingredient: ingredients.get(to)!, reasons, cuisines: toCuisines(cuisines), citations });
-      pairingsByIngredient.set(from, views);
+  const formulasFile = join(contentDir, "formulas.yaml");
+  const fillable = new Set(content.ingredients.flatMap(({ slotTypes }) => slotTypes));
+  for (const formula of content.formulas) {
+    for (const slot of formula.slots.filter(({ accepts }) => !fillable.has(accepts))) {
+      errors.push({
+        file: formulasFile,
+        message: `Formula ${formula.id} has a Slot "${slot.id}" that no Ingredient can fill (it accepts "${slot.accepts}").`,
+      });
+    }
+    const slotIds = new Set(formula.slots.map(({ id }) => id));
+    for (const [, id] of formula.method.flatMap((step) => [...step.matchAll(SLOT_REFERENCE)])) {
+      if (!slotIds.has(id)) {
+        errors.push({
+          file: formulasFile,
+          message: `Formula ${formula.id}'s method refers to unknown Slot "{${id}}".`,
+        });
+      }
     }
   }
-
-  return {
-    ingredients: () => [...ingredients.values()],
-    ingredient: (id) => ingredients.get(id),
-    pairingsFor: (id) => pairingsByIngredient.get(id) ?? [],
-  };
 }

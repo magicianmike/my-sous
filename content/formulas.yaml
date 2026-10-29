@@ -1,0 +1,57 @@
+# Formulas: adaptable dish templates. Each Slot accepts one Slot type that Ingredients list in
+# their `slotTypes`; `required` defaults to true. Method steps refer to Slots as {slotId}.
+
+- id: pan-sauce
+  name: Pan sauce
+  description: Sear something, then turn the browned bits left in the pan into a quick, glossy sauce.
+  slots:
+    - id: protein
+      role: something to sear
+      accepts: protein
+    - id: aromatic
+      role: an aromatic
+      accepts: aromatic
+    - id: acid
+      role: an acid
+      accepts: acid
+    - id: herb
+      role: a soft herb
+      accepts: soft herb
+      required: false
+    - id: heat
+      role: some heat
+      accepts: heat
+      required: false
+  method:
+    - Season {protein} with salt and sear it in a little oil over medium-high heat until well browned and cooked through (poultry to 165°F / 74°C at the thickest point). Set it aside to rest.
+    - Pour off most of the fat, lower the heat and cook {aromatic} for about a minute, until fragrant.
+    - Add a splash of water or stock and scrape up the browned bits as it bubbles and reduces a little.
+    - Off the heat, stir in a knob of butter, then add {acid} a little at a time, tasting as you go.
+    - Spoon the sauce over {protein} and finish with {herb} and {heat}.
+
+- id: sheet-pan-roast
+  name: Sheet-pan roast
+  description: Everything roasts together on one tray, so the juices season the vegetables.
+  slots:
+    - id: protein
+      role: something to roast
+      accepts: protein
+    - id: vegetable
+      role: a vegetable
+      accepts: vegetable
+    - id: aromatic
+      role: an aromatic
+      accepts: aromatic
+    - id: acid
+      role: an acid
+      accepts: acid
+      required: false
+    - id: herb
+      role: a soft herb
+      accepts: soft herb
+      required: false
+  method:
+    - Heat the oven to 425°F / 220°C.
+    - Toss {protein} and {vegetable} with oil and salt, then spread them out on a sheet pan in a single layer.
+    - Tuck in {aromatic} and roast until {protein} is cooked through (poultry to 165°F / 74°C at the thickest point) and the edges are browned, usually 25 to 40 minutes.
+    - Finish with {acid} and scatter over {herb}.

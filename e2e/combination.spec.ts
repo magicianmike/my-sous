@@ -1,0 +1,109 @@
+import { expect, test, type Locator, type Page } from "@playwright/test";
+
+function tray(page: Page) {
+  return page.getByRole("complementary", { name: /Your Combination/ });
+}
+
+/** What a Formula's Slot is filled with, found by the Slot's role. */
+function slot(page: Page, role: string) {
+  return page
+    .locator(".slots div")
+    .filter({ has: page.getByRole("term").filter({ hasText: role }) })
+    .getByRole("definition");
+}
+
+async function expectCombination(page: Page, names: string[]) {
+  await expect(tray(page).getByRole("listitem")).toHaveText(
+    names.map((name) => new RegExp(`^${name}`)),
+  );
+  await expect(tray(page).getByRole("heading")).toContainText(`${names.length} of 4`);
+}
+
+test("a Cook builds a Combination, sees Suggestions and opens a Formula", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/ingredients/chicken-thigh");
+  await page.getByRole("button", { name: "Add Chicken thigh to Combination" }).click();
+  await expectCombination(page, ["Chicken thigh"]);
+  await page.getByRole("button", { name: "Add Garlic to Combination" }).click();
+  await expectCombination(page, ["Chicken thigh", "Garlic"]);
+  await expect(page).toHaveURL(/\/ingredients\/chicken-thigh\?with=chicken-thigh,garlic$/);
+
+  await tray(page).getByRole("link", { name: "See what to make" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "What to make" })).toBeVisible();
+  await expect(page.getByRole("main").getByRole("heading", { level: 2 })).toHaveText([
+    "Pan sauce",
+    "Sheet-pan roast",
+  ]);
+
+  await page.getByRole("link", { name: "Pan sauce" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Pan sauce" })).toBeVisible();
+  await expect(slot(page, "something to sear")).toHaveText("Chicken thigh");
+  await expect(slot(page, "an aromatic")).toHaveText("Garlic");
+  await expect(slot(page, "an acid")).toHaveText("Not filled yet");
+  await expect(page.getByRole("listitem").filter({ hasText: /^Season chicken thigh/ })).toBeVisible();
+  const formulaUrl = page.url();
+
+  // Back and forward step through the Combination's history.
+  await page.goBack();
+  await expect(page).toHaveURL(/\/suggestions\?with=chicken-thigh,garlic$/);
+  await page.goBack();
+  await expectCombination(page, ["Chicken thigh", "Garlic"]);
+  await page.goBack();
+  await expectCombination(page, ["Chicken thigh"]);
+  await page.goForward();
+  await expectCombination(page, ["Chicken thigh", "Garlic"]);
+
+  // A copied link reopens the exact Combination.
+  const reopened = await context.newPage();
+  await reopened.goto(formulaUrl);
+  await expect(slot(reopened, "something to sear")).toHaveText("Chicken thigh");
+  await expectCombination(reopened, ["Chicken thigh", "Garlic"]);
+});
+
+test("unknown Ingredients in a link are dropped with a notice", async ({ page }) => {
+  await page.goto("/suggestions?with=lemon,unicorn");
+  await expectCombination(page, ["Lemon"]);
+  await expect(tray(page)).toContainText("aren’t in MySous yet, so they’re left out: unicorn.");
+});
+
+test("a full Combination says why nothing more can be added", async ({ page }) => {
+  await page.goto("/ingredients/garlic?with=lemon,lime,basil,tomato");
+  await page.getByRole("button", { name: "Add Garlic to Combination" }).click();
+  await expect(page.getByRole("status")).toHaveText(
+    "Your Combination already holds 4 Ingredients, the most it can, so Suggestions stay focused. Remove one to add Garlic.",
+  );
+  await expectCombination(page, ["Lemon", "Lime", "Basil", "Tomato"]);
+});
+
+test("removing an Ingredient updates the Combination and announces it", async ({ page }) => {
+  await page.goto("/ingredients/lemon?with=lemon,garlic");
+  await tray(page).getByRole("button", { name: "Remove Lemon" }).click();
+  await expectCombination(page, ["Garlic"]);
+  await expect(page.getByRole("status")).toHaveText("Lemon removed from Combination, 1 of 4.");
+});
+
+async function tabTo(page: Page, target: Locator) {
+  for (let i = 0; i < 80; i++) {
+    await page.keyboard.press("Tab");
+    if (await target.evaluate((el) => el === document.activeElement)) return;
+  }
+  throw new Error(`Tab never reached ${target}`);
+}
+
+test("the whole journey works with the keyboard alone", async ({ page }) => {
+  await page.goto("/ingredients/chicken-thigh");
+  await tabTo(page, page.getByRole("button", { name: "Add Chicken thigh to Combination" }));
+  await page.keyboard.press("Enter");
+  await expectCombination(page, ["Chicken thigh"]);
+  await tabTo(page, page.getByRole("button", { name: "Add Garlic to Combination" }));
+  await page.keyboard.press("Enter");
+  await expectCombination(page, ["Chicken thigh", "Garlic"]);
+  await tabTo(page, page.getByRole("link", { name: "See what to make" }));
+  await page.keyboard.press("Enter");
+  await tabTo(page, page.getByRole("link", { name: "Pan sauce" }));
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { level: 1, name: "Pan sauce" })).toBeVisible();
+  await expect(slot(page, "an aromatic")).toHaveText("Garlic");
+});

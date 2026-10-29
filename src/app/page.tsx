@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { CombinationLink } from "./combination";
 import { getKitchen } from "./kitchen";
 
 export default async function Home() {
@@ -10,7 +10,7 @@ export default async function Home() {
       <ul className="ingredients">
         {kitchen.ingredients().map((ingredient) => (
           <li key={ingredient.id}>
-            <Link href={`/ingredients/${ingredient.id}`}>{ingredient.name}</Link>
+            <CombinationLink href={`/ingredients/${ingredient.id}`}>{ingredient.name}</CombinationLink>
           </li>
         ))}
       </ul>

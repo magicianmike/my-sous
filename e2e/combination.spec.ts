@@ -90,7 +90,7 @@ test("a Combination that doesn't pair names the tension, and a swap resolves it"
   await expect(tensions.getByRole("listitem")).toHaveText([
     "Chicken thigh and basil don’t have a Pairing in MySous.",
   ]);
-  await expect(tensions).toContainText("Swap one?");
+  await expect(tensions).toContainText("Swap or remove one?");
   // The closest Suggestions still show, with their gaps.
   await expect(suggestionList(page).getByRole("heading")).toHaveText(["Pan sauce", "Sheet-pan roast"]);
 
@@ -111,14 +111,25 @@ test("a Combination that doesn't pair names the tension, and a swap resolves it"
   await expect(tensions).toBeVisible();
 });
 
-test("each swap is offered once, even when it eases several tensions", async ({ page }) => {
+test("every Ingredient in a tension gets one next step, and removing works too", async ({
+  page,
+}) => {
   await page.goto("/suggestions?with=chicken-thigh,basil,ginger");
   const tensions = page.getByRole("region", { name: "Not everything pairs yet" });
-  await expect(tensions.getByRole("listitem")).toHaveCount(2);
+  await expect(tensions.getByRole("listitem")).toHaveText([
+    "Chicken thigh and basil don’t have a Pairing in MySous.",
+    "Basil and ginger don’t have a Pairing in MySous.",
+  ]);
+  // Garlic pairs with chicken thigh and basil; nothing pairs with all the rest for the others.
   await expect(tensions.getByRole("button")).toHaveText([
-    "Swap basil for cilantro",
+    "Remove chicken thigh",
+    "Remove basil",
     "Swap ginger for garlic",
   ]);
+
+  await tensions.getByRole("button", { name: "Remove basil" }).click();
+  await expectCombination(page, ["Chicken thigh", "Ginger"]);
+  await expect(tensions).toBeHidden();
 });
 
 test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page }) => {

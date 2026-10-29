@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import type { Ingredient, Tension } from "@/kitchen/kitchen";
+import { inSentence, type CombinationFix, type Tension } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
 
 export const SuggestionList = withSearchParams(
@@ -18,21 +18,18 @@ export const SuggestionList = withSearchParams(
       );
     }
 
-    const { suggestions, tensions } = kitchen.suggest(combination.ingredients, []);
-    // Resolving a tension removes the button that was pressed, so focus moves to the Suggestions.
-    const then = (change: () => void) => () => {
-      change();
+    const { suggestions, tensions, fixes } = kitchen.suggest(combination.ingredients, []);
+    // Applying a fix removes the button that was pressed, so focus moves to the Suggestions.
+    function applyFix({ ingredient, replacement }: CombinationFix) {
+      if (replacement) replace(ingredient, replacement);
+      else remove(ingredient);
       heading.current?.focus();
-    };
+    }
 
     return (
       <>
         {tensions.length > 0 && (
-          <Tensions
-            tensions={tensions}
-            onSwap={(ingredient, replacement) => then(() => replace(ingredient, replacement))}
-            onRemove={(ingredient) => then(() => remove(ingredient))}
-          />
+          <Tensions tensions={tensions} fixes={fixes} onFix={applyFix} />
         )}
         <h2 id="suggestions-heading" ref={heading} tabIndex={-1}>
           Suggestions
@@ -62,23 +59,19 @@ export const SuggestionList = withSearchParams(
   () => <p>Finding Suggestions…</p>,
 );
 
-/** Every tension in one note, then each swap (or removal) that would help, offered once. */
+/** Every tension, then the one fix offered for each Ingredient involved. */
 function Tensions({
   tensions,
-  onSwap,
-  onRemove,
+  fixes,
+  onFix,
 }: {
   tensions: Tension[];
-  onSwap: (ingredient: Ingredient, replacement: Ingredient) => () => void;
-  onRemove: (ingredient: Ingredient) => () => void;
+  fixes: CombinationFix[];
+  onFix: (fix: CombinationFix) => void;
 }) {
-  const lower = (ingredient: Ingredient) => ingredient.name.toLowerCase();
-  const swaps = [
-    ...new Map(
-      tensions.flatMap(({ swaps }) => swaps).map((swap) => [`${swap.replace.id}>${swap.with.id}`, swap]),
-    ).values(),
-  ];
-  const involved = [...new Set(tensions.flatMap(({ ingredients }) => ingredients))];
+  const swaps = fixes.filter(({ replacement }) => replacement).length;
+  const prompt =
+    swaps === fixes.length ? "Swap one?" : swaps === 0 ? "Removing one would help." : "Swap or remove one?";
 
   return (
     <section className="tensions" aria-labelledby="tensions-heading">
@@ -86,27 +79,19 @@ function Tensions({
       <ul>
         {tensions.map(({ ingredients: [a, b] }) => (
           <li key={`${a.id}+${b.id}`}>
-            {a.name} and {lower(b)} don&rsquo;t have a Pairing in MySous.
+            {a.name} and {inSentence(b)} don&rsquo;t have a Pairing in MySous.
           </li>
         ))}
       </ul>
-      <p>{swaps.length > 0 ? "Swap one?" : "Removing one would help."}</p>
+      <p>{prompt}</p>
       <div className="actions">
-        {swaps.length > 0
-          ? swaps.map(({ replace, with: replacement }) => (
-              <button
-                key={`${replace.id}>${replacement.id}`}
-                type="button"
-                onClick={onSwap(replace, replacement)}
-              >
-                Swap {lower(replace)} for {lower(replacement)}
-              </button>
-            ))
-          : involved.map((ingredient) => (
-              <button key={ingredient.id} type="button" onClick={onRemove(ingredient)}>
-                Remove {lower(ingredient)}
-              </button>
-            ))}
+        {fixes.map((fix) => (
+          <button key={fix.ingredient.id} type="button" onClick={() => onFix(fix)}>
+            {fix.replacement
+              ? `Swap ${inSentence(fix.ingredient)} for ${inSentence(fix.replacement)}`
+              : `Remove ${inSentence(fix.ingredient)}`}
+          </button>
+        ))}
       </div>
     </section>
   );

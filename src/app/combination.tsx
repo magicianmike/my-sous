@@ -6,6 +6,7 @@ import { createContext, Suspense, useContext, useEffect, useMemo, useState } fro
 import {
   COMBINATION_LIMIT,
   createKitchen,
+  inSentence,
   type Combination,
   type Ingredient,
   type Kitchen,
@@ -84,7 +85,7 @@ export function useCombination() {
     /** Puts `replacement` where `ingredient` was, keeping the Combination's order. */
     replace(ingredient: Ingredient, replacement: Ingredient) {
       navigateTo(combination.ingredients.map((i) => (i === ingredient ? replacement : i)));
-      announce(`${ingredient.name} swapped for ${replacement.name.toLowerCase()} in your Combination.`);
+      announce(`${ingredient.name} swapped for ${inSentence(replacement)} in your Combination.`);
     },
   };
 }

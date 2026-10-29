@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { stringify } from "yaml";
-import { loadKitchen, type Kitchen, type Suggestion, type Tension } from "./index";
+import { loadKitchen, type Kitchen, type Suggestion, type SuggestResult } from "./index";
 
 /** Frontmatter for one Ingredient file, plus its essay body. Required fields get defaults. */
 type FixtureIngredient = { name: string; body?: string } & Record<string, unknown>;
@@ -451,31 +451,39 @@ describe("loadKitchen", () => {
       return kitchen.suggest(kitchen.combination(ids).ingredients, []);
     }
 
-    const describeTensions = ({ tensions }: { tensions: Tension[] }) =>
-      tensions.map(({ ingredients, swaps }) => [
-        ingredients.map(({ id }) => id),
-        swaps.map(({ replace, with: replacement }) => `${replace.id} → ${replacement.id}`),
-      ]);
+    const summarise = ({ tensions, fixes }: SuggestResult) => ({
+      tensions: tensions.map(({ ingredients }) => ingredients.map(({ id }) => id)),
+      fixes: fixes.map(({ ingredient, replacement }) =>
+        replacement ? `swap ${ingredient.id} for ${replacement.id}` : `remove ${ingredient.id}`,
+      ),
+    });
 
-    it("names each pair in the Combination with no Pairing, and proposes a swap for each side", async () => {
-      const result = await suggestFor(["chocolate", "anchovy", "basil"]);
-
-      expect(describeTensions(result)).toEqual([
-        // Fig pairs with anchovy and basil; caper and sea salt each pair with one, so content order.
-        [["chocolate", "anchovy"], ["chocolate → fig", "anchovy → caper"]],
-        // Mint pairs with chocolate; nothing of the same kind pairs with anchovy too.
-        [["chocolate", "basil"], ["chocolate → fig", "basil → mint"]],
-      ]);
+    it("names each pair with no Pairing, and gives every Ingredient involved one fix", async () => {
+      expect(summarise(await suggestFor(["chocolate", "anchovy", "basil"]))).toEqual({
+        tensions: [
+          ["chocolate", "anchovy"],
+          ["chocolate", "basil"],
+        ],
+        fixes: [
+          // Fig pairs with anchovy and basil, so swapping it in leaves no tension.
+          "swap chocolate for fig",
+          // Sea salt pairs with chocolate but not basil, and caper the reverse: neither resolves it.
+          "remove anchovy",
+          // Mint pairs with chocolate but not anchovy.
+          "remove basil",
+        ],
+      });
     });
 
     it("reports no tensions when every Ingredient pairs with every other", async () => {
-      expect((await suggestFor(["anchovy", "basil"])).tensions).toEqual([]);
+      expect(summarise(await suggestFor(["anchovy", "basil"]))).toEqual({ tensions: [], fixes: [] });
     });
 
-    it("leaves out a swap when nothing of the same kind pairs with the rest", async () => {
-      const result = await suggestFor(["chocolate", "caper"]);
-
-      expect(describeTensions(result)).toEqual([[["chocolate", "caper"], ["caper → sea-salt"]]]);
+    it("only proposes a swap that pairs with the whole rest of the Combination", async () => {
+      expect(summarise(await suggestFor(["chocolate", "caper"]))).toEqual({
+        tensions: [["chocolate", "caper"]],
+        fixes: ["remove chocolate", "swap caper for sea-salt"],
+      });
     });
 
     it("still gives a Suggestion for every Formula when nothing fits or pairs", async () => {

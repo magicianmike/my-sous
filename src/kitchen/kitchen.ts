@@ -61,21 +61,22 @@ export type Suggestion = {
   rankReason: string;
 };
 
-/** A proposal to swap one Combination Ingredient for another that pairs better with the rest. */
-export type CombinationSwap = { replace: Ingredient; with: Ingredient };
+/** Two Combination Ingredients with no Pairing between them. */
+export type Tension = { ingredients: [Ingredient, Ingredient] };
 
-/** Two Combination Ingredients with no Pairing between them, and swaps that would ease it. */
-export type Tension = {
-  ingredients: [Ingredient, Ingredient];
-  /** At most one per side: the same kind of Ingredient that pairs with most of the rest. */
-  swaps: CombinationSwap[];
-};
+/**
+ * The next step for one Ingredient in a tension: swap it for `replacement`, which pairs with
+ * all the rest of the Combination, or, when nothing does, remove it.
+ */
+export type CombinationFix = { ingredient: Ingredient; replacement?: Ingredient };
 
 /** What `suggest` gives for a Combination: ranked Suggestions, never empty while Formulas exist. */
 export type SuggestResult = {
   suggestions: Suggestion[];
   /** Pairs of Combination Ingredients with no Pairing between them, in Combination order. */
   tensions: Tension[];
+  /** One fix for each Ingredient in a tension, in Combination order. */
+  fixes: CombinationFix[];
 };
 
 export type Kitchen = {
@@ -124,7 +125,7 @@ function explainFill(slot: Slot, fill: Fill, justification: PairingView | undefi
 }
 
 /** How an Ingredient is named mid-sentence, as in "season chicken thigh". */
-function inSentence(ingredient: Ingredient): string {
+export function inSentence(ingredient: Ingredient): string {
   return ingredient.name.toLowerCase();
 }
 
@@ -213,29 +214,31 @@ export function createKitchen(content: KitchenContent): Kitchen {
       .sort((a, b) => b.score - a.score);
 
   /**
-   * The Ingredient to propose in place of `replace`: one that shares a Slot type with it (so it
-   * plays the same role), isn't in the Combination, and pairs with most of the rest; ties in
-   * content order. None if nothing pairs with the rest at all.
+   * Tensions in a Combination, and one fix per Ingredient involved. A swap must share a Slot
+   * type with the Ingredient it replaces (so it plays the same role), not be in the Combination
+   * already, and pair with all the rest, so accepting it leaves that Ingredient in no tension.
+   * The first such Ingredient in content order is proposed; with none, the fix is removal.
    */
-  function proposeSwap(replace: Ingredient, combination: Ingredient[]): CombinationSwap[] {
-    const rest = combination.filter((other) => other !== replace);
-    const [best] = [...ingredients.values()]
-      .filter((i) => !combination.includes(i) && i.slotTypes.some((t) => replace.slotTypes.includes(t)))
-      .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, rest) }))
-      .sort((a, b) => b.score - a.score);
-    return best?.score > 0 ? [{ replace, with: best.ingredient }] : [];
-  }
-
-  function findTensions(combination: Ingredient[]): Tension[] {
-    return combination.flatMap((a, i) =>
+  function findTensions(combination: Ingredient[]): Pick<SuggestResult, "tensions" | "fixes"> {
+    const tensions = combination.flatMap((a, i) =>
       combination
         .slice(i + 1)
         .filter((b) => !arePaired(a, b))
-        .map((b): Tension => ({
-          ingredients: [a, b],
-          swaps: [...proposeSwap(a, combination), ...proposeSwap(b, combination)],
-        })),
+        .map((b): Tension => ({ ingredients: [a, b] })),
     );
+    const fixes = combination
+      .filter((ingredient) => tensions.some(({ ingredients }) => ingredients.includes(ingredient)))
+      .map((ingredient): CombinationFix => {
+        const rest = combination.filter((other) => other !== ingredient);
+        const replacement = [...ingredients.values()].find(
+          (candidate) =>
+            !combination.includes(candidate) &&
+            candidate.slotTypes.some((type) => ingredient.slotTypes.includes(type)) &&
+            rest.every((other) => arePaired(candidate, other)),
+        );
+        return { ingredient, replacement };
+      });
+    return { tensions, fixes };
   }
 
   /** Everything derived from a Formula's fills: justifications, alternatives, method, rank. */
@@ -315,7 +318,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
         suggestions: suggestions
           .sort((a, b) => b.coherence - a.coherence)
           .map(({ suggestion }) => suggestion),
-        tensions: findTensions(combination),
+        ...findTensions(combination),
       };
     },
 

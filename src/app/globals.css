@@ -1,0 +1,74 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fbf8f3;
+  --text: #22201c;
+  --muted: #5c564c;
+  --link: #8a3b12;
+  --rule: #e2dacd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1a17;
+    --text: #f1ece3;
+    --muted: #bdb4a6;
+    --link: #f2a675;
+    --rule: #3a3731;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0 1rem 3rem;
+  background: var(--bg);
+  color: var(--text);
+  font: 1.0625rem/1.55 system-ui, sans-serif;
+}
+
+header,
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+header {
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 600;
+}
+
+a {
+  color: var(--link);
+}
+
+a:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.ingredients li a,
+.pairings li > a {
+  display: inline-block;
+  min-height: 44px;
+  padding-block: 0.6rem;
+  font-weight: 600;
+}
+
+.pairings li {
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pairings p {
+  margin: 0;
+  color: var(--muted);
+}

@@ -1,0 +1,82 @@
+# Every Pairing is stored once, in either order. The Kitchen shows it from both Ingredients.
+# Reason categories: contrast, aromatic bridge, texture, tradition.
+
+- ingredients: [tomato, basil]
+  reasons:
+    - category: tradition
+      note: Basil's sweet, peppery aroma is the usual finishing herb for ripe tomatoes in Italian cooking.
+
+- ingredients: [tomato, garlic]
+  reasons:
+    - category: tradition
+      note: Garlic softened in oil is a common base for a quick tomato sauce.
+
+- ingredients: [basil, garlic]
+  reasons:
+    - category: tradition
+      note: Pounded together with oil, they form the base of Ligurian pesto.
+
+- ingredients: [garlic, lemon]
+  reasons:
+    - category: contrast
+      note: Lemon's sharpness cuts through the richness of garlic cooked in oil or butter.
+
+- ingredients: [lemon, chicken-thigh]
+  reasons:
+    - category: contrast
+      note: Lemon's acid balances the rich fat of chicken thigh.
+
+- ingredients: [garlic, chicken-thigh]
+  reasons:
+    - category: tradition
+      note: Whole garlic cloves roast alongside chicken thighs in the same pan, turning soft and mellow.
+
+- ingredients: [lime, cilantro]
+  reasons:
+    - category: tradition
+      note: Usually added together at the end, as in Mexican salsas, to brighten a dish.
+
+- ingredients: [lime, chicken-thigh]
+  reasons:
+    - category: contrast
+      note: Lime's acid sharpens rich, browned chicken thigh.
+
+- ingredients: [cilantro, chicken-thigh]
+  reasons:
+    - category: contrast
+      note: Fresh, green cilantro lifts the deep savoury flavour of cooked chicken thigh.
+
+- ingredients: [ginger, scallion]
+  reasons:
+    - category: tradition
+      note: Sizzled with hot oil, they make the Cantonese ginger-scallion sauce served with poached chicken.
+
+- ingredients: [ginger, garlic]
+  reasons:
+    - category: tradition
+      note: Often cooked together at the start of a stir-fry to season the oil.
+
+- ingredients: [scallion, chicken-thigh]
+  reasons:
+    - category: contrast
+      note: Raw scallion's sharp bite contrasts with tender, rich chicken thigh.
+
+- ingredients: [ginger, chicken-thigh]
+  reasons:
+    - category: contrast
+      note: Ginger's clean heat cuts the richness of chicken thigh in braises and soups.
+
+- ingredients: [chile, lime]
+  reasons:
+    - category: contrast
+      note: Lime's acid sharpens and balances the heat of fresh chile.
+
+- ingredients: [chile, garlic]
+  reasons:
+    - category: tradition
+      note: Warmed together in olive oil, they make the Southern Italian pasta aglio, olio e peperoncino.
+
+- ingredients: [chile, cilantro]
+  reasons:
+    - category: tradition
+      note: Chopped fresh, they're usually paired in Mexican salsas.

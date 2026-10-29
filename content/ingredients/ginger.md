@@ -1,0 +1,4 @@
+---
+name: Ginger
+category: aromatic
+---

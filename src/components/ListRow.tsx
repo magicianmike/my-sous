@@ -16,7 +16,7 @@ export function ListRow({ mark, title, action, children }: Props) {
     <div className={`${styles.row} ${mark ? styles.withMark : ""}`}>
       {mark && <div className={styles.mark}>{mark}</div>}
       <div className={styles.title}>{title}</div>
-      {action && <div className={styles.action}>{action}</div>}
+      {action && <div>{action}</div>}
       {children && <div className={styles.body}>{children}</div>}
     </div>
   );

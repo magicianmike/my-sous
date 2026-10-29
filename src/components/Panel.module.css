@@ -1,6 +1,6 @@
 .panel {
   padding: var(--space-4);
-  border: 1px solid var(--line);
+  border: var(--border-hairline) solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--surface);
 }
@@ -16,6 +16,6 @@
 .extra {
   font-family: var(--font-text);
   color: var(--ink-muted);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   font-size: var(--text-sm);
 }

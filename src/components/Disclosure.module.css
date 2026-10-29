@@ -3,9 +3,9 @@
   align-items: center;
   gap: var(--space-1);
   min-height: var(--target);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--underline-offset);
   cursor: pointer;
   list-style: none;
 }
@@ -18,14 +18,14 @@
   content: "";
   width: 0.5em;
   height: 0.5em;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(45deg) translateY(-2px);
+  border-right: var(--border-control) solid currentColor;
+  border-bottom: var(--border-control) solid currentColor;
+  transform: rotate(45deg) translateY(-0.15em);
   transition: transform var(--motion-base) var(--ease-out);
 }
 
 .disclosure[open] summary::after {
-  transform: rotate(-135deg) translate(-2px, 0);
+  transform: rotate(-135deg) translate(-0.15em, 0);
 }
 
 .body > :first-child {

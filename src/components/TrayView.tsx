@@ -1,34 +1,44 @@
 import { Button } from "./Button";
 import { Chip } from "./Chip";
-import { IngredientMark, type IngredientColour } from "./IngredientMark";
+import { IngredientMark, type IngredientLook } from "./IngredientMark";
 import { Panel } from "./Panel";
 import styles from "./TrayView.module.css";
 
-export type TrayIngredient = { id: string; name: string; colour: IngredientColour; drawing: string };
-
-type Props = {
-  ingredients: TrayIngredient[];
+type Props<T extends IngredientLook> = {
+  ingredients: T[];
+  /** The heading's id; unique per page, since it names the tray. */
+  titleId: string;
   limit: number;
   /** Ids from a link that aren't in MySous. */
   unknown?: string[];
   /** Ingredients past the limit. */
-  overLimit?: TrayIngredient[];
+  overLimit?: T[];
   /** The latest change, announced to assistive technology. */
   status?: string;
-  onRemove: (ingredient: TrayIngredient) => void;
+  onRemove: (ingredient: T) => void;
   /** "See what to make", as a link the container provides. */
   action?: React.ReactNode;
   titleRef?: React.Ref<HTMLHeadingElement>;
 };
 
 /** The Combination tray, from props alone. */
-export function TrayView({ ingredients, limit, unknown = [], overLimit = [], status = "", onRemove, action, titleRef }: Props) {
+export function TrayView<T extends IngredientLook>({
+  ingredients,
+  titleId,
+  limit,
+  unknown = [],
+  overLimit = [],
+  status = "",
+  onRemove,
+  action,
+  titleRef,
+}: Props<T>) {
   return (
     <Panel
       as="aside"
       className={styles.tray}
       title="Your Combination"
-      titleId="tray-heading"
+      titleId={titleId}
       titleExtra={`${ingredients.length} of ${limit}`}
       titleRef={titleRef}
     >

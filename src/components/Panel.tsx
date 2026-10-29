@@ -2,7 +2,7 @@ import styles from "./Panel.module.css";
 
 type Props = {
   /** The landmark element: an aside for complementary content, a section otherwise. */
-  as?: "aside" | "section" | "div";
+  as?: "aside" | "section";
   /** The panel's heading; it also names the landmark. */
   title: React.ReactNode;
   titleId: string;

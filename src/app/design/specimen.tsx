@@ -5,13 +5,14 @@ import { Button, buttonClass } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { Combobox } from "@/components/Combobox";
 import { Disclosure } from "@/components/Disclosure";
-import { IngredientMark, type IngredientColour } from "@/components/IngredientMark";
+import { IngredientMark, type IngredientLook } from "@/components/IngredientMark";
 import { ListRow } from "@/components/ListRow";
 import { Panel } from "@/components/Panel";
 import { TrayView } from "@/components/TrayView";
 import { palettes } from "@/design/tokens";
+import { COMBINATION_LIMIT } from "@/kitchen/kitchen";
 
-export type SpecimenIngredient = { id: string; name: string; colour: IngredientColour; drawing: string };
+export type SpecimenIngredient = IngredientLook;
 
 /** The design system's specimen. Components get fixture props here, never the URL or the Kitchen. */
 export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] }) {
@@ -35,18 +36,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
           return (
             <li key={token}>
               <Chip
-                leading={
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      width: "1.5rem",
-                      height: "1.5rem",
-                      borderRadius: "50%",
-                      border: "1px solid var(--ink-muted)",
-                      background: `var(--${name})`,
-                    }}
-                  />
-                }
+                leading={<span aria-hidden="true" className="swatch" style={{ background: `var(--${name})` }} />}
               >
                 {name}
               </Chip>
@@ -114,14 +104,15 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
       </Panel>
 
       <h2>Combination tray</h2>
-      <div style={{ maxWidth: "18rem" }}>
+      <div className="specimen-tray">
         <TrayView
           ingredients={tray}
-          limit={4}
+          titleId="specimen-tray-heading"
+          limit={COMBINATION_LIMIT}
           status={status}
           onRemove={(removed) => {
             setTray(tray.filter(({ id }) => id !== removed.id));
-            setStatus(`${removed.name} removed from Combination, ${tray.length - 1} of 4.`);
+            setStatus(`${removed.name} removed from Combination, ${tray.length - 1} of ${COMBINATION_LIMIT}.`);
           }}
           action={
             <a href="#combination-tray" className={buttonClass("primary")}>

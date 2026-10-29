@@ -6,12 +6,12 @@
   min-height: var(--target);
   min-width: var(--target);
   padding: 0 var(--space-4);
-  border: 2px solid var(--ink-muted);
+  border: var(--border-control) solid var(--ink-muted);
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink);
   font: inherit;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   text-decoration: none;
   cursor: pointer;
   transition: transform var(--motion-fast) var(--ease-out);
@@ -30,7 +30,7 @@
 .quiet {
   border-color: transparent;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--underline-offset);
 }
 
 .button[aria-disabled="true"] {

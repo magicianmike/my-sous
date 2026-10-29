@@ -14,8 +14,11 @@ type Props<T> = {
   noMatch: (query: string) => React.ReactNode;
   /** A next step to show under the no-match message. */
   noMatchHint?: React.ReactNode;
-  /** Words for the match count, as in "2 ingredients found." */
+  /** Words for the result count, as in "2 ingredients found." */
   countNoun?: [singular: string, plural: string];
+  /** The popup list's name; defaults to the label. */
+  listboxLabel?: string;
+  disabled?: boolean;
 };
 
 /** Type-to-find, following the ARIA combobox pattern with a listbox popup. */
@@ -27,7 +30,9 @@ export function Combobox<T>({
   onChoose,
   noMatch,
   noMatchHint,
-  countNoun = ["match", "matches"],
+  countNoun = ["result", "results"],
+  listboxLabel = label,
+  disabled = false,
 }: Props<T>) {
   const id = useId();
   const [query, setQuery] = useState("");
@@ -75,6 +80,7 @@ export function Combobox<T>({
         aria-autocomplete="list"
         aria-activedescendant={expanded && active >= 0 ? optionId(results[active]) : undefined}
         value={query}
+        disabled={disabled}
         onChange={(event) => {
           setQuery(event.target.value);
           setOpen(true);
@@ -84,7 +90,7 @@ export function Combobox<T>({
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
       />
-      <ul id={`${id}-listbox`} role="listbox" aria-label={label} className={styles.listbox} hidden={!expanded}>
+      <ul id={`${id}-listbox`} role="listbox" aria-label={listboxLabel} className={styles.listbox} hidden={!expanded}>
         {results.map((item, i) => (
           <li
             key={getKey(item)}

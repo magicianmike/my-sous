@@ -28,6 +28,6 @@
   margin: 0;
 }
 
-.tray > a {
+.tray > :is(a, button) {
   width: 100%;
 }

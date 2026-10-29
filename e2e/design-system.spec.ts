@@ -49,27 +49,39 @@ test.describe("touch targets on a phone", () => {
   }
 });
 
-test.describe("focus", () => {
-  test.skip(({ isMobile }) => isMobile, "keyboard focus is checked at desktop width");
+for (const colorScheme of ["light", "dark"] as const) {
+  test.describe(`focus in the ${colorScheme} theme`, () => {
+    test.skip(({ isMobile }) => isMobile, "keyboard focus is checked at desktop width");
+    test.use({ colorScheme });
 
-  for (const path of screens) {
-    test(`${path}: every focused control shows the same ring`, async ({ page }) => {
-      await open(page, path);
-      const rings = new Set<string>();
-      for (let i = 0; i < 40; i++) {
-        await page.keyboard.press("Tab");
-        const ring = await page.evaluate(() => {
-          const el = document.activeElement;
-          if (!el || el === document.body) return null;
-          const { outlineStyle, outlineWidth } = getComputedStyle(el);
-          return `${outlineStyle} ${outlineWidth}`;
+    for (const path of screens) {
+      test(`${path}: every focused control shows the same ring, in the focus colour`, async ({ page }) => {
+        await open(page, path);
+        const focusColour = await page.evaluate(() => {
+          // Resolve the --focus token to the browser's rgb() form, as outlines report it.
+          const probe = document.createElement("span");
+          probe.style.color = "var(--focus)";
+          document.body.append(probe);
+          const colour = getComputedStyle(probe).color;
+          probe.remove();
+          return colour;
         });
-        if (ring) rings.add(ring);
-      }
-      expect([...rings]).toEqual(["solid 3px"]);
-    });
-  }
-});
+        const rings = new Set<string>();
+        for (let i = 0; i < 40; i++) {
+          await page.keyboard.press("Tab");
+          const ring = await page.evaluate(() => {
+            const el = document.activeElement;
+            if (!el || el === document.body) return null;
+            const { outlineStyle, outlineWidth, outlineColor } = getComputedStyle(el);
+            return `${outlineStyle} ${outlineWidth} ${outlineColor}`;
+          });
+          if (ring) rings.add(ring);
+        }
+        expect([...rings]).toEqual([`solid 3px ${focusColour}`]);
+      });
+    }
+  });
+}
 
 test.describe("motion", () => {
   const motionBase = (page: Page) =>

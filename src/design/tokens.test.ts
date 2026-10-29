@@ -33,6 +33,10 @@ describe("design tokens", () => {
       ].flatMap(([theme, ink, wash, stroke]) => [
         ...(contrastRatio(ink, wash) < 4.5 ? [`${id} (${theme}): text on wash`] : []),
         ...(contrastRatio(stroke, wash) < 3 ? [`${id} (${theme}): stroke on wash`] : []),
+        // Controls sit on washes (the tray's chips), so the focus ring must show on them too.
+        ...(contrastRatio(theme === "light" ? palettes.light.focus : palettes.dark.focus, wash) < 3
+          ? [`${id} (${theme}): focus ring on wash`]
+          : []),
       ]),
     );
 

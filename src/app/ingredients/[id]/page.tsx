@@ -31,7 +31,7 @@ export default async function IngredientPage({ params }: Props) {
 
   return (
     <>
-      <section className="hero" aria-labelledby="ingredient-name" style={hueStyle(ingredient.colour)}>
+      <section className="hero hue" aria-labelledby="ingredient-name" style={hueStyle(ingredient.colour)}>
         <IngredientMark ingredient={ingredient} size="lg" />
         <div className="title">
           <h1 id="ingredient-name">{ingredient.name}</h1>
@@ -53,11 +53,16 @@ export default async function IngredientPage({ params }: Props) {
           {ingredient.essay.split(/\n\s*\n/).map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
-          <p className="tip">
-            <b>Tip</b>
-            <span>{ingredient.tip}</span>
-          </p>
-          {ingredient.culturalContext && <p className="context">{ingredient.culturalContext}</p>}
+          <div className="tip">
+            <h2>Tip</h2>
+            <p>{ingredient.tip}</p>
+          </div>
+          {ingredient.culturalContext && (
+            <>
+              <h2>Cultural context</h2>
+              <p className="context">{ingredient.culturalContext}</p>
+            </>
+          )}
         </div>
       </section>
 

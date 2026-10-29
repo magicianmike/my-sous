@@ -19,6 +19,7 @@ export const IngredientSearch = withSearchParams(
         getLabel={({ name }) => name}
         onChoose={({ id }) => router.push(href(`/ingredients/${id}`))}
         countNoun={["ingredient", "ingredients"]}
+        listboxLabel="Matching ingredients"
         noMatch={(query) => `“${query}” isn’t in MySous yet.`}
         noMatchHint={
           <>
@@ -28,9 +29,10 @@ export const IngredientSearch = withSearchParams(
       />
     );
   },
-  // Before the browser takes over, the same field with nothing to search yet.
+  // Before the browser takes over, the same field, disabled so nothing typed is lost.
   () => (
     <Combobox<Ingredient>
+      disabled
       label="Find an ingredient"
       search={() => []}
       getKey={({ id }) => id}

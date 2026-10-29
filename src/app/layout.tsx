@@ -9,6 +9,7 @@ import { getKitchen } from "./kitchen";
 const display = Fraunces({
   subsets: ["latin"],
   axes: ["SOFT", "WONK", "opsz"],
+  style: ["normal", "italic"],
   variable: "--font-display",
   fallback: ["Georgia", "serif"],
 });

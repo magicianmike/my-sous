@@ -83,6 +83,13 @@ const scales = {
   "text-display": "clamp(2.875rem, 2rem + 3vw, 4rem)",
   "leading-tight": "1.1",
   "leading-body": "1.55",
+  "weight-regular": "400",
+  "weight-display": "600",
+  "weight-bold": "700",
+  "weight-heavy": "800",
+  "tracking-tight": "-0.01em",
+  "tracking-caps": "0.08em",
+  "underline-offset": "3px",
   // Spacing, on a 4px rhythm.
   "space-1": "0.25rem",
   "space-2": "0.5rem",
@@ -94,6 +101,11 @@ const scales = {
   "space-8": "4rem",
   "measure": "40rem",
   "page-width": "66rem",
+  "tray-width": "18rem",
+  "tile-min": "11rem",
+  // Borders: hairlines for decoration, a heavier line for controls.
+  "border-hairline": "1px",
+  "border-control": "2px",
   // Radius.
   "radius-sm": "0.625rem",
   "radius-md": "0.875rem",
@@ -104,6 +116,14 @@ const scales = {
   "shadow-floating": "0 10px 40px -8px rgb(0 0 0 / 0.35)",
   // Touch targets: the smallest a tappable control may be.
   "target": "2.75rem",
+  "chip-height": "2rem",
+  // Ingredient marks: the drawing's plate, and the drawing on it.
+  "mark-sm": "2.25rem",
+  "mark-sm-drawing": "1.75rem",
+  "mark-md": "4.25rem",
+  "mark-md-drawing": "2.875rem",
+  "mark-lg": "11rem",
+  "mark-lg-drawing": "8rem",
   // Focus.
   "focus-width": "3px",
   "focus-offset": "2px",
@@ -129,7 +149,10 @@ const declarations = (tokens: Record<string, string>) =>
 export function themeCss(): string {
   return [
     `:root { color-scheme: light dark; ${declarations(palettes.light)} ${declarations(scales)} ${declarations(motion)} }`,
-    `@media (prefers-color-scheme: dark) { :root { ${declarations(palettes.dark)} } }`,
+    // An Ingredient's colours arrive as --wash-light, --wash-dark and so on (see hueStyle);
+    // .hue picks the pair for the theme, so dark stays a token swap.
+    `.hue { --wash: var(--wash-light); --stroke: var(--stroke-light); }`,
+    `@media (prefers-color-scheme: dark) { :root { ${declarations(palettes.dark)} } .hue { --wash: var(--wash-dark); --stroke: var(--stroke-dark); } }`,
     `@media (prefers-reduced-motion: reduce) { :root { ${declarations(
       Object.fromEntries(Object.keys(motion).map((key) => [key, "0ms"])),
     )} } }`,

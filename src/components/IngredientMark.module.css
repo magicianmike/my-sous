@@ -1,6 +1,4 @@
 .mark {
-  --wash: var(--wash-light);
-  --stroke: var(--stroke-light);
   display: inline-grid;
   place-items: center;
   flex: none;
@@ -9,37 +7,29 @@
   color: var(--stroke);
 }
 
-@media (prefers-color-scheme: dark) {
-  .mark {
-    --wash: var(--wash-dark);
-    --stroke: var(--stroke-dark);
-  }
-}
-
 .sm {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--mark-sm);
+  height: var(--mark-sm);
 }
 
 .sm svg {
-  width: 1.75rem;
+  width: var(--mark-sm-drawing);
 }
 
 .md {
-  width: 4.25rem;
-  height: 4.25rem;
+  width: var(--mark-md);
+  height: var(--mark-md);
 }
 
 .md svg {
-  width: 2.875rem;
+  width: var(--mark-md-drawing);
 }
 
 .lg {
-  width: 11rem;
-  height: 11rem;
+  width: var(--mark-lg);
+  height: var(--mark-lg);
 }
 
 .lg svg {
-  width: 8rem;
-  stroke-width: 1.5;
+  width: var(--mark-lg-drawing);
 }

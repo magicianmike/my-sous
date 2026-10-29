@@ -8,7 +8,7 @@ Milestone: #7 (part of #2). Suggestions are ordered by coherence, and each one s
 
 **Ties keep the order Formulas appear in the content.** A stable sort means the content author decides between equally coherent Formulas, and the same inputs always give the same order.
 
-**The rank reason describes the shape of the fill, not a score.** The Cook never sees a number. The reason picks the most useful true sentence: "Everything pairs with garlic" when one Ingredient connects the rest, "Every Ingredient here pairs with every other" when the fill is fully connected, the pairs that work plus whatever doesn't fit ("Lemon and garlic pair well, but mint doesn't pair with the rest"), or that nothing pairs yet. Each shape has a test.
+**The rank reason describes the shape of the fill, not a score.** The Cook never sees a number. The reason picks the most useful true sentence: "Everything here pairs with garlic" when one Ingredient connects the rest, "Every Ingredient here pairs with every other" when the fill is fully connected, the pairs that work plus whatever doesn't fit ("Lemon and garlic pair well, but mint doesn't pair with the rest"), or that nothing pairs yet. Each shape has a test. Reasons only describe the Ingredients a Suggestion actually uses ("here"), since a Combination can hold two Ingredients that fit the same Slot and only one gets placed.
 
 ## Alternatives considered
 
@@ -18,4 +18,4 @@ Milestone: #7 (part of #2). Suggestions are ordered by coherence, and each one s
 ## Evidence
 
 - Vitest covers ordering, a tie, and each rank-reason shape through `loadKitchen`.
-- Playwright: `?with=chicken-thigh,garlic,tomato` ranks Sheet-pan roast ("Everything pairs with garlic.") above Pan sauce ("Chicken thigh and garlic pair well.").
+- Playwright: `?with=chicken-thigh,garlic,tomato` ranks Sheet-pan roast ("Everything here pairs with garlic.") above Pan sauce ("Chicken thigh and garlic pair well.").

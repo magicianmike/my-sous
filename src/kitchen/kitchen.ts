@@ -42,7 +42,7 @@ export type FilledSlot = {
   source?: "combination";
 };
 
-/** A Formula recommended for a Combination, with its Slots filled. */
+/** A Formula recommended for a Combination, with its Slots filled and a stated reason for its rank. */
 export type Suggestion = {
   formula: Formula;
   slots: FilledSlot[];
@@ -69,49 +69,56 @@ export type Kitchen = {
   suggest(combination: Ingredient[], pantry: Ingredient[]): Suggestion[];
 };
 
-/** Explains a Suggestion's coherence: which of its filled Ingredients pair, and which don't. */
-function explainRank(
-  filled: Ingredient[],
-  pairings: (readonly [Ingredient, Ingredient])[],
-): string {
-  const name = (ingredient: Ingredient) => ingredient.name.toLowerCase();
-  const pairsWith = (a: Ingredient, b: Ingredient) =>
-    pairings.some((pairing) => pairing.includes(a) && pairing.includes(b));
+/** How an Ingredient is named mid-sentence, as in "season chicken thigh". */
+function inSentence(ingredient: Ingredient): string {
+  return ingredient.name.toLowerCase();
+}
 
-  if (filled.length === 0) return "None of your Combination fits this Formula yet.";
-  if (filled.length === 1) {
-    return `Only ${name(filled[0])} from your Combination fits this Formula so far.`;
-  }
-  if (pairings.length === 0) {
-    return filled.length === 2
-      ? sentence(`${name(filled[0])} and ${name(filled[1])} don't have a Pairing in MySous yet.`)
+/**
+ * Explains a Suggestion's coherence in a plain sentence: which of the Ingredients it uses pair,
+ * and which don't. It only speaks about those Ingredients ("here"), because two Combination
+ * Ingredients can fit the same Slot and only one of them gets placed.
+ */
+function explainRank(
+  used: Ingredient[],
+  arePaired: (a: Ingredient, b: Ingredient) => boolean,
+  pairs: [Ingredient, Ingredient][],
+): string {
+  const name = inSentence;
+  if (used.length === 0) return "None of your Combination fits this Formula yet.";
+  if (used.length === 1) return `Only ${name(used[0])} from your Combination is used here.`;
+  if (pairs.length === 0) {
+    return used.length === 2
+      ? capitalise(`${name(used[0])} and ${name(used[1])} don't have a Pairing in MySous yet.`)
       : "None of these Ingredients pair with each other yet.";
   }
-  if (filled.length > 2 && pairings.length === (filled.length * (filled.length - 1)) / 2) {
+  if (used.length > 2 && pairs.length === (used.length * (used.length - 1)) / 2) {
     return "Every Ingredient here pairs with every other.";
   }
-  const hub = filled.find((a) => filled.every((b) => a === b || pairsWith(a, b)));
-  if (hub && filled.length > 2) return `Everything pairs with ${name(hub)}.`;
+  const hub = used.find((a) => used.every((b) => a === b || arePaired(a, b)));
+  if (hub && used.length > 2) return `Everything here pairs with ${name(hub)}.`;
 
-  const [[a, b], ...more] = pairings;
-  const alone = filled.filter((x) => filled.every((y) => x === y || !pairsWith(x, y)));
-  return sentence(
+  const [[a, b], ...more] = pairs;
+  const alone = used.filter((x) => used.every((y) => x === y || !arePaired(x, y)));
+  return capitalise(
     `${name(a)} and ${name(b)} pair well` +
       more.map(([c, d]) => `, and so do ${name(c)} and ${name(d)}`).join("") +
       (alone.length === 0
         ? "."
-        : `, but ${list(alone.map(name))} ${alone.length === 1 ? "doesn't" : "don't"} pair with the rest.`),
+        : `, but ${joinWithAnd(alone.map(name))} ${alone.length === 1 ? "doesn't" : "don't"} pair with the rest.`),
   );
 }
 
-function sentence(text: string): string {
+function capitalise(text: string): string {
   return text[0].toUpperCase() + text.slice(1);
 }
 
-function list(items: string[]): string {
+/** "a", "a and b", "a, b and c". */
+function joinWithAnd(items: string[]): string {
   return items.length <= 1 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
 }
 
+/** The same key for a Pairing whichever order its Ingredients come in. */
 function pairingKey(a: string, b: string): string {
   return [a, b].sort().join("+");
 }
@@ -129,7 +136,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
   );
 
   const pairingKeys = new Set(content.pairings.map(({ ingredients: [a, b] }) => pairingKey(a, b)));
-  const pair = (a: Ingredient, b: Ingredient) => pairingKeys.has(pairingKey(a.id, b.id));
+  const arePaired = (a: Ingredient, b: Ingredient) => pairingKeys.has(pairingKey(a.id, b.id));
 
   const pairingsByIngredient = new Map<string, PairingView[]>();
   for (const { ingredients: [a, b], reasons, cuisines, citations } of content.pairings) {
@@ -162,15 +169,15 @@ export function createKitchen(content: KitchenContent): Kitchen {
         const method = formula.method.map((step) =>
           step.replace(SLOT_REFERENCE, (_, id: string) => {
             const { slot, ingredient } = fills.get(id)!;
-            return ingredient ? ingredient.name.toLowerCase() : slot.role;
+            return ingredient ? inSentence(ingredient) : slot.role;
           }),
         );
-        const filled = slots.flatMap(({ ingredient }) => ingredient ?? []);
-        const pairings = filled.flatMap((a, i) =>
-          filled.slice(i + 1).flatMap((b) => (pair(a, b) ? [[a, b] as const] : [])),
+        const used = slots.flatMap(({ ingredient }) => ingredient ?? []);
+        const pairs = used.flatMap((a, i) =>
+          used.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
         );
-        const rankReason = explainRank(filled, pairings);
-        return { suggestion: { formula, slots, method, rankReason }, coherence: pairings.length };
+        const rankReason = explainRank(used, arePaired, pairs);
+        return { suggestion: { formula, slots, method, rankReason }, coherence: pairs.length };
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
       return suggestions.sort((a, b) => b.coherence - a.coherence).map(({ suggestion }) => suggestion);

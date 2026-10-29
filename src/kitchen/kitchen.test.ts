@@ -299,18 +299,19 @@ describe("loadKitchen", () => {
     });
 
     it.each([
-      [["lamb", "mint", "lemon"], "Everything pairs with lamb."],
+      [["lamb", "mint", "lemon"], "Everything here pairs with lamb."],
       [["lamb", "mint"], "Lamb and mint pair well."],
       [["lamb", "lemon", "garlic"], "Every Ingredient here pairs with every other."],
       [["lemon", "garlic", "mint"], "Lemon and garlic pair well, but mint doesn't pair with the rest."],
       [["mint", "chocolate"], "Mint and chocolate don't have a Pairing in MySous yet."],
       [["mint", "chocolate", "garlic"], "None of these Ingredients pair with each other yet."],
-      [["mint"], "Only mint from your Combination fits this Formula so far."],
+      [["mint"], "Only mint from your Combination is used here."],
       [[], "None of your Combination fits this Formula yet."],
     ])("explains its rank when it uses %j", async (fills, expected) => {
       const [suggestion] = await rank(
         [formula("dish", ["lamb", "mint", "lemon", "garlic", "chocolate"])],
-        fills.length > 0 ? fills : ["nothing"],
+        // An unknown id is dropped, which leaves an empty Combination.
+        fills.length > 0 ? fills : ["not-an-ingredient"],
       );
 
       expect(suggestion.rankReason).toBe(expected);

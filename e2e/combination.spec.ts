@@ -69,7 +69,7 @@ test("Suggestions are ranked by how well their Ingredients pair, with a reason",
 
   const suggestions = page.getByRole("main").getByRole("listitem");
   await expect(suggestions.getByRole("heading")).toHaveText(["Sheet-pan roast", "Pan sauce"]);
-  await expect(suggestions.nth(0)).toContainText("Everything pairs with garlic.");
+  await expect(suggestions.nth(0)).toContainText("Everything here pairs with garlic.");
   await expect(suggestions.nth(1)).toContainText("Chicken thigh and garlic pair well.");
 });
 

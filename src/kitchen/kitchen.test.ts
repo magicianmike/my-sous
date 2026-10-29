@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { stringify } from "yaml";
-import { loadKitchen, type Kitchen } from "./index";
+import { loadKitchen, type Kitchen, type Suggestion } from "./index";
 
 /** Frontmatter for one Ingredient file, plus its essay body. Required fields get defaults. */
 type FixtureIngredient = { name: string; body?: string } & Record<string, unknown>;
@@ -247,6 +247,133 @@ describe("loadKitchen", () => {
     });
   });
 
+  describe("filling Slots", () => {
+    const ingredient = (name: string, slotType: string) => ({ name, slotTypes: [slotType] });
+    const pairing = (a: string, b: string, note: string) => ({
+      ingredients: [a, b],
+      reasons: [reason(note)],
+    });
+    const fixture = {
+      ingredients: {
+        lamb: ingredient("Lamb", "protein"),
+        chicken: ingredient("Chicken", "protein"),
+        lemon: ingredient("Lemon", "acid"),
+        lime: ingredient("Lime", "acid"),
+        vinegar: ingredient("Vinegar", "acid"),
+        mint: ingredient("Mint", "herb"),
+        parsley: ingredient("Parsley", "herb"),
+        basil: ingredient("Basil", "herb"),
+      },
+      pairings: [
+        pairing("lamb", "mint", "Mint's coolness lifts rich lamb."),
+        pairing("lamb", "lemon", "Lemon cuts lamb's richness."),
+        pairing("lemon", "mint", "Lemon sharpens mint."),
+        pairing("lamb", "parsley", "Parsley freshens lamb."),
+        pairing("chicken", "lime", "Lime brightens chicken."),
+      ],
+      formulas: [
+        {
+          id: "plate",
+          name: "Plate",
+          description: "Something seared, sharpened and finished.",
+          slots: [
+            { id: "protein", role: "something to sear", accepts: "protein" },
+            { id: "acid", role: "an acid", accepts: "acid" },
+            { id: "herb", role: "a herb", accepts: "herb", required: false },
+          ],
+          method: ["Sear {protein}, squeeze over {acid}, scatter {herb}."],
+        },
+      ],
+    };
+
+    async function plate(combination: string[], pantry: string[] = []) {
+      const kitchen = await expectKitchen(writeContent(fixture));
+      const ingredients = (ids: string[]) => kitchen.combination(ids).ingredients;
+      const [suggestion] = kitchen.suggest(ingredients(combination), ingredients(pantry));
+      return { kitchen, suggestion };
+    }
+
+    const fill = (suggestion: Suggestion) =>
+      suggestion.slots.map(({ slot, ingredient, source }) => [slot.id, ingredient?.id, source]);
+
+    it("fills from the Combination first, then the Pantry, then the best-pairing Ingredient", async () => {
+      const { suggestion } = await plate(["lamb"], ["vinegar"]);
+
+      expect(fill(suggestion)).toEqual([
+        ["protein", "lamb", "combination"],
+        ["acid", "vinegar", "pantry"],
+        ["herb", "mint", "pairing"],
+      ]);
+    });
+
+    it("picks the Ingredient that pairs with most of the fill", async () => {
+      const { suggestion } = await plate(["lamb"]);
+
+      // Lemon pairs with lamb; mint pairs with lamb and lemon, parsley only with lamb.
+      expect(fill(suggestion)).toEqual([
+        ["protein", "lamb", "combination"],
+        ["acid", "lemon", "pairing"],
+        ["herb", "mint", "pairing"],
+      ]);
+    });
+
+    it("leaves a Slot empty rather than fill it with an Ingredient no Pairing justifies", async () => {
+      const { suggestion } = await plate(["vinegar"]);
+
+      expect(fill(suggestion)).toEqual([
+        ["protein", undefined, undefined],
+        ["acid", "vinegar", "combination"],
+        ["herb", undefined, undefined],
+      ]);
+    });
+
+    it("gives each filled Slot the Pairing that justifies it", async () => {
+      const { suggestion } = await plate(["lamb"]);
+
+      expect(
+        suggestion.slots.map(({ slot, justification }) => [
+          slot.id,
+          justification?.ingredient.id,
+          justification?.reasons[0].note,
+        ]),
+      ).toEqual([
+        ["protein", "lemon", "Lemon cuts lamb's richness."],
+        ["acid", "lamb", "Lemon cuts lamb's richness."],
+        ["herb", "lamb", "Mint's coolness lifts rich lamb."],
+      ]);
+    });
+
+    it("ranks each Slot's alternatives by how well they pair with the rest of the fill", async () => {
+      const { suggestion } = await plate(["lamb"]);
+
+      expect(
+        suggestion.slots.map(({ slot, alternatives }) => [slot.id, alternatives.map(({ id }) => id)]),
+      ).toEqual([
+        // Ties keep content order.
+        ["protein", ["chicken"]],
+        ["acid", ["lime", "vinegar"]],
+        ["herb", ["parsley", "basil"]],
+      ]);
+    });
+
+    it("swaps a Slot, and the method, justification and alternatives follow", async () => {
+      const { kitchen, suggestion } = await plate(["lamb"]);
+
+      const swapped = kitchen.swap(suggestion, "herb", "parsley");
+
+      expect(fill(swapped)).toEqual([
+        ["protein", "lamb", "combination"],
+        ["acid", "lemon", "pairing"],
+        ["herb", "parsley", "swap"],
+      ]);
+      expect(swapped.method).toEqual(["Sear lamb, squeeze over lemon, scatter parsley."]);
+      const herb = swapped.slots[2];
+      expect(herb.justification?.reasons[0].note).toBe("Parsley freshens lamb.");
+      expect(herb.alternatives.map(({ id }) => id)).toEqual(["mint", "basil"]);
+      expect(fill(suggestion)[2]).toEqual(["herb", "mint", "pairing"]);
+    });
+  });
+
   describe("ranking Suggestions", () => {
     const pairs = (...ids: [string, string][]) =>
       ids.map((ingredients) => ({ ingredients, reasons: [reason("A note.")] }));
@@ -308,10 +435,11 @@ describe("loadKitchen", () => {
       [["mint"], "Only mint from your Combination is used here."],
       [[], "None of your Combination fits this Formula yet."],
     ])("explains its rank when it uses %j", async (fills, expected) => {
+      // A Formula with a Slot for each fill, so nothing else is added by Pairing. Chocolate pairs
+      // with nothing, so with an empty Combination its Slot stays empty.
       const [suggestion] = await rank(
-        [formula("dish", ["lamb", "mint", "lemon", "garlic", "chocolate"])],
-        // An unknown id is dropped, which leaves an empty Combination.
-        fills.length > 0 ? fills : ["not-an-ingredient"],
+        [formula("dish", fills.length > 0 ? fills : ["chocolate"])],
+        fills,
       );
 
       expect(suggestion.rankReason).toBe(expected);

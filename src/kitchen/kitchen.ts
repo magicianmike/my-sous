@@ -35,11 +35,18 @@ export type Combination = {
   overLimit: Ingredient[];
 };
 
-/** A Slot in a Suggestion, with the Ingredient chosen for it, if any, and where it came from. */
+/** Where a Slot's Ingredient came from: in fill order, then a swap by the Cook. */
+export type FillSource = "combination" | "pantry" | "pairing" | "swap";
+
+/** A Slot in a Suggestion, with the Ingredient chosen for it, if any, and why. */
 export type FilledSlot = {
   slot: Slot;
   ingredient?: Ingredient;
-  source?: "combination";
+  source?: FillSource;
+  /** The Pairing between this Ingredient and another in the fill that justifies it, if any. */
+  justification?: PairingView;
+  /** Other Ingredients that could fill the Slot, best-pairing with the rest of the fill first. */
+  alternatives: Ingredient[];
 };
 
 /** A Formula recommended for a Combination, with its Slots filled and a stated reason for its rank. */
@@ -62,12 +69,17 @@ export type Kitchen = {
   formulas(): Formula[];
   formula(id: string): Formula | undefined;
   /**
-   * Suggestions for a Combination, one per Formula. Each Slot takes the first Combination
-   * Ingredient that fits it and hasn't filled another Slot. Ranked by coherence (the number of
-   * Pairings among the filled Ingredients), with ties in content order. Deterministic.
+   * Suggestions for a Combination, one per Formula. Slots fill from the Combination first, then
+   * the Pantry (each Ingredient filling at most one Slot), then the Ingredient that pairs with
+   * most of the fill; a Slot that no Pairing can justify stays empty. Ranked by coherence (the
+   * number of Pairings among the filled Ingredients), with ties in content order. Deterministic.
    */
   suggest(combination: Ingredient[], pantry: Ingredient[]): Suggestion[];
+  /** The same Suggestion with one Slot holding the Cook's choice; every other fill is kept. */
+  swap(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
 };
+
+type Fill = { ingredient: Ingredient; source: FillSource } | undefined;
 
 /** How an Ingredient is named mid-sentence, as in "season chicken thigh". */
 function inSentence(ingredient: Ingredient): string {
@@ -147,6 +159,48 @@ export function createKitchen(content: KitchenContent): Kitchen {
     }
   }
 
+  /** How many of `others` an Ingredient pairs with. */
+  const pairsWithCount = (ingredient: Ingredient, others: Ingredient[]) =>
+    others.filter((other) => arePaired(ingredient, other)).length;
+
+  /** Ingredients that fit a Slot and aren't used, best-pairing with `rest` first; ties in content order. */
+  const candidates = (slot: Slot, used: Ingredient[], rest: Ingredient[]) =>
+    [...ingredients.values()]
+      .filter((i) => i.slotTypes.includes(slot.accepts) && !used.includes(i))
+      .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, rest) }))
+      .sort((a, b) => b.score - a.score);
+
+  /** Everything derived from a Formula's fills: justifications, alternatives, method, rank. */
+  function build(formula: Formula, fills: Fill[]): { suggestion: Suggestion; coherence: number } {
+    const used = fills.flatMap((fill) => fill?.ingredient ?? []);
+    const slots = formula.slots.map((slot, i): FilledSlot => {
+      const fill = fills[i];
+      const rest = used.filter((other) => other !== fill?.ingredient);
+      // The first Ingredient in fill order that this one pairs with.
+      const partner = fill && rest.find((other) => arePaired(fill.ingredient, other));
+      const justification =
+        partner &&
+        pairingsByIngredient.get(fill.ingredient.id)!.find(({ ingredient }) => ingredient === partner);
+      return {
+        slot,
+        ...fill,
+        justification,
+        alternatives: candidates(slot, used, rest).map(({ ingredient }) => ingredient),
+      };
+    });
+    const method = formula.method.map((step) =>
+      step.replace(SLOT_REFERENCE, (_, id: string) => {
+        const { slot, ingredient } = slots.find(({ slot }) => slot.id === id)!;
+        return ingredient ? inSentence(ingredient) : slot.role;
+      }),
+    );
+    const pairs = used.flatMap((a, i) =>
+      used.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
+    );
+    const rankReason = explainRank(used, arePaired, pairs);
+    return { suggestion: { formula, slots, method, rankReason }, coherence: pairs.length };
+  }
+
   return {
     content,
     ingredients: () => [...ingredients.values()],
@@ -156,31 +210,37 @@ export function createKitchen(content: KitchenContent): Kitchen {
     formulas: () => content.formulas,
     formula: (id) => content.formulas.find((formula) => formula.id === id),
 
-    suggest(combination) {
+    suggest(combination, pantry) {
       const suggestions = content.formulas.map((formula) => {
-        const unused = [...combination];
-        const slots = formula.slots.map((slot): FilledSlot => {
-          const index = unused.findIndex(({ slotTypes }) => slotTypes.includes(slot.accepts));
-          if (index === -1) return { slot };
-          const [ingredient] = unused.splice(index, 1);
-          return { slot, ingredient, source: "combination" };
+        const fills: Fill[] = formula.slots.map(() => undefined);
+        const used = () => fills.flatMap((fill) => fill?.ingredient ?? []);
+        const fits = (slot: Slot) => (ingredient: Ingredient) => ingredient.slotTypes.includes(slot.accepts);
+
+        for (const [source, pool] of [["combination", combination], ["pantry", pantry]] as const) {
+          const unused = pool.filter((ingredient) => !used().includes(ingredient));
+          formula.slots.forEach((slot, i) => {
+            const index = fills[i] ? -1 : unused.findIndex(fits(slot));
+            if (index !== -1) fills[i] = { ingredient: unused.splice(index, 1)[0], source };
+          });
+        }
+        formula.slots.forEach((slot, i) => {
+          const [best] = fills[i] ? [] : candidates(slot, used(), used());
+          if (best?.score > 0) fills[i] = { ingredient: best.ingredient, source: "pairing" };
         });
-        const fills = new Map(slots.map((filled) => [filled.slot.id, filled]));
-        const method = formula.method.map((step) =>
-          step.replace(SLOT_REFERENCE, (_, id: string) => {
-            const { slot, ingredient } = fills.get(id)!;
-            return ingredient ? inSentence(ingredient) : slot.role;
-          }),
-        );
-        const used = slots.flatMap(({ ingredient }) => ingredient ?? []);
-        const pairs = used.flatMap((a, i) =>
-          used.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
-        );
-        const rankReason = explainRank(used, arePaired, pairs);
-        return { suggestion: { formula, slots, method, rankReason }, coherence: pairs.length };
+
+        return build(formula, fills);
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
       return suggestions.sort((a, b) => b.coherence - a.coherence).map(({ suggestion }) => suggestion);
+    },
+
+    swap(suggestion, slotId, ingredientId) {
+      const fills: Fill[] = suggestion.slots.map(({ slot, ingredient, source }) =>
+        slot.id === slotId
+          ? { ingredient: ingredients.get(ingredientId)!, source: "swap" }
+          : ingredient && source && { ingredient, source },
+      );
+      return build(suggestion.formula, fills).suggestion;
     },
 
     combination(ids) {

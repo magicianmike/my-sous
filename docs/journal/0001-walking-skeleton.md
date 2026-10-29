@@ -10,6 +10,10 @@ Milestone: #3 (part of #2). The thinnest real slice: a Cook opens an Ingredient 
 
 **Pairings are stored once and shown from both sides.** `content/pairings.yaml` holds each pair a single time, in either order (ADR 0001). The Kitchen indexes it in both directions, and treats `[a, b]` and `[b, a]` as the same Pairing when checking for duplicates.
 
+**The full content format lands now, ahead of the screens that use it.** Ingredients carry their Cuisines, Slot types, tip, optional Blend components and cultural context, and an essay as the Markdown body. Pairings carry Cuisines, citations and optional longer text. Cuisines live in `cuisines.yaml`, and an unknown Cuisine reference fails the build like an unknown Ingredient does. Every later ticket builds on this format, so settling it in the skeleton is cheaper than migrating content later. The Ingredient page doesn't render the new fields yet.
+
+**Citations are allowed but not yet required.** No Pairing has one yet: they come from a `/research` pass against primary sources (ADR 0001), and inventing them to fill the field would break the project's rule against unfounded claims.
+
 **Static export, no runtime server.** `output: "export"` produces plain HTML. The e2e suite runs against that exact output (served from `out/`), not the dev server, so what's tested is what's deployed.
 
 **Accessibility is checked from day one.** axe runs on every screen in light and dark themes at phone and desktop widths. The first palette is plain on purpose: visual direction is decided later by prototype rounds, and it will have to keep these checks green.
@@ -23,4 +27,4 @@ Milestone: #3 (part of #2). The thinnest real slice: a Cook opens an Ingredient 
 ## Evidence
 
 - Before: an empty repo with a glossary and three ADRs.
-- After: 10 Ingredients and 16 Pairings, deployed. Screenshots to be added from the first preview deploy.
+- After: 10 Ingredients, 16 Pairings and 4 Cuisines, deployed. Screenshots to be added from the first preview deploy.

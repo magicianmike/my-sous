@@ -1,17 +1,21 @@
 # Every Pairing is stored once, in either order. The Kitchen shows it from both Ingredients.
-# Reason categories: contrast, aromatic bridge, texture, tradition.
+# Reason categories: contrast, aromatic bridge, texture, tradition. A reason can add a longer `detail`.
+# Optional: `cuisines` (ids from cuisines.yaml) and `citations` (each a `title` and optional `url`).
 
 - ingredients: [tomato, basil]
+  cuisines: [southern-italian]
   reasons:
     - category: tradition
       note: Basil's sweet, peppery aroma often finishes ripe tomatoes in Southern Italian cooking.
 
 - ingredients: [tomato, garlic]
+  cuisines: [southern-italian]
   reasons:
     - category: tradition
       note: Garlic softened in oil is a common base for a quick tomato sauce.
 
 - ingredients: [basil, garlic]
+  cuisines: [ligurian]
   reasons:
     - category: tradition
       note: Pounded together with oil, they form the base of Ligurian pesto.
@@ -47,11 +51,13 @@
       note: Fresh, green cilantro lifts the deep savoury flavour of cooked chicken thigh.
 
 - ingredients: [ginger, scallion]
+  cuisines: [cantonese]
   reasons:
     - category: tradition
       note: Sizzled with hot oil, they make a ginger-scallion sauce often served with poached chicken in Cantonese cooking.
 
 - ingredients: [ginger, garlic]
+  cuisines: [cantonese]
   reasons:
     - category: tradition
       note: Often cooked together at the start of a stir-fry to season the oil.
@@ -72,6 +78,7 @@
       note: Lime's acid sharpens and balances the heat of fresh chile.
 
 - ingredients: [chile, garlic]
+  cuisines: [southern-italian]
   reasons:
     - category: tradition
       note: Warmed together in olive oil, they're usually the base of aglio, olio e peperoncino, a Southern Italian pasta.

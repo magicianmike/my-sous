@@ -1,0 +1,17 @@
+# Cuisines are named at regional granularity: "Sichuan" or "Levantine", never "Asian".
+
+- id: southern-italian
+  name: Southern Italian
+  description: The cooking of Italy's south, including Campania, Calabria, Apulia and Sicily.
+
+- id: ligurian
+  name: Ligurian
+  description: The cooking of Italy's north-west coast around Genoa, the home of pesto.
+
+- id: cantonese
+  name: Cantonese
+  description: The cooking of Guangdong and Hong Kong, usually built on fresh ingredients and light seasoning.
+
+- id: oaxacan
+  name: Oaxacan
+  description: The cooking of Oaxaca in southern Mexico, known for its moles.

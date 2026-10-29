@@ -13,7 +13,9 @@
 | herbarium | B2 · Herbarium | `prototype/botanical-herbarium` | Large: a specimen tile per Pairing | Monochrome ink on paper | Still | Nunito |
 | quiet | B3 · Quiet line | `prototype/botanical-quiet` | Hero and tray only; rows are text | A colour per Pairing Reason | Springy add | Figtree |
 
-Run it the same way: double-click `index.html`.
+Run it the same way: double-click `index.html`. Motion in B1 and B3 shows on the full-size page: B1 animates on first load, and B3 when you add an Ingredient.
+
+**Contrast (round 2):** every variant passes WCAG 2.2 AA text contrast in both themes at 390px and 1280px, with no horizontal scrolling. Lowest ratios, light / dark: B 6.16 / 6.70, B1 5.99 / 6.00, B2 6.57 / 7.46, B3 6.50 / 7.74.
 
 ## Round 1
 

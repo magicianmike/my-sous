@@ -11,6 +11,8 @@
 | serif | R3b · Soft serif | `prototype/garden-serif` | Type: headings in Fraunces at its softest, body stays Nunito. Tests whether some of round 1's editorial warmth belongs here. |
 | fridge | R3c · Fridge first | `prototype/garden-fridge` | Phone at the fridge: a compact header, the essay behind "About lime", tighter rows and a slim tray, so the Pairings start on the first screen. |
 
+**Contrast (round 3):** every variant passes WCAG 2.2 AA text contrast in both themes at 390px and 1280px, with no horizontal scrolling. Lowest ratios: 5.99:1 light and 6.00:1 dark, from B1's shared tokens. R3c is audited with "About lime" closed; its essay uses the same tokens as B1.
+
 ## Round 2: refining Botanical line
 
 **Round 1 verdict (2026-10-29):** the author chose **B, Botanical line**. A (Editorial cookbook) and C (Modern utility) lost; they stay on `prototype/editorial-cookbook` and `prototype/modern-utility`, and their files are removed from this branch. Reasons are still to be recorded.

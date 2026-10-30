@@ -181,8 +181,10 @@ main {
   margin: 0;
 }
 
+/* Centred by the hero; its text reads from the left. */
 .about {
   max-width: var(--measure);
+  text-align: start;
   margin-top: var(--space-2);
   padding: var(--space-4) var(--space-5);
   border-radius: var(--radius-lg);

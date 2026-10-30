@@ -20,6 +20,8 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
 ];
 
 async function expectNoViolations(page: Page) {
+  // Contrast is judged on what settles, not on rows caught halfway through fading in.
+  await page.evaluate(() => Promise.all(document.getAnimations().map(({ finished }) => finished)));
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();

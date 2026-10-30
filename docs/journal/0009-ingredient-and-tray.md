@@ -4,7 +4,7 @@ Milestone: #15 (part of #2). The Ingredient page and the Combination tray reach 
 
 ## Before and after
 
-The "before" shots are 0008's "after" shots, which are what `main` showed when this work began. Each pair shows Chicken thigh with chicken thigh and garlic in the Combination.
+The first two "before" shots are 0008's "after" shots, which are what `main` showed when this work began; the 320px and zoomed ones were taken from `main` for this entry. Each shows Chicken thigh with chicken thigh and garlic in the Combination (and lemon and basil too at 320px). Before, a phone showed the Combination only at the very end of the page.
 
 | Screen | Before | After |
 | --- | --- | --- |
@@ -12,17 +12,17 @@ The "before" shots are 0008's "after" shots, which are what `main` showed when t
 | Ingredient, phone dark | ![](0008-design-system/after-ingredient-phone-dark.png) | ![](0009-ingredient-and-tray/after-ingredient-phone-dark.png) |
 | Tray sheet open, phone dark | (new) | ![](0009-ingredient-and-tray/after-tray-sheet-phone-dark.png) |
 | Pairings filtered to Tradition, desktop light | (new) | ![](0009-ingredient-and-tray/after-filter-desktop-light.png) |
-| 320px, four Ingredients in the Combination | (new) | ![](0009-ingredient-and-tray/after-ingredient-320-light.png) |
-| 1280×720 at 200% zoom (640×360) | (new) | ![](0009-ingredient-and-tray/after-ingredient-zoom200-light.png) |
+| 320px, four Ingredients in the Combination | ![](0009-ingredient-and-tray/before-ingredient-320-light.png) | ![](0009-ingredient-and-tray/after-ingredient-320-light.png) |
+| 1280×720 at 200% zoom (640×360) | ![](0009-ingredient-and-tray/before-ingredient-zoom200-light.png) | ![](0009-ingredient-and-tray/after-ingredient-zoom200-light.png) |
 | 1000px, between phone and three columns | (new) | ![](0009-ingredient-and-tray/after-ingredient-1000-light.png) |
 
-All ten shots, including desktop dark and the sheet and phone page in light, are in `0009-ingredient-and-tray/`.
+All twelve shots, including desktop dark and the sheet and phone page in light, are in `0009-ingredient-and-tray/`.
 
 ## Decisions
 
 **Three columns on desktop, as 0002 set out.** From 72rem the Ingredient (drawing, name, Cuisines, essay and Tip) sits in its own column beside its Pairings, and the tray stays on the right, so the first Pairings are on the first screen at 1280×720. The Ingredient column keeps the centred stack the author asked for during #14, with the essay and Tip left-aligned inside their card. Between 56rem and 72rem the Ingredient stacks above its Pairings, beside the tray. The author chose this over keeping two columns.
 
-**The Ingredient column doesn't stick.** 0002 drew it as sticky, but at 1280×720 the column is taller than the screen, so a sticky column would hide its own Tip until the Pairings ran out. Only the tray sticks.
+**The Ingredient column doesn't stick.** 0002 drew it as sticky, but at 1280×720 the column is taller than the screen, so a sticky column would hide its own Tip until the Pairings ran out. Only the tray sticks. This departs from 0002, so it waits for the author's approval (see Open).
 
 **Pairings can be narrowed to one Pairing Reason.** A segmented control (All, then each reason the Ingredient has) shows above the Pairings when there's more than one reason. It's made of native radios, so arrow keys move the choice and assistive technology announces "radio, 2 of 3". An Ingredient with one reason has nothing to filter, so it shows no control.
 
@@ -30,11 +30,11 @@ All ten shots, including desktop dark and the sheet and phone page in light, are
 
 **On a phone, the tray is a bar that opens a sheet.** A bar docked at the foot of the screen shows the chosen Ingredients' drawings, "2 of 4" and "See what to make". Tapping it opens the full tray as a modal sheet. The author chose this over 0002's always-open floating sheet, which would cover much of a small screen once three or four Ingredients are in.
 
-- **Focus.** Opening the sheet moves focus to its heading. Tab and Shift+Tab cycle within it; a native modal alone lets Tab escape to the browser's controls. Escape, Close or a tap on the dimmed page closes it, and focus returns to the bar. Following a link from the sheet closes it too.
-- **The bar's name.** It reads "Your Combination 2 of 4: Chicken thigh, Garlic", so a screen reader user hears the Combination without opening it. The name starts with the bar's visible text so voice control users can say what they see. axe caught the first version, whose visible text ran together as "Your Combination0 of 4".
+- **Focus.** Opening the sheet moves focus to its heading. Tab and Shift+Tab cycle within it; a native modal alone lets Tab escape to the browser's controls. Escape, Close or a tap on the dimmed page closes it, and focus returns to the bar. Following a link from the sheet closes it too. If the screen widens into the side panel while the sheet is open (a rotated tablet, a resized window), the sheet closes and focus moves to the panel's heading, since the bar is gone.
+- **The bar's name.** It reads "Your Combination 2 of 4: Chicken thigh, Garlic", so a Cook using a screen reader hears the Combination without opening it. The name starts with the bar's visible text, so a Cook using voice control can say what they see. axe caught the first version, whose visible text ran together as "Your Combination0 of 4".
 - **One tray at a time.** The side panel, and the bar and sheet, are both in the page; CSS shows one for the screen size, so assistive technology meets one tray.
 
-**Every Combination change is announced, wherever it happens.** "Garlic added to Combination, 2 of 4." comes from a live region outside the tray, so it's heard on desktop and with the sheet closed. A modal makes the rest of the page inert, live region included, so the open sheet has its own, and a change made inside the sheet is heard from there. The limit message ("Your Combination already holds 4 Ingredients…") follows the same path.
+**Every Combination change is announced, wherever it happens.** "Garlic added to Combination, 2 of 4." comes from a live region outside the tray, so it's heard on desktop and with the sheet closed. A modal makes the rest of the page inert, live region included, so the open sheet has its own, and a change made inside the sheet is heard from there. The limit message ("Your Combination already holds 4 Ingredients…") follows the same path. On a phone the latest message also shows in a line above the bar. That matters most for the limit: without it, pressing Add with four Ingredients in would visibly do nothing.
 
 **Nothing scrolls sideways from 320px to wide desktop, or at 200% zoom.** Playwright checks five screens at six sizes, from 320×640 to 1600×900, including 640×360, which is a 1280×720 screen at 200% zoom. At 320px with four Ingredients, the bar's content first pushed it 5px too wide.
 
@@ -66,4 +66,6 @@ Record anything that differs here, with the device and OS version.
 
 ## Open
 
-- The VoiceOver pass above.
+- **Author review gate:** the before/after shots above and the preview deploy.
+- **Author approval:** the Ingredient column not sticking, a departure from 0002.
+- The VoiceOver pass above. #15 shouldn't close until its notes are recorded here.

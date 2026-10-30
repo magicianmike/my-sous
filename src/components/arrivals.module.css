@@ -1,0 +1,11 @@
+/* An Ingredient added to the Combination grows in, with a slight overshoot. */
+.arriving {
+  animation: grow var(--motion-slow) var(--ease-overshoot);
+}
+
+@keyframes grow {
+  from {
+    opacity: 0;
+    transform: scale(var(--scale-arrive));
+  }
+}

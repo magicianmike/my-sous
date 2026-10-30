@@ -87,3 +87,42 @@ test.describe("on desktop, the tray is a side panel", () => {
     await expect(page.getByRole("dialog")).toHaveCount(0);
   });
 });
+
+test.describe("when the screen changes size", () => {
+  test.skip(({ isMobile }) => isMobile, "each test sets its own viewport");
+
+  test("widening with the sheet open moves focus to the side panel", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/ingredients/lemon?with=lemon,garlic");
+    await opener(page).click();
+    await expect(sheet(page)).toBeVisible();
+
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await expect(sheet(page)).toBeHidden();
+    const panel = page.getByRole("complementary", { name: /Your Combination/ });
+    await expect(panel.getByRole("heading", { name: /Your Combination/ })).toBeFocused();
+  });
+
+  // 320px wide, and a 1280×720 screen at 200% zoom.
+  for (const viewport of [
+    { width: 320, height: 640 },
+    { width: 640, height: 360 },
+  ]) {
+    const size = `${viewport.width}×${viewport.height}`;
+    test(`the open sheet fits and every control is reachable at ${size}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto("/ingredients/lemon?with=lemon,garlic,basil,tomato");
+      await opener(page).click();
+      await expect(sheet(page)).toBeVisible();
+
+      const overflow = await sheet(page).evaluate((el) => el.scrollWidth - el.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+      // The sheet scrolls within itself, so its last control comes into view.
+      const close = sheet(page).getByRole("button", { name: "Close" });
+      await close.scrollIntoViewIfNeeded();
+      await expect(close).toBeInViewport();
+      await close.click();
+      await expect(sheet(page)).toBeHidden();
+    });
+  }
+});

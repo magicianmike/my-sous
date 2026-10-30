@@ -4,7 +4,8 @@ import { Chip } from "@/components/Chip";
 import { Disclosure } from "@/components/Disclosure";
 import { hueStyle, IngredientMark } from "@/components/IngredientMark";
 import { ListRow } from "@/components/ListRow";
-import { commonIn, inSentence } from "@/kitchen/kitchen";
+import type { PairingReasonCategory } from "@/kitchen/categories";
+import { commonIn, inSentence, type Ingredient } from "@/kitchen/kitchen";
 import { AddToCombination, CombinationLink } from "../../combination";
 import { getKitchen } from "../../kitchen";
 import { PairingFilter } from "./pairing-filter";
@@ -77,7 +78,10 @@ export default async function IngredientPage({ params }: Props) {
               {components.map(({ name, ingredient: component }) => (
                 <li key={name}>
                   {component ? (
-                    <Chip colour={component.colour} leading={<IngredientMark ingredient={component} size="sm" />}>
+                    <Chip
+                      colour={component.colour}
+                      leading={<IngredientMark ingredient={component} size="sm" />}
+                    >
                       <CombinationLink href={`/ingredients/${component.id}`}>{name}</CombinationLink>
                     </Chip>
                   ) : (
@@ -101,7 +105,9 @@ export default async function IngredientPage({ params }: Props) {
                     <li key={paired.id} style={{ "--row": row++ } as React.CSSProperties}>
                       <ListRow
                         mark={<IngredientMark ingredient={paired} />}
-                        title={<CombinationLink href={`/ingredients/${paired.id}`}>{paired.name}</CombinationLink>}
+                        title={
+                          <CombinationLink href={`/ingredients/${paired.id}`}>{paired.name}</CombinationLink>
+                        }
                         action={<AddToCombination ingredientId={paired.id} />}
                       >
                         {reasons.map((reason) => (
@@ -110,7 +116,7 @@ export default async function IngredientPage({ params }: Props) {
                             {(reason.detail || cuisines.length > 0) && (
                               <Disclosure
                                 summary="More"
-                                hiddenSummary={`about ${inSentence(ingredient)} and ${inSentence(paired)}, ${category}`}
+                                hiddenSummary={moreAbout(ingredient, paired, category)}
                               >
                                 {reason.detail && <p>{reason.detail}</p>}
                                 {cuisines.length > 0 && <p className="muted">{commonIn(cuisines)}</p>}
@@ -130,4 +136,9 @@ export default async function IngredientPage({ params }: Props) {
       </div>
     </div>
   );
+}
+
+/** Finishes "More" for assistive technology, so each one says which Pairing it opens. */
+function moreAbout(ingredient: Ingredient, paired: Ingredient, category: PairingReasonCategory): string {
+  return `about ${inSentence(ingredient)} and ${inSentence(paired)}, ${category}`;
 }

@@ -1,11 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { trayShown } from "./tray";
 
 const combination = "?with=chicken-thigh,garlic";
 
 /** Each screen, and something that shows once its client-side content has rendered. */
 const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
-  ["/", (page) => page.getByRole("heading", { name: /Your Combination/ }).or(page.getByRole("button", { name: /^Your Combination/ }))],
+  ["/", trayShown],
   ["/ingredients/lemon", (page) => page.getByRole("button", { name: "Add Lemon to Combination" })],
   [`/ingredients/lemon${combination}`, (page) => page.getByRole("button", { name: "Remove Garlic from Combination" })],
   [`/suggestions${combination}`, (page) => page.getByRole("link", { name: "Pan sauce" })],

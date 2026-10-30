@@ -29,27 +29,36 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
 
   const close = () => sheet.current?.close();
 
-  // A link followed from the sheet leads to a new screen; so does widening into the side panel.
+  // A link followed from the sheet leads to a new screen.
   useEffect(close, [pathname]);
   // The page keeps the docked bar's height clear when it scrolls a focused control into view.
   useEffect(() => {
     const root = document.documentElement;
     const observer = new ResizeObserver(([entry]) => {
-      const docked = !matchMedia(SIDE_PANEL).matches;
-      root.style.setProperty("--tray-dock-height", `${docked ? Math.ceil(entry.borderBoxSize[0].blockSize) : 0}px`);
+      const height = matchMedia(SIDE_PANEL).matches ? 0 : Math.ceil(entry.borderBoxSize[0].blockSize);
+      root.style.setProperty("--tray-dock-height", `${height}px`);
     });
     observer.observe(dock.current!);
     return () => observer.disconnect();
   }, []);
+  // Widening into the side panel closes the sheet; focus that was in it moves to the panel, since
+  // the bar it would return to is gone.
   useEffect(() => {
     const wide = matchMedia(SIDE_PANEL);
-    wide.addEventListener("change", close);
-    return () => wide.removeEventListener("change", close);
+    const widen = () => {
+      if (!wide.matches || !sheet.current?.open) return;
+      const hadFocus = sheet.current.contains(document.activeElement);
+      close();
+      if (hadFocus) panelHeading.current?.focus();
+    };
+    wide.addEventListener("change", widen);
+    return () => wide.removeEventListener("change", widen);
   }, []);
 
-  const tray = (titleId: string, heading: React.RefObject<HTMLHeadingElement | null>, trayStatus?: string) => (
+  /** One tray; `announces` gives it its own live region, which only the modal sheet needs. */
+  const tray = ({ titleId, heading, announces }: TrayPlacement) => (
     <TrayView
-      status={trayStatus}
+      status={announces ? status : undefined}
       ingredients={combination.ingredients}
       titleId={titleId}
       limit={COMBINATION_LIMIT}
@@ -67,7 +76,9 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
 
   return (
     <div ref={dock} className="tray-dock">
-      <div className="tray-panel">{tray("tray-heading", panelHeading)}</div>
+      <div className="tray-panel">
+        {tray({ titleId: "tray-heading", heading: panelHeading, announces: false })}
+      </div>
       <div className="tray-bar">
         <TrayBar
           ingredients={combination.ingredients}
@@ -84,12 +95,17 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
         ref={sheet}
         className="tray-sheet"
         aria-labelledby="tray-sheet-heading"
-        onClose={() => opener.current?.focus()}
+        onClose={() => {
+          // Back to the bar, unless closing moved focus on already (as widening does).
+          if (sheet.current!.contains(document.activeElement) || document.activeElement === document.body) {
+            opener.current?.focus();
+          }
+        }}
         // A tap on the backdrop lands on the dialog itself, outside its content.
         onClick={(event) => event.target === sheet.current && close()}
         onKeyDown={containTab}
       >
-        {tray("tray-sheet-heading", sheetHeading, status)}
+        {tray({ titleId: "tray-sheet-heading", heading: sheetHeading, announces: true })}
         <Button className="tray-close" onClick={close}>
           Close
         </Button>
@@ -101,10 +117,25 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
   );
 });
 
+type TrayPlacement = {
+  titleId: string;
+  heading: React.RefObject<HTMLHeadingElement | null>;
+  announces: boolean;
+};
+
+/** What Tab can reach. */
+const FOCUSABLE = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "summary",
+  "[tabindex]:not([tabindex='-1'])",
+].join(", ");
+
 /** Keeps Tab and Shift+Tab cycling within a modal, rather than leaving for the browser's controls. */
 function containTab(event: React.KeyboardEvent<HTMLElement>) {
   if (event.key !== "Tab") return;
-  const focusable = [...event.currentTarget.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")];
+  const focusable = [...event.currentTarget.querySelectorAll<HTMLElement>(FOCUSABLE)];
   const [first, last] = [focusable[0], focusable.at(-1)];
   const active = document.activeElement;
   if (event.shiftKey && (active === first || !focusable.includes(active as HTMLElement))) {

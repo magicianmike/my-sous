@@ -31,7 +31,11 @@ for (const reduced of [false, true]) {
     test("Pairing rows settle in one after another, once", async ({ page }) => {
       await page.goto("/ingredients/chicken-thigh");
       const rows = page.locator(".pairing-group li");
-      expect(await animation(rows.nth(0))).toEqual({ name: "settle", duration: reduced ? "0s" : "0.4s", delay: "0s" });
+      expect(await animation(rows.nth(0))).toEqual({
+        name: "settle",
+        duration: reduced ? "0s" : "0.4s",
+        delay: "0s",
+      });
       expect((await animation(rows.nth(2))).delay).toBe(reduced ? "0s" : "0.09s");
 
       // Filtering after first paint doesn't replay it.
@@ -48,7 +52,10 @@ for (const reduced of [false, true]) {
 
       await page.getByRole("button", { name: "Add Garlic to Combination" }).first().click();
       await expect(items).toHaveCount(2);
-      expect(await animation(items.nth(1))).toMatchObject({ name: "grow", duration: reduced ? "0s" : "0.4s" });
+      expect(await animation(items.nth(1))).toMatchObject({
+        name: expect.stringMatching(/grow$/),
+        duration: reduced ? "0s" : "0.4s",
+      });
       expect((await animation(items.first())).name).toBe("none");
     });
   });

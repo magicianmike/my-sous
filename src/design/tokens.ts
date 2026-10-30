@@ -117,6 +117,8 @@ const scales = {
   // Elevation.
   "shadow-raised": "0 1px 3px rgb(0 0 0 / 0.12)",
   "shadow-floating": "0 10px 40px -8px rgb(0 0 0 / 0.35)",
+  // A sheet leaves some of the page in view above it, so it reads as on top of the page.
+  "sheet-max-height": "85dvh",
   // Dims the page behind a modal sheet.
   "scrim": "rgb(0 0 0 / 0.45)",
   // Touch targets: the smallest a tappable control may be.
@@ -136,6 +138,8 @@ const scales = {
   "ease-out": "cubic-bezier(0.2, 0.7, 0.2, 1)",
   // A slight overshoot, for an Ingredient arriving in the tray.
   "ease-overshoot": "cubic-bezier(0.34, 1.4, 0.64, 1)",
+  // How small an arriving Ingredient starts before it grows in.
+  "scale-arrive": "0.6",
 };
 
 /** Motion durations; all become 0ms when the Cook asks for reduced motion. */

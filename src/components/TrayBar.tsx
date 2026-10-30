@@ -1,6 +1,6 @@
 import { IngredientMark, type IngredientLook } from "./IngredientMark";
 import styles from "./TrayBar.module.css";
-import { useArrivals } from "./useArrivals";
+import { useArrivalClass } from "./arrivals";
 
 type Props = {
   ingredients: IngredientLook[];
@@ -15,7 +15,7 @@ type Props = {
 /** The Combination at a glance, docked to the foot of a phone screen; it opens the full tray. */
 export function TrayBar({ ingredients, limit, onOpen, openerRef, action }: Props) {
   const names = ingredients.map(({ name }) => name).join(", ");
-  const arrivals = useArrivals(ingredients.map(({ id }) => id));
+  const arrivalClass = useArrivalClass(ingredients.map(({ id }) => id));
   return (
     <div className={styles.bar}>
       <button
@@ -30,7 +30,7 @@ export function TrayBar({ ingredients, limit, onOpen, openerRef, action }: Props
         {ingredients.length > 0 && (
           <span className={styles.marks}>
             {ingredients.map((ingredient) => (
-              <span key={ingredient.id} className={arrivals.has(ingredient.id) ? "arriving" : undefined}>
+              <span key={ingredient.id} className={arrivalClass(ingredient.id)}>
                 <IngredientMark ingredient={ingredient} size="sm" />
               </span>
             ))}

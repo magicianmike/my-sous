@@ -118,11 +118,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
             setStatus(`${removed.name} removed from Combination, ${tray.length - 1} of ${COMBINATION_LIMIT}.`);
           }}
           renderName={({ id, name }) => <a href={`/ingredients/${id}`}>{name}</a>}
-          action={
-            <a href="#combination-tray" className={buttonClass("primary")}>
-              See what to make
-            </a>
-          }
+          action={seeWhatToMake}
         />
       </div>
 
@@ -133,11 +129,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
           ingredients={tray}
           limit={COMBINATION_LIMIT}
           onOpen={() => setStatus("The bar opens the tray as a sheet.")}
-          action={
-            <a href="#combination-tray" className={buttonClass("primary")}>
-              See what to make
-            </a>
-          }
+          action={seeWhatToMake}
         />
       </div>
 
@@ -169,3 +161,9 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
     </>
   );
 }
+
+const seeWhatToMake = (
+  <a href="#combination-tray" className={buttonClass("primary")}>
+    See what to make
+  </a>
+);

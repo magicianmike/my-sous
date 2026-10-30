@@ -61,7 +61,8 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
           // Focus Not Obscured: the control must not sit under the docked bar. Scrolling snaps to
           // whole pixels, so an edge may land a fraction of one past the bar's top.
           const barTop = bar.getBoundingClientRect().top;
-          return bottom - barTop > 1 && top < innerHeight ? `${focused.outerHTML.slice(0, 60)} bottom=${bottom} barTop=${barTop}` : null;
+          if (bottom - barTop <= 1 || top >= innerHeight) return null;
+          return `${focused.outerHTML.slice(0, 60)} bottom=${bottom} barTop=${barTop}`;
         });
         expect(covered).toBeNull();
       }

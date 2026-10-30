@@ -16,7 +16,7 @@ type Props = {
 export function IngredientMark({ ingredient: { colour, drawing }, size = "md", drawIn = false }: Props) {
   return (
     <span
-      className={`hue ${styles.mark} ${styles[size]} ${drawIn ? styles.drawIn : ""}`}
+      className={["hue", styles.mark, styles[size], drawIn && styles.drawIn].filter(Boolean).join(" ")}
       style={hueStyle(colour)}
       aria-hidden="true"
     >
@@ -28,14 +28,14 @@ export function IngredientMark({ ingredient: { colour, drawing }, size = "md", d
         strokeLinecap="round"
         strokeLinejoin="round"
         // Drawings are content, checked at build time to hold only simple shapes.
-        dangerouslySetInnerHTML={{ __html: drawIn ? measured(drawing) : drawing }}
+        dangerouslySetInnerHTML={{ __html: drawIn ? withUnitLengths(drawing) : drawing }}
       />
     </span>
   );
 }
 
 /** Gives each shape a length of 1, so a dash of 1 can draw it in whatever its real length. */
-function measured(drawing: string): string {
+function withUnitLengths(drawing: string): string {
   return drawing.replaceAll("/>", ' pathLength="1"/>');
 }
 

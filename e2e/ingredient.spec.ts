@@ -42,7 +42,9 @@ test("an Ingredient with one Pairing Reason has nothing to filter", async ({ pag
 test.describe("on desktop", () => {
   test.skip(({ isMobile }) => isMobile, "three columns are the desktop layout");
 
-  test("the Ingredient sits beside its Pairings, with the first Pairings on the first screen", async ({ page }) => {
+  test("the Ingredient sits beside its Pairings, with the first Pairings on the first screen", async ({
+    page,
+  }) => {
     await page.goto("/ingredients/chicken-thigh");
     const name = (await page.getByRole("heading", { level: 1 }).boundingBox())!;
     const pairings = (await page.getByRole("heading", { level: 2, name: "Pairs well with" }).boundingBox())!;

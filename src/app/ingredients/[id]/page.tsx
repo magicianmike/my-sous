@@ -29,11 +29,13 @@ export default async function IngredientPage({ params }: Props) {
   const ingredient = kitchen.ingredient(id);
   if (!ingredient) notFound();
   const components = kitchen.blendComponents(id);
+  // Each Pairing row's place on the page, so the rows settle in one after another.
+  let row = 0;
 
   return (
     <div className="ingredient">
       <section className="hero hue" aria-labelledby="ingredient-name" style={hueStyle(ingredient.colour)}>
-        <IngredientMark ingredient={ingredient} size="lg" />
+        <IngredientMark ingredient={ingredient} size="lg" drawIn />
         <div className="title">
           <h1 id="ingredient-name">{ingredient.name}</h1>
           <AddToCombination ingredientId={ingredient.id} />
@@ -96,7 +98,7 @@ export default async function IngredientPage({ params }: Props) {
                 <h3 id={headingId}>{heading}</h3>
                 <ul className="stack">
                   {pairings.map(({ ingredient: paired, reasons, cuisines }) => (
-                    <li key={paired.id}>
+                    <li key={paired.id} style={{ "--row": row++ } as React.CSSProperties}>
                       <ListRow
                         mark={<IngredientMark ingredient={paired} />}
                         title={<CombinationLink href={`/ingredients/${paired.id}`}>{paired.name}</CombinationLink>}

@@ -8,12 +8,18 @@ export type IngredientLook = { id: string; name: string; colour: IngredientColou
 type Props = {
   ingredient: Pick<IngredientLook, "colour" | "drawing">;
   size?: "sm" | "md" | "lg";
+  /** Draws the lines in on first paint, as the Ingredient page's hero does. */
+  drawIn?: boolean;
 };
 
 /** An Ingredient's line drawing on its own wash. Decorative: its name is always nearby. */
-export function IngredientMark({ ingredient: { colour, drawing }, size = "md" }: Props) {
+export function IngredientMark({ ingredient: { colour, drawing }, size = "md", drawIn = false }: Props) {
   return (
-    <span className={`hue ${styles.mark} ${styles[size]}`} style={hueStyle(colour)} aria-hidden="true">
+    <span
+      className={`hue ${styles.mark} ${styles[size]} ${drawIn ? styles.drawIn : ""}`}
+      style={hueStyle(colour)}
+      aria-hidden="true"
+    >
       <svg
         viewBox="0 0 48 48"
         fill="none"
@@ -22,10 +28,15 @@ export function IngredientMark({ ingredient: { colour, drawing }, size = "md" }:
         strokeLinecap="round"
         strokeLinejoin="round"
         // Drawings are content, checked at build time to hold only simple shapes.
-        dangerouslySetInnerHTML={{ __html: drawing }}
+        dangerouslySetInnerHTML={{ __html: drawIn ? measured(drawing) : drawing }}
       />
     </span>
   );
+}
+
+/** Gives each shape a length of 1, so a dash of 1 can draw it in whatever its real length. */
+function measured(drawing: string): string {
+  return drawing.replaceAll("/>", ' pathLength="1"/>');
 }
 
 /**

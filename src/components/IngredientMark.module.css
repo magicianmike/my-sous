@@ -33,3 +33,15 @@
 .lg svg {
   width: var(--mark-lg-drawing);
 }
+
+/* Each line draws itself in, once, on first paint. */
+.drawIn svg > * {
+  stroke-dasharray: 1;
+  animation: draw-in var(--motion-draw) var(--ease-out);
+}
+
+@keyframes draw-in {
+  from {
+    stroke-dashoffset: 1;
+  }
+}

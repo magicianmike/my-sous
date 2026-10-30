@@ -3,6 +3,7 @@ import { Chip } from "./Chip";
 import { IngredientMark, type IngredientLook } from "./IngredientMark";
 import { Panel } from "./Panel";
 import styles from "./TrayView.module.css";
+import { useArrivals } from "./useArrivals";
 
 type Props<T extends IngredientLook> = {
   ingredients: T[];
@@ -36,6 +37,7 @@ export function TrayView<T extends IngredientLook>({
   action,
   titleRef,
 }: Props<T>) {
+  const arrivals = useArrivals(ingredients.map(({ id }) => id));
   return (
     <Panel
       as="aside"
@@ -62,7 +64,7 @@ export function TrayView<T extends IngredientLook>({
         <>
           <ul className={styles.items}>
             {ingredients.map((ingredient) => (
-              <li key={ingredient.id}>
+              <li key={ingredient.id} className={arrivals.has(ingredient.id) ? "arriving" : undefined}>
                 <Chip
                   colour={ingredient.colour}
                   leading={<IngredientMark ingredient={ingredient} size="sm" />}

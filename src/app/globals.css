@@ -405,3 +405,30 @@ main {
 .specimen-tray {
   max-width: var(--tray-width);
 }
+
+/* Motion: only on first paint, or on the thing that changed. Durations are 0ms under reduced motion. */
+
+.settling .pairing-group li {
+  animation: settle var(--motion-slow) var(--ease-out) backwards;
+  /* Past the first screen of rows, the rest arrive together rather than keep the Cook waiting. */
+  animation-delay: calc(min(var(--row), 8) * var(--motion-stagger));
+}
+
+/* An Ingredient added to the Combination grows into the tray, with a slight overshoot. */
+.arriving {
+  animation: grow var(--motion-slow) var(--ease-overshoot);
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-3));
+  }
+}
+
+@keyframes grow {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}

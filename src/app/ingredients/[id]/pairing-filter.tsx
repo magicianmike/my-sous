@@ -9,6 +9,8 @@ export type PairingGroupView = { category: PairingReasonCategory; heading: strin
 /** An Ingredient's Pairings, grouped by Pairing Reason, with a filter when there's more than one. */
 export function PairingFilter({ groups }: { groups: PairingGroupView[] }) {
   const [shown, setShown] = useState<PairingReasonCategory | "all">("all");
+  // Rows settle in on first paint only; filtering shows them as they are.
+  const [settled, setSettled] = useState(false);
   const options = groups.map(({ category, heading }) => ({ value: category, label: heading }));
   return (
     <>
@@ -17,14 +19,19 @@ export function PairingFilter({ groups }: { groups: PairingGroupView[] }) {
           label="Show Pairings by reason"
           options={[{ value: "all", label: "All" }, ...options]}
           value={shown}
-          onChange={setShown}
+          onChange={(value) => {
+            setSettled(true);
+            setShown(value);
+          }}
         />
       )}
-      {groups.map(({ category, content }) => (
-        <div key={category} hidden={shown !== "all" && shown !== category}>
-          {content}
-        </div>
-      ))}
+      <div className={settled ? undefined : "settling"}>
+        {groups.map(({ category, content }) => (
+          <div key={category} hidden={shown !== "all" && shown !== category}>
+            {content}
+          </div>
+        ))}
+      </div>
     </>
   );
 }

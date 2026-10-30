@@ -134,6 +134,8 @@ const scales = {
   "focus-offset": "2px",
   // Motion: calm, and only on first paint or for the thing that changed.
   "ease-out": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+  // A slight overshoot, for an Ingredient arriving in the tray.
+  "ease-overshoot": "cubic-bezier(0.34, 1.4, 0.64, 1)",
 };
 
 /** Motion durations; all become 0ms when the Cook asks for reduced motion. */
@@ -142,6 +144,8 @@ export const motion = {
   "motion-base": "200ms",
   "motion-slow": "400ms",
   "motion-draw": "1400ms",
+  // The gap between one Pairing row settling in and the next.
+  "motion-stagger": "45ms",
 };
 
 const kebab = (key: string) => key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);

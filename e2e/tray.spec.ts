@@ -43,10 +43,27 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     await opener(page).click();
     for (const control of await sheet(page).locator("a, button").all()) {
       const box = (await control.boundingBox())!;
-      expect(box.height, await control.textContent()).toBeGreaterThanOrEqual(44);
+      expect(box.height, (await control.textContent()) ?? "").toBeGreaterThanOrEqual(44);
     }
     const bar = (await opener(page).boundingBox())!;
     expect(bar.height).toBeGreaterThanOrEqual(44);
+  });
+
+  test("changes made in the open sheet are announced from within it", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon,garlic");
+    await opener(page).click();
+    await sheet(page).getByRole("button", { name: "Remove Garlic" }).click();
+
+    // The page behind a modal is inert, so the sheet needs its own live region.
+    await expect(sheet(page).getByRole("status")).toHaveText("Garlic removed from Combination, 1 of 4.");
+    await expect(sheet(page).getByRole("heading", { name: /Your Combination/ })).toBeFocused();
+  });
+
+  test("changes made with the sheet closed are announced", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon");
+    await page.getByRole("button", { name: "Add Garlic to Combination" }).click();
+    await expect(page.getByRole("status")).toHaveText("Garlic added to Combination, 2 of 4.");
+    await expect(opener(page)).toHaveAccessibleName("Your Combination 2 of 4: Lemon, Garlic");
   });
 
   test("following a link from the sheet closes it", async ({ page }) => {

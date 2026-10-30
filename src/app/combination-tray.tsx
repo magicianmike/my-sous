@@ -14,7 +14,8 @@ const SIDE_PANEL = "(min-width: 56rem)";
 /**
  * The tray, fed from the Combination in the URL: a side panel on wide screens, and on a phone a
  * bar that opens the same tray as a modal sheet. Only one shows at a time, so assistive technology
- * meets one tray. The live region sits outside both, so changes are announced either way.
+ * meets one tray. The live region sits outside both, so changes are announced either way; the open
+ * sheet has its own, since a modal makes the page behind it, and its live region, inert.
  */
 export const CombinationTray = withSearchParams(function CombinationTray() {
   const { status } = useKitchen();
@@ -35,8 +36,9 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
     return () => wide.removeEventListener("change", close);
   }, []);
 
-  const tray = (titleId: string, heading: React.RefObject<HTMLHeadingElement | null>) => (
+  const tray = (titleId: string, heading: React.RefObject<HTMLHeadingElement | null>, trayStatus?: string) => (
     <TrayView
+      status={trayStatus}
       ingredients={combination.ingredients}
       titleId={titleId}
       limit={COMBINATION_LIMIT}
@@ -76,7 +78,7 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
         onClick={(event) => event.target === sheet.current && close()}
         onKeyDown={containTab}
       >
-        {tray("tray-sheet-heading", sheetHeading)}
+        {tray("tray-sheet-heading", sheetHeading, status)}
         <Button className="tray-close" onClick={close}>
           Close
         </Button>

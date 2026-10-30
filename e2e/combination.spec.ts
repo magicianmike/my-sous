@@ -188,9 +188,12 @@ test("a full Combination says why nothing more can be added", async ({ page }) =
 
 test("removing an Ingredient updates the Combination and announces it", async ({ page }) => {
   await page.goto("/ingredients/lemon?with=lemon,garlic");
-  await (await tray(page)).getByRole("button", { name: "Remove Lemon" }).click();
+  const shown = await tray(page);
+  await shown.getByRole("button", { name: "Remove Lemon" }).click();
   await expectCombination(page, ["Garlic"]);
-  await expect(page.getByRole("status")).toHaveText("Lemon removed from Combination, 1 of 4.");
+  // On a phone the change is made in the open sheet, so it's announced from there.
+  const live = test.info().project.use.isMobile ? shown.getByRole("status") : page.getByRole("status");
+  await expect(live).toHaveText("Lemon removed from Combination, 1 of 4.");
 });
 
 async function tabTo(page: Page, target: Locator) {

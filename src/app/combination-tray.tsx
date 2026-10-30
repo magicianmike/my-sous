@@ -25,6 +25,11 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
         remove(ingredient);
         heading.current?.focus();
       }}
+      renderName={({ id, name }) => (
+        <CombinationLink href={`/ingredients/${id}`}>
+          {name}
+        </CombinationLink>
+      )}
       action={
         <CombinationLink href="/suggestions" className={buttonClass("primary")}>
           See what to make

@@ -114,6 +114,11 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
             setTray(tray.filter(({ id }) => id !== removed.id));
             setStatus(`${removed.name} removed from Combination, ${tray.length - 1} of ${COMBINATION_LIMIT}.`);
           }}
+          renderName={({ id, name }) => (
+            <a href={`/ingredients/${id}`}>
+              {name}
+            </a>
+          )}
           action={
             <a href="#combination-tray" className={buttonClass("primary")}>
               See what to make

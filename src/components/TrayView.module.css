@@ -31,3 +31,12 @@
 .tray > :is(a, button) {
   width: 100%;
 }
+
+/* A name the container made a link: the whole label is the target. */
+.items a {
+  display: flex;
+  align-items: center;
+  min-height: var(--target);
+  color: inherit;
+  text-underline-offset: var(--underline-offset);
+}

@@ -16,6 +16,8 @@ type Props<T extends IngredientLook> = {
   /** The latest change, announced to assistive technology. */
   status?: string;
   onRemove: (ingredient: T) => void;
+  /** Each Ingredient's name, as a link to its page the container provides. */
+  renderName?: (ingredient: T) => React.ReactNode;
   /** "See what to make", as a link the container provides. */
   action?: React.ReactNode;
   titleRef?: React.Ref<HTMLHeadingElement>;
@@ -30,6 +32,7 @@ export function TrayView<T extends IngredientLook>({
   overLimit = [],
   status = "",
   onRemove,
+  renderName = ({ name }) => name,
   action,
   titleRef,
 }: Props<T>) {
@@ -69,7 +72,7 @@ export function TrayView<T extends IngredientLook>({
                     </Button>
                   }
                 >
-                  {ingredient.name}
+                  {renderName(ingredient)}
                 </Chip>
               </li>
             ))}

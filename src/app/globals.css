@@ -243,6 +243,33 @@ main {
 
 /* Ingredient */
 
+/*
+ * Below 72rem the Ingredient stacks above its Pairings. From 72rem, three columns: the Ingredient,
+ * its Pairings, and the tray.
+ */
+
+@media (min-width: 72rem) {
+  .app:has(.ingredient),
+  body:has(.ingredient) .site-header {
+    max-width: var(--page-width-wide);
+  }
+
+  main:has(.ingredient) {
+    max-width: none;
+  }
+
+  .ingredient {
+    display: grid;
+    grid-template-columns: var(--ingredient-column) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .ingredient-pairings > h2:first-child {
+    margin-top: 0;
+  }
+}
+
 /* Drawing, name, Cuisines and about card, centred as one column. */
 .hero {
   display: grid;

@@ -101,6 +101,9 @@ const scales = {
   "space-8": "4rem",
   "measure": "40rem",
   "page-width": "66rem",
+  // The Ingredient page's three columns: the Ingredient, its Pairings, the tray.
+  "page-width-wide": "78rem",
+  "ingredient-column": "20rem",
   "tray-width": "18rem",
   "tile-min": "11rem",
   // Borders: hairlines for decoration, a heavier line for controls.

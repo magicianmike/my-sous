@@ -25,11 +25,22 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
   const sheetHeading = useRef<HTMLHeadingElement>(null);
   const sheet = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLButtonElement>(null);
+  const dock = useRef<HTMLDivElement>(null);
 
   const close = () => sheet.current?.close();
 
   // A link followed from the sheet leads to a new screen; so does widening into the side panel.
   useEffect(close, [pathname]);
+  // The page keeps the docked bar's height clear when it scrolls a focused control into view.
+  useEffect(() => {
+    const root = document.documentElement;
+    const observer = new ResizeObserver(([entry]) => {
+      const docked = !matchMedia(SIDE_PANEL).matches;
+      root.style.setProperty("--tray-dock-height", `${docked ? Math.ceil(entry.borderBoxSize[0].blockSize) : 0}px`);
+    });
+    observer.observe(dock.current!);
+    return () => observer.disconnect();
+  }, []);
   useEffect(() => {
     const wide = matchMedia(SIDE_PANEL);
     wide.addEventListener("change", close);
@@ -55,7 +66,7 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
   );
 
   return (
-    <div className="tray-dock">
+    <div ref={dock} className="tray-dock">
       <div className="tray-panel">{tray("tray-heading", panelHeading)}</div>
       <div className="tray-bar">
         <TrayBar

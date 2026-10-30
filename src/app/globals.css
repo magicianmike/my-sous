@@ -94,7 +94,7 @@ ul {
 /*
  * The tray. On a phone, a bar docked to the foot of the screen, which opens the tray as a sheet;
  * it sticks within the page rather than floating over it, so it never hides the page's end.
- * From 56rem, a sticky side panel. Matches SIDE_PANEL in combination-tray.tsx.
+ * On wider screens, a sticky side panel; the media query matches SIDE_PANEL in combination-tray.tsx.
  */
 
 .tray-dock {
@@ -102,11 +102,17 @@ ul {
   bottom: 0;
   z-index: 1;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   margin-inline: calc(var(--space-4) * -1);
 }
 
 .tray-panel {
   display: none;
+}
+
+/* Scrolling to a focused control leaves room for the docked bar, so the bar never covers it. */
+html {
+  scroll-padding-bottom: var(--tray-dock-height);
 }
 
 .tray-status {
@@ -244,7 +250,7 @@ main {
 /* Ingredient */
 
 /*
- * Below 72rem the Ingredient stacks above its Pairings. From 72rem, three columns: the Ingredient,
+ * The Ingredient stacks above its Pairings until the screen fits three columns: the Ingredient,
  * its Pairings, and the tray.
  */
 

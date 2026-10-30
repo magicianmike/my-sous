@@ -1,0 +1,69 @@
+# 0009 · Ingredient page and Combination tray
+
+Milestone: #15 (part of #2). The Ingredient page and the Combination tray reach the layout and motion settled in 0002: three columns on desktop, and on a phone a bar that opens the tray as a sheet.
+
+## Before and after
+
+The "before" shots are 0008's "after" shots, which are what `main` showed when this work began. Each pair shows Chicken thigh with chicken thigh and garlic in the Combination.
+
+| Screen | Before | After |
+| --- | --- | --- |
+| Ingredient, desktop light | ![](0008-design-system/after-ingredient-desktop-light.png) | ![](0009-ingredient-and-tray/after-ingredient-desktop-light.png) |
+| Ingredient, phone dark | ![](0008-design-system/after-ingredient-phone-dark.png) | ![](0009-ingredient-and-tray/after-ingredient-phone-dark.png) |
+| Tray sheet open, phone dark | (new) | ![](0009-ingredient-and-tray/after-tray-sheet-phone-dark.png) |
+| Pairings filtered to Tradition, desktop light | (new) | ![](0009-ingredient-and-tray/after-filter-desktop-light.png) |
+| 320px, four Ingredients in the Combination | (new) | ![](0009-ingredient-and-tray/after-ingredient-320-light.png) |
+| 1280×720 at 200% zoom (640×360) | (new) | ![](0009-ingredient-and-tray/after-ingredient-zoom200-light.png) |
+| 1000px, between phone and three columns | (new) | ![](0009-ingredient-and-tray/after-ingredient-1000-light.png) |
+
+All ten shots, including desktop dark and the sheet and phone page in light, are in `0009-ingredient-and-tray/`.
+
+## Decisions
+
+**Three columns on desktop, as 0002 set out.** From 72rem the Ingredient (drawing, name, Cuisines, essay and Tip) sits in its own column beside its Pairings, and the tray stays on the right, so the first Pairings are on the first screen at 1280×720. The Ingredient column keeps the centred stack the author asked for during #14, with the essay and Tip left-aligned inside their card. Between 56rem and 72rem the Ingredient stacks above its Pairings, beside the tray. The author chose this over keeping two columns.
+
+**The Ingredient column doesn't stick.** 0002 drew it as sticky, but at 1280×720 the column is taller than the screen, so a sticky column would hide its own Tip until the Pairings ran out. Only the tray sticks.
+
+**Pairings can be narrowed to one Pairing Reason.** A segmented control (All, then each reason the Ingredient has) shows above the Pairings when there's more than one reason. It's made of native radios, so arrow keys move the choice and assistive technology announces "radio, 2 of 3". An Ingredient with one reason has nothing to filter, so it shows no control.
+
+**On a phone, the essay and Tip stay open.** R3c (0002) found that the stacked layout puts the first Pairing below the first screen on a 390px phone. The author weighed that and kept the essay open, as asked for in #14.
+
+**On a phone, the tray is a bar that opens a sheet.** A bar docked at the foot of the screen shows the chosen Ingredients' drawings, "2 of 4" and "See what to make". Tapping it opens the full tray as a modal sheet. The author chose this over 0002's always-open floating sheet, which would cover much of a small screen once three or four Ingredients are in.
+
+- **Focus.** Opening the sheet moves focus to its heading. Tab and Shift+Tab cycle within it; a native modal alone lets Tab escape to the browser's controls. Escape, Close or a tap on the dimmed page closes it, and focus returns to the bar. Following a link from the sheet closes it too.
+- **The bar's name.** It reads "Your Combination 2 of 4: Chicken thigh, Garlic", so a screen reader user hears the Combination without opening it. The name starts with the bar's visible text so voice control users can say what they see. axe caught the first version, whose visible text ran together as "Your Combination0 of 4".
+- **One tray at a time.** The side panel, and the bar and sheet, are both in the page; CSS shows one for the screen size, so assistive technology meets one tray.
+
+**Every Combination change is announced, wherever it happens.** "Garlic added to Combination, 2 of 4." comes from a live region outside the tray, so it's heard on desktop and with the sheet closed. A modal makes the rest of the page inert, live region included, so the open sheet has its own, and a change made inside the sheet is heard from there. The limit message ("Your Combination already holds 4 Ingredients…") follows the same path.
+
+**Nothing scrolls sideways from 320px to wide desktop, or at 200% zoom.** Playwright checks five screens at six sizes, from 320×640 to 1600×900, including 640×360, which is a 1280×720 screen at 200% zoom. At 320px with four Ingredients, the bar's content first pushed it 5px too wide.
+
+**The bar never covers the page's end or the focused control.** The bar is sticky inside the page rather than fixed over it, so the page's last Pairing scrolls clear of it. The page sets `scroll-padding-bottom` to the bar's measured height, so a control reached by Tab is scrolled above the bar (WCAG 2.4.11, Focus Not Obscured). A Playwright test tabs through the page at three phone and zoomed sizes and checks each control against the bar. When there's room, the bar fits on one row, so at 200% zoom it takes 65px of a 360px screen rather than a third of it.
+
+**Motion: the three patterns from 0002, each only once.**
+
+- **The hero drawing draws itself in** (1.4s, ease-out) on first paint. Each shape gets `pathLength="1"`, so one dash animates every line whatever its length.
+- **Pairing rows settle in** with a 45ms stagger. Past the eighth row, the rest arrive together, so a long list doesn't keep the Cook waiting. Choosing a filter turns this off, so filtering never replays it.
+- **An added Ingredient grows into the tray** (0.4s, slight overshoot): in the side panel on desktop, in the bar's drawings on a phone. What was in the tray at first paint doesn't grow, and an Ingredient removed and added back grows again.
+- Every duration is a token that becomes 0ms under reduced motion. Playwright checks all three both ways.
+
+axe now waits for running animations to finish, because it had caught rows halfway through fading in and reported their contrast.
+
+**New components take props only.** TrayBar and SegmentedControl join the `/design` specimen, ready for the Case Study.
+
+## VoiceOver pass
+
+**Status: waiting for the author.** It needs a real iPhone and a Mac, which an automated run can't stand in for. The flow to check, with what each step should say:
+
+1. Open an Ingredient page (`/ingredients/lemon`). The heading "Lemon" is read. The Pairings filter, if shown, is read as a radio group, "Show Pairings by reason".
+2. Activate "Add Lemon to Combination". Expect "Lemon added to Combination, 1 of 4." Focus stays on the button, now "Remove Lemon from Combination".
+3. Add a Pairing from the list. Expect "Garlic added to Combination, 2 of 4."
+4. **Phone:** find the bar, "Your Combination 2 of 4: Lemon, Garlic, button". Open it. Focus moves to "Your Combination 2 of 4, heading", and swiping stays inside the sheet. Remove Garlic. Expect "Garlic removed from Combination, 1 of 4." Close it, with the two-finger scrub gesture as well as the Close button. Focus returns to the bar.
+5. **Mac:** with VO+arrows and with Tab, the tray is a complementary landmark, "Your Combination", and the rotor lists it.
+6. Activate "See what to make". The Suggestions heading is read.
+
+Record anything that differs here, with the device and OS version.
+
+## Open
+
+- The VoiceOver pass above.

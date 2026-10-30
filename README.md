@@ -21,4 +21,10 @@ npm run test:e2e     # Playwright + axe against out/ (run the build first)
 
 The build fails on any malformed file unknown Ingredient or Cuisine reference, Slot that no Ingredient can fill, or method step that refers to an unknown Slot.
 
+## Design system
+
+Tokens (colour, type, spacing, radius, elevation, motion, focus) live in `src/design/tokens.ts`, which generates the CSS; dark is a token swap. Core components are in `src/components/` and take props only. `/design` shows each one from fixture props.
+
+Every Ingredient needs a `colour` in its frontmatter (`wash`, `washDark`, `stroke`, `strokeDark`) and a single-line drawing in `content/ingredients/<id>.svg` (shapes only, on a 48-unit grid). Tests check every colour's contrast in both themes.
+
 The decision journal lives in `docs/journal/`.

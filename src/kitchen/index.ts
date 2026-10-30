@@ -24,6 +24,19 @@ type RawContent = Omit<KitchenContent, "ingredients"> & {
   ingredients: (IngredientContent & { file: string })[];
 };
 
+const SHAPE =
+  /^<(path|circle|ellipse|line|polyline|rect)(\s+(d|cx|cy|r|rx|ry|x|y|x1|y1|x2|y2|width|height|points)="[-0-9.,\sa-zA-Z]*")*\s*\/>$/;
+
+/**
+ * Whether a drawing is only self-closing shapes with geometry attributes. Drawings are rendered
+ * as markup, so nothing else (scripts, event handlers, links, images) may get in.
+ */
+function isSimpleDrawing(drawing: string): boolean {
+  const tags = drawing.match(/<[^>]*>/g) ?? [];
+  const between = drawing.replace(/<[^>]*>/g, "");
+  return tags.length > 0 && between.trim() === "" && tags.every((tag) => SHAPE.test(tag));
+}
+
 /**
  * Reads and validates the curated content in `contentDir`: every Cuisine in `cuisines.yaml`,
  * one Markdown file per Ingredient under `ingredients/` (frontmatter plus an essay), and every
@@ -62,11 +75,35 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
 
   const ingredients: RawContent["ingredients"] = [];
   const ingredientsDir = join(contentDir, "ingredients");
+
+  /** An Ingredient's drawing, if it exists and only draws simple shapes. */
+  async function readDrawing(id: string): Promise<string | undefined> {
+    const file = join(ingredientsDir, `${id}.svg`);
+    let drawing: string;
+    try {
+      // Whitespace between shapes would become stray text in the page.
+      drawing = (await readFile(file, "utf8")).trim().replace(/>\s+</g, "><");
+    } catch {
+      errors.push({ file, message: `Ingredient ${id} needs a drawing in ingredients/${id}.svg.` });
+      return undefined;
+    }
+    if (!isSimpleDrawing(drawing)) {
+      errors.push({
+        file,
+        message: `Ingredient ${id}'s drawing may only use path, circle, ellipse, line, polyline and rect, with geometry attributes.`,
+      });
+      return undefined;
+    }
+    return drawing;
+  }
   for (const name of (await readdir(ingredientsDir)).filter((f) => f.endsWith(".md")).sort()) {
     const file = join(ingredientsDir, name);
+    const id = basename(name, ".md");
+    const drawing = await readDrawing(id);
+    if (drawing === undefined) continue;
     const { data, content: essay } = matter(await readFile(file, "utf8"));
-    const ingredient = check(ingredientSchema, { ...data, essay: essay.trim() }, file);
-    if (ingredient) ingredients.push({ id: basename(name, ".md"), file, ...ingredient });
+    const ingredient = check(ingredientSchema, { ...data, essay: essay.trim(), drawing }, file);
+    if (ingredient) ingredients.push({ id, file, ...ingredient });
   }
 
   return {

@@ -1,6 +1,9 @@
 "use client";
 
 import { useRef } from "react";
+import { Button } from "@/components/Button";
+import { ListRow } from "@/components/ListRow";
+import { Panel } from "@/components/Panel";
 import { inSentence, type CombinationFix, type Tension } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
 
@@ -34,21 +37,28 @@ export const SuggestionList = withSearchParams(
         <h2 id="suggestions-heading" ref={heading} tabIndex={-1}>
           Suggestions
         </h2>
-        <ul className="suggestions" aria-labelledby="suggestions-heading">
+        <ul className="stack" aria-labelledby="suggestions-heading">
           {suggestions.map(({ formula, slots, rankReason }) => {
             const used = slots.flatMap(({ ingredient }) => ingredient?.name ?? []);
             const needs = slots.filter(({ slot, ingredient }) => slot.required && !ingredient);
             return (
               <li key={formula.id}>
-                <h3>
-                  <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
-                </h3>
-                <p className="rank-reason">{rankReason}</p>
-                <p>{formula.description}</p>
-                <p>Uses {used.length > 0 ? used.join(", ") : "none of your Combination yet"}.</p>
-                {needs.length > 0 && (
-                  <p>Still needs {needs.map(({ slot }) => slot.role).join(", ")}.</p>
-                )}
+                <ListRow
+                  title={
+                    <h3>
+                      <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
+                    </h3>
+                  }
+                >
+                  <p className="rank-reason">{rankReason}</p>
+                  <p>{formula.description}</p>
+                  <p className="muted">
+                    Uses {used.length > 0 ? used.join(", ") : "none of your Combination yet"}.
+                  </p>
+                  {needs.length > 0 && (
+                    <p className="muted">Still needs {needs.map(({ slot }) => slot.role).join(", ")}.</p>
+                  )}
+                </ListRow>
               </li>
             );
           })}
@@ -74,9 +84,8 @@ function Tensions({
     swaps === fixes.length ? "Swap one?" : swaps === 0 ? "Removing one would help." : "Swap or remove one?";
 
   return (
-    <section className="tensions" aria-labelledby="tensions-heading">
-      <h2 id="tensions-heading">Not everything pairs yet</h2>
-      <ul>
+    <Panel title="Not everything pairs yet" titleId="tensions-heading">
+      <ul className="stack">
         {tensions.map(({ ingredients: [a, b] }) => (
           <li key={`${a.id}+${b.id}`}>
             {a.name} and {inSentence(b)} don&rsquo;t have a Pairing in MySous.
@@ -86,13 +95,13 @@ function Tensions({
       <p>{prompt}</p>
       <div className="actions">
         {fixes.map((fix) => (
-          <button key={fix.ingredient.id} type="button" onClick={() => onFix(fix)}>
+          <Button key={fix.ingredient.id} variant={fix.replacement ? "primary" : "secondary"} onClick={() => onFix(fix)}>
             {fix.replacement
               ? `Swap ${inSentence(fix.ingredient)} for ${inSentence(fix.replacement)}`
               : `Remove ${inSentence(fix.ingredient)}`}
-          </button>
+          </Button>
         ))}
       </div>
-    </section>
+    </Panel>
   );
 }

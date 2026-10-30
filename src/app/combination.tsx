@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Button } from "@/components/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, Suspense, useContext, useEffect, useMemo, useState } from "react";
 import {
@@ -129,12 +130,15 @@ export const AddToCombination = withSearchParams(function AddToCombination({
   const added = combination.ingredients.includes(ingredient);
   // One button that changes its label, so keyboard focus stays on it after a press.
   return (
-    <button type="button" onClick={() => (added ? remove(ingredient) : add(ingredient))}>
+    <Button
+      variant={added ? "secondary" : "primary"}
+      onClick={() => (added ? remove(ingredient) : add(ingredient))}
+    >
       {added ? "Remove" : "Add"}
       <span className="visually-hidden">
         {" "}
         {ingredient.name} {added ? "from" : "to"} Combination
       </span>
-    </button>
+    </Button>
   );
 });

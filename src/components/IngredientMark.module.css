@@ -1,0 +1,35 @@
+.mark {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--stroke);
+}
+
+.sm {
+  width: var(--mark-sm);
+  height: var(--mark-sm);
+}
+
+.sm svg {
+  width: var(--mark-sm-drawing);
+}
+
+.md {
+  width: var(--mark-md);
+  height: var(--mark-md);
+}
+
+.md svg {
+  width: var(--mark-md-drawing);
+}
+
+.lg {
+  width: var(--mark-lg);
+  height: var(--mark-lg);
+}
+
+.lg svg {
+  width: var(--mark-lg-drawing);
+}

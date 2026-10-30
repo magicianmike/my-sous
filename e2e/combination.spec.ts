@@ -218,3 +218,12 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await page.keyboard.press("Enter");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
 });
+
+test("a Cook opens an Ingredient from the tray and keeps the Combination", async ({ page }) => {
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  await tray(page).getByRole("link", { name: "Garlic" }).click();
+
+  await expect(page.getByRole("heading", { level: 1, name: "Garlic" })).toBeVisible();
+  await expect(page).toHaveURL(/\/ingredients\/garlic\?with=chicken-thigh,garlic$/);
+  await expectCombination(page, ["Chicken thigh", "Garlic"]);
+});

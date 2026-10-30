@@ -24,7 +24,9 @@ export default async function FormulaPage({ params }: Props) {
 
   return (
     <>
-      <CombinationLink href="/suggestions">Back to what to make</CombinationLink>
+      <CombinationLink href="/suggestions" className="back-link">
+        Back to what to make
+      </CombinationLink>
       <h1>{formula.name}</h1>
       <p>{formula.description}</p>
       <FormulaFill formulaId={formula.id} />

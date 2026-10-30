@@ -12,7 +12,10 @@ const screens = [
 /** Waits for the parts that render in the browser (the tray) to be there. */
 async function open(page: Page, path: string) {
   await page.goto(path);
-  await expect(page.getByRole("heading", { name: /Your Combination/ }).first()).toBeVisible();
+  // The tray's heading on desktop; on a phone, the bar that opens it.
+  await expect(
+    page.getByRole("heading", { name: /Your Combination/ }).or(page.getByRole("button", { name: /^Your Combination/ })).first(),
+  ).toBeVisible();
 }
 
 test.describe("touch targets on a phone", () => {

@@ -91,15 +91,104 @@ ul {
   gap: var(--space-6);
 }
 
+/*
+ * The tray. On a phone, a bar docked to the foot of the screen, which opens the tray as a sheet;
+ * it sticks within the page rather than floating over it, so it never hides the page's end.
+ * From 56rem, a sticky side panel. Matches SIDE_PANEL in combination-tray.tsx.
+ */
+
+.tray-dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: grid;
+  margin-inline: calc(var(--space-4) * -1);
+}
+
+.tray-panel {
+  display: none;
+}
+
+.tray-status {
+  order: -1;
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.tray-status:empty {
+  padding: 0;
+}
+
+.tray-sheet {
+  width: 100%;
+  max-width: none;
+  max-height: 85dvh;
+  margin: auto 0 0;
+  padding: 0 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-floating);
+}
+
+.tray-sheet[open] {
+  animation: sheet-in var(--motion-slow) var(--ease-out);
+}
+
+.tray-sheet::backdrop {
+  background: var(--scrim);
+}
+
+.tray-sheet > aside {
+  border: 0;
+}
+
+.tray-close {
+  display: flex;
+  width: calc(100% - 2 * var(--space-4));
+  margin-inline: auto;
+}
+
+html:has(.tray-sheet:modal) {
+  overflow: hidden;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
 @media (min-width: 56rem) {
   .app {
     grid-template-columns: minmax(0, 1fr) var(--tray-width);
     align-items: start;
   }
 
-  .app > aside {
-    position: sticky;
+  .tray-dock {
     top: var(--space-4);
+    bottom: auto;
+    gap: var(--space-2);
+    margin-inline: 0;
+  }
+
+  .tray-panel {
+    display: block;
+  }
+
+  .tray-bar,
+  .tray-sheet {
+    display: none;
+  }
+
+  .tray-status {
+    order: 0;
+    padding: 0;
+    background: none;
   }
 }
 

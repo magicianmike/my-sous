@@ -1,8 +1,13 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-function tray(page: Page) {
-  return page.getByRole("complementary", { name: /Your Combination/ });
+/** The tray: the side panel on desktop, or on a phone the sheet, opened from its bar. */
+async function tray(page: Page) {
+  if (!test.info().project.use.isMobile) return page.getByRole("complementary", { name: /Your Combination/ });
+  const sheet = page.getByRole("dialog", { name: /Your Combination/ });
+  if (!(await sheet.isVisible())) await page.getByRole("button", { name: /^Your Combination/ }).click();
+  return sheet;
 }
+
 
 /** A Formula's Slot, found by the heading that names its role. */
 function slotItem(page: Page, role: string) {
@@ -21,11 +26,17 @@ function suggestionList(page: Page) {
   return page.getByRole("list", { name: "Suggestions" });
 }
 
+/** Checks the Combination without moving focus: on a phone, from the bar's name. */
 async function expectCombination(page: Page, names: string[]) {
-  await expect(tray(page).getByRole("listitem")).toHaveText(
-    names.map((name) => new RegExp(`^${name}`)),
-  );
-  await expect(tray(page).getByRole("heading")).toContainText(`${names.length} of 4`);
+  if (test.info().project.use.isMobile) {
+    await expect(page.getByRole("button", { name: /^Your Combination/ })).toHaveAccessibleName(
+      `Your Combination ${names.length} of 4${names.length > 0 ? `: ${names.join(", ")}` : ""}`,
+    );
+    return;
+  }
+  const shown = await tray(page);
+  await expect(shown.getByRole("listitem")).toHaveText(names.map((name) => new RegExp(`^${name}`)));
+  await expect(shown.getByRole("heading")).toContainText(`${names.length} of 4`);
 }
 
 test("a Cook builds a Combination, sees Suggestions and opens a Formula", async ({
@@ -39,7 +50,7 @@ test("a Cook builds a Combination, sees Suggestions and opens a Formula", async 
   await expectCombination(page, ["Chicken thigh", "Garlic"]);
   await expect(page).toHaveURL(/\/ingredients\/chicken-thigh\?with=chicken-thigh,garlic$/);
 
-  await tray(page).getByRole("link", { name: "See what to make" }).click();
+  await (await tray(page)).getByRole("link", { name: "See what to make" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "What to make" })).toBeVisible();
   await expect(suggestionList(page).getByRole("heading")).toHaveText([
     "Pan sauce",
@@ -162,7 +173,7 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
 test("unknown Ingredients in a link are dropped with a notice", async ({ page }) => {
   await page.goto("/suggestions?with=lemon,unicorn");
   await expectCombination(page, ["Lemon"]);
-  await expect(tray(page)).toContainText("aren’t in MySous yet, so they’re left out: unicorn.");
+  await expect(await tray(page)).toContainText("aren’t in MySous yet, so they’re left out: unicorn.");
 });
 
 test("a full Combination says why nothing more can be added", async ({ page }) => {
@@ -177,7 +188,7 @@ test("a full Combination says why nothing more can be added", async ({ page }) =
 
 test("removing an Ingredient updates the Combination and announces it", async ({ page }) => {
   await page.goto("/ingredients/lemon?with=lemon,garlic");
-  await tray(page).getByRole("button", { name: "Remove Lemon" }).click();
+  await (await tray(page)).getByRole("button", { name: "Remove Lemon" }).click();
   await expectCombination(page, ["Garlic"]);
   await expect(page.getByRole("status")).toHaveText("Lemon removed from Combination, 1 of 4.");
 });
@@ -221,7 +232,7 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
 
 test("a Cook opens an Ingredient from the tray and keeps the Combination", async ({ page }) => {
   await page.goto("/suggestions?with=chicken-thigh,garlic");
-  await tray(page).getByRole("link", { name: "Garlic" }).click();
+  await (await tray(page)).getByRole("link", { name: "Garlic" }).click();
 
   await expect(page.getByRole("heading", { level: 1, name: "Garlic" })).toBeVisible();
   await expect(page).toHaveURL(/\/ingredients\/garlic\?with=chicken-thigh,garlic$/);

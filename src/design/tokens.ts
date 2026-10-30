@@ -114,6 +114,8 @@ const scales = {
   // Elevation.
   "shadow-raised": "0 1px 3px rgb(0 0 0 / 0.12)",
   "shadow-floating": "0 10px 40px -8px rgb(0 0 0 / 0.35)",
+  // Dims the page behind a modal sheet.
+  "scrim": "rgb(0 0 0 / 0.45)",
   // Touch targets: the smallest a tappable control may be.
   "target": "2.75rem",
   "chip-height": "2rem",

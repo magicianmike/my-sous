@@ -1,0 +1,61 @@
+.bar {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: var(--border-hairline) solid var(--line);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface);
+  box-shadow: var(--shadow-floating);
+}
+
+.bar > a {
+  width: 100%;
+}
+
+.opener {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: 0 var(--space-1);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* An upward chevron: the sheet opens from here. */
+.opener::after {
+  content: "";
+  width: var(--space-2);
+  height: var(--space-2);
+  margin: var(--space-1) var(--space-2) 0;
+  border-top: var(--border-control) solid currentColor;
+  border-left: var(--border-control) solid currentColor;
+  transform: rotate(45deg);
+}
+
+.marks {
+  display: flex;
+}
+
+.marks > * + * {
+  margin-inline-start: calc(var(--space-3) * -1);
+  box-shadow: 0 0 0 var(--border-control) var(--surface);
+}
+
+.title {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+}
+
+.count {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}

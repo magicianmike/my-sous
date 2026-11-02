@@ -27,14 +27,17 @@
   color: var(--accent-ink);
 }
 
-/* For an icon: no outline until the pointer is over it. */
+/* For an icon: the glyph alone, which changes colour under the pointer, as links do. */
 .quiet {
   padding: 0;
   border-color: transparent;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out);
 }
 
 .quiet:hover {
-  background: var(--sunk);
+  color: var(--link-hover);
 }
 
 .button[aria-disabled="true"] {

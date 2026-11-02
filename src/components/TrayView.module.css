@@ -14,6 +14,16 @@
   border-radius: var(--radius-md);
 }
 
+.wrap {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.wrap li > span {
+  width: auto;
+  gap: var(--space-1);
+}
+
 .notice {
   margin: 0 0 var(--space-2);
   color: var(--ink-muted);

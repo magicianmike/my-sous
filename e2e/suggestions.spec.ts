@@ -182,3 +182,11 @@ test("a drawing shown without its name gives the name in a tooltip, on hover or 
   // The name is the link's own; the tooltip doesn't read it twice.
   await expect(lemon).toHaveAccessibleName("Lemon");
 });
+
+test("What to make shows the Combination's Ingredients side by side, each as wide as its name", async ({ page }) => {
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  const items = page.locator(".suggestions-combination li");
+  const [first, second] = await Promise.all([items.nth(0).boundingBox(), items.nth(1).boundingBox()]);
+  expect(second!.y).toBe(first!.y);
+  expect(second!.x).toBeGreaterThan(first!.x + first!.width - 1);
+});

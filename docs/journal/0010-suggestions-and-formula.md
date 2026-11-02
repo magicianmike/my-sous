@@ -58,6 +58,7 @@ The author's review of the first build asked for five changes, made as follows:
 - **The Yours, Suggested, Swapped and Optional tags** moved to each part's top-right corner and became quieter: sentence case, small, muted, on a recessed fill with no border.
 - **Calmer Suggestion cards.** Group labels are plain small muted text instead of bold capitals; the needs sentence and the rank reason share one regular-weight paragraph; the description stays muted.
 - **A drawing shown without its name has a tooltip** (on Suggestion cards and in the tray bar): the name, above the drawing, on hover or keyboard focus. It stays while the pointer is over it and Escape dismisses it (WCAG 1.4.13). It's visual only, since the link already carries the name. A new Tooltip component, on the `/design` specimen. Drawings beside their names don't get one.
+- **On What to make, the Combination's Ingredients sit side by side**, each as wide as its name, wrapping as needed (TrayView's new `wrap`). The tray sheet and side panel keep one per line.
 - **Remove in the tray is a bin icon**, still named "Remove Garlic" for assistive technology and voice control.
 
 ## VoiceOver pass

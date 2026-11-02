@@ -48,11 +48,22 @@ The direction in 0002 settled the Ingredient page. These screens follow its lang
 
 **Tests.** Vitest covers `makeable` and `needs` in the Kitchen: the Combination and the Pantry count, a Pairing suggestion doesn't, and an optional Slot never blocks. Playwright covers each state by its words (ready, needs more, empty Slot, empty Pantry, no Combination, tension), the swap and undo flow by keyboard with focus and announcements, and no sideways scroll on both screens from 320px to 1600px, including 200% zoom.
 
+## After the first review
+
+The author's review of the first build asked for five changes, made as follows:
+
+- **No "Formula" or "Slot" on screen.** The Cook reads "dish" and "part" ("Ready means your Combination fills every part a dish needs"). Code, content and these docs keep the glossary's terms; the glossary now records both. The `/formulas/` address is unchanged for now.
+- **Every drawing and every Ingredient name opens its Ingredient.** Where a name link sits beside the drawing, the drawing is a second target for the pointer only (hidden from assistive technology and skipped by Tab), so nothing is read or tabbed to twice. On a Suggestion card nothing else names them, so each drawing is a named link, in a group named "Yours", "Suggested" or "Optional". The tray bar's drawings moved out of its button so they can be links. Drawings get a full-size touch target through padding offset by a negative margin, so the layout doesn't move. Names inside curated prose (Pairing notes, essays) aren't linked.
+- **Fewer underlines.** Links that stand alone (titles, names, drawings, Swap) have none and change colour under the pointer: a new `link-hover` green, or the Ingredient's own stroke colour for an Ingredient, which every Ingredient's stroke meets at 4.5:1 or better on every surface (5.83:1 at worst). A link inside a sentence keeps a fine muted underline, so it's never told apart by colour alone. Drawings show a ring in their colour.
+- **The Yours, Suggested, Swapped and Optional tags** moved to each part's top-right corner and became quieter: sentence case, small, muted, on a recessed fill with no border.
+- **Calmer Suggestion cards.** Group labels are plain small muted text instead of bold capitals; the needs sentence and the rank reason share one regular-weight paragraph; the description stays muted.
+- **Remove in the tray is a bin icon**, still named "Remove Garlic" for assistive technology and voice control.
+
 ## VoiceOver pass
 
 **Status: waiting for the author.** Suggestions → Formula → swap → undo, on an iPhone and a Mac:
 
-1. Open What to make with chicken thigh and garlic. On the Pan sauce card, expect the heading "Pan sauce", then "Needs 1 more", "Yours: chicken thigh, garlic.", "Suggested: lemon.", "Optional: basil, fresh chile.", and "Also needs an acid (lemon pairs best)."
+1. Open What to make with chicken thigh and garlic. On the Pan sauce card, expect the heading "Pan sauce", then "Needs 1 more", the groups "Yours" (links Chicken thigh, Garlic), "Suggested" (Lemon) and "Optional" (Basil, Fresh chile), and "Also needs an acid (lemon pairs best)."
 2. Open Pan sauce. Expect "Needs 1 more" and the same sentence under the description. Each Slot reads its role (a heading), its Ingredient, and its tag ("Suggested").
 3. On "an acid", open "Swap an acid" and choose "Use Lime". Expect "Lime is now an acid. Undo brings back lemon." Focus is on "Undo swap of an acid". The readiness sentence now ends "(you chose lime)".
 4. Activate Undo. Expect "Undone: Lemon is an acid again." Focus moves to the heading "an acid".
@@ -62,6 +73,6 @@ Record anything that differs here, with the device and OS version.
 
 ## Open
 
-- **Author review gate:** the shots above and the preview deploy.
+- **Author review gate:** the shots above and the preview deploy. The "after" shots predate the changes under "After the first review"; they're retaken once the author approves the second round.
 - **Author approval:** the Ready badge's solid ink fill (see the first decision).
 - The VoiceOver pass above. #16 shouldn't close until its notes are recorded here.

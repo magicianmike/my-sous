@@ -41,9 +41,55 @@ h3 {
   margin: var(--space-5) 0 var(--space-2);
 }
 
-a {
+/*
+ * Links stand on their own (titles, names, drawings) without underlines, and change colour under the
+ * pointer. Kept at no specificity, so a link styled as a button keeps its own colours.
+ */
+:where(a) {
   color: inherit;
+  text-decoration: none;
   text-underline-offset: var(--underline-offset);
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+:where(a:hover) {
+  color: var(--link-hover);
+}
+
+/* An Ingredient's link takes on the Ingredient's own colour. */
+:where(a.hue:hover) {
+  color: var(--stroke);
+}
+
+/* In a sentence, a link keeps a fine underline, so it isn't told from the words around it by colour alone. */
+:where(p a) {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-hairline);
+  text-decoration-color: var(--ink-muted);
+}
+
+:where(p a:hover) {
+  text-decoration-color: currentColor;
+}
+
+/*
+ * An Ingredient's drawing as a link: a ring in its colour under the pointer. The padding makes a small
+ * drawing a full-size target, and the matching negative margin keeps it from moving the layout.
+ */
+.mark-link {
+  display: inline-flex;
+  flex: none;
+  padding: var(--space-1);
+  margin: calc(var(--space-1) * -1);
+  border-radius: 50%;
+}
+
+.mark-link > * {
+  transition: box-shadow var(--motion-fast) var(--ease-out);
+}
+
+.mark-link:hover > * {
+  box-shadow: 0 0 0 var(--border-control) var(--stroke);
 }
 
 :focus-visible {
@@ -379,15 +425,15 @@ main {
 
 /* Suggestions and Formula */
 
-.rank-reason {
-  font-weight: var(--weight-bold);
-}
-
 /* A tension: the two Ingredients' drawings, side by side, then the sentence that names it. */
 .tension {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+}
+
+.tension p {
+  margin: 0;
 }
 
 .tension-marks {
@@ -428,10 +474,15 @@ main {
   gap: var(--space-2);
 }
 
+/* A name standing alone, not in a sentence, so no underline. */
 .slot-fill {
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--text-xl);
+}
+
+.slot-fill a {
+  text-decoration: none;
 }
 
 .formula-readiness {
@@ -445,27 +496,23 @@ main {
   margin: 0;
 }
 
-/* A word on where a Slot's Ingredient came from, or that the Slot is optional. */
+/* Where a part's Ingredient came from, or that the part is optional: quiet notes in the row's top corner. */
 .tags {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: var(--space-1);
-  margin: var(--space-1) 0 0;
+  margin: 0;
 }
 
 .tag {
   padding: 0 var(--space-2);
-  border: var(--border-hairline) solid var(--ink-muted);
   border-radius: var(--radius-pill);
+  background: var(--sunk);
   color: var(--ink-muted);
-  font-family: var(--font-text);
   font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-caps);
-  text-transform: uppercase;
 }
 
-/* What else could fill a Slot: each a chip with its drawing. */
 .alternatives {
   display: flex;
   flex-wrap: wrap;

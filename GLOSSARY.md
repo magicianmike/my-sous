@@ -51,11 +51,11 @@ The one to four Ingredients the Cook wants to cook around, whether or not they a
 _Avoid_: Selection, basket, cart, idea
 
 **Formula**:
-An adaptable dish template (for example a pan sauce or a grain bowl) made of Slots that the Cook's Ingredients fill.
+An adaptable dish template (for example a pan sauce or a grain bowl) made of Slots that the Cook's Ingredients fill. The Cook sees it called a **dish**; "Formula" stays in code, content and docs.
 _Avoid_: Template, recipe, pattern
 
 **Slot**:
-A named role within a Formula, such as "an acid" or "a soft herb", that one or more Ingredients can fill.
+A named role within a Formula, such as "an acid" or "a soft herb", that one or more Ingredients can fill. The Cook sees it called a **part** ("every part a dish needs"); "Slot" stays in code, content and docs.
 _Avoid_: Placeholder, component
 
 **Suggestion**:

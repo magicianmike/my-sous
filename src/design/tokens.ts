@@ -19,6 +19,8 @@ export type Palette = {
   ink: string;
   /** Secondary text; also the border of controls, which must stand out from the page. */
   inkMuted: string;
+  /** A link under the pointer; an Ingredient's link takes the Ingredient's own colour instead. */
+  linkHover: string;
   /** Primary actions. */
   accent: string;
   /** Text on `accent`. */
@@ -36,6 +38,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
     line: "#d6d8cd",
     ink: "#1f2620",
     inkMuted: "#4d574f",
+    linkHover: "#2f6a3a",
     accent: "#1f2620",
     accentInk: "#ffffff",
     focus: "#1f2620",
@@ -48,6 +51,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
     line: "#343a35",
     ink: "#ebefe9",
     inkMuted: "#aab3ab",
+    linkHover: "#9dd4a6",
     accent: "#ebefe9",
     accentInk: "#121412",
     focus: "#ebefe9",
@@ -64,6 +68,10 @@ export const textPairings: [keyof Palette, keyof Palette][] = [
   ["inkMuted", "surface"],
   ["inkMuted", "floating"],
   ["inkMuted", "sunk"],
+  ["linkHover", "bg"],
+  ["linkHover", "surface"],
+  ["linkHover", "floating"],
+  ["linkHover", "sunk"],
   ["accentInk", "accent"],
 ];
 

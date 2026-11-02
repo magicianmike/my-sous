@@ -5,7 +5,7 @@ type Props = {
   mark?: React.ReactNode;
   /** The row's title, usually a link. */
   title: React.ReactNode;
-  /** An action at the end of the title line, such as Add. */
+  /** An action at the end of the title line, such as Add, or a quiet note in the top corner. */
   action?: React.ReactNode;
   children?: React.ReactNode;
 };
@@ -16,7 +16,7 @@ export function ListRow({ mark, title, action, children }: Props) {
     <div className={`${styles.row} ${mark ? styles.withMark : ""}`}>
       {mark && <div className={styles.mark}>{mark}</div>}
       <div className={styles.title}>{title}</div>
-      {action && <div>{action}</div>}
+      {action && <div className={styles.action}>{action}</div>}
       {children && <div className={styles.body}>{children}</div>}
     </div>
   );

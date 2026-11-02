@@ -177,7 +177,7 @@ function explainRank(
   pairs: [Ingredient, Ingredient][],
 ): string {
   const name = inSentence;
-  if (used.length === 0) return "None of your Combination fits this Formula yet.";
+  if (used.length === 0) return "None of your Combination fits this dish yet.";
   if (used.length === 1) return `Only ${name(used[0])} from your Combination is used here.`;
   if (pairs.length === 0) {
     return used.length === 2

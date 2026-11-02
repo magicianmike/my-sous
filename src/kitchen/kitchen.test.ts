@@ -646,7 +646,7 @@ describe("loadKitchen", () => {
       const { suggestions, tensions } = await suggestFor(["anchovy", "caper", "sea-salt"]);
 
       expect(suggestions.map(({ formula, rankReason }) => [formula.id, rankReason])).toEqual([
-        ["dessert", "None of your Combination fits this Formula yet."],
+        ["dessert", "None of your Combination fits this dish yet."],
       ]);
       expect(suggestions[0].slots.map(({ ingredient }) => ingredient)).toEqual([undefined, undefined]);
       expect(tensions).toHaveLength(3);
@@ -725,7 +725,7 @@ describe("loadKitchen", () => {
       [["mint", "chocolate"], "Mint and chocolate don't have a Pairing in MySous yet."],
       [["mint", "chocolate", "garlic"], "None of these Ingredients pair with each other yet."],
       [["mint"], "Only mint from your Combination is used here."],
-      [[], "None of your Combination fits this Formula yet."],
+      [[], "None of your Combination fits this dish yet."],
     ])("explains its rank when it uses %j", async (fills, expected) => {
       // A Formula with a Slot for each fill, so nothing else is added by Pairing. Chocolate pairs
       // with nothing, so with an empty Combination its Slot stays empty.

@@ -4,10 +4,14 @@
   gap: var(--space-1);
   min-height: var(--target);
   font-weight: var(--weight-bold);
-  text-decoration: underline;
-  text-underline-offset: var(--underline-offset);
   cursor: pointer;
   list-style: none;
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+/* The chevron says it opens, so no underline; under the pointer it changes colour, as links do. */
+.disclosure summary:hover {
+  color: var(--link-hover);
 }
 
 .disclosure summary::-webkit-details-marker {

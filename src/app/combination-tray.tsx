@@ -8,6 +8,7 @@ import { TrayBar } from "@/components/TrayBar";
 import { TrayView } from "@/components/TrayView";
 import { COMBINATION_LIMIT, type Ingredient } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "./combination";
+import { IngredientLink, IngredientMarkLink } from "./ingredient-link";
 
 /** Where the tray is a side panel rather than a bar and sheet; matches `.tray-dock` in globals.css. */
 const SIDE_PANEL = "(min-width: 56rem)";
@@ -107,7 +108,8 @@ function TrayDock() {
         remove(ingredient);
         heading.current?.focus();
       }}
-      renderName={({ id, name }) => <CombinationLink href={`/ingredients/${id}`}>{name}</CombinationLink>}
+      renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
+      renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
       action={seeWhatToMake}
     />
   );
@@ -128,6 +130,7 @@ function TrayDock() {
             sheetHeading.current?.focus();
           }}
           action={seeWhatToMake}
+          renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
         />
       </div>
       <dialog
@@ -166,7 +169,7 @@ type TrayPlacement = {
 
 /** What Tab can reach. */
 const FOCUSABLE = [
-  "a[href]",
+  "a[href]:not([tabindex='-1'])",
   "button:not([disabled])",
   "input:not([disabled])",
   "summary",

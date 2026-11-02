@@ -15,7 +15,8 @@ import {
   type Suggestion,
 } from "@/kitchen/kitchen";
 import { useCombination, useKitchen, withSearchParams } from "../../combination";
-import { readinessSentence } from "../../readiness";
+import { IngredientLink, IngredientMarkLink } from "../../ingredient-link";
+import { ReadinessSentence } from "../../readiness";
 
 /** The Formula's Slots and method, filled from the current Combination. */
 export const FormulaFill = withSearchParams(function FormulaFill({
@@ -90,7 +91,9 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
     <>
       <div className="formula-readiness">
         <Readiness missing={current.suggestion.needs.length} />
-        <p>{readinessSentence(current.suggestion)}</p>
+        <p>
+          <ReadinessSentence suggestion={current.suggestion} />
+        </p>
       </div>
       <h2>What goes in</h2>
       <ul className="slots stack">
@@ -99,7 +102,7 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
           return (
             <li key={slot.id}>
               <ListRow
-                mark={ingredient ? <IngredientMark ingredient={ingredient} size="sm" /> : <EmptyMark />}
+                mark={ingredient ? <IngredientMarkLink ingredient={ingredient} /> : <EmptyMark />}
                 title={
                   <>
                     <h3
@@ -111,19 +114,25 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
                     >
                       {slot.role}
                     </h3>
-                    <p className="slot-fill">{ingredient ? ingredient.name : "Nothing yet"}</p>
-                    <p className="tags">
-                      {source && <span className="tag">{SOURCE_TAG[source]}</span>}
-                      {!slot.required && <span className="tag">Optional</span>}
+                    <p className="slot-fill">
+                      {ingredient ? <IngredientLink ingredient={ingredient} /> : "Nothing yet"}
                     </p>
                   </>
                 }
                 action={
-                  undoable === slot.id && (
-                    <Button ref={undoButton} onClick={undo}>
-                      Undo<span className="visually-hidden"> swap of {slot.role}</span>
-                    </Button>
-                  )
+                  <>
+                    {(source || !slot.required) && (
+                      <p className="tags">
+                        {source && <span className="tag">{SOURCE_TAG[source]}</span>}
+                        {!slot.required && <span className="tag">Optional</span>}
+                      </p>
+                    )}
+                    {undoable === slot.id && (
+                      <Button ref={undoButton} onClick={undo}>
+                        Undo<span className="visually-hidden"> swap of {slot.role}</span>
+                      </Button>
+                    )}
+                  </>
                 }
               >
                 <p className="muted">{filled.reason}</p>

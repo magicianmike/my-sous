@@ -113,7 +113,7 @@ export function withSearchParams<P extends object>(
   };
 }
 
-type LinkProps = { href: string; children: React.ReactNode; className?: string };
+type LinkProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & { href: string };
 
 /** A link to another app screen that keeps the current Combination. */
 export const CombinationLink = withSearchParams(

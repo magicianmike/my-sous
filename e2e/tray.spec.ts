@@ -15,7 +15,7 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
 
   test("the bar shows an empty circle for each slot still free, and leads with See what to make", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
-    const marks = opener(page).locator("[class*=marks] > *");
+    const marks = page.locator(".tray-bar [class*=marks] > *");
     await expect(marks).toHaveCount(4);
     await expect(marks.locator("svg")).toHaveCount(2);
 
@@ -26,10 +26,16 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     expect(action!.y).toBeLessThan(bar!.y);
   });
 
+  test("a drawing in the bar opens its Ingredient", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon,garlic");
+    await page.locator(".tray-bar a.mark-link").nth(1).click();
+    await expect(page).toHaveURL(/\/ingredients\/garlic\?with=lemon,garlic$/);
+  });
+
   test("an empty Combination shows no empty circles", async ({ page }) => {
     await page.goto("/ingredients/lemon");
     await expect(opener(page)).toHaveAccessibleName("Your Combination 0 of 4");
-    await expect(opener(page).locator("[class*=marks]")).toHaveCount(0);
+    await expect(page.locator(".tray-bar [class*=marks]")).toHaveCount(0);
   });
 
   test("opening moves focus in, contains it, and closing returns it", async ({ page }) => {

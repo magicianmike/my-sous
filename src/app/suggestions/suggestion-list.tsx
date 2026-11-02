@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { Button, buttonClass } from "@/components/Button";
 import { EmptyMark } from "@/components/EmptyMark";
-import { IngredientMark } from "@/components/IngredientMark";
 import { ListRow } from "@/components/ListRow";
 import { MarkGroup } from "@/components/MarkGroup";
 import { Panel } from "@/components/Panel";
@@ -14,11 +13,13 @@ import {
   inSentence,
   isCooksOwn,
   type CombinationFix,
+  type Ingredient,
   type Suggestion,
   type Tension,
 } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
-import { readinessSentence } from "../readiness";
+import { IngredientLink, IngredientMarkLink } from "../ingredient-link";
+import { ReadinessSentence } from "../readiness";
 
 export const SuggestionList = withSearchParams(
   function SuggestionList() {
@@ -49,7 +50,8 @@ export const SuggestionList = withSearchParams(
             remove(ingredient);
             combinationHeading.current?.focus();
           }}
-          renderName={({ id, name }) => <CombinationLink href={`/ingredients/${id}`}>{name}</CombinationLink>}
+          renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
+          renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
         />
       </div>
     );
@@ -96,8 +98,8 @@ export const SuggestionList = withSearchParams(
           Suggestions
         </h2>
         <p className="muted">
-          MySous doesn&rsquo;t know your Pantry yet, so Ready means your Combination fills every Slot a
-          Formula needs.
+          MySous doesn&rsquo;t know your Pantry yet, so Ready means your Combination fills every part a
+          dish needs.
         </p>
         <ul className="stack" aria-labelledby="suggestions-heading">
           {suggestions.map((suggestion) => (
@@ -126,6 +128,8 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
     ingredient && source === "pairing" && !slot.required ? [ingredient] : [],
   );
   const open = needs.filter(({ ingredient }) => !ingredient).length;
+  // No other link on the card names these Ingredients, so each drawing carries its name.
+  const markLink = (ingredient: Ingredient) => <IngredientMarkLink ingredient={ingredient} named />;
   return (
     <ListRow
       title={
@@ -136,18 +140,25 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
       action={<Readiness missing={needs.length} />}
     >
       <div className="mark-groups">
-        {yours.length > 0 && <MarkGroup label="Yours" ingredients={yours} />}
+        {yours.length > 0 && <MarkGroup label="Yours" ingredients={yours} renderMark={markLink} />}
         {(suggested.length > 0 || open > 0) && (
           <MarkGroup
             label="Suggested"
             ingredients={suggested}
-            empty={{ count: open, label: `${open} Slot${open === 1 ? "" : "s"} nothing pairs with yet` }}
+            empty={{ count: open, label: `${open} part${open === 1 ? "" : "s"} nothing pairs with yet` }}
+            renderMark={markLink}
           />
         )}
-        {optional.length > 0 && <MarkGroup label="Optional" ingredients={optional} />}
+        {optional.length > 0 && <MarkGroup label="Optional" ingredients={optional} renderMark={markLink} />}
       </div>
-      {!makeable && <p className="needs">{readinessSentence(suggestion)}</p>}
-      <p className="rank-reason">{rankReason}</p>
+      <p>
+        {!makeable && (
+          <>
+            <ReadinessSentence suggestion={suggestion} />{" "}
+          </>
+        )}
+        {rankReason}
+      </p>
       <p className="muted">{formula.description}</p>
     </ListRow>
   );
@@ -172,13 +183,14 @@ function Tensions({
       <ul className="stack">
         {tensions.map(({ ingredients: [a, b] }) => (
           <li key={`${a.id}+${b.id}`} className="tension">
-            <span className="tension-marks" aria-hidden="true">
-              <IngredientMark ingredient={a} size="sm" />
-              <IngredientMark ingredient={b} size="sm" />
+            <span className="tension-marks">
+              <IngredientMarkLink ingredient={a} />
+              <IngredientMarkLink ingredient={b} />
             </span>
-            <span>
-              {a.name} and {inSentence(b)} don&rsquo;t have a Pairing in MySous.
-            </span>
+            <p>
+              <IngredientLink ingredient={a} /> and{" "}
+              <IngredientLink ingredient={b}>{inSentence(b)}</IngredientLink> don&rsquo;t have a Pairing in MySous.
+            </p>
           </li>
         ))}
       </ul>

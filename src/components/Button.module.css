@@ -27,10 +27,14 @@
   color: var(--accent-ink);
 }
 
+/* For an icon: no outline until the pointer is over it. */
 .quiet {
+  padding: 0;
   border-color: transparent;
-  text-decoration: underline;
-  text-underline-offset: var(--underline-offset);
+}
+
+.quiet:hover {
+  background: var(--sunk);
 }
 
 .button[aria-disabled="true"] {

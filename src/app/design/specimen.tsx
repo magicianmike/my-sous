@@ -104,7 +104,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
         <MarkGroup
           label="Suggested"
           ingredients={ingredients.slice(2, 3)}
-          empty={{ count: 1, label: "1 Slot nothing pairs with yet" }}
+          empty={{ count: 1, label: "1 part nothing pairs with yet" }}
         />
       </div>
 

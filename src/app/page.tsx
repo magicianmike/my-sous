@@ -1,5 +1,5 @@
 import { IngredientMark } from "@/components/IngredientMark";
-import { CombinationLink } from "./combination";
+import { IngredientLink } from "./ingredient-link";
 import { IngredientSearch } from "./ingredient-search";
 import { getKitchen } from "./kitchen";
 
@@ -13,10 +13,10 @@ export default async function Home() {
       <ul id="all-ingredients" className="ingredient-links" aria-label="Every ingredient">
         {kitchen.ingredients().map((ingredient) => (
           <li key={ingredient.id}>
-            <CombinationLink href={`/ingredients/${ingredient.id}`}>
+            <IngredientLink ingredient={ingredient}>
               <IngredientMark ingredient={ingredient} size="sm" />
               {ingredient.name}
-            </CombinationLink>
+            </IngredientLink>
           </li>
         ))}
       </ul>

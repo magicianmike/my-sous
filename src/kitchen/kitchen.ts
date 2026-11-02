@@ -151,7 +151,7 @@ function explainFill(slot: Slot, fill: Fill, justification: PairingView | undefi
     case undefined:
       return `No Pairing here points to ${slot.role} yet.`;
     case "combination":
-      return "From your Combination.";
+      return "From your basket.";
     case "pantry":
       return "From your Pantry.";
     case "pairing":
@@ -177,8 +177,8 @@ function explainRank(
   pairs: [Ingredient, Ingredient][],
 ): string {
   const name = inSentence;
-  if (used.length === 0) return "None of your Combination fits this dish yet.";
-  if (used.length === 1) return `Only ${name(used[0])} from your Combination is used here.`;
+  if (used.length === 0) return "None of your basket fits this dish yet.";
+  if (used.length === 1) return `Only ${name(used[0])} from your basket is used here.`;
   if (pairs.length === 0) {
     return used.length === 2
       ? capitalise(`${name(used[0])} and ${name(used[1])} don't have a Pairing in MySous yet.`)

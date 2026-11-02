@@ -50,7 +50,7 @@ for (const reduced of [false, true]) {
       await expect(items).toHaveCount(1);
       expect((await animation(items.first())).name).toBe("none");
 
-      await page.getByRole("button", { name: "Add Garlic to Combination" }).first().click();
+      await page.getByRole("button", { name: "Add Garlic to your basket" }).first().click();
       await expect(items).toHaveCount(2);
       expect(await animation(items.nth(1))).toMatchObject({
         name: expect.stringMatching(/grow$/),

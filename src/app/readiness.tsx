@@ -8,8 +8,8 @@ const and = new Intl.ListFormat("en", { type: "conjunction" });
 export function ReadinessSentence({ suggestion: { makeable, needs, slots } }: { suggestion: Suggestion }) {
   if (makeable) {
     return slots.some(({ source }) => source === "pantry")
-      ? "Ready with your Combination and Pantry."
-      : "Ready with your Combination.";
+      ? "Ready with your basket and Pantry."
+      : "Ready with your basket.";
   }
   const parts = needs.map(({ slot, ingredient, source }) => {
     if (!ingredient) return <>{slot.role} (nothing pairs yet)</>;

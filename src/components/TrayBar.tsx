@@ -50,10 +50,10 @@ export function TrayBar<T extends IngredientLook>({
         className={styles.opener}
         aria-haspopup="dialog"
         // Starts with the visible text, so voice control can say what it sees; then the names.
-        aria-label={`Your Combination ${ingredients.length} of ${limit}${names && `: ${names}`}`}
+        aria-label={`Your basket ${ingredients.length} of ${limit}${names && `: ${names}`}`}
         onClick={onOpen}
       >
-        <span className={styles.title}>Your Combination</span>{" "}
+        <span className={styles.title}>Your basket</span>{" "}
         <span className={styles.count}>
           {ingredients.length} of {limit}
         </span>

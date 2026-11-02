@@ -134,7 +134,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
         </div>
       </Panel>
 
-      <h2>Combination tray</h2>
+      <h2>Basket (Combination tray)</h2>
       <div className="specimen-tray">
         <TrayView
           ingredients={tray}
@@ -143,7 +143,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
           status={status}
           onRemove={(removed) => {
             setTray(tray.filter(({ id }) => id !== removed.id));
-            setStatus(`${removed.name} removed from Combination, ${tray.length - 1} of ${COMBINATION_LIMIT}.`);
+            setStatus(`${removed.name} removed from your basket, ${tray.length - 1} of ${COMBINATION_LIMIT}.`);
           }}
           renderName={({ id, name }) => <a href={`/ingredients/${id}`}>{name}</a>}
           action={seeWhatToMake}
@@ -163,7 +163,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
 
       <h2>Toast</h2>
       <p className="muted">Shows each Combination change for a few seconds, then fades.</p>
-      <Toast message="Garlic added to Combination, 2 of 4." />
+      <Toast message="Garlic added to your basket, 2 of 4." />
 
       <h2>Segmented control</h2>
       <SegmentedControl

@@ -7,9 +7,9 @@ function inSheet(page: Page) {
 
 /** The tray: the side panel on desktop, or on a phone the sheet, opened from its bar. */
 async function tray(page: Page) {
-  if (!inSheet(page)) return page.getByRole("complementary", { name: /Your Combination/ });
-  const sheet = page.getByRole("dialog", { name: /Your Combination/ });
-  if (!(await sheet.isVisible())) await page.getByRole("button", { name: /^Your Combination/ }).click();
+  if (!inSheet(page)) return page.getByRole("complementary", { name: /Your basket/ });
+  const sheet = page.getByRole("dialog", { name: /Your basket/ });
+  if (!(await sheet.isVisible())) await page.getByRole("button", { name: /^Your basket/ }).click();
   return sheet;
 }
 
@@ -34,8 +34,8 @@ function suggestionList(page: Page) {
 /** Checks the Combination without moving focus: on a phone, from the bar's name. */
 async function expectCombination(page: Page, names: string[]) {
   if (inSheet(page)) {
-    await expect(page.getByRole("button", { name: /^Your Combination/ })).toHaveAccessibleName(
-      `Your Combination ${names.length} of 4${names.length > 0 ? `: ${names.join(", ")}` : ""}`,
+    await expect(page.getByRole("button", { name: /^Your basket/ })).toHaveAccessibleName(
+      `Your basket ${names.length} of 4${names.length > 0 ? `: ${names.join(", ")}` : ""}`,
     );
     return;
   }
@@ -49,9 +49,9 @@ test("a Cook builds a Combination, sees Suggestions and opens a Formula", async 
   context,
 }) => {
   await page.goto("/ingredients/chicken-thigh");
-  await page.getByRole("button", { name: "Add Chicken thigh to Combination" }).click();
+  await page.getByRole("button", { name: "Add Chicken thigh to your basket" }).click();
   await expectCombination(page, ["Chicken thigh"]);
-  await page.getByRole("button", { name: "Add Garlic to Combination" }).click();
+  await page.getByRole("button", { name: "Add Garlic to your basket" }).click();
   await expectCombination(page, ["Chicken thigh", "Garlic"]);
   await expect(page).toHaveURL(/\/ingredients\/chicken-thigh\?with=chicken-thigh,garlic$/);
 
@@ -120,7 +120,7 @@ test("a Combination that doesn't pair names the tension, and a swap resolves it"
     "Chicken thigh and cilantro pair well.",
   );
   await expect(page.getByRole("status")).toHaveText(
-    "Basil swapped for cilantro in your Combination.",
+    "Basil swapped for cilantro in your basket.",
   );
 
   await page.goBack();
@@ -194,7 +194,7 @@ test("only the latest swap offers Undo, and undoing it moves Undo to the swap be
 
 test("a Formula ready with the Combination says so, in words", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic,lemon");
-  await expect(page.locator(".formula-readiness")).toHaveText(/^Ready\s*Ready with your Combination\.$/);
+  await expect(page.locator(".formula-readiness")).toHaveText(/^Ready\s*Ready with your basket\.$/);
   await expect(slotItem(page, "an acid").locator(".tag")).toHaveText(["Yours"]);
 });
 
@@ -206,11 +206,11 @@ test("unknown Ingredients in a link are dropped with a notice", async ({ page })
 
 test("a full Combination says why nothing more can be added", async ({ page }) => {
   await page.goto("/ingredients/garlic?with=lemon,lime,basil,tomato");
-  await page.getByRole("button", { name: "Add Garlic to Combination" }).click();
+  await page.getByRole("button", { name: "Add Garlic to your basket" }).click();
   await expect(page.getByRole("status")).toHaveText(
-    "Your Combination already holds 4 Ingredients, the most it can, so Suggestions stay focused. Remove one to add Garlic.",
+    "Your basket already holds 4 Ingredients, the most it can, so Suggestions stay focused. Remove one to add Garlic.",
   );
-  await expect(page.locator(".toast-spot")).toHaveText(/^Your Combination already holds 4 Ingredients/);
+  await expect(page.locator(".toast-spot")).toHaveText(/^Your basket already holds 4 Ingredients/);
   await expectCombination(page, ["Lemon", "Lime", "Basil", "Tomato"]);
 });
 
@@ -221,7 +221,7 @@ test("removing an Ingredient updates the Combination and announces it", async ({
   await expectCombination(page, ["Garlic"]);
   // On a phone the change is made in the open sheet, so it's announced from there.
   const live = test.info().project.use.isMobile ? shown.getByRole("status") : page.getByRole("status");
-  await expect(live).toHaveText("Lemon removed from Combination, 1 of 4.");
+  await expect(live).toHaveText("Lemon removed from your basket, 1 of 4.");
 });
 
 async function tabTo(page: Page, target: Locator) {
@@ -234,13 +234,13 @@ async function tabTo(page: Page, target: Locator) {
 
 test("the whole journey works with the keyboard alone", async ({ page }) => {
   await page.goto("/ingredients/chicken-thigh");
-  await tabTo(page, page.getByRole("button", { name: "Add Chicken thigh to Combination" }));
+  await tabTo(page, page.getByRole("button", { name: "Add Chicken thigh to your basket" }));
   await page.keyboard.press("Enter");
   await expectCombination(page, ["Chicken thigh"]);
   await expect(
-    page.getByRole("button", { name: "Remove Chicken thigh from Combination" }),
+    page.getByRole("button", { name: "Remove Chicken thigh from your basket" }),
   ).toBeFocused();
-  await tabTo(page, page.getByRole("button", { name: "Add Garlic to Combination" }));
+  await tabTo(page, page.getByRole("button", { name: "Add Garlic to your basket" }));
   await page.keyboard.press("Enter");
   await expectCombination(page, ["Chicken thigh", "Garlic"]);
   await tabTo(page, page.getByRole("link", { name: "See what to make" }));
@@ -263,22 +263,22 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
 
 test("What to make shows the Combination under its heading, in place of the tray", async ({ page }) => {
   await page.goto("/suggestions?with=chicken-thigh,garlic");
-  const shown = page.getByRole("main").getByRole("complementary", { name: /Your Combination/ });
+  const shown = page.getByRole("main").getByRole("complementary", { name: /Your basket/ });
   await expect(shown.getByRole("listitem")).toHaveText([/^Chicken thigh/, /^Garlic/]);
   await expect(page.getByRole("complementary")).toHaveCount(1);
-  await expect(page.getByRole("button", { name: /^Your Combination/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /^Your basket/ })).toHaveCount(0);
 
   await shown.getByRole("button", { name: "Remove Garlic" }).click();
-  await expect(page.getByRole("status")).toHaveText("Garlic removed from Combination, 1 of 4.");
-  await expect(shown.getByRole("heading", { name: /Your Combination/ })).toBeFocused();
+  await expect(page.getByRole("status")).toHaveText("Garlic removed from your basket, 1 of 4.");
+  await expect(shown.getByRole("heading", { name: /Your basket/ })).toBeFocused();
   await expect(suggestionList(page)).toBeVisible();
 });
 
 test("a change shows as a toast, which fades after a few seconds", async ({ page }) => {
   await page.goto("/ingredients/lemon");
-  await page.getByRole("button", { name: "Add Lemon to Combination" }).first().click();
+  await page.getByRole("button", { name: "Add Lemon to your basket" }).first().click();
   const toast = page.locator(".toast-spot");
-  await expect(toast).toHaveText("Lemon added to Combination, 1 of 4.");
+  await expect(toast).toHaveText("Lemon added to your basket, 1 of 4.");
   await expect(toast).toBeVisible();
   // It's for the eye only; the live region announces it.
   await expect(toast.getByRole("status")).toHaveCount(0);

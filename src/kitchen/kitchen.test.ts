@@ -504,13 +504,13 @@ describe("loadKitchen", () => {
 
       expect(reasons(suggestion)).toEqual([
         "Pairs with mint: Mint's coolness lifts rich lamb.",
-        "From your Combination.",
+        "From your basket.",
         "Pairs with lamb: Mint's coolness lifts rich lamb.",
       ]);
       // Swapping lamb out leaves mint, which was there for lamb, without a Pairing.
       expect(reasons(kitchen.swap(suggestion, "protein", "chicken"))).toEqual([
         "Your choice. It doesn't pair with anything else here yet.",
-        "From your Combination.",
+        "From your basket.",
         "Suggested earlier. It doesn't pair with anything else here now.",
       ]);
       expect(reasons((await plate(["vinegar"])).suggestion)[0]).toBe(
@@ -646,7 +646,7 @@ describe("loadKitchen", () => {
       const { suggestions, tensions } = await suggestFor(["anchovy", "caper", "sea-salt"]);
 
       expect(suggestions.map(({ formula, rankReason }) => [formula.id, rankReason])).toEqual([
-        ["dessert", "None of your Combination fits this dish yet."],
+        ["dessert", "None of your basket fits this dish yet."],
       ]);
       expect(suggestions[0].slots.map(({ ingredient }) => ingredient)).toEqual([undefined, undefined]);
       expect(tensions).toHaveLength(3);
@@ -724,8 +724,8 @@ describe("loadKitchen", () => {
       [["lemon", "garlic", "mint"], "Lemon and garlic pair well, but mint doesn't pair with the rest."],
       [["mint", "chocolate"], "Mint and chocolate don't have a Pairing in MySous yet."],
       [["mint", "chocolate", "garlic"], "None of these Ingredients pair with each other yet."],
-      [["mint"], "Only mint from your Combination is used here."],
-      [[], "None of your Combination fits this dish yet."],
+      [["mint"], "Only mint from your basket is used here."],
+      [[], "None of your basket fits this dish yet."],
     ])("explains its rank when it uses %j", async (fills, expected) => {
       // A Formula with a Slot for each fill, so nothing else is added by Pairing. Chocolate pairs
       // with nothing, so with an empty Combination its Slot stays empty.

@@ -105,7 +105,7 @@ test.describe("motion", () => {
 
 test("the specimen renders components from props alone, without the URL", async ({ page }) => {
   await open(page, "/design");
-  const tray = page.getByRole("main").getByRole("complementary", { name: /Your Combination/ });
+  const tray = page.getByRole("main").getByRole("complementary", { name: /Your basket/ });
   await expect(tray).toContainText("2 of 4");
   await tray.getByRole("button", { name: "Remove Basil" }).click();
   await expect(tray).toContainText("1 of 4");

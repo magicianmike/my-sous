@@ -7,8 +7,8 @@ const combination = "?with=chicken-thigh,garlic";
 /** Each screen, and something that shows once its client-side content has rendered. */
 const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   ["/", trayShown],
-  ["/ingredients/lemon", (page) => page.getByRole("button", { name: "Add Lemon to Combination" })],
-  [`/ingredients/lemon${combination}`, (page) => page.getByRole("button", { name: "Remove Garlic from Combination" })],
+  ["/ingredients/lemon", (page) => page.getByRole("button", { name: "Add Lemon to your basket" })],
+  [`/ingredients/lemon${combination}`, (page) => page.getByRole("button", { name: "Remove Garlic from your basket" })],
   [`/suggestions${combination}`, (page) => page.getByRole("link", { name: "Pan sauce" })],
   [`/formulas/pan-sauce${combination}`, (page) => page.getByRole("heading", { name: "Method" })],
   ["/ingredients/gremolata", (page) => page.getByRole("heading", { name: "Typically includes" })],
@@ -62,8 +62,8 @@ for (const colorScheme of ["light", "dark"] as const) {
     test("the open tray sheet on a phone has no axe violations", async ({ page, isMobile }) => {
       test.skip(!isMobile, "the sheet is the phone layout");
       await page.goto("/ingredients/lemon?with=lemon,garlic");
-      await page.getByRole("button", { name: /^Your Combination/ }).click();
-      await expect(page.getByRole("dialog", { name: /Your Combination/ })).toBeVisible();
+      await page.getByRole("button", { name: /^Your basket/ }).click();
+      await expect(page.getByRole("dialog", { name: /Your basket/ })).toBeVisible();
       await expectNoViolations(page);
     });
 

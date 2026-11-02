@@ -84,7 +84,7 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
 
     test("with four Ingredients, the bar's title stays whole on one line", async ({ page }) => {
       await open(page, "/ingredients/lemon?with=chicken-thigh,garlic,lemon,basil");
-      const title = page.locator(".tray-bar button").getByText("Your Combination", { exact: true });
+      const title = page.locator(".tray-bar button").getByText("Your basket", { exact: true });
       const fits = await title.evaluate((el) => {
         const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
         return { wrapped: el.getBoundingClientRect().height > lineHeight * 1.5, cut: el.scrollWidth > el.clientWidth };

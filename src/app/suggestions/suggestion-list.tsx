@@ -67,7 +67,7 @@ export const SuggestionList = withSearchParams(
           <h2 id="nothing-yet-heading" ref={emptyHeading} tabIndex={-1}>
             Nothing to suggest yet
           </h2>
-          <p>Add an Ingredient or two to your Combination, and MySous suggests what to make with them.</p>
+          <p>Add an Ingredient or two to your basket, and MySous suggests what to make with them.</p>
           {combination.unknown.length > 0 && (
             <p className="muted">
               Some Ingredients in this link aren&rsquo;t in MySous yet, so they&rsquo;re left out:{" "}
@@ -99,7 +99,7 @@ export const SuggestionList = withSearchParams(
           Suggestions
         </h2>
         <p className="muted">
-          MySous doesn&rsquo;t know your Pantry yet, so Ready means your Combination fills every part a
+          MySous doesn&rsquo;t know your Pantry yet, so Ready means your basket fills every part a
           dish needs.
         </p>
         <ul className="stack" aria-labelledby="suggestions-heading">

@@ -48,7 +48,7 @@ export function TrayView<T extends IngredientLook>({
     <Panel
       as="aside"
       className={styles.tray}
-      title="Your Combination"
+      title="Your basket"
       titleId={titleId}
       titleExtra={`${ingredients.length} of ${limit}`}
       titleRef={titleRef}
@@ -60,12 +60,12 @@ export function TrayView<T extends IngredientLook>({
       )}
       {overLimit.length > 0 && (
         <p className={styles.notice}>
-          A Combination holds up to {limit} Ingredients, so these are left out:{" "}
+          A basket holds up to {limit} Ingredients, so these are left out:{" "}
           {overLimit.map(({ name }) => name).join(", ")}.
         </p>
       )}
       {ingredients.length === 0 ? (
-        <p className={styles.empty}>Add an Ingredient to start a Combination.</p>
+        <p className={styles.empty}>Add an Ingredient to start a basket.</p>
       ) : (
         <>
           <ul className={`${styles.items} ${wrap ? styles.wrap : ""}`}>

@@ -47,8 +47,8 @@ _Avoid_: Fridge, inventory, my ingredients
 ### Dishes
 
 **Combination**:
-The one to four Ingredients the Cook wants to cook around, whether or not they are in the Pantry. Both entry points (exploring Pairings and starting from the Pantry) converge on a Combination, and Formula suggestions are always made for one.
-_Avoid_: Selection, basket, cart, idea
+The one to four Ingredients the Cook wants to cook around, whether or not they are in the Pantry. Both entry points (exploring Pairings and starting from the Pantry) converge on a Combination, and Formula suggestions are always made for one. The Cook sees it called their **basket** ("Your basket", "Add to your basket"); "Combination" stays in code, content and docs. On screen, the basket never means the Pantry: it holds what the Cook wants to cook around, had or not.
+_Avoid_: Selection, cart, idea
 
 **Formula**:
 An adaptable dish template (for example a pan sauce or a grain bowl) made of Slots that the Cook's Ingredients fill. The Cook sees it called a **dish**; "Formula" stays in code, content and docs.

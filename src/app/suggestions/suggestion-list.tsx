@@ -128,8 +128,8 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
     ingredient && source === "pairing" && !slot.required ? [ingredient] : [],
   );
   const open = needs.filter(({ ingredient }) => !ingredient).length;
-  // No other link on the card names these Ingredients, so each drawing carries its name.
-  const markLink = (ingredient: Ingredient) => <IngredientMarkLink ingredient={ingredient} named />;
+  // Nothing else on the card names these Ingredients, so each drawing carries its name, and shows it on hover.
+  const markLink = (ingredient: Ingredient) => <IngredientMarkLink ingredient={ingredient} named tooltip />;
   return (
     <ListRow
       title={

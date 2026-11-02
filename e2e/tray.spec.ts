@@ -178,3 +178,11 @@ test.describe("when the screen changes size", () => {
     });
   }
 });
+
+test("on a wider screen, a drawing in the bar shows its name on hover", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover is for a pointer");
+  await page.setViewportSize({ width: 700, height: 800 });
+  await page.goto("/ingredients/lemon?with=lemon,garlic");
+  await page.locator(".tray-bar a.mark-link").nth(1).hover();
+  await expect(page.locator(".tray-bar").getByText("Garlic", { exact: true })).toBeVisible();
+});

@@ -157,3 +157,28 @@ test("every Ingredient drawing the Cook can press rings under the pointer", asyn
     await expect.poll(() => ring(target(page))).not.toBe("none");
   }
 });
+
+test("a drawing shown without its name gives the name in a tooltip, on hover or focus, until Escape", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "hover and Tab are for a pointer and a keyboard");
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  const lemon = marks(page, "Pan sauce", "Suggested").first();
+  const tooltip = card(page, "Pan sauce").getByText("Lemon", { exact: true });
+  await expect(tooltip).toHaveCount(0);
+
+  await lemon.hover();
+  await expect(tooltip).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(tooltip).toHaveCount(0);
+  await page.mouse.move(0, 0);
+
+  await lemon.focus();
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Tab");
+  await expect(lemon).toBeFocused();
+  await expect(tooltip).toBeVisible();
+  // The name is the link's own; the tooltip doesn't read it twice.
+  await expect(lemon).toHaveAccessibleName("Lemon");
+});

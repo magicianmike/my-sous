@@ -1,4 +1,5 @@
 import { hueStyle, IngredientMark } from "@/components/IngredientMark";
+import { Tooltip } from "@/components/Tooltip";
 import type { Ingredient } from "@/kitchen/kitchen";
 import { CombinationLink } from "./combination";
 
@@ -25,11 +26,13 @@ type MarkLinkProps = {
    * for the pointer only: hidden from assistive technology and skipped by Tab, so nothing is read twice.
    */
   named?: boolean;
+  /** Shows the name above the drawing on hover or focus, for where the drawing stands without its name. */
+  tooltip?: boolean;
 };
 
 /** An Ingredient's drawing, as a link to its page. */
-export function IngredientMarkLink({ ingredient, size = "sm", named = false }: MarkLinkProps) {
-  return (
+export function IngredientMarkLink({ ingredient, size = "sm", named = false, tooltip = false }: MarkLinkProps) {
+  const link = (
     <CombinationLink
       href={`/ingredients/${ingredient.id}`}
       className="mark-link"
@@ -38,4 +41,5 @@ export function IngredientMarkLink({ ingredient, size = "sm", named = false }: M
       <IngredientMark ingredient={ingredient} size={size} />
     </CombinationLink>
   );
+  return tooltip ? <Tooltip label={ingredient.name}>{link}</Tooltip> : link;
 }

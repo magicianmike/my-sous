@@ -12,6 +12,7 @@ import { MarkGroup } from "@/components/MarkGroup";
 import { Panel } from "@/components/Panel";
 import { Readiness } from "@/components/Readiness";
 import { SegmentedControl } from "@/components/SegmentedControl";
+import { Tooltip } from "@/components/Tooltip";
 import { Toast } from "@/components/Toast";
 import { TrayBar } from "@/components/TrayBar";
 import { TrayView } from "@/components/TrayView";
@@ -88,6 +89,11 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
         <IngredientMark ingredient={lemon} size="lg" />
         <IngredientMark ingredient={lemon} size="md" />
         <IngredientMark ingredient={lemon} size="sm" />
+        <Tooltip label={lemon.name}>
+          <a href="#tooltip" className="mark-link" aria-label={lemon.name}>
+            <IngredientMark ingredient={lemon} size="sm" />
+          </a>
+        </Tooltip>
       </div>
 
       <h2>Suggestion parts</h2>

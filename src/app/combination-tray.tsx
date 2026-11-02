@@ -130,7 +130,7 @@ function TrayDock() {
             sheetHeading.current?.focus();
           }}
           action={seeWhatToMake}
-          renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
+          renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} tooltip />}
         />
       </div>
       <dialog

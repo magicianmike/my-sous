@@ -57,6 +57,7 @@ The author's review of the first build asked for five changes, made as follows:
 - **Fewer underlines.** Links that stand alone (titles, names, drawings, Swap) have none and change colour under the pointer: a new `link-hover` green, or the Ingredient's own stroke colour for an Ingredient, which every Ingredient's stroke meets at 4.5:1 or better on every surface (5.83:1 at worst). A link inside a sentence keeps a fine muted underline, so it's never told apart by colour alone. Every drawing the Cook can press (a drawing link, a home tile, a Swap choice) shows a faint hairline ring in its colour.
 - **The Yours, Suggested, Swapped and Optional tags** moved to each part's top-right corner and became quieter: sentence case, small, muted, on a recessed fill with no border.
 - **Calmer Suggestion cards.** Group labels are plain small muted text instead of bold capitals; the needs sentence and the rank reason share one regular-weight paragraph; the description stays muted.
+- **A drawing shown without its name has a tooltip** (on Suggestion cards and in the tray bar): the name, above the drawing, on hover or keyboard focus. It stays while the pointer is over it and Escape dismisses it (WCAG 1.4.13). It's visual only, since the link already carries the name. A new Tooltip component, on the `/design` specimen. Drawings beside their names don't get one.
 - **Remove in the tray is a bin icon**, still named "Remove Garlic" for assistive technology and voice control.
 
 ## VoiceOver pass

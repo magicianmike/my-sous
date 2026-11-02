@@ -70,7 +70,15 @@
 
 .marks > * {
   display: flex;
+  flex: none;
   border-radius: 50%;
+}
+
+/* A slot the Combination has room for: an empty circle the size of a drawing. */
+.slot {
+  width: var(--mark-sm);
+  height: var(--mark-sm);
+  border: var(--border-control) dashed var(--line);
 }
 
 .title {
@@ -90,15 +98,25 @@
   font-weight: var(--weight-bold);
 }
 
-/* With room, one row: the bar takes less of a short screen, such as at 200% zoom. */
+/* With room, one row, "See what to make" first: the bar takes less of a short screen, such as at 200% zoom. */
 @media (min-width: 40rem) {
   .bar {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
   }
 
   .opener {
     grid-template-columns: auto minmax(0, 1fr) auto auto;
     grid-template-areas: "marks title count chevron";
+  }
+
+  /* On one row the drawings overlap, leaving the title room on a laptop screen zoomed to 200%. */
+  .marks {
+    gap: 0;
+  }
+
+  .marks > * + * {
+    margin-inline-start: calc(var(--space-3) * -1);
+    box-shadow: 0 0 0 var(--border-control) var(--floating);
   }
 }

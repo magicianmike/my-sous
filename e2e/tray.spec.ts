@@ -13,6 +13,19 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     await expect(sheet(page)).toBeHidden();
   });
 
+  test("the bar shows an empty circle for each slot still free, and leads with See what to make", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon,garlic");
+    const marks = opener(page).locator("[class*=marks] > *");
+    await expect(marks).toHaveCount(4);
+    await expect(marks.locator("svg")).toHaveCount(2);
+
+    const [action, bar] = await Promise.all([
+      page.getByRole("link", { name: "See what to make" }).boundingBox(),
+      opener(page).boundingBox(),
+    ]);
+    expect(action!.y).toBeLessThan(bar!.y);
+  });
+
   test("opening moves focus in, contains it, and closing returns it", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
     await opener(page).click();

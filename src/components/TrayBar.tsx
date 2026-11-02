@@ -18,6 +18,7 @@ export function TrayBar({ ingredients, limit, onOpen, openerRef, action }: Props
   const arrivalClass = useArrivalClass(ingredients.map(({ id }) => id));
   return (
     <div className={styles.bar}>
+      {ingredients.length > 0 && action}
       <button
         ref={openerRef}
         type="button"
@@ -31,17 +32,18 @@ export function TrayBar({ ingredients, limit, onOpen, openerRef, action }: Props
         <span className={styles.count}>
           {ingredients.length} of {limit}
         </span>
-        {ingredients.length > 0 && (
-          <span className={styles.marks}>
-            {ingredients.map((ingredient) => (
-              <span key={ingredient.id} className={arrivalClass(ingredient.id)}>
-                <IngredientMark ingredient={ingredient} size="sm" />
-              </span>
-            ))}
-          </span>
-        )}
+        <span className={styles.marks}>
+          {ingredients.map((ingredient) => (
+            <span key={ingredient.id} className={arrivalClass(ingredient.id)}>
+              <IngredientMark ingredient={ingredient} size="sm" />
+            </span>
+          ))}
+          {/* The slots still free, as empty circles; the button's name already gives the count. */}
+          {Array.from({ length: Math.max(limit - ingredients.length, 0) }, (_, slot) => (
+            <span key={slot} className={styles.slot} />
+          ))}
+        </span>
       </button>
-      {ingredients.length > 0 && action}
     </div>
   );
 }

@@ -9,6 +9,8 @@ export type Palette = {
   bg: string;
   /** Cards and panels on the page. */
   surface: string;
+  /** What floats above the page, such as the docked tray bar; lighter than `surface` in dark. */
+  floating: string;
   /** Recessed areas, such as a segmented control's track. */
   sunk: string;
   /** Hairlines and dividers (decorative, not needed to see a control). */
@@ -29,6 +31,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
   light: {
     bg: "#f8f7f2",
     surface: "#ffffff",
+    floating: "#ffffff",
     sunk: "#efeee6",
     line: "#d6d8cd",
     ink: "#1f2620",
@@ -40,6 +43,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
   dark: {
     bg: "#121412",
     surface: "#1b1e1b",
+    floating: "#2b302b",
     sunk: "#252925",
     line: "#343a35",
     ink: "#ebefe9",
@@ -54,9 +58,11 @@ export const palettes: Record<"light" | "dark", Palette> = {
 export const textPairings: [keyof Palette, keyof Palette][] = [
   ["ink", "bg"],
   ["ink", "surface"],
+  ["ink", "floating"],
   ["ink", "sunk"],
   ["inkMuted", "bg"],
   ["inkMuted", "surface"],
+  ["inkMuted", "floating"],
   ["inkMuted", "sunk"],
   ["accentInk", "accent"],
 ];
@@ -70,6 +76,8 @@ export const nonTextPairings: [keyof Palette, keyof Palette][] = [
   ["focus", "sunk"],
   ["accent", "bg"],
   ["accent", "surface"],
+  ["accent", "floating"],
+  ["focus", "floating"],
 ];
 
 const scales = {
@@ -117,6 +125,8 @@ const scales = {
   // Elevation.
   "shadow-raised": "0 1px 3px rgb(0 0 0 / 0.12)",
   "shadow-floating": "0 10px 40px -8px rgb(0 0 0 / 0.35)",
+  // Cast upward, by what's docked to the foot of the screen.
+  "shadow-docked": "0 -8px 28px -4px rgb(0 0 0 / 0.4), 0 -1px 2px rgb(0 0 0 / 0.16)",
   // A sheet leaves some of the page in view above it, so it reads as on top of the page.
   "sheet-max-height": "85dvh",
   // Dims the page behind a modal sheet.

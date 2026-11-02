@@ -77,5 +77,14 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
       });
       expect(clear).toBe(true);
     });
+
+    test("at the end of the page, the bar still meets the foot of the screen", async ({ page }) => {
+      await open(page, "/ingredients/chicken-thigh?with=chicken-thigh,garlic");
+      await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+      const gap = await page.evaluate(
+        () => innerHeight - document.querySelector(".tray-dock")!.getBoundingClientRect().bottom,
+      );
+      expect(gap).toBeLessThanOrEqual(1);
+    });
   });
 }

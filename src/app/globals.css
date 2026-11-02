@@ -4,9 +4,10 @@
   box-sizing: border-box;
 }
 
+/* No padding at the foot: on a phone the tray bar is the page's last thing and meets the screen's foot. */
 body {
   margin: 0;
-  padding: 0 var(--space-4) var(--space-7);
+  padding: 0 var(--space-4);
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-text);
@@ -119,7 +120,7 @@ html {
   order: -1;
   margin: 0;
   padding: var(--space-2) var(--space-4);
-  background: var(--surface);
+  background: var(--floating);
   color: var(--ink-muted);
   font-size: var(--text-sm);
 }
@@ -170,6 +171,10 @@ html:has(.tray-sheet:modal) {
 }
 
 @media (min-width: 56rem) {
+  body {
+    padding-bottom: var(--space-7);
+  }
+
   .app {
     grid-template-columns: minmax(0, 1fr) var(--tray-width);
     align-items: start;

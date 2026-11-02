@@ -85,14 +85,14 @@ h3 {
 }
 
 /*
- * Any drawing in something the Cook can press (a drawing link, a home tile, a Swap choice) rings when the
- * pointer is on it: a hairline, half strength, enough to show it without shouting.
+ * A drawing standing without its name rings when the pointer is on it: a hairline, half strength, enough to
+ * show it without shouting. Beside its name, the name's colour change says it all, so the drawing stays plain.
  */
 .ingredient-mark {
   transition: box-shadow var(--motion-fast) var(--ease-out);
 }
 
-:is(a, button):hover .ingredient-mark {
+.mark-alone:hover .ingredient-mark {
   box-shadow: 0 0 0 var(--border-hairline) color-mix(in srgb, var(--stroke) 50%, transparent);
 }
 

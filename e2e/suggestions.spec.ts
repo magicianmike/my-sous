@@ -141,20 +141,24 @@ test("removing from the Combination is a bin icon, still named in words", async 
   await expect(remove.getByText("Remove Garlic")).toHaveClass(/visually-hidden/);
 });
 
-test("every Ingredient drawing the Cook can press rings under the pointer", async ({ page, isMobile }) => {
+test("only a drawing shown without its name rings under the pointer", async ({ page, isMobile }) => {
   test.skip(isMobile, "hover is for a pointer");
   const ring = (target: ReturnType<Page["locator"]>) =>
     target.locator(".ingredient-mark").evaluate((el) => getComputedStyle(el).boxShadow);
-  const places: [string, (page: Page) => ReturnType<Page["locator"]>][] = [
-    ["/", (page) => page.getByRole("link", { name: "Lemon" })],
-    ["/suggestions?with=chicken-thigh,garlic", (page) => marks(page, "Pan sauce", "Suggested").first()],
-    ["/formulas/pan-sauce?with=chicken-thigh,garlic", (page) => slotItem(page, "an acid").locator("a.mark-link")],
+  const places: [string, (page: Page) => ReturnType<Page["locator"]>, boolean][] = [
+    ["/suggestions?with=chicken-thigh,garlic", (page) => marks(page, "Pan sauce", "Suggested").first(), true],
+    ["/", (page) => page.getByRole("link", { name: "Lemon" }), false],
+    ["/formulas/pan-sauce?with=chicken-thigh,garlic", (page) => slotItem(page, "an acid").locator("a.mark-link"), false],
   ];
-  for (const [path, target] of places) {
+  for (const [path, target, rings] of places) {
     await page.goto(path);
     expect(await ring(target(page))).toBe("none");
     await target(page).hover();
-    await expect.poll(() => ring(target(page))).not.toBe("none");
+    if (rings) await expect.poll(() => ring(target(page))).not.toBe("none");
+    else {
+      await page.waitForTimeout(300);
+      expect(await ring(target(page))).toBe("none");
+    }
   }
 });
 

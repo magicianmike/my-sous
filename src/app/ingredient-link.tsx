@@ -26,20 +26,23 @@ type MarkLinkProps = {
    * for the pointer only: hidden from assistive technology and skipped by Tab, so nothing is read twice.
    */
   named?: boolean;
-  /** Shows the name above the drawing on hover or focus, for where the drawing stands without its name. */
-  tooltip?: boolean;
+  /**
+   * The drawing stands without its name nearby: it rings under the pointer and shows the name in a tooltip.
+   * Beside its name, the name's link does that work, so the drawing stays plain.
+   */
+  alone?: boolean;
 };
 
 /** An Ingredient's drawing, as a link to its page. */
-export function IngredientMarkLink({ ingredient, size = "sm", named = false, tooltip = false }: MarkLinkProps) {
+export function IngredientMarkLink({ ingredient, size = "sm", named = false, alone = false }: MarkLinkProps) {
   const link = (
     <CombinationLink
       href={`/ingredients/${ingredient.id}`}
-      className="mark-link"
+      className={`mark-link ${alone ? "mark-alone" : ""}`}
       {...(named ? { "aria-label": ingredient.name } : { "aria-hidden": true, tabIndex: -1 })}
     >
       <IngredientMark ingredient={ingredient} size={size} />
     </CombinationLink>
   );
-  return tooltip ? <Tooltip label={ingredient.name}>{link}</Tooltip> : link;
+  return alone ? <Tooltip label={ingredient.name}>{link}</Tooltip> : link;
 }

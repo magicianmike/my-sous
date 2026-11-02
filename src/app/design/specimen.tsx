@@ -90,7 +90,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
         <IngredientMark ingredient={lemon} size="md" />
         <IngredientMark ingredient={lemon} size="sm" />
         <Tooltip label={lemon.name}>
-          <a href="#tooltip" className="mark-link" aria-label={lemon.name}>
+          <a href="#tooltip" className="mark-link mark-alone" aria-label={lemon.name}>
             <IngredientMark ingredient={lemon} size="sm" />
           </a>
         </Tooltip>

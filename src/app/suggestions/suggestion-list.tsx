@@ -129,7 +129,7 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
   );
   const open = needs.filter(({ ingredient }) => !ingredient).length;
   // Nothing else on the card names these Ingredients, so each drawing carries its name, and shows it on hover.
-  const markLink = (ingredient: Ingredient) => <IngredientMarkLink ingredient={ingredient} named tooltip />;
+  const markLink = (ingredient: Ingredient) => <IngredientMarkLink ingredient={ingredient} named alone />;
   return (
     <ListRow
       title={

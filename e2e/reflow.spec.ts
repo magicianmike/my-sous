@@ -5,6 +5,7 @@ import { trayShown } from "./tray";
 const viewports = [
   { width: 320, height: 640 },
   { width: 390, height: 844 },
+  { width: 576, height: 640 },
   { width: 640, height: 360 },
   { width: 1000, height: 800 },
   { width: 1280, height: 720 },
@@ -77,6 +78,16 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
         return last.bottom <= document.querySelector(".tray-dock")!.getBoundingClientRect().top;
       });
       expect(clear).toBe(true);
+    });
+
+    test("with four Ingredients, the bar's title stays whole on one line", async ({ page }) => {
+      await open(page, "/ingredients/lemon?with=chicken-thigh,garlic,lemon,basil");
+      const title = page.locator(".tray-bar button").getByText("Your Combination", { exact: true });
+      const fits = await title.evaluate((el) => {
+        const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+        return { wrapped: el.getBoundingClientRect().height > lineHeight * 1.5, cut: el.scrollWidth > el.clientWidth };
+      });
+      expect(fits).toEqual({ wrapped: false, cut: false });
     });
 
     test("at the end of the page, the bar still meets the foot of the screen", async ({ page }) => {

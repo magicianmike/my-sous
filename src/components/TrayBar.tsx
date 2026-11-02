@@ -27,6 +27,10 @@ export function TrayBar({ ingredients, limit, onOpen, openerRef, action }: Props
         aria-label={`Your Combination ${ingredients.length} of ${limit}${names && `: ${names}`}`}
         onClick={onOpen}
       >
+        <span className={styles.title}>Your Combination</span>{" "}
+        <span className={styles.count}>
+          {ingredients.length} of {limit}
+        </span>
         {ingredients.length > 0 && (
           <span className={styles.marks}>
             {ingredients.map((ingredient) => (
@@ -36,10 +40,6 @@ export function TrayBar({ ingredients, limit, onOpen, openerRef, action }: Props
             ))}
           </span>
         )}
-        <span className={styles.title}>Your Combination</span>{" "}
-        <span className={styles.count}>
-          {ingredients.length} of {limit}
-        </span>
       </button>
       {ingredients.length > 0 && action}
     </div>

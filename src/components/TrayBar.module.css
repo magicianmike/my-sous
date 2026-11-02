@@ -74,11 +74,12 @@
   border-radius: 50%;
 }
 
-/* A slot the Combination has room for: an empty circle the size of a drawing. */
+/* A slot the Combination has room for: a recessed, empty circle the size of a drawing. */
 .slot {
   width: var(--mark-sm);
   height: var(--mark-sm);
   border: var(--border-control) dashed var(--line);
+  background: var(--sunk);
 }
 
 .title {

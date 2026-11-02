@@ -8,6 +8,7 @@ const screens = [
   "/suggestions?with=chicken-thigh,basil",
   "/formulas/pan-sauce?with=chicken-thigh,garlic",
   "/design",
+  "/pantry?with=chicken-thigh",
 ];
 
 /** Waits for the parts that render in the browser (the tray) to be there. */

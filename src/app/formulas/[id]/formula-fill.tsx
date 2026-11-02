@@ -18,6 +18,7 @@ import {
 } from "@/kitchen/kitchen";
 import { useCombination, useKitchen, withSearchParams } from "../../combination";
 import { IngredientLink, IngredientMarkLink } from "../../ingredient-link";
+import { usePantry } from "../../pantry";
 import { ReadinessSentence } from "../../readiness";
 
 /** The Formula's Slots and method, filled from the current Combination. */
@@ -28,14 +29,17 @@ export const FormulaFill = withSearchParams(function FormulaFill({
 }) {
   const { kitchen } = useKitchen();
   const { combination, add } = useCombination();
+  const pantry = usePantry();
   // The part whose Ingredient was just added to the basket, so focus can return to it after the reset.
   const [added, setAdded] = useState<string>();
   const suggestion = kitchen
-    .suggest(combination.ingredients, [])
+    .suggest(combination.ingredients, pantry.ingredients)
     .suggestions
     .find(({ formula }) => formula.id === formulaId)!;
-  // A new Combination starts a fresh swap history.
-  const combinationKey = combination.ingredients.map(({ id }) => id).join(",");
+  // A new Combination or Pantry starts a fresh swap history.
+  const combinationKey = [combination.ingredients, pantry.ingredients]
+    .map((ingredients) => ingredients.map(({ id }) => id).join(","))
+    .join("|");
   return (
     <SlotEditor
       key={combinationKey}
@@ -58,7 +62,7 @@ type FocusTarget = { undo: true } | { slot: string };
 /** Where a Slot's Ingredient came from, in a word; never left to colour. */
 const SOURCE_TAG: Record<FillSource, string> = {
   combination: "Yours",
-  pantry: "Yours",
+  pantry: "In your Pantry",
   pairing: "Suggested",
   swap: "Swapped",
 };
@@ -75,6 +79,7 @@ function SlotEditor({
   onAdd: (slotId: string, ingredient: Ingredient) => void;
 }) {
   const { kitchen, announce } = useKitchen();
+  const pantry = usePantry();
   const [history, setHistory] = useState<Step[]>([{ suggestion: initial }]);
   const [focus, setFocus] = useState<FocusTarget | undefined>(initialFocus ? { slot: initialFocus } : undefined);
   const undoButton = useRef<HTMLButtonElement>(null);
@@ -123,6 +128,13 @@ function SlotEditor({
       <ul className="slots stack">
         {current.suggestion.slots.map((filled) => {
           const { slot, ingredient, source, alternatives } = filled;
+          // With a Pantry, whether the Cook has it, under the name; unless the source already says so.
+          const availability =
+            pantry.ingredients.length > 0 && ingredient && source !== "pantry"
+              ? current.suggestion.onHand.includes(ingredient)
+                ? "In your Pantry"
+                : "You’d need this"
+              : undefined;
           // What fills it isn't in the basket yet, so the Cook can add it.
           const addable = ingredient && source && !isCooksOwn(source) ? ingredient : undefined;
           return (
@@ -143,6 +155,7 @@ function SlotEditor({
                     <p className="slot-fill">
                       {ingredient ? <IngredientLink ingredient={ingredient} /> : "Nothing yet"}
                     </p>
+                    {availability && <p className="slot-availability">{availability}</p>}
                   </>
                 }
                 action={
@@ -182,7 +195,15 @@ function SlotEditor({
                               >
                                 <IngredientMark ingredient={alternative} size="sm" />
                                 <span className="visually-hidden">Use </span>
-                                {alternative.name}
+                                {/* One flex item, so the note reads straight after the name. */}
+                                <span>
+                                  {alternative.name}
+                                  {pantry.has(alternative) && (
+                                    <span className="alternative-note">
+                                      <span className="visually-hidden">,</span> in Pantry
+                                    </span>
+                                  )}
+                                </span>
                               </button>
                             </li>
                           ))}

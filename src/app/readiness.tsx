@@ -1,28 +1,27 @@
 import { Fragment } from "react";
 import { inSentence, type Suggestion } from "@/kitchen/kitchen";
 import { IngredientLink } from "./ingredient-link";
+import { usePantry } from "./pantry";
 
 const and = new Intl.ListFormat("en", { type: "conjunction" });
 
 /** Whether a Suggestion is ready, or what it still needs and what would fill it, in one sentence. */
-export function ReadinessSentence({ suggestion: { makeable, needs, slots } }: { suggestion: Suggestion }) {
-  if (makeable) {
-    return slots.some(({ source }) => source === "pantry")
-      ? "Ready with your basket and Pantry."
-      : "Ready with your basket.";
-  }
+export function ReadinessSentence({ suggestion: { makeable, needs } }: { suggestion: Suggestion }) {
+  // With an empty Pantry, what's on hand is the basket.
+  const pantryKnown = usePantry().ingredients.length > 0;
+  if (makeable) return pantryKnown ? "Ready with what’s in your Pantry." : "Ready with your basket.";
   const parts = needs.map(({ slot, ingredient, source }) => {
     if (!ingredient) return <>{slot.role} (nothing pairs yet)</>;
     const name = <IngredientLink ingredient={ingredient}>{inSentence(ingredient)}</IngredientLink>;
-    return source === "swap" ? (
-      <>
-        {slot.role} (you chose {name})
-      </>
-    ) : (
-      <>
-        {slot.role} ({name} pairs best)
-      </>
-    );
+    switch (source) {
+      case "swap":
+        return <>{slot.role} (you chose {name})</>;
+      case "pairing":
+        return <>{slot.role} ({name} pairs best)</>;
+      default:
+        // From the basket, but not in the Pantry.
+        return <>{slot.role} ({name}, not in your Pantry)</>;
+    }
   });
   return <>Also needs {joined(parts)}.</>;
 }

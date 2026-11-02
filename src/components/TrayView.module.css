@@ -47,7 +47,7 @@
 
 /* A name the container made a link: the whole label is the target. */
 .items a {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   min-height: var(--target);
 }

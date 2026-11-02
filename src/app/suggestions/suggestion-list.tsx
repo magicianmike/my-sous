@@ -19,12 +19,14 @@ import {
 } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
 import { IngredientLink, IngredientMarkLink } from "../ingredient-link";
+import { BasketName, usePantry } from "../pantry";
 import { ReadinessSentence } from "../readiness";
 
 export const SuggestionList = withSearchParams(
   function SuggestionList() {
     const { kitchen } = useKitchen();
     const { combination, remove, replace } = useCombination();
+    const pantry = usePantry();
     const heading = useRef<HTMLHeadingElement>(null);
     const combinationHeading = useRef<HTMLHeadingElement>(null);
     const emptyHeading = useRef<HTMLHeadingElement>(null);
@@ -50,7 +52,7 @@ export const SuggestionList = withSearchParams(
             remove(ingredient);
             combinationHeading.current?.focus();
           }}
-          renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
+          renderName={(ingredient) => <BasketName ingredient={ingredient} />}
           renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
         />
       </div>
@@ -80,7 +82,7 @@ export const SuggestionList = withSearchParams(
       );
     }
 
-    const { suggestions, tensions, fixes } = kitchen.suggest(combination.ingredients, []);
+    const { suggestions, tensions, fixes } = kitchen.suggest(combination.ingredients, pantry.ingredients);
     // Applying a fix removes the button that was pressed, so focus moves to the Suggestions.
     function applyFix({ ingredient, replacement }: CombinationFix) {
       if (replacement) replace(ingredient, replacement);
@@ -97,10 +99,17 @@ export const SuggestionList = withSearchParams(
         <h2 id="suggestions-heading" ref={heading} tabIndex={-1}>
           Suggestions
         </h2>
-        <p className="muted">
-          MySous doesn&rsquo;t know your Pantry yet, so Ready means your basket fills every part a
-          dish needs.
-        </p>
+        {pantry.ingredients.length === 0 ? (
+          <p className="muted">
+            Your Pantry is empty, so Ready means your basket fills every part a dish needs.{" "}
+            <CombinationLink href="/pantry">Add what you have</CombinationLink> to see what you can make now.
+          </p>
+        ) : (
+          <p className="muted">
+            Ready means your Pantry has every part a dish needs, so you can make it now. Dishes you can make
+            come first.
+          </p>
+        )}
         <ul className="stack" aria-labelledby="suggestions-heading">
           {suggestions.map((suggestion) => (
             <li key={suggestion.formula.id}>

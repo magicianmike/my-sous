@@ -19,6 +19,8 @@ type Props<T> = {
   /** The popup list's name; defaults to the label. */
   listboxLabel?: string;
   disabled?: boolean;
+  /** Empties the field after a choice, for adding several things in a row. */
+  clearOnChoose?: boolean;
 };
 
 /** Type-to-find, following the ARIA combobox pattern with a listbox popup. */
@@ -33,6 +35,7 @@ export function Combobox<T>({
   countNoun = ["result", "results"],
   listboxLabel = label,
   disabled = false,
+  clearOnChoose = false,
 }: Props<T>) {
   const id = useId();
   const [query, setQuery] = useState("");
@@ -42,6 +45,14 @@ export function Combobox<T>({
   const expanded = open && results.length > 0;
   const typed = query.trim();
   const optionId = (item: T) => `${id}-option-${getKey(item)}`;
+
+  function choose(item: T) {
+    onChoose(item);
+    if (clearOnChoose) {
+      setQuery("");
+      setActive(-1);
+    }
+  }
 
   function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if ((event.key === "ArrowDown" || event.key === "ArrowUp") && results.length > 0) {
@@ -54,7 +65,7 @@ export function Combobox<T>({
       );
     } else if (event.key === "Enter" && expanded) {
       event.preventDefault();
-      onChoose(results[Math.max(active, 0)]);
+      choose(results[Math.max(active, 0)]);
     } else if (event.key === "Escape") {
       // First Escape closes the list; a second clears the field.
       if (expanded) setOpen(false);
@@ -100,7 +111,7 @@ export function Combobox<T>({
             className={styles.option}
             // Keep focus in the field, so a click doesn't close the list before it lands.
             onMouseDown={(event) => event.preventDefault()}
-            onClick={() => onChoose(item)}
+            onClick={() => choose(item)}
           >
             {getLabel(item)}
           </li>

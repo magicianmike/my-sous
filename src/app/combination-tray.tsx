@@ -9,6 +9,7 @@ import { TrayView } from "@/components/TrayView";
 import { COMBINATION_LIMIT, type Ingredient } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "./combination";
 import { IngredientLink, IngredientMarkLink } from "./ingredient-link";
+import { BasketName } from "./pantry";
 
 /** Where the tray is a side panel rather than a bar and sheet; matches `.tray-dock` in globals.css. */
 const SIDE_PANEL = "(min-width: 56rem)";
@@ -108,7 +109,7 @@ function TrayDock() {
         remove(ingredient);
         heading.current?.focus();
       }}
-      renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
+      renderName={(ingredient) => <BasketName ingredient={ingredient} />}
       renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
       action={seeWhatToMake}
     />

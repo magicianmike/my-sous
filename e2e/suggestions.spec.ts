@@ -46,11 +46,15 @@ test("a Suggestion that needs more says how many, what, and what pairs best", as
   await expect(panSauce.getByRole("link", { name: "lemon", exact: true })).toBeVisible();
 });
 
-test("What to make says Ready only covers the Combination while MySous doesn't know the Pantry", async ({
+test("with an empty Pantry, What to make says Ready only covers the basket, and how to add a Pantry", async ({
   page,
 }) => {
   await page.goto("/suggestions?with=chicken-thigh,garlic");
-  await expect(page.getByRole("main")).toContainText("MySous doesn’t know your Pantry yet");
+  await expect(page.getByRole("main")).toContainText(
+    "Your Pantry is empty, so Ready means your basket fills every part a dish needs.",
+  );
+  await page.getByRole("main").getByRole("link", { name: "Add what you have" }).click();
+  await expect(page).toHaveURL(/\/pantry\?with=chicken-thigh,garlic$/);
 });
 
 test("a required Slot nothing pairs with shows as open, with the choice still there", async ({ page }) => {

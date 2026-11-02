@@ -14,6 +14,7 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   ["/ingredients/gremolata", (page) => page.getByRole("heading", { name: "Typically includes" })],
   ["/design", (page) => page.getByRole("heading", { name: "Combination tray" })],
   ["/ingredients/mango", (page) => page.getByRole("heading", { name: "This isn’t in MySous yet" })],
+  ["/pantry", (page) => page.getByRole("heading", { name: "Staples" })],
   [
     "/suggestions?with=chicken-thigh,basil,ginger",
     (page) => page.getByRole("heading", { name: "Not everything pairs yet" }),
@@ -56,6 +57,20 @@ for (const colorScheme of ["light", "dark"] as const) {
 
       await page.goto("/ingredients/lemon");
       await page.getByText("More about lemon and garlic, contrast").click();
+      await expectNoViolations(page);
+    });
+
+    test("with a Pantry, the Pantry, What to make and a dish have no axe violations", async ({ page }) => {
+      await page.goto("/pantry");
+      await page.evaluate(() => localStorage.setItem("mysous.pantry", JSON.stringify(["garlic", "lemon", "lime"])));
+      await page.reload();
+      await expect(page.getByRole("button", { name: "Remove Garlic from your Pantry" })).toBeVisible();
+      await expectNoViolations(page);
+      await page.goto("/suggestions?with=chicken-thigh,garlic");
+      await expect(page.getByText("Ready means your Pantry has every part")).toBeVisible();
+      await expectNoViolations(page);
+      await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+      await page.getByText("Swap an acid").click();
       await expectNoViolations(page);
     });
 

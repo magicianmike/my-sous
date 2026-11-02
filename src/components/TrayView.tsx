@@ -1,5 +1,6 @@
 import { BasketIcon } from "./BasketIcon";
 import { Button } from "./Button";
+import { TrashIcon } from "./TrashIcon";
 import { Chip } from "./Chip";
 import { IngredientMark, type IngredientLook } from "./IngredientMark";
 import { Panel } from "./Panel";
@@ -79,7 +80,7 @@ export function TrayView<T extends IngredientLook>({
                   leading={renderMark(ingredient)}
                   trailing={
                     <Button variant="quiet" className={styles.remove} onClick={() => onRemove(ingredient)}>
-                      <TrashIcon />
+                      <TrashIcon className={styles.icon} />
                       <span className="visually-hidden">Remove {ingredient.name}</span>
                     </Button>
                   }
@@ -98,23 +99,5 @@ export function TrayView<T extends IngredientLook>({
         </p>
       )}
     </Panel>
-  );
-}
-
-/** A bin, for removing; the button around it carries the words. */
-function TrashIcon() {
-  return (
-    <svg
-      className={styles.icon}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" />
-    </svg>
   );
 }

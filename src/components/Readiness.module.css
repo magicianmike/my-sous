@@ -1,0 +1,42 @@
+.readiness {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--chip-height);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  white-space: nowrap;
+}
+
+.readiness::before {
+  content: "";
+  flex: none;
+  width: var(--space-4);
+  height: var(--space-4);
+  border-radius: 50%;
+}
+
+/* Ready: a tick. */
+.ready {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.ready::before {
+  border-radius: 0;
+  background: var(--accent-ink);
+  clip-path: polygon(10% 52%, 24% 38%, 42% 56%, 76% 20%, 90% 34%, 42% 82%);
+}
+
+/* Needs more: an open, dashed circle, like an empty Slot. */
+.needs {
+  background: var(--sunk);
+  color: var(--ink);
+}
+
+.needs::before {
+  border: var(--border-control) dashed var(--ink-muted);
+}

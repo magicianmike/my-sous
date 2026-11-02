@@ -8,6 +8,7 @@ import { TrayBar } from "@/components/TrayBar";
 import { TrayView } from "@/components/TrayView";
 import { COMBINATION_LIMIT, type Ingredient } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "./combination";
+import { IngredientLink, IngredientMarkLink } from "./ingredient-link";
 
 /** Where the tray is a side panel rather than a bar and sheet; matches `.tray-dock` in globals.css. */
 const SIDE_PANEL = "(min-width: 56rem)";
@@ -107,7 +108,8 @@ function TrayDock() {
         remove(ingredient);
         heading.current?.focus();
       }}
-      renderName={({ id, name }) => <CombinationLink href={`/ingredients/${id}`}>{name}</CombinationLink>}
+      renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
+      renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
       action={seeWhatToMake}
     />
   );
@@ -128,6 +130,7 @@ function TrayDock() {
             sheetHeading.current?.focus();
           }}
           action={seeWhatToMake}
+          renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} alone />}
         />
       </div>
       <dialog
@@ -166,7 +169,7 @@ type TrayPlacement = {
 
 /** What Tab can reach. */
 const FOCUSABLE = [
-  "a[href]",
+  "a[href]:not([tabindex='-1'])",
   "button:not([disabled])",
   "input:not([disabled])",
   "summary",
@@ -190,6 +193,25 @@ function containTab(event: React.KeyboardEvent<HTMLElement>) {
 
 const seeWhatToMake = (
   <CombinationLink href="/suggestions" className={buttonClass("primary")}>
+    <PanIcon />
     See what to make
   </CombinationLink>
 );
+
+/** A pan with a wisp of steam: something to cook. The words beside it carry the meaning. */
+function PanIcon() {
+  return (
+    <svg
+      className="button-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M2.5 12h14v1.5a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5zM16.5 13h5M7.5 4.5c-1 1 1 2 0 3.5M11.5 4.5c-1 1 1 2 0 3.5" />
+    </svg>
+  );
+}

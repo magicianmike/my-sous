@@ -1,21 +1,21 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const sheet = (page: Page) => page.getByRole("dialog", { name: /Your Combination/ });
-const opener = (page: Page) => page.getByRole("button", { name: /^Your Combination/ });
+const sheet = (page: Page) => page.getByRole("dialog", { name: /Your basket/ });
+const opener = (page: Page) => page.getByRole("button", { name: /^Your basket/ });
 
 test.describe("on a phone, the tray is a bar that opens a sheet", () => {
   test.skip(({ isMobile }) => !isMobile, "the sheet is the phone layout");
 
   test("the bar shows the Combination at a glance", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
-    await expect(opener(page)).toHaveAccessibleName("Your Combination 2 of 4: Lemon, Garlic");
+    await expect(opener(page)).toHaveAccessibleName("Your basket 2 of 4: Lemon, Garlic");
     await expect(page.getByRole("link", { name: "See what to make" })).toBeVisible();
     await expect(sheet(page)).toBeHidden();
   });
 
   test("the bar shows an empty circle for each slot still free, and leads with See what to make", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
-    const marks = opener(page).locator("[class*=marks] > *");
+    const marks = page.locator(".tray-bar [class*=marks] > *");
     await expect(marks).toHaveCount(4);
     await expect(marks.locator("svg")).toHaveCount(2);
 
@@ -26,10 +26,16 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     expect(action!.y).toBeLessThan(bar!.y);
   });
 
+  test("a drawing in the bar opens its Ingredient", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon,garlic");
+    await page.locator(".tray-bar a.mark-link").nth(1).click();
+    await expect(page).toHaveURL(/\/ingredients\/garlic\?with=lemon,garlic$/);
+  });
+
   test("an empty Combination shows no empty circles", async ({ page }) => {
     await page.goto("/ingredients/lemon");
-    await expect(opener(page)).toHaveAccessibleName("Your Combination 0 of 4");
-    await expect(opener(page).locator("[class*=marks]")).toHaveCount(0);
+    await expect(opener(page)).toHaveAccessibleName("Your basket 0 of 4");
+    await expect(page.locator(".tray-bar [class*=marks]")).toHaveCount(0);
   });
 
   test("opening moves focus in, contains it, and closing returns it", async ({ page }) => {
@@ -37,7 +43,7 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     await opener(page).click();
 
     await expect(sheet(page)).toBeVisible();
-    await expect(sheet(page).getByRole("heading", { name: /Your Combination/ })).toBeFocused();
+    await expect(sheet(page).getByRole("heading", { name: /Your basket/ })).toBeFocused();
     await expect(sheet(page).getByRole("listitem")).toHaveText([/^Lemon/, /^Garlic/]);
 
     // The page behind is inert, and Tab and Shift+Tab cycle within the sheet.
@@ -75,8 +81,8 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     await sheet(page).getByRole("button", { name: "Remove Garlic" }).click();
 
     // The page behind a modal is inert, so the sheet needs its own live region.
-    await expect(sheet(page).getByRole("status")).toHaveText("Garlic removed from Combination, 1 of 4.");
-    await expect(sheet(page).getByRole("heading", { name: /Your Combination/ })).toBeFocused();
+    await expect(sheet(page).getByRole("status")).toHaveText("Garlic removed from your basket, 1 of 4.");
+    await expect(sheet(page).getByRole("heading", { name: /Your basket/ })).toBeFocused();
   });
 
   test("a change made in the open sheet shows as a toast on top, just above the sheet", async ({ page }) => {
@@ -85,7 +91,7 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     await sheet(page).getByRole("button", { name: "Remove Garlic" }).click();
 
     const toast = sheet(page).locator(".toast-spot p");
-    await expect(toast).toHaveText("Garlic removed from Combination, 1 of 4.");
+    await expect(toast).toHaveText("Garlic removed from your basket, 1 of 4.");
     const placement = () =>
       toast.evaluate((el) => {
         const { left, top, width, height, bottom } = el.getBoundingClientRect();
@@ -107,9 +113,9 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
 
   test("changes made with the sheet closed are announced", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon");
-    await page.getByRole("button", { name: "Add Garlic to Combination" }).click();
-    await expect(page.getByRole("status")).toHaveText("Garlic added to Combination, 2 of 4.");
-    await expect(opener(page)).toHaveAccessibleName("Your Combination 2 of 4: Lemon, Garlic");
+    await page.getByRole("button", { name: "Add Garlic to your basket" }).click();
+    await expect(page.getByRole("status")).toHaveText("Garlic added to your basket, 2 of 4.");
+    await expect(opener(page)).toHaveAccessibleName("Your basket 2 of 4: Lemon, Garlic");
   });
 
   test("following a link from the sheet closes it", async ({ page }) => {
@@ -127,7 +133,7 @@ test.describe("on desktop, the tray is a side panel", () => {
 
   test("it is always there and doesn't trap focus", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
-    const tray = page.getByRole("complementary", { name: /Your Combination/ });
+    const tray = page.getByRole("complementary", { name: /Your basket/ });
     await expect(tray.getByRole("listitem")).toHaveText([/^Lemon/, /^Garlic/]);
     await expect(opener(page)).toBeHidden();
     await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -145,8 +151,8 @@ test.describe("when the screen changes size", () => {
 
     await page.setViewportSize({ width: 1280, height: 720 });
     await expect(sheet(page)).toBeHidden();
-    const panel = page.getByRole("complementary", { name: /Your Combination/ });
-    await expect(panel.getByRole("heading", { name: /Your Combination/ })).toBeFocused();
+    const panel = page.getByRole("complementary", { name: /Your basket/ });
+    await expect(panel.getByRole("heading", { name: /Your basket/ })).toBeFocused();
   });
 
   // 320px wide, and a 1280×720 screen at 200% zoom.
@@ -171,4 +177,12 @@ test.describe("when the screen changes size", () => {
       await expect(sheet(page)).toBeHidden();
     });
   }
+});
+
+test("on a wider screen, a drawing in the bar shows its name on hover", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover is for a pointer");
+  await page.setViewportSize({ width: 700, height: 800 });
+  await page.goto("/ingredients/lemon?with=lemon,garlic");
+  await page.locator(".tray-bar a.mark-link").nth(1).hover();
+  await expect(page.locator(".tray-bar").getByText("Garlic", { exact: true })).toBeVisible();
 });

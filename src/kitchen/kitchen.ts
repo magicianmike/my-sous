@@ -56,6 +56,11 @@ export type Combination = {
 /** Where a Slot's Ingredient came from: in fill order, then a swap by the Cook. */
 export type FillSource = "combination" | "pantry" | "pairing" | "swap";
 
+/** Whether the Cook has the Ingredient: it's in the Combination or Pantry, not suggested or swapped in. */
+export function isCooksOwn(source: FillSource | undefined): boolean {
+  return source === "combination" || source === "pantry";
+}
+
 /** A Slot in a Suggestion, with the Ingredient chosen for it, if any, and why. */
 export type FilledSlot = {
   slot: Slot;
@@ -77,6 +82,10 @@ export type Suggestion = {
   method: string[];
   /** Why the Suggestion ranked where it did, in a plain sentence. */
   rankReason: string;
+  /** The required Slots the Combination and Pantry don't fill, as filled so far, in Formula order. */
+  needs: FilledSlot[];
+  /** Whether the Combination and Pantry together fill every required Slot. */
+  makeable: boolean;
 };
 
 /** Two Combination Ingredients with no Pairing between them. */
@@ -142,7 +151,7 @@ function explainFill(slot: Slot, fill: Fill, justification: PairingView | undefi
     case undefined:
       return `No Pairing here points to ${slot.role} yet.`;
     case "combination":
-      return "From your Combination.";
+      return "From your basket.";
     case "pantry":
       return "From your Pantry.";
     case "pairing":
@@ -168,8 +177,8 @@ function explainRank(
   pairs: [Ingredient, Ingredient][],
 ): string {
   const name = inSentence;
-  if (used.length === 0) return "None of your Combination fits this Formula yet.";
-  if (used.length === 1) return `Only ${name(used[0])} from your Combination is used here.`;
+  if (used.length === 0) return "None of your basket fits this dish yet.";
+  if (used.length === 1) return `Only ${name(used[0])} from your basket is used here.`;
   if (pairs.length === 0) {
     return used.length === 2
       ? capitalise(`${name(used[0])} and ${name(used[1])} don't have a Pairing in MySous yet.`)
@@ -319,7 +328,12 @@ export function createKitchen(content: KitchenContent): Kitchen {
       chosen.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
     );
     const rankReason = explainRank(chosen, arePaired, pairs);
-    return { suggestion: { formula, slots, method, rankReason }, coherence: pairs.length };
+    // What the Cook has: a Pairing suggestion or a swap may still need getting.
+    const needs = slots.filter(({ slot, source }) => slot.required && !isCooksOwn(source));
+    return {
+      suggestion: { formula, slots, method, rankReason, needs, makeable: needs.length === 0 },
+      coherence: pairs.length,
+    };
   }
 
   return {

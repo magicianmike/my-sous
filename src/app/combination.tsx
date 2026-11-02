@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BasketIcon } from "@/components/BasketIcon";
 import { Button } from "@/components/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, Suspense, useContext, useEffect, useMemo, useState } from "react";
@@ -75,7 +76,7 @@ export function useCombination() {
       const next = kitchen.combination([...ids, ingredient.id]);
       if (next.overLimit.length > 0) {
         announce(
-          `Your Combination already holds ${COMBINATION_LIMIT} Ingredients, the most it can, so Suggestions stay focused. Remove one to add ${ingredient.name}.`,
+          `Your basket already holds ${COMBINATION_LIMIT} Ingredients, the most it can, so Suggestions stay focused. Remove one to add ${ingredient.name}.`,
         );
         return;
       }
@@ -90,13 +91,13 @@ export function useCombination() {
     /** Puts `replacement` where `ingredient` was, keeping the Combination's order. */
     replace(ingredient: Ingredient, replacement: Ingredient) {
       navigateTo(combination.ingredients.map((i) => (i === ingredient ? replacement : i)));
-      announce(`${ingredient.name} swapped for ${inSentence(replacement)} in your Combination.`);
+      announce(`${ingredient.name} swapped for ${inSentence(replacement)} in your basket.`);
     },
   };
 }
 
 function changed(ingredient: Ingredient, change: string, size: number): string {
-  return `${ingredient.name} ${change} Combination, ${size} of ${COMBINATION_LIMIT}.`;
+  return `${ingredient.name} ${change} your basket, ${size} of ${COMBINATION_LIMIT}.`;
 }
 
 /** Wraps components that read the URL, which static pages can only do in the browser. */
@@ -113,7 +114,7 @@ export function withSearchParams<P extends object>(
   };
 }
 
-type LinkProps = { href: string; children: React.ReactNode; className?: string };
+type LinkProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & { href: string };
 
 /** A link to another app screen that keeps the current Combination. */
 export const CombinationLink = withSearchParams(
@@ -138,10 +139,11 @@ export const AddToCombination = withSearchParams(function AddToCombination({
       variant={added ? "secondary" : "primary"}
       onClick={() => (added ? remove(ingredient) : add(ingredient))}
     >
+      {!added && <BasketIcon className="button-icon" />}
       {added ? "Remove" : "Add"}
       <span className="visually-hidden">
         {" "}
-        {ingredient.name} {added ? "from" : "to"} Combination
+        {ingredient.name} {added ? "from" : "to"} your basket
       </span>
     </Button>
   );

@@ -41,9 +41,59 @@ h3 {
   margin: var(--space-5) 0 var(--space-2);
 }
 
-a {
+/*
+ * Links stand on their own (titles, names, drawings) without underlines, and change colour under the
+ * pointer. Kept at no specificity, so a link styled as a button keeps its own colours.
+ */
+:where(a) {
   color: inherit;
+  text-decoration: none;
   text-underline-offset: var(--underline-offset);
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+:where(a:hover) {
+  color: var(--link-hover);
+}
+
+/* An Ingredient's link takes on the Ingredient's own colour. */
+:where(a.hue:hover) {
+  color: var(--stroke);
+}
+
+/* In a sentence, a link keeps a fine underline, so it isn't told from the words around it by colour alone. */
+:where(p a) {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-hairline);
+  text-decoration-color: var(--ink-muted);
+}
+
+:where(p a:hover) {
+  text-decoration-color: currentColor;
+}
+
+/*
+ * An Ingredient's drawing as a link: a faint ring in its colour under the pointer. The padding makes a small
+ * drawing a full-size target, and the matching negative margin keeps it from moving the layout.
+ */
+.mark-link {
+  display: inline-flex;
+  flex: none;
+  padding: var(--space-1);
+  margin: calc(var(--space-1) * -1);
+  border-radius: 50%;
+}
+
+/*
+ * A drawing standing without its name rings when the pointer is on it: a hairline, half strength, enough to
+ * show it without shouting. Beside its name, the name's colour change says it all, so the drawing stays plain.
+ */
+.ingredient-mark {
+  transition: box-shadow var(--motion-fast) var(--ease-out);
+}
+
+.mark-alone:hover .ingredient-mark {
+  box-shadow: 0 0 0 var(--border-hairline) color-mix(in srgb, var(--stroke) 50%, transparent);
 }
 
 :focus-visible {
@@ -119,6 +169,7 @@ html {
 /* What to make shows the Combination under its heading, no wider than a line of text. */
 .suggestions-combination {
   max-width: var(--measure);
+  margin-bottom: var(--space-4);
 }
 
 /* Toasts sit centred above the docked bar, or near the foot of the screen when there's none. */
@@ -238,6 +289,13 @@ main {
   display: grid;
   gap: var(--space-3);
   margin: 0;
+}
+
+/* An icon before a button's words, the size of a line of its text. */
+.button-icon {
+  flex: none;
+  width: var(--space-5);
+  height: var(--space-5);
 }
 
 .actions {
@@ -378,8 +436,48 @@ main {
 
 /* Suggestions and Formula */
 
-.rank-reason {
-  font-weight: var(--weight-bold);
+/* A tension: the two Ingredients' drawings, side by side, then the sentence that names it. */
+.tension {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.tension p {
+  margin: 0;
+}
+
+.tension-marks {
+  display: flex;
+  flex: none;
+  gap: var(--space-1);
+}
+
+/* What to make before there's a Combination: four open Slots and one way forward. */
+.nothing-yet {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: var(--border-control) dashed var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.nothing-yet h2,
+.nothing-yet p {
+  margin: 0;
+}
+
+.nothing-yet-marks {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.mark-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-3);
 }
 
 .slots {
@@ -387,10 +485,87 @@ main {
   gap: var(--space-2);
 }
 
+/* A name standing alone, not in a sentence, so no underline. */
 .slot-fill {
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--text-xl);
+}
+
+.slot-fill a {
+  text-decoration: none;
+}
+
+.formula-readiness {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.formula-readiness p {
+  margin: 0;
+}
+
+/* Where a part's Ingredient came from, or that the part is optional: quiet notes in the row's top corner. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.tag {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--sunk);
+  color: var(--ink-muted);
+  font-size: var(--text-xs);
+}
+
+/* A part's last line: Swap at the start, Add at the end, so Add sits in the row's bottom corner. */
+.slot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.slot-actions details {
+  flex: 1;
+}
+
+.slot-actions .slot-add {
+  margin-inline-start: auto;
+}
+
+.alternatives {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+}
+
+.alternative {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-1);
+  border: var(--border-control) solid var(--ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+
+.alternative:hover {
+  background: var(--sunk);
 }
 
 .slot-role {

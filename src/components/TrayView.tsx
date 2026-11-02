@@ -1,3 +1,4 @@
+import { BasketIcon } from "./BasketIcon";
 import { Button } from "./Button";
 import { Chip } from "./Chip";
 import { IngredientMark, type IngredientLook } from "./IngredientMark";
@@ -19,6 +20,8 @@ type Props<T extends IngredientLook> = {
   onRemove: (ingredient: T) => void;
   /** Each Ingredient's name, as a link to its page the container provides. */
   renderName?: (ingredient: T) => React.ReactNode;
+  /** Each Ingredient's drawing, as a link to its page the container provides. */
+  renderMark?: (ingredient: T) => React.ReactNode;
   /** "See what to make", as a link the container provides. */
   action?: React.ReactNode;
   titleRef?: React.Ref<HTMLHeadingElement>;
@@ -34,6 +37,7 @@ export function TrayView<T extends IngredientLook>({
   status,
   onRemove,
   renderName = ({ name }) => name,
+  renderMark = (ingredient) => <IngredientMark ingredient={ingredient} size="sm" />,
   action,
   titleRef,
 }: Props<T>) {
@@ -42,7 +46,12 @@ export function TrayView<T extends IngredientLook>({
     <Panel
       as="aside"
       className={styles.tray}
-      title="Your Combination"
+      title={
+        <span className={styles.title}>
+          <BasketIcon className={styles.titleIcon} />
+          Your basket
+        </span>
+      }
       titleId={titleId}
       titleExtra={`${ingredients.length} of ${limit}`}
       titleRef={titleRef}
@@ -54,12 +63,12 @@ export function TrayView<T extends IngredientLook>({
       )}
       {overLimit.length > 0 && (
         <p className={styles.notice}>
-          A Combination holds up to {limit} Ingredients, so these are left out:{" "}
+          A basket holds up to {limit} Ingredients, so these are left out:{" "}
           {overLimit.map(({ name }) => name).join(", ")}.
         </p>
       )}
       {ingredients.length === 0 ? (
-        <p className={styles.empty}>Add an Ingredient to start a Combination.</p>
+        <p className={styles.empty}>Add an Ingredient to start a basket.</p>
       ) : (
         <>
           <ul className={styles.items}>
@@ -67,10 +76,11 @@ export function TrayView<T extends IngredientLook>({
               <li key={ingredient.id} className={arrivalClass(ingredient.id)}>
                 <Chip
                   colour={ingredient.colour}
-                  leading={<IngredientMark ingredient={ingredient} size="sm" />}
+                  leading={renderMark(ingredient)}
                   trailing={
-                    <Button variant="quiet" onClick={() => onRemove(ingredient)}>
-                      Remove<span className="visually-hidden"> {ingredient.name}</span>
+                    <Button variant="quiet" className={styles.remove} onClick={() => onRemove(ingredient)}>
+                      <TrashIcon />
+                      <span className="visually-hidden">Remove {ingredient.name}</span>
                     </Button>
                   }
                 >
@@ -88,5 +98,23 @@ export function TrayView<T extends IngredientLook>({
         </p>
       )}
     </Panel>
+  );
+}
+
+/** A bin, for removing; the button around it carries the words. */
+function TrashIcon() {
+  return (
+    <svg
+      className={styles.icon}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" />
+    </svg>
   );
 }

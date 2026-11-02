@@ -357,6 +357,45 @@ describe("loadKitchen", () => {
       ]);
     });
 
+    it("is makeable when the Combination fills every required Slot, else names what it needs", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic", "lemon"]).ingredients, []);
+      const [panSauce, herbSalad] = suggestions;
+
+      // The optional herb is empty, which doesn't stop a pan sauce.
+      expect(panSauce).toMatchObject({ makeable: true, needs: [] });
+      expect(herbSalad.makeable).toBe(false);
+      expect(herbSalad.needs.map(({ slot }) => slot.id)).toEqual(["first-herb", "second-herb"]);
+    });
+
+    it("counts the Pantry towards makeable, like the Combination", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      const { suggestions } = kitchen.suggest(
+        kitchen.combination(["garlic"]).ingredients,
+        kitchen.combination(["lemon"]).ingredients,
+      );
+
+      expect(suggestions.find(({ formula }) => formula.id === "pan-sauce")).toMatchObject({ makeable: true });
+    });
+
+    it("still needs a required Slot that only a Pairing suggestion or a swap fills", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({
+          ...fixture,
+          pairings: [{ ingredients: ["garlic", "lemon"], reasons: [reason("A note.")] }],
+        }),
+      );
+
+      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic"]).ingredients, []);
+      const panSauce = suggestions.find(({ formula }) => formula.id === "pan-sauce")!;
+
+      expect(panSauce.slots.find(({ slot }) => slot.id === "acid")).toMatchObject({ source: "pairing" });
+      expect(panSauce.makeable).toBe(false);
+      expect(panSauce.needs.map(({ slot }) => slot.id)).toEqual(["acid"]);
+    });
+
     it("gives the same Suggestions every time for the same Combination", async () => {
       const suggestFrom = async () => {
         const kitchen = await expectKitchen(writeContent(fixture));
@@ -465,13 +504,13 @@ describe("loadKitchen", () => {
 
       expect(reasons(suggestion)).toEqual([
         "Pairs with mint: Mint's coolness lifts rich lamb.",
-        "From your Combination.",
+        "From your basket.",
         "Pairs with lamb: Mint's coolness lifts rich lamb.",
       ]);
       // Swapping lamb out leaves mint, which was there for lamb, without a Pairing.
       expect(reasons(kitchen.swap(suggestion, "protein", "chicken"))).toEqual([
         "Your choice. It doesn't pair with anything else here yet.",
-        "From your Combination.",
+        "From your basket.",
         "Suggested earlier. It doesn't pair with anything else here now.",
       ]);
       expect(reasons((await plate(["vinegar"])).suggestion)[0]).toBe(
@@ -607,7 +646,7 @@ describe("loadKitchen", () => {
       const { suggestions, tensions } = await suggestFor(["anchovy", "caper", "sea-salt"]);
 
       expect(suggestions.map(({ formula, rankReason }) => [formula.id, rankReason])).toEqual([
-        ["dessert", "None of your Combination fits this Formula yet."],
+        ["dessert", "None of your basket fits this dish yet."],
       ]);
       expect(suggestions[0].slots.map(({ ingredient }) => ingredient)).toEqual([undefined, undefined]);
       expect(tensions).toHaveLength(3);
@@ -685,8 +724,8 @@ describe("loadKitchen", () => {
       [["lemon", "garlic", "mint"], "Lemon and garlic pair well, but mint doesn't pair with the rest."],
       [["mint", "chocolate"], "Mint and chocolate don't have a Pairing in MySous yet."],
       [["mint", "chocolate", "garlic"], "None of these Ingredients pair with each other yet."],
-      [["mint"], "Only mint from your Combination is used here."],
-      [[], "None of your Combination fits this Formula yet."],
+      [["mint"], "Only mint from your basket is used here."],
+      [[], "None of your basket fits this dish yet."],
     ])("explains its rank when it uses %j", async (fills, expected) => {
       // A Formula with a Slot for each fill, so nothing else is added by Pairing. Chocolate pairs
       // with nothing, so with an empty Combination its Slot stays empty.

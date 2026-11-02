@@ -6,7 +6,8 @@ import { hueStyle, IngredientMark } from "@/components/IngredientMark";
 import { ListRow } from "@/components/ListRow";
 import type { PairingReasonCategory } from "@/kitchen/categories";
 import { commonIn, inSentence, type Ingredient } from "@/kitchen/kitchen";
-import { AddToCombination, CombinationLink } from "../../combination";
+import { AddToCombination } from "../../combination";
+import { IngredientLink, IngredientMarkLink } from "../../ingredient-link";
 import { getKitchen } from "../../kitchen";
 import { PairingFilter } from "./pairing-filter";
 
@@ -80,9 +81,9 @@ export default async function IngredientPage({ params }: Props) {
                   {component ? (
                     <Chip
                       colour={component.colour}
-                      leading={<IngredientMark ingredient={component} size="sm" />}
+                      leading={<IngredientMarkLink ingredient={component} />}
                     >
-                      <CombinationLink href={`/ingredients/${component.id}`}>{name}</CombinationLink>
+                      <IngredientLink ingredient={component}>{name}</IngredientLink>
                     </Chip>
                   ) : (
                     <Chip>{name}</Chip>
@@ -104,10 +105,8 @@ export default async function IngredientPage({ params }: Props) {
                   {pairings.map(({ ingredient: paired, reasons, cuisines }) => (
                     <li key={paired.id} style={{ "--row": row++ } as React.CSSProperties}>
                       <ListRow
-                        mark={<IngredientMark ingredient={paired} />}
-                        title={
-                          <CombinationLink href={`/ingredients/${paired.id}`}>{paired.name}</CombinationLink>
-                        }
+                        mark={<IngredientMarkLink ingredient={paired} size="md" />}
+                        title={<IngredientLink ingredient={paired} />}
                         action={<AddToCombination ingredientId={paired.id} />}
                       >
                         {reasons.map((reason) => (

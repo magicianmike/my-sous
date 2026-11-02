@@ -1,6 +1,20 @@
+/* Side by side, each as wide as its name, wrapping as needed. */
+/* The basket's sign before its name. */
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.titleIcon {
+  flex: none;
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
 .items {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: var(--space-2);
   margin: 0 0 var(--space-3);
   padding: 0;
@@ -9,8 +23,7 @@
 
 .items li > span {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  gap: var(--space-1);
   border-radius: var(--radius-md);
 }
 
@@ -37,6 +50,37 @@
   display: flex;
   align-items: center;
   min-height: var(--target);
-  color: inherit;
-  text-underline-offset: var(--underline-offset);
+}
+
+/*
+ * With a mouse, the bin shows only on the Ingredient under the pointer, or on keyboard focus; it keeps its
+ * room, so nothing moves. On touch, where nothing hovers, it always shows.
+ */
+@media (hover: hover) {
+  .remove {
+    opacity: 0;
+    transition: opacity var(--motion-fast) var(--ease-out);
+  }
+
+  .items li:hover .remove,
+  .remove:focus-visible {
+    opacity: 1;
+  }
+}
+
+/* A mouse needs less room than a finger, so two short names fit side by side in the side panel. */
+@media (pointer: fine) {
+  .items .remove {
+    min-width: var(--space-6);
+  }
+}
+
+/* Red under the pointer: this one removes. */
+.items .remove:hover {
+  color: var(--danger);
+}
+
+.icon {
+  width: var(--space-5);
+  height: var(--space-5);
 }

@@ -29,16 +29,13 @@
   width: 100%;
 }
 
-/* Two lines: the title, count and chevron, then the drawings, so four never squeeze the title. */
+/* The title, count and chevron on one line; on a phone the drawings go under it, so four never squeeze the title. */
 .opener {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  grid-template-areas:
-    "title count chevron"
-    "marks marks marks";
+  grid-template-areas: "title count chevron";
   align-items: center;
   column-gap: var(--space-2);
-  row-gap: var(--space-1);
   min-height: var(--target);
   padding: 0 var(--space-1);
   border: 0;
@@ -63,23 +60,16 @@
 }
 
 .marks {
-  grid-area: marks;
+  order: 1;
   display: flex;
   gap: var(--space-1);
+  padding: 0 var(--space-1);
 }
 
 .marks > * {
   display: flex;
   flex: none;
   border-radius: 50%;
-}
-
-/* A slot the Combination has room for: a recessed, empty circle the size of a drawing. */
-.slot {
-  width: var(--mark-sm);
-  height: var(--mark-sm);
-  border: var(--border-control) dashed var(--line);
-  background: var(--sunk);
 }
 
 .title {
@@ -92,6 +82,14 @@
   font-weight: var(--weight-display);
 }
 
+/* The basket's sign, before the title, sized to its line. */
+.titleIcon {
+  width: var(--space-5);
+  height: var(--space-5);
+  margin-inline-end: var(--space-2);
+  vertical-align: -0.2em;
+}
+
 .count {
   grid-area: count;
   color: var(--ink-muted);
@@ -102,17 +100,22 @@
 /* With room, one row, "See what to make" first: the bar takes less of a short screen, such as at 200% zoom. */
 @media (min-width: 40rem) {
   .bar {
-    grid-template-columns: auto minmax(0, 1fr);
+    display: flex;
     align-items: center;
   }
 
+  .bar > a {
+    width: auto;
+  }
+
   .opener {
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
-    grid-template-areas: "marks title count chevron";
+    flex: 1;
+    min-width: 0;
   }
 
   /* On one row the drawings overlap, leaving the title room on a laptop screen zoomed to 200%. */
   .marks {
+    order: 0;
     gap: 0;
   }
 

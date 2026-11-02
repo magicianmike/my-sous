@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { trayShown } from "./tray";
 
 const screens = [
   "/",
@@ -12,7 +13,7 @@ const screens = [
 /** Waits for the parts that render in the browser (the tray) to be there. */
 async function open(page: Page, path: string) {
   await page.goto(path);
-  await expect(page.getByRole("heading", { name: /Your Combination/ }).first()).toBeVisible();
+  await expect(trayShown(page)).toBeVisible();
 }
 
 test.describe("touch targets on a phone", () => {

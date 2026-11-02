@@ -1,0 +1,40 @@
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+  background: var(--sunk);
+}
+
+.segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  color: var(--ink);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-out);
+}
+
+.segment:has(:checked) {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* The radio stays in the page for keyboards and assistive technology; the segment shows it. */
+.input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.segment:has(:focus-visible) {
+  outline: var(--focus-width) solid var(--focus);
+  outline-offset: var(--focus-offset);
+}

@@ -8,6 +8,9 @@ import { Disclosure } from "@/components/Disclosure";
 import { IngredientMark, type IngredientLook } from "@/components/IngredientMark";
 import { ListRow } from "@/components/ListRow";
 import { Panel } from "@/components/Panel";
+import { SegmentedControl } from "@/components/SegmentedControl";
+import { Toast } from "@/components/Toast";
+import { TrayBar } from "@/components/TrayBar";
 import { TrayView } from "@/components/TrayView";
 import { palettes } from "@/design/tokens";
 import { COMBINATION_LIMIT } from "@/kitchen/kitchen";
@@ -19,6 +22,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
   const [tray, setTray] = useState(ingredients.slice(0, 2));
   const [status, setStatus] = useState("");
   const [chosen, setChosen] = useState("");
+  const [segment, setSegment] = useState("all");
   const [lemon, garlic] = [ingredients.find(({ id }) => id === "lemon")!, ingredients.find(({ id }) => id === "garlic")!];
 
   return (
@@ -114,18 +118,37 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
             setTray(tray.filter(({ id }) => id !== removed.id));
             setStatus(`${removed.name} removed from Combination, ${tray.length - 1} of ${COMBINATION_LIMIT}.`);
           }}
-          renderName={({ id, name }) => (
-            <a href={`/ingredients/${id}`}>
-              {name}
-            </a>
-          )}
-          action={
-            <a href="#combination-tray" className={buttonClass("primary")}>
-              See what to make
-            </a>
-          }
+          renderName={({ id, name }) => <a href={`/ingredients/${id}`}>{name}</a>}
+          action={seeWhatToMake}
         />
       </div>
+
+      <h2>Tray bar</h2>
+      <p className="muted">On a phone, the tray docks as this bar and opens as a sheet.</p>
+      <div className="specimen-tray">
+        <TrayBar
+          ingredients={tray}
+          limit={COMBINATION_LIMIT}
+          onOpen={() => setStatus("The bar opens the tray as a sheet.")}
+          action={seeWhatToMake}
+        />
+      </div>
+
+      <h2>Toast</h2>
+      <p className="muted">Shows each Combination change for a few seconds, then fades.</p>
+      <Toast message="Garlic added to Combination, 2 of 4." />
+
+      <h2>Segmented control</h2>
+      <SegmentedControl
+        label="Show Pairings by reason"
+        options={[
+          { value: "all", label: "All" },
+          { value: "contrast", label: "Contrast" },
+          { value: "tradition", label: "Tradition" },
+        ]}
+        value={segment}
+        onChange={setSegment}
+      />
 
       <h2>Combobox</h2>
       <Combobox<SpecimenIngredient>
@@ -143,3 +166,9 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
     </>
   );
 }
+
+const seeWhatToMake = (
+  <a href="#combination-tray" className={buttonClass("primary")}>
+    See what to make
+  </a>
+);

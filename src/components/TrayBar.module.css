@@ -1,0 +1,123 @@
+.bar {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  /* Room above the content for the grabber. */
+  padding: var(--space-4) var(--space-3) var(--space-3);
+  border: var(--border-hairline) solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--floating);
+  box-shadow: var(--shadow-docked);
+}
+
+/* A grabber, as a sheet has: the bar sits above the page and lifts into the tray. */
+.bar::before {
+  content: "";
+  position: absolute;
+  top: var(--space-1);
+  left: 50%;
+  width: var(--space-7);
+  height: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--ink-muted);
+  transform: translateX(-50%);
+}
+
+.bar > a {
+  width: 100%;
+}
+
+/* Two lines: the title, count and chevron, then the drawings, so four never squeeze the title. */
+.opener {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "title count chevron"
+    "marks marks marks";
+  align-items: center;
+  column-gap: var(--space-2);
+  row-gap: var(--space-1);
+  min-height: var(--target);
+  padding: 0 var(--space-1);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* An upward chevron: the sheet opens from here. */
+.opener::after {
+  content: "";
+  grid-area: chevron;
+  width: var(--space-2);
+  height: var(--space-2);
+  margin: var(--space-1) var(--space-2) 0;
+  border-top: var(--border-control) solid currentColor;
+  border-left: var(--border-control) solid currentColor;
+  transform: rotate(45deg);
+}
+
+.marks {
+  grid-area: marks;
+  display: flex;
+  gap: var(--space-1);
+}
+
+.marks > * {
+  display: flex;
+  flex: none;
+  border-radius: 50%;
+}
+
+/* A slot the Combination has room for: a recessed, empty circle the size of a drawing. */
+.slot {
+  width: var(--mark-sm);
+  height: var(--mark-sm);
+  border: var(--border-control) dashed var(--line);
+  background: var(--sunk);
+}
+
+.title {
+  grid-area: title;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+}
+
+.count {
+  grid-area: count;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+/* With room, one row, "See what to make" first: the bar takes less of a short screen, such as at 200% zoom. */
+@media (min-width: 40rem) {
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .opener {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "marks title count chevron";
+  }
+
+  /* On one row the drawings overlap, leaving the title room on a laptop screen zoomed to 200%. */
+  .marks {
+    gap: 0;
+  }
+
+  .marks > * + * {
+    margin-inline-start: calc(var(--space-3) * -1);
+    box-shadow: 0 0 0 var(--border-control) var(--floating);
+  }
+}

@@ -9,6 +9,8 @@ export type Palette = {
   bg: string;
   /** Cards and panels on the page. */
   surface: string;
+  /** What floats above the page, such as the docked tray bar; lighter than `surface` in dark. */
+  floating: string;
   /** Recessed areas, such as a segmented control's track. */
   sunk: string;
   /** Hairlines and dividers (decorative, not needed to see a control). */
@@ -29,6 +31,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
   light: {
     bg: "#f8f7f2",
     surface: "#ffffff",
+    floating: "#ffffff",
     sunk: "#efeee6",
     line: "#d6d8cd",
     ink: "#1f2620",
@@ -40,6 +43,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
   dark: {
     bg: "#121412",
     surface: "#1b1e1b",
+    floating: "#2b302b",
     sunk: "#252925",
     line: "#343a35",
     ink: "#ebefe9",
@@ -54,9 +58,11 @@ export const palettes: Record<"light" | "dark", Palette> = {
 export const textPairings: [keyof Palette, keyof Palette][] = [
   ["ink", "bg"],
   ["ink", "surface"],
+  ["ink", "floating"],
   ["ink", "sunk"],
   ["inkMuted", "bg"],
   ["inkMuted", "surface"],
+  ["inkMuted", "floating"],
   ["inkMuted", "sunk"],
   ["accentInk", "accent"],
 ];
@@ -70,6 +76,8 @@ export const nonTextPairings: [keyof Palette, keyof Palette][] = [
   ["focus", "sunk"],
   ["accent", "bg"],
   ["accent", "surface"],
+  ["accent", "floating"],
+  ["focus", "floating"],
 ];
 
 const scales = {
@@ -101,6 +109,9 @@ const scales = {
   "space-8": "4rem",
   "measure": "40rem",
   "page-width": "66rem",
+  // The Ingredient page's three columns: the Ingredient, its Pairings, the tray.
+  "page-width-wide": "78rem",
+  "ingredient-column": "20rem",
   "tray-width": "18rem",
   "tile-min": "11rem",
   // Borders: hairlines for decoration, a heavier line for controls.
@@ -114,6 +125,19 @@ const scales = {
   // Elevation.
   "shadow-raised": "0 1px 3px rgb(0 0 0 / 0.12)",
   "shadow-floating": "0 10px 40px -8px rgb(0 0 0 / 0.35)",
+  // Cast upward, by what's docked to the foot of the screen.
+  "shadow-docked": "0 -8px 28px -4px rgb(0 0 0 / 0.4), 0 -1px 2px rgb(0 0 0 / 0.16)",
+  // A sheet leaves some of the page in view above it, so it reads as on top of the page.
+  "sheet-max-height": "85dvh",
+  // The docked tray bar's height; the tray measures and sets it while the bar shows.
+  "tray-dock-height": "0px",
+  // The open tray sheet's height, measured the same way, so its toast sits just above it.
+  "tray-sheet-height": "0px",
+  // How long a toast stays before it fades; not motion, so reduced motion keeps it.
+  "toast-hold": "5s",
+  // Dims and blurs the page behind a modal sheet.
+  "scrim": "rgb(0 0 0 / 0.45)",
+  "scrim-blur": "6px",
   // Touch targets: the smallest a tappable control may be.
   "target": "2.75rem",
   "chip-height": "2rem",
@@ -129,6 +153,10 @@ const scales = {
   "focus-offset": "2px",
   // Motion: calm, and only on first paint or for the thing that changed.
   "ease-out": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+  // A slight overshoot, for an Ingredient arriving in the tray.
+  "ease-overshoot": "cubic-bezier(0.34, 1.4, 0.64, 1)",
+  // How small an arriving Ingredient starts before it grows in.
+  "scale-arrive": "0.6",
 };
 
 /** Motion durations; all become 0ms when the Cook asks for reduced motion. */
@@ -137,6 +165,8 @@ export const motion = {
   "motion-base": "200ms",
   "motion-slow": "400ms",
   "motion-draw": "1400ms",
+  // The gap between one Pairing row settling in and the next.
+  "motion-stagger": "45ms",
 };
 
 const kebab = (key: string) => key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);

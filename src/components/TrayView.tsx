@@ -3,6 +3,7 @@ import { Chip } from "./Chip";
 import { IngredientMark, type IngredientLook } from "./IngredientMark";
 import { Panel } from "./Panel";
 import styles from "./TrayView.module.css";
+import { useArrivalClass } from "./arrivals";
 
 type Props<T extends IngredientLook> = {
   ingredients: T[];
@@ -13,7 +14,7 @@ type Props<T extends IngredientLook> = {
   unknown?: string[];
   /** Ingredients past the limit. */
   overLimit?: T[];
-  /** The latest change, announced to assistive technology. */
+  /** The latest change, announced to assistive technology but not shown. Leave out when the container announces. */
   status?: string;
   onRemove: (ingredient: T) => void;
   /** Each Ingredient's name, as a link to its page the container provides. */
@@ -30,12 +31,13 @@ export function TrayView<T extends IngredientLook>({
   limit,
   unknown = [],
   overLimit = [],
-  status = "",
+  status,
   onRemove,
   renderName = ({ name }) => name,
   action,
   titleRef,
 }: Props<T>) {
+  const arrivalClass = useArrivalClass(ingredients.map(({ id }) => id));
   return (
     <Panel
       as="aside"
@@ -62,7 +64,7 @@ export function TrayView<T extends IngredientLook>({
         <>
           <ul className={styles.items}>
             {ingredients.map((ingredient) => (
-              <li key={ingredient.id}>
+              <li key={ingredient.id} className={arrivalClass(ingredient.id)}>
                 <Chip
                   colour={ingredient.colour}
                   leading={<IngredientMark ingredient={ingredient} size="sm" />}
@@ -80,9 +82,11 @@ export function TrayView<T extends IngredientLook>({
           {action}
         </>
       )}
-      <p role="status" className={styles.notice}>
-        {status}
-      </p>
+      {status !== undefined && (
+        <p role="status" className="visually-hidden">
+          {status}
+        </p>
+      )}
     </Panel>
   );
 }

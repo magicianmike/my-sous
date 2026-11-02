@@ -4,9 +4,10 @@
   box-sizing: border-box;
 }
 
+/* No padding at the foot: on a phone the tray bar is the page's last thing and meets the screen's foot. */
 body {
   margin: 0;
-  padding: 0 var(--space-4) var(--space-7);
+  padding: 0 var(--space-4);
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-text);
@@ -91,16 +92,129 @@ ul {
   gap: var(--space-6);
 }
 
+/*
+ * The tray. On a phone, a bar docked to the foot of the screen, which opens the tray as a sheet;
+ * it sticks within the page rather than floating over it, so it never hides the page's end.
+ * On wider screens, a sticky side panel; the media query matches SIDE_PANEL in combination-tray.tsx.
+ */
+
+.tray-dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-inline: calc(var(--space-4) * -1);
+}
+
+.tray-panel {
+  display: none;
+}
+
+/* Scrolling to a focused control leaves room for the docked bar, so the bar never covers it. */
+html {
+  scroll-padding-bottom: var(--tray-dock-height);
+}
+
+/* What to make shows the Combination under its heading, no wider than a line of text. */
+.suggestions-combination {
+  max-width: var(--measure);
+}
+
+/* Toasts sit centred above the docked bar, or near the foot of the screen when there's none. */
+.toast-spot {
+  position: fixed;
+  inset-inline: var(--space-4);
+  bottom: calc(var(--tray-dock-height) + var(--space-3));
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.toast-spot > * {
+  pointer-events: auto;
+}
+
+/* With the sheet open, its own toast sits just above the sheet, in the dimmed space. */
+.toast-spot-sheet {
+  bottom: calc(var(--tray-sheet-height) + var(--space-3));
+}
+
+/* The page's toast keeps its timing behind the sheet, so closing doesn't replay an old message. */
+html:has(.tray-sheet:modal) .toast-spot:not(.toast-spot-sheet) {
+  visibility: hidden;
+}
+
+.tray-sheet {
+  width: 100%;
+  max-width: none;
+  max-height: var(--sheet-max-height);
+  margin: auto 0 0;
+  padding: 0 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-floating);
+}
+
+.tray-sheet[open] {
+  animation: sheet-in var(--motion-slow) var(--ease-out);
+}
+
+.tray-sheet::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(var(--scrim-blur));
+}
+
+.tray-sheet > aside {
+  border: 0;
+}
+
+.tray-close {
+  display: flex;
+  width: calc(100% - 2 * var(--space-4));
+  margin-inline: auto;
+}
+
+html:has(.tray-sheet:modal) {
+  overflow: hidden;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
 @media (min-width: 56rem) {
-  .app {
+  body {
+    padding-bottom: var(--space-7);
+  }
+
+  /* Beside the tray; What to make has none. */
+  .app:has(.tray-dock) {
     grid-template-columns: minmax(0, 1fr) var(--tray-width);
     align-items: start;
   }
 
-  .app > aside {
-    position: sticky;
+  .tray-dock {
     top: var(--space-4);
+    bottom: auto;
+    gap: var(--space-2);
+    margin-inline: 0;
   }
+
+  .tray-panel {
+    display: block;
+  }
+
+  .tray-bar,
+  .tray-sheet {
+    display: none;
+  }
+
 }
 
 main {
@@ -153,6 +267,33 @@ main {
 }
 
 /* Ingredient */
+
+/*
+ * The Ingredient stacks above its Pairings until the screen fits three columns: the Ingredient,
+ * its Pairings, and the tray.
+ */
+
+@media (min-width: 72rem) {
+  .app:has(.ingredient),
+  body:has(.ingredient) .site-header {
+    max-width: var(--page-width-wide);
+  }
+
+  main:has(.ingredient) {
+    max-width: none;
+  }
+
+  .ingredient {
+    display: grid;
+    grid-template-columns: var(--ingredient-column) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .ingredient-pairings > h2:first-child {
+    margin-top: 0;
+  }
+}
 
 /* Drawing, name, Cuisines and about card, centred as one column. */
 .hero {
@@ -282,4 +423,19 @@ main {
 
 .specimen-tray {
   max-width: var(--tray-width);
+}
+
+/* Motion: only on first paint, or on the thing that changed. Durations are 0ms under reduced motion. */
+
+.settling .pairing-group li {
+  animation: settle var(--motion-slow) var(--ease-out) backwards;
+  /* Past the first screen of rows, the rest arrive together rather than keep the Cook waiting. */
+  animation-delay: calc(min(var(--row), 8) * var(--motion-stagger));
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-3));
+  }
 }

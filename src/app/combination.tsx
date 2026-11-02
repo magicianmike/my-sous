@@ -21,8 +21,11 @@ export function hrefWith(path: string, ids: string[]): string {
   return ids.length > 0 ? `${path}?${PARAM}=${ids.join(",")}` : path;
 }
 
-/** The Kitchen, plus the latest status message about the Combination. */
-type KitchenState = { kitchen: Kitchen; status: string; announce(message: string): void };
+/**
+ * The Kitchen, plus the latest status message about the Combination. `statusKey` changes with
+ * every message, even one that repeats the last, so it can be shown afresh.
+ */
+type KitchenState = { kitchen: Kitchen; status: string; statusKey: number; announce(message: string): void };
 
 const KitchenContext = createContext<KitchenState | null>(null);
 
@@ -35,11 +38,12 @@ export function KitchenProvider({
   children: React.ReactNode;
 }) {
   const kitchen = useMemo(() => createKitchen(content), [content]);
-  const [status, setStatus] = useState("");
+  const [{ status, statusKey }, setStatus] = useState({ status: "", statusKey: 0 });
+  const announce = (message: string) => setStatus(({ statusKey }) => ({ status: message, statusKey: statusKey + 1 }));
   const pathname = usePathname();
-  useEffect(() => setStatus(""), [pathname]);
+  useEffect(() => setStatus(({ statusKey }) => ({ status: "", statusKey })), [pathname]);
   return (
-    <KitchenContext.Provider value={{ kitchen, status, announce: setStatus }}>
+    <KitchenContext.Provider value={{ kitchen, status, statusKey, announce }}>
       {children}
     </KitchenContext.Provider>
   );

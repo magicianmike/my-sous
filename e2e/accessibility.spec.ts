@@ -76,7 +76,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       await acid.getByText("Swap").click();
       await expectNoViolations(page);
       await acid.getByRole("button", { name: /^Use / }).first().click();
-      await expect(page.getByRole("main").getByRole("status")).not.toBeEmpty();
+      await expect(acid.getByRole("button", { name: /^Undo swap/ })).toBeFocused();
       await expectNoViolations(page);
     });
   });

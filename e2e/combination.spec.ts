@@ -155,24 +155,47 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
   await expect(acid).toContainText(
     "Pairs with chicken thigh: Lemon's acid balances the rich fat of chicken thigh.",
   );
-  await expect(slotItem(page, "a soft herb (optional)")).toBeVisible();
+  await expect(acid.locator(".tag")).toHaveText(["Suggested"]);
+  await expect(slotItem(page, "a soft herb")).toContainText("Optional");
+  await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (lemon pairs best).");
 
   await acid.getByText("Swap").click();
   await acid.getByRole("button", { name: "Use Lime" }).click();
 
   await expect(slot(page, "an acid")).toHaveText("Lime");
-  await expect(page.getByRole("main").getByRole("status")).toHaveText(
-    "Lime is now an acid. Undo brings back lemon.",
-  );
+  await expect(acid.locator(".tag")).toHaveText(["Swapped"]);
+  await expect(page.getByRole("status")).toHaveText("Lime is now an acid. Undo brings back lemon.");
   await expect(page.getByText(/then add lime a little at a time/)).toBeVisible();
-  await expect(page.getByRole("button", { name: "Undo swap" })).toBeFocused();
+  await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (you chose lime).");
+  const undo = acid.getByRole("button", { name: "Undo swap of an acid" });
+  await expect(undo).toBeFocused();
 
-  await page.getByRole("button", { name: "Undo swap" }).click();
+  await undo.click();
   await expect(slot(page, "an acid")).toHaveText("Lemon");
-  await expect(page.getByRole("main").getByRole("status")).toHaveText(
-    "Undone: Lemon is an acid again.",
-  );
+  await expect(page.getByRole("status")).toHaveText("Undone: Lemon is an acid again.");
   await expect(page.getByText(/then add lemon a little at a time/)).toBeVisible();
+  await expect(acid.getByRole("button", { name: /^Undo/ })).toHaveCount(0);
+  await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();
+});
+
+test("only the latest swap offers Undo, and undoing it moves Undo to the swap before", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const acid = slotItem(page, "an acid");
+  await acid.getByText("Swap").click();
+  await acid.getByRole("button", { name: "Use Lime" }).click();
+  const aromatic = slotItem(page, "an aromatic");
+  await aromatic.getByText("Swap").click();
+  await aromatic.getByRole("button", { name: /^Use / }).first().click();
+
+  await expect(page.getByRole("button", { name: /^Undo swap/ })).toHaveCount(1);
+  await aromatic.getByRole("button", { name: "Undo swap of an aromatic" }).click();
+  await expect(acid.getByRole("button", { name: "Undo swap of an acid" })).toBeFocused();
+});
+
+test("a Formula ready with the Combination says so, in words", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic,lemon");
+  await expect(page.locator(".formula-readiness")).toHaveText(/^Ready\s*Ready with your Combination\.$/);
+  await expect(slotItem(page, "an acid").locator(".tag")).toHaveText(["Yours"]);
 });
 
 test("unknown Ingredients in a link are dropped with a notice", async ({ page }) => {
@@ -233,7 +256,7 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await tabTo(page, page.getByRole("button", { name: "Use Lime" }));
   await page.keyboard.press("Enter");
   await expect(slot(page, "an acid")).toHaveText("Lime");
-  await expect(page.getByRole("button", { name: "Undo swap" })).toBeFocused();
+  await expect(page.getByRole("button", { name: "Undo swap of an acid" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
 });

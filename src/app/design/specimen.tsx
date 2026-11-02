@@ -5,9 +5,12 @@ import { Button, buttonClass } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { Combobox } from "@/components/Combobox";
 import { Disclosure } from "@/components/Disclosure";
+import { EmptyMark } from "@/components/EmptyMark";
 import { IngredientMark, type IngredientLook } from "@/components/IngredientMark";
 import { ListRow } from "@/components/ListRow";
+import { MarkGroup } from "@/components/MarkGroup";
 import { Panel } from "@/components/Panel";
+import { Readiness } from "@/components/Readiness";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { Toast } from "@/components/Toast";
 import { TrayBar } from "@/components/TrayBar";
@@ -85,6 +88,25 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
         <IngredientMark ingredient={lemon} size="lg" />
         <IngredientMark ingredient={lemon} size="md" />
         <IngredientMark ingredient={lemon} size="sm" />
+      </div>
+
+      <h2>Suggestion parts</h2>
+      <p className="muted">
+        Whether a Suggestion is ready, and where its Ingredients come from, always in words.
+      </p>
+      <div className="actions" style={{ alignItems: "center" }}>
+        <Readiness needs={0} />
+        <Readiness needs={2} />
+        <EmptyMark />
+      </div>
+      <div className="mark-groups" style={{ marginTop: "var(--space-4)" }}>
+        <MarkGroup label="Yours" ingredients={[lemon, garlic]} />
+        <MarkGroup
+          label="Suggested"
+          ingredients={ingredients.slice(2, 3)}
+          empty={1}
+          emptyLabel="1 Slot nothing pairs with yet"
+        />
       </div>
 
       <h2>List row and disclosure</h2>

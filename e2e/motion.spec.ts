@@ -10,8 +10,8 @@ function animation(locator: Locator) {
 
 /** Where the Combination's Ingredients show: the tray's rows on desktop, the bar's drawings on a phone. */
 function trayItems(page: Page, isMobile: boolean) {
-  // On a phone, each drawing's wrapper, which carries the animation.
-  return isMobile ? page.locator(".tray-bar [aria-hidden=true] >> xpath=..") : page.locator(".tray-panel li");
+  // On a phone, each drawing's wrapper, which carries the animation; empty slots have no drawing.
+  return isMobile ? page.locator(".tray-bar [class*=marks] > :has(svg)") : page.locator(".tray-panel li");
 }
 
 for (const reduced of [false, true]) {

@@ -18,6 +18,8 @@ const screens = [
   "/ingredients/gremolata",
   "/suggestions?with=chicken-thigh,basil",
   "/formulas/pan-sauce?with=chicken-thigh,garlic",
+  "/suggestions?with=chicken-thigh,basil,ginger",
+  "/formulas/sheet-pan-roast?with=ginger",
 ];
 
 // Viewports are set per test, so one project is enough.

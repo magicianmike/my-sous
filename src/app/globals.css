@@ -119,6 +119,7 @@ html {
 /* What to make shows the Combination under its heading, no wider than a line of text. */
 .suggestions-combination {
   max-width: var(--measure);
+  margin-bottom: var(--space-4);
 }
 
 /* Toasts sit centred above the docked bar, or near the foot of the screen when there's none. */
@@ -382,6 +383,46 @@ main {
   font-weight: var(--weight-bold);
 }
 
+/* A tension: the two Ingredients' drawings, side by side, then the sentence that names it. */
+.tension {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.tension-marks {
+  display: flex;
+  flex: none;
+  gap: var(--space-1);
+}
+
+/* What to make before there's a Combination: four open Slots and one way forward. */
+.nothing-yet {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: var(--border-control) dashed var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.nothing-yet h2,
+.nothing-yet p {
+  margin: 0;
+}
+
+.nothing-yet-marks {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.mark-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-3);
+}
+
 .slots {
   display: grid;
   gap: var(--space-2);
@@ -391,6 +432,65 @@ main {
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--text-xl);
+}
+
+.formula-readiness {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.formula-readiness p {
+  margin: 0;
+}
+
+/* A word on where a Slot's Ingredient came from, or that the Slot is optional. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: var(--space-1) 0 0;
+}
+
+.tag {
+  padding: 0 var(--space-2);
+  border: var(--border-hairline) solid var(--ink-muted);
+  border-radius: var(--radius-pill);
+  color: var(--ink-muted);
+  font-family: var(--font-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+/* What else could fill a Slot: each a chip with its drawing. */
+.alternatives {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+}
+
+.alternative {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-1);
+  border: var(--border-control) solid var(--ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+
+.alternative:hover {
+  background: var(--sunk);
 }
 
 .slot-role {

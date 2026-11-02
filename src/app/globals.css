@@ -84,12 +84,15 @@ h3 {
   border-radius: 50%;
 }
 
-.mark-link > * {
+/*
+ * Any drawing in something the Cook can press (a drawing link, a home tile, a Swap choice) rings when the
+ * pointer is on it: a hairline, half strength, enough to show it without shouting.
+ */
+.ingredient-mark {
   transition: box-shadow var(--motion-fast) var(--ease-out);
 }
 
-/* A hairline, half strength: enough to show the pointer is on it without shouting. */
-.mark-link:hover > * {
+:is(a, button):hover .ingredient-mark {
   box-shadow: 0 0 0 var(--border-hairline) color-mix(in srgb, var(--stroke) 50%, transparent);
 }
 

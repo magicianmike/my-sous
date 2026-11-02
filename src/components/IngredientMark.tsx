@@ -16,7 +16,7 @@ type Props = {
 export function IngredientMark({ ingredient: { colour, drawing }, size = "md", drawIn = false }: Props) {
   return (
     <span
-      className={["hue", styles.mark, styles[size], drawIn && styles.drawIn].filter(Boolean).join(" ")}
+      className={["hue", "ingredient-mark", styles.mark, styles[size], drawIn && styles.drawIn].filter(Boolean).join(" ")}
       style={hueStyle(colour)}
       aria-hidden="true"
     >

@@ -21,6 +21,8 @@ export type Palette = {
   inkMuted: string;
   /** A link under the pointer; an Ingredient's link takes the Ingredient's own colour instead. */
   linkHover: string;
+  /** Something that removes or undoes, under the pointer, such as the tray's bin. */
+  danger: string;
   /** Primary actions. */
   accent: string;
   /** Text on `accent`. */
@@ -39,6 +41,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
     ink: "#1f2620",
     inkMuted: "#4d574f",
     linkHover: "#2f6a3a",
+    danger: "#b3261e",
     accent: "#1f2620",
     accentInk: "#ffffff",
     focus: "#1f2620",
@@ -52,6 +55,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
     ink: "#ebefe9",
     inkMuted: "#aab3ab",
     linkHover: "#9dd4a6",
+    danger: "#ff8f85",
     accent: "#ebefe9",
     accentInk: "#121412",
     focus: "#ebefe9",
@@ -72,6 +76,10 @@ export const textPairings: [keyof Palette, keyof Palette][] = [
   ["linkHover", "surface"],
   ["linkHover", "floating"],
   ["linkHover", "sunk"],
+  ["danger", "bg"],
+  ["danger", "surface"],
+  ["danger", "floating"],
+  ["danger", "sunk"],
   ["accentInk", "accent"],
 ];
 

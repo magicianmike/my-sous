@@ -213,3 +213,12 @@ test("with a mouse, an Ingredient's bin shows only under the pointer or on keybo
   await page.keyboard.press("Tab");
   await expect.poll(opacity).toBe("1");
 });
+
+test("an Ingredient's bin turns red under the pointer", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover is for a pointer");
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  const remove = page.getByRole("button", { name: "Remove Garlic" });
+  await remove.hover();
+  // The danger token: #b3261e in the light theme.
+  await expect.poll(() => remove.evaluate((el) => getComputedStyle(el).color)).toBe("rgb(179, 38, 30)");
+});

@@ -65,6 +65,11 @@
   }
 }
 
+/* Red under the pointer: this one removes. */
+.items .remove:hover {
+  color: var(--danger);
+}
+
 .icon {
   width: var(--space-5);
   height: var(--space-5);

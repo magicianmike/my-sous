@@ -28,6 +28,9 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
   const dock = useRef<HTMLDivElement>(null);
 
   const close = () => sheet.current?.close();
+  // Focus is in the sheet, or was until the sheet hid and the browser dropped it to the page.
+  const focusWasInSheet = () =>
+    sheet.current!.contains(document.activeElement) || document.activeElement === document.body;
 
   // A link followed from the sheet leads to a new screen.
   useEffect(close, [pathname]);
@@ -47,7 +50,7 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
     const wide = matchMedia(SIDE_PANEL);
     const widen = () => {
       if (!wide.matches || !sheet.current?.open) return;
-      const hadFocus = sheet.current.contains(document.activeElement);
+      const hadFocus = focusWasInSheet();
       close();
       if (hadFocus) panelHeading.current?.focus();
     };
@@ -97,7 +100,7 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
         aria-labelledby="tray-sheet-heading"
         onClose={() => {
           // Back to the bar, unless closing moved focus on already (as widening does).
-          if (sheet.current!.contains(document.activeElement) || document.activeElement === document.body) {
+          if (focusWasInSheet()) {
             opener.current?.focus();
           }
         }}

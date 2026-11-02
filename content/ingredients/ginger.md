@@ -2,7 +2,7 @@
 name: Ginger
 category: aromatic
 cuisines: [cantonese]
-common: true
+staple: true
 slotTypes: [aromatic]
 tip: Scrape the skin off with a spoon; it follows the knobbly shape better than a peeler.
 colour:

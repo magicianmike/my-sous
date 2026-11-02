@@ -116,7 +116,7 @@ describe("loadKitchen", () => {
       typicallyIncludes: ["dried thyme", "sumac", "sesame"],
       cuisines: [levantine],
       slotTypes: ["seasoning"],
-      common: false,
+      staple: false,
       tip: "Bloom it in olive oil.",
       culturalContext: "Often eaten with bread and olive oil.",
       essay: "A tangy, herbal blend.\n\nIt burns quickly.",
@@ -253,10 +253,10 @@ describe("loadKitchen", () => {
     });
   });
 
-  it("lists the staples for the Pantry's grid: Ingredients marked common, in name order", async () => {
+  it("lists the staples for the Pantry's grid, in name order", async () => {
     const kitchen = await expectKitchen(
       writeContent({
-        ingredients: { lemon: { ...lemon, common: true }, garlic: { ...garlic, common: true }, thyme },
+        ingredients: { lemon: { ...lemon, staple: true }, garlic: { ...garlic, staple: true }, thyme },
         pairings: [],
       }),
     );
@@ -391,7 +391,7 @@ describe("loadKitchen", () => {
       expect(panSauce.makeable).toBe(true);
     });
 
-    it("with a Pantry, counts only the Pantry as on hand, so a Combination Ingredient may still be needed", async () => {
+    it("with a Pantry, counts only it as on hand, so a Combination Ingredient may be needed", async () => {
       const kitchen = await expectKitchen(writeContent(fixture));
       const ids = (ids: string[]) => kitchen.combination(ids).ingredients;
 
@@ -399,6 +399,7 @@ describe("loadKitchen", () => {
       const panSauce = suggestions.find(({ formula }) => formula.id === "pan-sauce")!;
 
       expect(panSauce.onHand.map(({ id }) => id)).toEqual(["garlic", "thyme"]);
+      expect(panSauce.fromPantry).toBe(true);
       expect(panSauce.slots.find(({ slot }) => slot.id === "acid")).toMatchObject({ source: "combination" });
       expect(panSauce.needs.map(({ slot }) => slot.id)).toEqual(["acid"]);
       expect(panSauce.makeable).toBe(false);
@@ -775,9 +776,28 @@ describe("loadKitchen", () => {
       ]);
     });
 
-    it("with an empty Pantry, ranks by Pairings alone, so planning a shop starts from what goes together", async () => {
+    it("with a Pantry, explains its rank by what came from the basket and the Pantry", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({ ...fixture, formulas: [formula("dish", ["lamb", "mint"])] }),
+      );
+      const ids = (ids: string[]) => kitchen.combination(ids).ingredients;
+
+      const [withPantry] = kitchen.suggest(ids(["lamb"]), ids(["mint"])).suggestions;
+      const [withoutPantry] = kitchen.suggest(ids(["mint"]), []).suggestions;
+
+      expect(withPantry).toMatchObject({ fromPantry: true, rankReason: "Lamb and mint pair well." });
+      expect(withoutPantry).toMatchObject({ fromPantry: false });
+      expect(kitchen.suggest([], ids(["chocolate"])).suggestions[0].rankReason).toBe(
+        "None of your basket and Pantry fits this dish yet.",
+      );
+    });
+
+    it("with an empty Pantry, ranks by Pairings alone, to plan a shop", async () => {
       const suggestions = await rank(
-        [formula("ready-but-loose", ["mint", "chocolate"]), formula("tight-needs-more", ["lamb", "lemon", "garlic"])],
+        [
+          formula("ready-but-loose", ["mint", "chocolate"]),
+          formula("tight-needs-more", ["lamb", "lemon", "garlic"]),
+        ],
         ["mint", "chocolate", "lamb", "lemon"],
       );
 
@@ -852,12 +872,12 @@ describe("loadKitchen", () => {
 
     it("when more Ingredients are staples than the Pantry's grid shows", async () => {
       const staples = Object.fromEntries(
-        Array.from({ length: 25 }, (_, i) => [`staple-${i}`, { name: `Staple ${i}`, common: true }]),
+        Array.from({ length: 25 }, (_, i) => [`staple-${i}`, { name: `Staple ${i}`, staple: true }]),
       );
       const errors = await expectErrors(writeContent({ ingredients: staples, pairings: [] }));
 
       expect(errors).toEqual([
-        "25 Ingredients are marked common, but the Pantry's grid of staples shows at most 24. Unmark some.",
+        "25 Ingredients are marked as staples, but the Pantry's grid shows at most 24. Unmark some.",
       ]);
     });
 

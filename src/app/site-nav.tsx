@@ -16,7 +16,7 @@ export function SiteNav() {
           <span className="nav-count">
             <span aria-hidden="true">·</span>
             {ingredients.length}
-            <span className="visually-hidden"> Ingredients</span>
+            <span className="visually-hidden"> ingredients</span>
           </span>
         )}
       </CombinationLink>

@@ -44,6 +44,10 @@ _Avoid_: Culture, ethnic food, authentic
 The set of Ingredients the Cook has on hand right now, fridge included.
 _Avoid_: Fridge, inventory, my ingredients
 
+**Staple**:
+An Ingredient most kitchens keep, such as garlic or lemon, marked in its content so the Pantry offers it as a quick tap.
+_Avoid_: Common ingredient, basic, essential
+
 ### Dishes
 
 **Combination**:

@@ -18,7 +18,7 @@ import {
 } from "@/kitchen/kitchen";
 import { useCombination, useKitchen, withSearchParams } from "../../combination";
 import { IngredientLink, IngredientMarkLink } from "../../ingredient-link";
-import { usePantry } from "../../pantry";
+import { InPantryNote, usePantry } from "../../pantry";
 import { ReadinessSentence } from "../../readiness";
 
 /** The Formula's Slots and method, filled from the current Combination. */
@@ -67,6 +67,15 @@ const SOURCE_TAG: Record<FillSource, string> = {
   swap: "Swapped",
 };
 
+/**
+ * Whether the Cook has a part's Ingredient, once there's a Pantry to say: a quiet line under its name.
+ * Nothing when the Pantry is empty, the part is empty, or its tag already says it's from the Pantry.
+ */
+function availabilityOf({ fromPantry, onHand }: Suggestion, { ingredient, source }: FilledSlot) {
+  if (!fromPantry || !ingredient || source === "pantry") return undefined;
+  return onHand.includes(ingredient) ? "In your Pantry" : "You’d need this";
+}
+
 function SlotEditor({
   initial,
   initialFocus,
@@ -79,7 +88,6 @@ function SlotEditor({
   onAdd: (slotId: string, ingredient: Ingredient) => void;
 }) {
   const { kitchen, announce } = useKitchen();
-  const pantry = usePantry();
   const [history, setHistory] = useState<Step[]>([{ suggestion: initial }]);
   const [focus, setFocus] = useState<FocusTarget | undefined>(initialFocus ? { slot: initialFocus } : undefined);
   const undoButton = useRef<HTMLButtonElement>(null);
@@ -128,13 +136,7 @@ function SlotEditor({
       <ul className="slots stack">
         {current.suggestion.slots.map((filled) => {
           const { slot, ingredient, source, alternatives } = filled;
-          // With a Pantry, whether the Cook has it, under the name; unless the source already says so.
-          const availability =
-            pantry.ingredients.length > 0 && ingredient && source !== "pantry"
-              ? current.suggestion.onHand.includes(ingredient)
-                ? "In your Pantry"
-                : "You’d need this"
-              : undefined;
+          const availability = availabilityOf(current.suggestion, filled);
           // What fills it isn't in the basket yet, so the Cook can add it.
           const addable = ingredient && source && !isCooksOwn(source) ? ingredient : undefined;
           return (
@@ -198,11 +200,7 @@ function SlotEditor({
                                 {/* One flex item, so the note reads straight after the name. */}
                                 <span>
                                   {alternative.name}
-                                  {pantry.has(alternative) && (
-                                    <span className="alternative-note">
-                                      <span className="visually-hidden">,</span> in Pantry
-                                    </span>
-                                  )}
+                                  <InPantryNote ingredient={alternative} />
                                 </span>
                               </button>
                             </li>

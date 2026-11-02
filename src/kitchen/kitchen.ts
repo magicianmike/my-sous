@@ -90,6 +90,8 @@ export type Suggestion = {
    * keeps it, so a swap to something on hand counts as had.
    */
   onHand: Ingredient[];
+  /** Whether `onHand` is the Pantry, rather than the Combination standing in for an empty one. */
+  fromPantry: boolean;
   /** The required Slots not filled from what's on hand, as filled so far, in Formula order. */
   needs: FilledSlot[];
   /** Whether what's on hand fills every required Slot: the dish can be made now. */
@@ -131,7 +133,7 @@ export type Kitchen = {
   /** What a Blend typically includes (by Ingredient id or in plain words); empty for others. */
   blendComponents(id: string): BlendComponent[];
   combination(ids: string[]): Combination;
-  /** Ingredients marked common, for the Pantry's grid, in name order. */
+  /** Ingredients marked as staples, for the Pantry's grid, in name order. */
   staples(): Ingredient[];
   formulas(): Formula[];
   formula(id: string): Formula | undefined;
@@ -187,10 +189,13 @@ function explainRank(
   used: Ingredient[],
   arePaired: (a: Ingredient, b: Ingredient) => boolean,
   pairs: [Ingredient, Ingredient][],
+  fromPantry: boolean,
 ): string {
   const name = inSentence;
-  if (used.length === 0) return "None of your basket fits this dish yet.";
-  if (used.length === 1) return `Only ${name(used[0])} from your basket is used here.`;
+  // Where the Cook's Ingredients came from, as the Cook calls them.
+  const yours = fromPantry ? "your basket and Pantry" : "your basket";
+  if (used.length === 0) return `None of ${yours} fits this dish yet.`;
+  if (used.length === 1) return `Only ${name(used[0])} from ${yours} is used here.`;
   if (pairs.length === 0) {
     return used.length === 2
       ? capitalise(`${name(used[0])} and ${name(used[1])} don't have a Pairing in MySous yet.`)
@@ -311,6 +316,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
     formula: Formula,
     fills: Fill[],
     onHand: Ingredient[],
+    fromPantry: boolean,
   ): { suggestion: Suggestion; coherence: number } {
     const used = usedIn(fills);
     const slots = formula.slots.map((slot, i): FilledSlot => {
@@ -340,12 +346,21 @@ export function createKitchen(content: KitchenContent): Kitchen {
     const pairs = chosen.flatMap((a, i) =>
       chosen.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
     );
-    const rankReason = explainRank(chosen, arePaired, pairs);
+    const rankReason = explainRank(chosen, arePaired, pairs, fromPantry);
     const needs = slots.filter(
       ({ slot, ingredient }) => slot.required && !(ingredient && onHand.includes(ingredient)),
     );
     return {
-      suggestion: { formula, slots, method, rankReason, onHand, needs, makeable: needs.length === 0 },
+      suggestion: {
+        formula,
+        slots,
+        method,
+        rankReason,
+        onHand,
+        fromPantry,
+        needs,
+        makeable: needs.length === 0,
+      },
       coherence: pairs.length,
     };
   }
@@ -395,13 +410,15 @@ export function createKitchen(content: KitchenContent): Kitchen {
 
     staples: () =>
       [...ingredients.values()]
-        .filter(({ common }) => common)
+        .filter(({ staple }) => staple)
         // Plain code-point comparison, so the order is the same in Node and every browser.
         .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0)),
     formulas: () => content.formulas,
     formula: (id) => content.formulas.find((formula) => formula.id === id),
 
     suggest(combination, pantry) {
+      // An empty Pantry says nothing about what's on hand, so the Combination stands in for it.
+      const fromPantry = pantry.length > 0;
       const suggestions = content.formulas.map((formula) => {
         const fills: Fill[] = formula.slots.map(() => undefined);
         const used = () => usedIn(fills);
@@ -425,16 +442,16 @@ export function createKitchen(content: KitchenContent): Kitchen {
           });
         }
 
-        return deriveSuggestion(formula, fills, pantry.length > 0 ? pantry : combination);
+        return deriveSuggestion(formula, fills, fromPantry ? pantry : combination, fromPantry);
       });
       // With a Pantry, what can be made now comes first, then what needs least; an empty Pantry
       // says nothing about what's on hand, so then it's Pairings alone. A stable sort, so ties keep
       // the order Formulas appear in the content.
-      const missing = ({ suggestion }: { suggestion: Suggestion }) =>
-        pantry.length > 0 ? suggestion.needs.length : 0;
+      const missingCount = ({ suggestion }: { suggestion: Suggestion }) =>
+        fromPantry ? suggestion.needs.length : 0;
       return {
         suggestions: suggestions
-          .sort((a, b) => missing(a) - missing(b) || b.coherence - a.coherence)
+          .sort((a, b) => missingCount(a) - missingCount(b) || b.coherence - a.coherence)
           .map(({ suggestion }) => suggestion),
         ...findTensions(combination),
       };
@@ -451,7 +468,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
           ? { ingredient: chosen, source: "swap" as const }
           : ingredient && source && { ingredient, source },
       );
-      return deriveSuggestion(suggestion.formula, fills, suggestion.onHand).suggestion;
+      return deriveSuggestion(suggestion.formula, fills, suggestion.onHand, suggestion.fromPantry).suggestion;
     },
 
     combination(ids) {

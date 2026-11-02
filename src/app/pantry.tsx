@@ -61,8 +61,8 @@ function subscribe(listener: () => void) {
   };
 }
 
-function counted(size: number): string {
-  return `${size} Ingredient${size === 1 ? "" : "s"}`;
+function ingredientCount(size: number): string {
+  return `${size} ingredient${size === 1 ? "" : "s"}`;
 }
 
 /** The Cook's Pantry, in the order they added things, and the ways to change it. */
@@ -85,27 +85,34 @@ export function usePantry() {
       }
       const next = [...ingredients, ingredient];
       save(next.map(({ id }) => id));
-      announce(`${ingredient.name} added to your Pantry, ${counted(next.length)}.`);
+      announce(`${ingredient.name} added to your Pantry, ${ingredientCount(next.length)}.`);
     },
     remove(ingredient: Ingredient) {
       const next = ingredients.filter((other) => other !== ingredient);
       save(next.map(({ id }) => id));
-      announce(`${ingredient.name} removed from your Pantry, ${counted(next.length)}.`);
+      announce(`${ingredient.name} removed from your Pantry, ${ingredientCount(next.length)}.`);
     },
   };
 }
 
+/** "in Pantry" after an Ingredient's name, when it is; assistive technology hears it after a comma. */
+export function InPantryNote({ ingredient }: { ingredient: Ingredient }) {
+  const { has } = usePantry();
+  return (
+    has(ingredient) && (
+      <span className="in-pantry">
+        <span className="visually-hidden">,</span> in Pantry
+      </span>
+    )
+  );
+}
+
 /** A basket Ingredient's name, as a link, noting when it's already in the Pantry. */
 export function BasketName({ ingredient }: { ingredient: Ingredient }) {
-  const { has } = usePantry();
   return (
     <>
       <IngredientLink ingredient={ingredient} />
-      {has(ingredient) && (
-        <span className="in-pantry">
-          <span className="visually-hidden">, </span>in Pantry
-        </span>
-      )}
+      <InPantryNote ingredient={ingredient} />
     </>
   );
 }

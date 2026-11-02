@@ -124,11 +124,13 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
     }
   }
 
-  const staples = content.ingredients.filter(({ common }) => common).length;
+  const staples = content.ingredients.filter(({ staple }) => staple).length;
   if (staples > STAPLES_LIMIT) {
     errors.push({
       file: join(contentDir, "ingredients"),
-      message: `${staples} Ingredients are marked common, but the Pantry's grid of staples shows at most ${STAPLES_LIMIT}. Unmark some.`,
+      message:
+        `${staples} Ingredients are marked as staples, but the Pantry's grid shows at most ` +
+        `${STAPLES_LIMIT}. Unmark some.`,
     });
   }
 

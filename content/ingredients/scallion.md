@@ -2,7 +2,7 @@
 name: Scallion
 category: allium
 cuisines: [cantonese]
-common: true
+staple: true
 slotTypes: [aromatic, garnish]
 tip: Cook with the white parts and save the green tops to scatter on at the end.
 colour:

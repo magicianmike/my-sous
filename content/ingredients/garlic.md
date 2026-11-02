@@ -2,7 +2,7 @@
 name: Garlic
 category: allium
 cuisines: [southern-italian, ligurian, cantonese, oaxacan]
-common: true
+staple: true
 slotTypes: [aromatic]
 tip: Cook garlic gently; it turns bitter if it browns too far.
 colour:

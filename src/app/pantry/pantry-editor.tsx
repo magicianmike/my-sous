@@ -5,6 +5,7 @@ import { Button } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { Combobox } from "@/components/Combobox";
 import { IngredientMark } from "@/components/IngredientMark";
+import { TickIcon } from "@/components/TickIcon";
 import { TrashIcon } from "@/components/TrashIcon";
 import type { Ingredient } from "@/kitchen/kitchen";
 import { useKitchen } from "../combination";
@@ -91,7 +92,7 @@ export function PantryEditor() {
                   <IngredientMark ingredient={ingredient} size="sm" />
                   <span className="staple-name">{ingredient.name}</span>
                   {/* A tick when it's in, so the state never rests on colour. */}
-                  <TickIcon />
+                  <TickIcon className="staple-tick" />
                 </button>
               </li>
             );
@@ -99,22 +100,5 @@ export function PantryEditor() {
         </ul>
       </section>
     </>
-  );
-}
-
-function TickIcon() {
-  return (
-    <svg
-      className="staple-tick"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M5 12.5l4.5 4.5L19 7.5" />
-    </svg>
   );
 }

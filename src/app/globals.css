@@ -625,15 +625,10 @@ main {
 /* Pantry */
 
 /* "in Pantry", beside a name in the basket or a Swap choice. */
-.in-pantry,
-.alternative-note {
+.in-pantry {
   color: var(--ink-muted);
   font-size: var(--text-xs);
   font-weight: var(--weight-regular);
-}
-
-.in-pantry {
-  margin-inline-start: var(--space-1);
   white-space: nowrap;
 }
 

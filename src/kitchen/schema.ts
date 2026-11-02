@@ -27,7 +27,7 @@ export const ingredientSchema = z.object({
   cuisines: z.array(z.string()).default([]),
   slotTypes: z.array(z.string().min(1)).default([]),
   /** A staple most kitchens keep, offered in the Pantry's grid to tap. */
-  common: z.boolean().default(false),
+  staple: z.boolean().default(false),
   tip: z.string().min(1),
   culturalContext: z.string().min(1).optional(),
   essay: z.string().min(1, "the Ingredient needs an essay below its frontmatter"),

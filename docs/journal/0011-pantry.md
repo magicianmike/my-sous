@@ -24,7 +24,7 @@ There was no Pantry before. What to make said so in a note: "MySous doesn't know
 
 **Ranking.** With a Pantry: fewest required parts missing (so Ready first), then coherence. With an empty Pantry: coherence alone, so a Cook planning a shop starts from what goes together (story 41).
 
-**Adding.** By name, through the same search as Home, with the field clearing after each choice so several can go in quickly. Or by tapping a staple: Ingredients the author marks `common` in their frontmatter, at most 24, so the grid stays a quick tap rather than a catalogue. Each staple is a toggle (`aria-pressed`) that shows a tick once it's in, so the state never rests on colour. The six launch staples (garlic, ginger, lemon, lime, scallion, tomato) are a first pass for the author to change.
+**Adding.** By name, through the same search as Home, with the field clearing after each choice so several can go in quickly. Or by tapping a staple: Ingredients the author marks `staple: true` in their frontmatter (a new glossary term), at most 24, so the grid stays a quick tap rather than a catalogue. Each staple is a toggle (`aria-pressed`) that shows a tick once it's in, so the state never rests on colour. The six launch staples (garlic, ginger, lemon, lime, scallion, tomato) are a first pass for the author to change.
 
 **Where the Pantry shows.**
 

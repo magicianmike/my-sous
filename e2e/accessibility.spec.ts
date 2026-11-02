@@ -62,7 +62,9 @@ for (const colorScheme of ["light", "dark"] as const) {
 
     test("with a Pantry, the Pantry, What to make and a dish have no axe violations", async ({ page }) => {
       await page.goto("/pantry");
-      await page.evaluate(() => localStorage.setItem("mysous.pantry", JSON.stringify(["garlic", "lemon", "lime"])));
+      await page.evaluate(() =>
+        localStorage.setItem("mysous.pantry", JSON.stringify(["garlic", "lemon", "lime"])),
+      );
       await page.reload();
       await expect(page.getByRole("button", { name: "Remove Garlic from your Pantry" })).toBeVisible();
       await expectNoViolations(page);

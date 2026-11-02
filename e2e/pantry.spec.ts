@@ -7,7 +7,8 @@ async function withPantry(page: Page, ids: string[], path: string) {
   await page.goto(path);
 }
 
-const pantryList = (page: Page) => page.getByRole("region", { name: /^In your Pantry/ }).getByRole("listitem");
+const pantryList = (page: Page) =>
+  page.getByRole("region", { name: /^In your Pantry/ }).getByRole("listitem");
 
 /** A Suggestion's card on What to make, found by its dish's name. */
 function card(page: Page, dish: string) {
@@ -37,16 +38,17 @@ test("a Cook fills their Pantry, it's kept after a reload, and what they can mak
   await search.press("Enter");
   await expect(search).toHaveValue("");
   await expect(page.getByRole("status").filter({ hasText: "Chicken thigh added" })).toHaveText(
-    "Chicken thigh added to your Pantry, 1 Ingredient.",
+    "Chicken thigh added to your Pantry, 1 ingredient.",
   );
 
   // By tapping staples.
   await page.getByRole("button", { name: "Garlic", exact: true }).click();
   await page.getByRole("button", { name: "Lemon", exact: true }).click();
   await page.getByRole("button", { name: "Lime", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Garlic", exact: true })).toHaveAttribute("aria-pressed", "true");
+  const garlicStaple = page.getByRole("button", { name: "Garlic", exact: true });
+  await expect(garlicStaple).toHaveAttribute("aria-pressed", "true");
   await expect(pantryList(page)).toHaveText([/^Chicken thigh/, /^Garlic/, /^Lemon/, /^Lime/]);
-  await expect(page.getByRole("link", { name: /^Pantry/ })).toHaveText(/^Pantry\s*·\s*4\s*Ingredients$/);
+  await expect(page.getByRole("link", { name: /^Pantry/ })).toHaveText(/^Pantry\s*·\s*4\s*ingredients$/);
 
   // Removing, from the list or by tapping a staple again.
   await page.getByRole("button", { name: "Remove Lime from your Pantry" }).click();
@@ -91,7 +93,9 @@ test("with a Pantry, the basket marks what's already in it", async ({ page }) =>
   await expect(basket).toHaveText([/^Chicken thigh(?!.*in Pantry)/, /^Garlic, in Pantry/]);
 });
 
-test("with storage blocked, the Pantry lasts the visit, says so, and the app still works", async ({ page }) => {
+test("with storage blocked, the Pantry lasts the visit, says so, and the app still works", async ({
+  page,
+}) => {
   await page.addInitScript(() => {
     const blocked = () => {
       throw new DOMException("Blocked", "SecurityError");
@@ -107,5 +111,5 @@ test("with storage blocked, the Pantry lasts the visit, says so, and the app sti
   // Moving within the app keeps the Pantry for the visit.
   await page.getByRole("link", { name: "See what to make" }).first().click();
   await expect(page.getByRole("main")).toContainText("Ready means your Pantry has every part a dish needs");
-  await expect(page.getByRole("link", { name: /^Pantry/ })).toHaveText(/^Pantry\s*·\s*2\s*Ingredients$/);
+  await expect(page.getByRole("link", { name: /^Pantry/ })).toHaveText(/^Pantry\s*·\s*2\s*ingredients$/);
 });

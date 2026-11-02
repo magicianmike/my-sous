@@ -129,6 +129,10 @@ const scales = {
   "shadow-docked": "0 -8px 28px -4px rgb(0 0 0 / 0.4), 0 -1px 2px rgb(0 0 0 / 0.16)",
   // A sheet leaves some of the page in view above it, so it reads as on top of the page.
   "sheet-max-height": "85dvh",
+  // The docked tray bar's height; the tray measures and sets it while the bar shows.
+  "tray-dock-height": "0px",
+  // How long a toast stays before it fades; not motion, so reduced motion keeps it.
+  "toast-hold": "5s",
   // Dims the page behind a modal sheet.
   "scrim": "rgb(0 0 0 / 0.45)",
   // Touch targets: the smallest a tappable control may be.

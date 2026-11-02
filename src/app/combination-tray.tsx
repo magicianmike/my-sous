@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { Button, buttonClass } from "@/components/Button";
+import { Toast } from "@/components/Toast";
 import { TrayBar } from "@/components/TrayBar";
 import { TrayView } from "@/components/TrayView";
 import { COMBINATION_LIMIT, type Ingredient } from "@/kitchen/kitchen";
@@ -13,11 +14,33 @@ const SIDE_PANEL = "(min-width: 56rem)";
 
 /**
  * The tray, fed from the Combination in the URL: a side panel on wide screens, and on a phone a
- * bar that opens the same tray as a modal sheet. Only one shows at a time, so assistive technology
- * meets one tray. The live region sits outside both, so changes are announced either way; the open
- * sheet has its own, since a modal makes the page behind it, and its live region, inert.
+ * bar that opens the same tray as a modal sheet. What to make shows the Combination itself, so it
+ * has no tray. Every change is announced from a live region outside the tray, and shown as a toast.
  */
 export const CombinationTray = withSearchParams(function CombinationTray() {
+  const { status, statusKey } = useKitchen();
+  const pathname = usePathname();
+  return (
+    <>
+      {pathname !== "/suggestions" && <TrayDock />}
+      <p role="status" className="visually-hidden">
+        {status}
+      </p>
+      {status && (
+        <div className="toast-spot">
+          <Toast key={statusKey} message={status} />
+        </div>
+      )}
+    </>
+  );
+});
+
+/**
+ * The side panel, or the bar and its sheet; CSS shows one for the screen size, so assistive
+ * technology meets one tray. The open sheet has its own live region, since a modal makes the page
+ * behind it, and its live region, inert.
+ */
+function TrayDock() {
   const { status } = useKitchen();
   const { combination, remove } = useCombination();
   const pathname = usePathname();
@@ -42,7 +65,10 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
       root.style.setProperty("--tray-dock-height", `${height}px`);
     });
     observer.observe(dock.current!);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--tray-dock-height");
+    };
   }, []);
   // Widening into the side panel closes the sheet; focus that was in it moves to the panel, since
   // the bar it would return to is gone.
@@ -113,12 +139,9 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
           Close
         </Button>
       </dialog>
-      <p role="status" className="tray-status">
-        {status}
-      </p>
     </div>
   );
-});
+}
 
 type TrayPlacement = {
   titleId: string;

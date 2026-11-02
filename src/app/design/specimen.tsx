@@ -9,6 +9,7 @@ import { IngredientMark, type IngredientLook } from "@/components/IngredientMark
 import { ListRow } from "@/components/ListRow";
 import { Panel } from "@/components/Panel";
 import { SegmentedControl } from "@/components/SegmentedControl";
+import { Toast } from "@/components/Toast";
 import { TrayBar } from "@/components/TrayBar";
 import { TrayView } from "@/components/TrayView";
 import { palettes } from "@/design/tokens";
@@ -132,6 +133,10 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
           action={seeWhatToMake}
         />
       </div>
+
+      <h2>Toast</h2>
+      <p className="muted">Shows each Combination change for a few seconds, then fades.</p>
+      <Toast message="Garlic added to Combination, 2 of 4." />
 
       <h2>Segmented control</h2>
       <SegmentedControl

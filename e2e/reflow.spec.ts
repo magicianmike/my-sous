@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { trayShown } from "./tray";
 
 /** Widths from the smallest phone to wide desktop; 640×360 is a 1280×720 screen at 200% zoom. */
 const viewports = [
@@ -23,7 +24,7 @@ test.skip(({ isMobile }) => isMobile, "each test sets its own viewport");
 
 async function open(page: Page, path: string) {
   await page.goto(path);
-  await expect(page.locator(".tray-dock")).toBeAttached();
+  await expect(trayShown(page)).toBeVisible();
 }
 
 for (const viewport of viewports) {

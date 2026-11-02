@@ -4,7 +4,8 @@ import { useRef } from "react";
 import { Button } from "@/components/Button";
 import { ListRow } from "@/components/ListRow";
 import { Panel } from "@/components/Panel";
-import { inSentence, type CombinationFix, type Tension } from "@/kitchen/kitchen";
+import { TrayView } from "@/components/TrayView";
+import { COMBINATION_LIMIT, inSentence, type CombinationFix, type Tension } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
 
 export const SuggestionList = withSearchParams(
@@ -12,12 +13,34 @@ export const SuggestionList = withSearchParams(
     const { kitchen } = useKitchen();
     const { combination, remove, replace } = useCombination();
     const heading = useRef<HTMLHeadingElement>(null);
+    const combinationHeading = useRef<HTMLHeadingElement>(null);
+    // Here the Combination sits under the heading, in place of the tray.
+    const shown = (
+      <div className="suggestions-combination">
+        <TrayView
+          ingredients={combination.ingredients}
+          titleId="combination-heading"
+          limit={COMBINATION_LIMIT}
+          unknown={combination.unknown}
+          overLimit={combination.overLimit}
+          titleRef={combinationHeading}
+          onRemove={(ingredient) => {
+            remove(ingredient);
+            combinationHeading.current?.focus();
+          }}
+          renderName={({ id, name }) => <CombinationLink href={`/ingredients/${id}`}>{name}</CombinationLink>}
+        />
+      </div>
+    );
     if (combination.ingredients.length === 0) {
       return (
-        <p>
-          Add an Ingredient to your Combination to see what to make.{" "}
-          <CombinationLink href="/">Start from an ingredient</CombinationLink>
-        </p>
+        <>
+          {shown}
+          <p>
+            Add an Ingredient to your Combination to see what to make.{" "}
+            <CombinationLink href="/">Start from an ingredient</CombinationLink>
+          </p>
+        </>
       );
     }
 
@@ -31,6 +54,7 @@ export const SuggestionList = withSearchParams(
 
     return (
       <>
+        {shown}
         {tensions.length > 0 && (
           <Tensions tensions={tensions} fixes={fixes} onFix={applyFix} />
         )}

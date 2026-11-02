@@ -116,17 +116,24 @@ html {
   scroll-padding-bottom: var(--tray-dock-height);
 }
 
-.tray-status {
-  order: -1;
-  margin: 0;
-  padding: var(--space-2) var(--space-4);
-  background: var(--floating);
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
+/* What to make shows the Combination under its heading, no wider than a line of text. */
+.suggestions-combination {
+  max-width: var(--measure);
 }
 
-.tray-status:empty {
-  padding: 0;
+/* Toasts sit centred above the docked bar, or near the foot of the screen when there's none. */
+.toast-spot {
+  position: fixed;
+  inset-inline: var(--space-4);
+  bottom: calc(var(--tray-dock-height) + var(--space-3));
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.toast-spot > * {
+  pointer-events: auto;
 }
 
 .tray-sheet {
@@ -175,7 +182,8 @@ html:has(.tray-sheet:modal) {
     padding-bottom: var(--space-7);
   }
 
-  .app {
+  /* Beside the tray; What to make has none. */
+  .app:has(.tray-dock) {
     grid-template-columns: minmax(0, 1fr) var(--tray-width);
     align-items: start;
   }
@@ -196,11 +204,6 @@ html:has(.tray-sheet:modal) {
     display: none;
   }
 
-  .tray-status {
-    order: 0;
-    padding: 0;
-    background: none;
-  }
 }
 
 main {

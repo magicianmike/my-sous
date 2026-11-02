@@ -14,7 +14,7 @@ type Props<T extends IngredientLook> = {
   unknown?: string[];
   /** Ingredients past the limit. */
   overLimit?: T[];
-  /** The latest change, announced to assistive technology. Leave out when the container announces. */
+  /** The latest change, announced to assistive technology but not shown. Leave out when the container announces. */
   status?: string;
   onRemove: (ingredient: T) => void;
   /** Each Ingredient's name, as a link to its page the container provides. */
@@ -83,7 +83,7 @@ export function TrayView<T extends IngredientLook>({
         </>
       )}
       {status !== undefined && (
-        <p role="status" className={styles.notice}>
+        <p role="status" className="visually-hidden">
           {status}
         </p>
       )}

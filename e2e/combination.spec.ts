@@ -1,8 +1,13 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
+/** On a phone, the Combination sits in a sheet opened from the bar, except on What to make. */
+function inSheet(page: Page) {
+  return test.info().project.use.isMobile && !new URL(page.url()).pathname.startsWith("/suggestions");
+}
+
 /** The tray: the side panel on desktop, or on a phone the sheet, opened from its bar. */
 async function tray(page: Page) {
-  if (!test.info().project.use.isMobile) return page.getByRole("complementary", { name: /Your Combination/ });
+  if (!inSheet(page)) return page.getByRole("complementary", { name: /Your Combination/ });
   const sheet = page.getByRole("dialog", { name: /Your Combination/ });
   if (!(await sheet.isVisible())) await page.getByRole("button", { name: /^Your Combination/ }).click();
   return sheet;
@@ -28,7 +33,7 @@ function suggestionList(page: Page) {
 
 /** Checks the Combination without moving focus: on a phone, from the bar's name. */
 async function expectCombination(page: Page, names: string[]) {
-  if (test.info().project.use.isMobile) {
+  if (inSheet(page)) {
     await expect(page.getByRole("button", { name: /^Your Combination/ })).toHaveAccessibleName(
       `Your Combination ${names.length} of 4${names.length > 0 ? `: ${names.join(", ")}` : ""}`,
     );
@@ -182,7 +187,7 @@ test("a full Combination says why nothing more can be added", async ({ page }) =
   await expect(page.getByRole("status")).toHaveText(
     "Your Combination already holds 4 Ingredients, the most it can, so Suggestions stay focused. Remove one to add Garlic.",
   );
-  await expect(page.getByRole("status")).toBeVisible();
+  await expect(page.locator(".toast-spot")).toHaveText(/^Your Combination already holds 4 Ingredients/);
   await expectCombination(page, ["Lemon", "Lime", "Basil", "Tomato"]);
 });
 
@@ -231,6 +236,30 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Undo swap" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
+});
+
+test("What to make shows the Combination under its heading, in place of the tray", async ({ page }) => {
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  const shown = page.getByRole("main").getByRole("complementary", { name: /Your Combination/ });
+  await expect(shown.getByRole("listitem")).toHaveText([/^Chicken thigh/, /^Garlic/]);
+  await expect(page.getByRole("complementary")).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /^Your Combination/ })).toHaveCount(0);
+
+  await shown.getByRole("button", { name: "Remove Garlic" }).click();
+  await expect(page.getByRole("status")).toHaveText("Garlic removed from Combination, 1 of 4.");
+  await expect(shown.getByRole("heading", { name: /Your Combination/ })).toBeFocused();
+  await expect(suggestionList(page)).toBeVisible();
+});
+
+test("a change shows as a toast, which fades after a few seconds", async ({ page }) => {
+  await page.goto("/ingredients/lemon");
+  await page.getByRole("button", { name: "Add Lemon to Combination" }).first().click();
+  const toast = page.locator(".toast-spot");
+  await expect(toast).toHaveText("Lemon added to Combination, 1 of 4.");
+  await expect(toast).toBeVisible();
+  // It's for the eye only; the live region announces it.
+  await expect(toast.getByRole("status")).toHaveCount(0);
+  await expect(toast.locator("p")).toBeHidden({ timeout: 8000 });
 });
 
 test("a Cook opens an Ingredient from the tray and keeps the Combination", async ({ page }) => {

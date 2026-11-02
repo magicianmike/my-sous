@@ -67,16 +67,16 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
 
     const toast = sheet(page).locator(".toast-spot p");
     await expect(toast).toHaveText("Garlic removed from Combination, 1 of 4.");
-    const onTop = await toast.evaluate((el) => {
-      const { left, top, width, height, bottom } = el.getBoundingClientRect();
-      const hit = document.elementFromPoint(left + width / 2, top + height / 2);
-      const sheetTop = document.querySelector(".tray-sheet")!.getBoundingClientRect().top;
-      return { hit: el.contains(hit), gap: sheetTop - bottom };
-    });
-    // Just above the sheet: clear of it, and close by.
-    expect(onTop.hit).toBe(true);
-    expect(onTop.gap).toBeGreaterThanOrEqual(0);
-    expect(onTop.gap).toBeLessThanOrEqual(24);
+    const placement = () =>
+      toast.evaluate((el) => {
+        const { left, top, width, height, bottom } = el.getBoundingClientRect();
+        const hit = document.elementFromPoint(left + width / 2, top + height / 2);
+        const sheetTop = document.querySelector(".tray-sheet")!.getBoundingClientRect().top;
+        // Just above the sheet: clear of it, and close by.
+        return { onTop: el.contains(hit), justAbove: sheetTop - bottom >= 0 && sheetTop - bottom <= 24 };
+      });
+    // The sheet shrinks by a row as Garlic goes, and the toast follows it within a frame.
+    await expect.poll(placement).toEqual({ onTop: true, justAbove: true });
   });
 
   test("the page behind the open sheet is dimmed and blurred", async ({ page }) => {

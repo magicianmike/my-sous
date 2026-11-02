@@ -60,7 +60,7 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     await expect(sheet(page).getByRole("heading", { name: /Your Combination/ })).toBeFocused();
   });
 
-  test("a change made in the open sheet shows as a toast on top, clear of the sheet", async ({ page }) => {
+  test("a change made in the open sheet shows as a toast on top, just above the sheet", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
     await opener(page).click();
     await sheet(page).getByRole("button", { name: "Remove Garlic" }).click();
@@ -71,9 +71,12 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
       const { left, top, width, height, bottom } = el.getBoundingClientRect();
       const hit = document.elementFromPoint(left + width / 2, top + height / 2);
       const sheetTop = document.querySelector(".tray-sheet")!.getBoundingClientRect().top;
-      return { hit: el.contains(hit), clear: bottom <= sheetTop };
+      return { hit: el.contains(hit), gap: sheetTop - bottom };
     });
-    expect(onTop).toEqual({ hit: true, clear: true });
+    // Just above the sheet: clear of it, and close by.
+    expect(onTop.hit).toBe(true);
+    expect(onTop.gap).toBeGreaterThanOrEqual(0);
+    expect(onTop.gap).toBeLessThanOrEqual(24);
   });
 
   test("the page behind the open sheet is dimmed and blurred", async ({ page }) => {

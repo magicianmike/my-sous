@@ -42,8 +42,8 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
  */
 function TrayDock() {
   const { status, statusKey } = useKitchen();
-  // The page's toast would sit behind the modal sheet, so the sheet shows its own, for changes
-  // made since it opened.
+  // The page's toast would sit behind the modal sheet, so the sheet shows its own, just above it,
+  // for changes made since it opened.
   const [openedAt, setOpenedAt] = useState(Infinity);
   const { combination, remove } = useCombination();
   const pathname = usePathname();
@@ -60,17 +60,23 @@ function TrayDock() {
 
   // A link followed from the sheet leads to a new screen.
   useEffect(close, [pathname]);
-  // The page keeps the docked bar's height clear when it scrolls a focused control into view.
+  // The page keeps the docked bar's height clear when it scrolls a focused control into view, and
+  // toasts sit just above the bar, or the open sheet.
   useEffect(() => {
     const root = document.documentElement;
-    const observer = new ResizeObserver(([entry]) => {
-      const height = matchMedia(SIDE_PANEL).matches ? 0 : Math.ceil(entry.borderBoxSize[0].blockSize);
-      root.style.setProperty("--tray-dock-height", `${height}px`);
+    const observer = new ResizeObserver((entries) => {
+      for (const { target, borderBoxSize } of entries) {
+        const property = target === sheet.current ? "--tray-sheet-height" : "--tray-dock-height";
+        const height = matchMedia(SIDE_PANEL).matches ? 0 : Math.ceil(borderBoxSize[0].blockSize);
+        root.style.setProperty(property, `${height}px`);
+      }
     });
     observer.observe(dock.current!);
+    observer.observe(sheet.current!);
     return () => {
       observer.disconnect();
       root.style.removeProperty("--tray-dock-height");
+      root.style.removeProperty("--tray-sheet-height");
     };
   }, []);
   // Widening into the side panel closes the sheet; focus that was in it moves to the panel, since

@@ -131,6 +131,8 @@ const scales = {
   "sheet-max-height": "85dvh",
   // The docked tray bar's height; the tray measures and sets it while the bar shows.
   "tray-dock-height": "0px",
+  // The open tray sheet's height, measured the same way, so its toast sits just above it.
+  "tray-sheet-height": "0px",
   // How long a toast stays before it fades; not motion, so reduced motion keeps it.
   "toast-hold": "5s",
   // Dims and blurs the page behind a modal sheet.

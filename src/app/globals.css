@@ -136,10 +136,9 @@ html {
   pointer-events: auto;
 }
 
-/* With the sheet open, its own toast shows in the dimmed space above it, clear of Close. */
+/* With the sheet open, its own toast sits just above the sheet, in the dimmed space. */
 .toast-spot-sheet {
-  top: var(--space-4);
-  bottom: auto;
+  bottom: calc(var(--tray-sheet-height) + var(--space-3));
 }
 
 /* The page's toast keeps its timing behind the sheet, so closing doesn't replay an old message. */

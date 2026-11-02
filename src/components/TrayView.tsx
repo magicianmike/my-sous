@@ -1,3 +1,4 @@
+import { BasketIcon } from "./BasketIcon";
 import { Button } from "./Button";
 import { Chip } from "./Chip";
 import { IngredientMark, type IngredientLook } from "./IngredientMark";
@@ -45,7 +46,12 @@ export function TrayView<T extends IngredientLook>({
     <Panel
       as="aside"
       className={styles.tray}
-      title="Your basket"
+      title={
+        <span className={styles.title}>
+          <BasketIcon className={styles.titleIcon} />
+          Your basket
+        </span>
+      }
       titleId={titleId}
       titleExtra={`${ingredients.length} of ${limit}`}
       titleRef={titleRef}

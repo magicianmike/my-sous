@@ -82,6 +82,14 @@
   font-weight: var(--weight-display);
 }
 
+/* The basket's sign, before the title, sized to its line. */
+.titleIcon {
+  width: var(--space-5);
+  height: var(--space-5);
+  margin-inline-end: var(--space-2);
+  vertical-align: -0.2em;
+}
+
 .count {
   grid-area: count;
   color: var(--ink-muted);

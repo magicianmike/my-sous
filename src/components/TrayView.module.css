@@ -1,4 +1,17 @@
 /* Side by side, each as wide as its name, wrapping as needed. */
+/* The basket's sign before its name. */
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.titleIcon {
+  flex: none;
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
 .items {
   display: flex;
   flex-wrap: wrap;

@@ -1,3 +1,4 @@
+import { BasketIcon } from "./BasketIcon";
 import { EmptyMark } from "./EmptyMark";
 import { IngredientMark, type IngredientLook } from "./IngredientMark";
 import styles from "./TrayBar.module.css";
@@ -53,7 +54,10 @@ export function TrayBar<T extends IngredientLook>({
         aria-label={`Your basket ${ingredients.length} of ${limit}${names && `: ${names}`}`}
         onClick={onOpen}
       >
-        <span className={styles.title}>Your basket</span>{" "}
+        <span className={styles.title}>
+          <BasketIcon className={styles.titleIcon} />
+          Your basket
+        </span>{" "}
         <span className={styles.count}>
           {ingredients.length} of {limit}
         </span>

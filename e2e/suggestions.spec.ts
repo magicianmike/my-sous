@@ -246,3 +246,16 @@ test("the basket's Ingredients sit side by side in the side panel too", async ({
   const [first, second] = await Promise.all([items.nth(0).boundingBox(), items.nth(1).boundingBox()]);
   expect(second!.y).toBe(first!.y);
 });
+
+test("a part's Add sits in the row's bottom corner, after Swap", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const acid = slotItem(page, "an acid");
+  const [add, swap, row] = await Promise.all([
+    acid.getByRole("button", { name: "Add Lemon to your basket" }).boundingBox(),
+    acid.getByText("Swap").boundingBox(),
+    acid.boundingBox(),
+  ]);
+  expect(add!.y + add!.height).toBeGreaterThan(row!.y + row!.height * 0.6);
+  expect(add!.x + add!.width).toBeGreaterThan(row!.x + row!.width * 0.75);
+  expect(add!.x).toBeGreaterThan(swap!.x);
+});

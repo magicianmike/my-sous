@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BasketIcon } from "@/components/BasketIcon";
 import { Button } from "@/components/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, Suspense, useContext, useEffect, useMemo, useState } from "react";
@@ -138,6 +139,7 @@ export const AddToCombination = withSearchParams(function AddToCombination({
       variant={added ? "secondary" : "primary"}
       onClick={() => (added ? remove(ingredient) : add(ingredient))}
     >
+      {!added && <BasketIcon className="button-icon" />}
       {added ? "Remove" : "Add"}
       <span className="visually-hidden">
         {" "}

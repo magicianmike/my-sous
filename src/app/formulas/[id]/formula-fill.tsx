@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BasketIcon } from "@/components/BasketIcon";
 import { Button } from "@/components/Button";
 import { Disclosure } from "@/components/Disclosure";
 import { EmptyMark } from "@/components/EmptyMark";
@@ -122,6 +123,8 @@ function SlotEditor({
       <ul className="slots stack">
         {current.suggestion.slots.map((filled) => {
           const { slot, ingredient, source, alternatives } = filled;
+          // What fills it isn't in the basket yet, so the Cook can add it.
+          const addable = ingredient && source && !isCooksOwn(source) ? ingredient : undefined;
           return (
             <li key={slot.id}>
               <ListRow
@@ -150,11 +153,6 @@ function SlotEditor({
                         {!slot.required && <span className="tag">Optional</span>}
                       </p>
                     )}
-                    {ingredient && source && !isCooksOwn(source) && (
-                      <Button variant="primary" onClick={() => onAdd(slot.id, ingredient)}>
-                        Add<span className="visually-hidden"> {ingredient.name} to your basket</span>
-                      </Button>
-                    )}
                     {undoable === slot.id && (
                       <Button ref={undoButton} onClick={undo}>
                         Undo<span className="visually-hidden"> swap of {slot.role}</span>
@@ -164,29 +162,40 @@ function SlotEditor({
                 }
               >
                 <p className="muted">{filled.reason}</p>
-                {alternatives.length > 0 && (
-                  // Keyed by the fill, so a swap closes the list.
-                  <Disclosure
-                    key={ingredient?.id}
-                    summary={ingredient ? "Swap" : "Choose"}
-                    hiddenSummary={slot.role}
-                  >
-                    <ul className="alternatives">
-                      {alternatives.map((alternative) => (
-                        <li key={alternative.id}>
-                          <button
-                            type="button"
-                            className="alternative"
-                            onClick={() => swap(filled, alternative)}
-                          >
-                            <IngredientMark ingredient={alternative} size="sm" />
-                            <span className="visually-hidden">Use </span>
-                            {alternative.name}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </Disclosure>
+                {/* Swap at the start, Add at the end: the row's last line. */}
+                {(alternatives.length > 0 || addable) && (
+                  <div className="slot-actions">
+                    {alternatives.length > 0 && (
+                      // Keyed by the fill, so a swap closes the list.
+                      <Disclosure
+                        key={ingredient?.id}
+                        summary={ingredient ? "Swap" : "Choose"}
+                        hiddenSummary={slot.role}
+                      >
+                        <ul className="alternatives">
+                          {alternatives.map((alternative) => (
+                            <li key={alternative.id}>
+                              <button
+                                type="button"
+                                className="alternative"
+                                onClick={() => swap(filled, alternative)}
+                              >
+                                <IngredientMark ingredient={alternative} size="sm" />
+                                <span className="visually-hidden">Use </span>
+                                {alternative.name}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </Disclosure>
+                    )}
+                    {addable && (
+                      <Button variant="primary" className="slot-add" onClick={() => onAdd(slot.id, addable)}>
+                        <BasketIcon className="button-icon" />
+                        Add<span className="visually-hidden"> {addable.name} to your basket</span>
+                      </Button>
+                    )}
+                  </div>
                 )}
               </ListRow>
             </li>

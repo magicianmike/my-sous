@@ -524,6 +524,23 @@ main {
   font-size: var(--text-xs);
 }
 
+/* A part's last line: Swap at the start, Add at the end, so Add sits in the row's bottom corner. */
+.slot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.slot-actions details {
+  flex: 1;
+}
+
+.slot-actions .slot-add {
+  margin-inline-start: auto;
+}
+
 .alternatives {
   display: flex;
   flex-wrap: wrap;

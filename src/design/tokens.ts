@@ -133,8 +133,9 @@ const scales = {
   "tray-dock-height": "0px",
   // How long a toast stays before it fades; not motion, so reduced motion keeps it.
   "toast-hold": "5s",
-  // Dims the page behind a modal sheet.
+  // Dims and blurs the page behind a modal sheet.
   "scrim": "rgb(0 0 0 / 0.45)",
+  "scrim-blur": "6px",
   // Touch targets: the smallest a tappable control may be.
   "target": "2.75rem",
   "chip-height": "2rem",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Button, buttonClass } from "@/components/Button";
 import { Toast } from "@/components/Toast";
@@ -41,7 +41,10 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
  * behind it, and its live region, inert.
  */
 function TrayDock() {
-  const { status } = useKitchen();
+  const { status, statusKey } = useKitchen();
+  // The page's toast would sit behind the modal sheet, so the sheet shows its own, for changes
+  // made since it opened.
+  const [openedAt, setOpenedAt] = useState(Infinity);
   const { combination, remove } = useCombination();
   const pathname = usePathname();
   const panelHeading = useRef<HTMLHeadingElement>(null);
@@ -114,6 +117,7 @@ function TrayDock() {
           limit={COMBINATION_LIMIT}
           openerRef={opener}
           onOpen={() => {
+            setOpenedAt(statusKey);
             sheet.current?.showModal();
             sheetHeading.current?.focus();
           }}
@@ -138,6 +142,11 @@ function TrayDock() {
         <Button className="tray-close" onClick={close}>
           Close
         </Button>
+        {status && statusKey > openedAt && (
+          <div className="toast-spot toast-spot-sheet">
+            <Toast key={statusKey} message={status} />
+          </div>
+        )}
       </dialog>
     </div>
   );

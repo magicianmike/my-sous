@@ -136,6 +136,17 @@ html {
   pointer-events: auto;
 }
 
+/* With the sheet open, its own toast shows in the dimmed space above it, clear of Close. */
+.toast-spot-sheet {
+  top: var(--space-4);
+  bottom: auto;
+}
+
+/* The page's toast keeps its timing behind the sheet, so closing doesn't replay an old message. */
+html:has(.tray-sheet:modal) .toast-spot:not(.toast-spot-sheet) {
+  visibility: hidden;
+}
+
 .tray-sheet {
   width: 100%;
   max-width: none;
@@ -155,6 +166,7 @@ html {
 
 .tray-sheet::backdrop {
   background: var(--scrim);
+  backdrop-filter: blur(var(--scrim-blur));
 }
 
 .tray-sheet > aside {

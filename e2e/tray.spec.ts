@@ -60,6 +60,29 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     await expect(sheet(page).getByRole("heading", { name: /Your Combination/ })).toBeFocused();
   });
 
+  test("a change made in the open sheet shows as a toast on top, clear of the sheet", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon,garlic");
+    await opener(page).click();
+    await sheet(page).getByRole("button", { name: "Remove Garlic" }).click();
+
+    const toast = sheet(page).locator(".toast-spot p");
+    await expect(toast).toHaveText("Garlic removed from Combination, 1 of 4.");
+    const onTop = await toast.evaluate((el) => {
+      const { left, top, width, height, bottom } = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(left + width / 2, top + height / 2);
+      const sheetTop = document.querySelector(".tray-sheet")!.getBoundingClientRect().top;
+      return { hit: el.contains(hit), clear: bottom <= sheetTop };
+    });
+    expect(onTop).toEqual({ hit: true, clear: true });
+  });
+
+  test("the page behind the open sheet is dimmed and blurred", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon");
+    await opener(page).click();
+    const backdrop = await sheet(page).evaluate((el) => getComputedStyle(el, "::backdrop").backdropFilter);
+    expect(backdrop).toMatch(/^blur\(/);
+  });
+
   test("changes made with the sheet closed are announced", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon");
     await page.getByRole("button", { name: "Add Garlic to Combination" }).click();

@@ -32,17 +32,20 @@ export function TrayBar({ ingredients, limit, onOpen, openerRef, action }: Props
         <span className={styles.count}>
           {ingredients.length} of {limit}
         </span>
-        <span className={styles.marks}>
-          {ingredients.map((ingredient) => (
-            <span key={ingredient.id} className={arrivalClass(ingredient.id)}>
-              <IngredientMark ingredient={ingredient} size="sm" />
-            </span>
-          ))}
-          {/* The slots still free, as empty circles; the button's name already gives the count. */}
-          {Array.from({ length: Math.max(limit - ingredients.length, 0) }, (_, slot) => (
-            <span key={slot} className={styles.slot} />
-          ))}
-        </span>
+        {/* Until the first Ingredient is in, there's nothing to glance at, so no empty circles either. */}
+        {ingredients.length > 0 && (
+          <span className={styles.marks}>
+            {ingredients.map((ingredient) => (
+              <span key={ingredient.id} className={arrivalClass(ingredient.id)}>
+                <IngredientMark ingredient={ingredient} size="sm" />
+              </span>
+            ))}
+            {/* The slots still free, as empty circles; the button's name already gives the count. */}
+            {Array.from({ length: Math.max(limit - ingredients.length, 0) }, (_, slot) => (
+              <span key={slot} className={styles.slot} />
+            ))}
+          </span>
+        )}
       </button>
     </div>
   );

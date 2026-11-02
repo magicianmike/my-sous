@@ -26,6 +26,12 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     expect(action!.y).toBeLessThan(bar!.y);
   });
 
+  test("an empty Combination shows no empty circles", async ({ page }) => {
+    await page.goto("/ingredients/lemon");
+    await expect(opener(page)).toHaveAccessibleName("Your Combination 0 of 4");
+    await expect(opener(page).locator("[class*=marks]")).toHaveCount(0);
+  });
+
   test("opening moves focus in, contains it, and closing returns it", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
     await opener(page).click();

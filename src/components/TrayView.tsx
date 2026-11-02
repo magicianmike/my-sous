@@ -75,7 +75,7 @@ export function TrayView<T extends IngredientLook>({
                   colour={ingredient.colour}
                   leading={renderMark(ingredient)}
                   trailing={
-                    <Button variant="quiet" onClick={() => onRemove(ingredient)}>
+                    <Button variant="quiet" className={styles.remove} onClick={() => onRemove(ingredient)}>
                       <TrashIcon />
                       <span className="visually-hidden">Remove {ingredient.name}</span>
                     </Button>

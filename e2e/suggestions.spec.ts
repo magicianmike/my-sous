@@ -190,3 +190,26 @@ test("What to make shows the Combination's Ingredients side by side, each as wid
   expect(second!.y).toBe(first!.y);
   expect(second!.x).toBeGreaterThan(first!.x + first!.width - 1);
 });
+
+test("with a mouse, an Ingredient's bin shows only under the pointer or on keyboard focus", async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  const remove = page.getByRole("button", { name: "Remove Garlic" });
+  const opacity = () => remove.evaluate((el) => getComputedStyle(el).opacity);
+  if (isMobile) {
+    // Nothing hovers on touch, so it always shows.
+    expect(await opacity()).toBe("1");
+    return;
+  }
+  await expect.poll(opacity).toBe("0");
+  await page.locator(".suggestions-combination li").filter({ hasText: "Garlic" }).hover();
+  await expect.poll(opacity).toBe("1");
+  await page.mouse.move(0, 0);
+  await expect.poll(opacity).toBe("0");
+  await remove.focus();
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Tab");
+  await expect.poll(opacity).toBe("1");
+});

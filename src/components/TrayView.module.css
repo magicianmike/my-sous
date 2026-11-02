@@ -49,6 +49,22 @@
   min-height: var(--target);
 }
 
+/*
+ * With a mouse, the bin shows only on the Ingredient under the pointer, or on keyboard focus; it keeps its
+ * room, so nothing moves. On touch, where nothing hovers, it always shows.
+ */
+@media (hover: hover) {
+  .remove {
+    opacity: 0;
+    transition: opacity var(--motion-fast) var(--ease-out);
+  }
+
+  .items li:hover .remove,
+  .remove:focus-visible {
+    opacity: 1;
+  }
+}
+
 .icon {
   width: var(--space-5);
   height: var(--space-5);

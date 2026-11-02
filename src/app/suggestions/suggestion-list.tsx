@@ -12,6 +12,7 @@ import { TrayView } from "@/components/TrayView";
 import {
   COMBINATION_LIMIT,
   inSentence,
+  isCooksOwn,
   type CombinationFix,
   type Suggestion,
   type Tension,
@@ -95,8 +96,8 @@ export const SuggestionList = withSearchParams(
           Suggestions
         </h2>
         <p className="muted">
-          MySous doesn&rsquo;t know your Pantry yet, so Ready means your Combination fills every Slot a Formula
-          needs.
+          MySous doesn&rsquo;t know your Pantry yet, so Ready means your Combination fills every Slot a
+          Formula needs.
         </p>
         <ul className="stack" aria-labelledby="suggestions-heading">
           {suggestions.map((suggestion) => (
@@ -115,12 +116,16 @@ export const SuggestionList = withSearchParams(
 function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
   const { formula, slots, rankReason, needs, makeable } = suggestion;
   const yours = slots.flatMap(({ ingredient, source }) =>
-    ingredient && (source === "combination" || source === "pantry") ? [ingredient] : [],
+    ingredient && isCooksOwn(source) ? [ingredient] : [],
   );
-  const suggested = slots.flatMap(({ ingredient, source }) =>
-    ingredient && source === "pairing" ? [ingredient] : [],
+  // Suggested: what a required Slot still needs. Optional: extras that pair, which never block Ready.
+  const suggested = slots.flatMap(({ slot, ingredient, source }) =>
+    ingredient && source === "pairing" && slot.required ? [ingredient] : [],
   );
-  const open = slots.filter(({ slot, ingredient }) => slot.required && !ingredient).length;
+  const optional = slots.flatMap(({ slot, ingredient, source }) =>
+    ingredient && source === "pairing" && !slot.required ? [ingredient] : [],
+  );
+  const open = needs.filter(({ ingredient }) => !ingredient).length;
   return (
     <ListRow
       title={
@@ -128,7 +133,7 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
           <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
         </h3>
       }
-      action={<Readiness needs={needs.length} />}
+      action={<Readiness missing={needs.length} />}
     >
       <div className="mark-groups">
         {yours.length > 0 && <MarkGroup label="Yours" ingredients={yours} />}
@@ -136,10 +141,10 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
           <MarkGroup
             label="Suggested"
             ingredients={suggested}
-            empty={open}
-            emptyLabel={`${open} Slot${open === 1 ? "" : "s"} nothing pairs with yet`}
+            empty={{ count: open, label: `${open} Slot${open === 1 ? "" : "s"} nothing pairs with yet` }}
           />
         )}
+        {optional.length > 0 && <MarkGroup label="Optional" ingredients={optional} />}
       </div>
       {!makeable && <p className="needs">{readinessSentence(suggestion)}</p>}
       <p className="rank-reason">{rankReason}</p>

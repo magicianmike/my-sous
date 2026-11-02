@@ -89,7 +89,7 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
   return (
     <>
       <div className="formula-readiness">
-        <Readiness needs={current.suggestion.needs.length} />
+        <Readiness missing={current.suggestion.needs.length} />
         <p>{readinessSentence(current.suggestion)}</p>
       </div>
       <h2>What goes in</h2>

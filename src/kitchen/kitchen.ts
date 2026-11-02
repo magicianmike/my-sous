@@ -56,6 +56,11 @@ export type Combination = {
 /** Where a Slot's Ingredient came from: in fill order, then a swap by the Cook. */
 export type FillSource = "combination" | "pantry" | "pairing" | "swap";
 
+/** Whether the Cook has the Ingredient: it's in the Combination or Pantry, not suggested or swapped in. */
+export function isCooksOwn(source: FillSource | undefined): boolean {
+  return source === "combination" || source === "pantry";
+}
+
 /** A Slot in a Suggestion, with the Ingredient chosen for it, if any, and why. */
 export type FilledSlot = {
   slot: Slot;
@@ -77,8 +82,8 @@ export type Suggestion = {
   method: string[];
   /** Why the Suggestion ranked where it did, in a plain sentence. */
   rankReason: string;
-  /** The required Slots the Combination and Pantry don't fill, in Formula order. */
-  needs: Slot[];
+  /** The required Slots the Combination and Pantry don't fill, as filled so far, in Formula order. */
+  needs: FilledSlot[];
   /** Whether the Combination and Pantry together fill every required Slot. */
   makeable: boolean;
 };
@@ -324,9 +329,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
     );
     const rankReason = explainRank(chosen, arePaired, pairs);
     // What the Cook has: a Pairing suggestion or a swap may still need getting.
-    const needs = slots
-      .filter(({ slot, source }) => slot.required && source !== "combination" && source !== "pantry")
-      .map(({ slot }) => slot);
+    const needs = slots.filter(({ slot, source }) => slot.required && !isCooksOwn(source));
     return {
       suggestion: { formula, slots, method, rankReason, needs, makeable: needs.length === 0 },
       coherence: pairs.length,

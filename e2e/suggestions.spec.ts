@@ -30,7 +30,9 @@ test("a Suggestion that needs more says how many, what, and what pairs best", as
   await expect(panSauce).toContainText("Needs 1 more");
   await expect(panSauce).toContainText("Also needs an acid (lemon pairs best).");
   await expect(panSauce.getByText(/^Yours/)).toHaveText("Yours: chicken thigh, garlic.");
-  await expect(panSauce.getByText(/^Suggested/)).toContainText("lemon");
+  // Only the acid is needed; the basil and chile that pair are optional extras, kept apart.
+  await expect(panSauce.getByText(/^Suggested/)).toHaveText("Suggested: lemon.");
+  await expect(panSauce.getByText(/^Optional/)).toHaveText("Optional: basil, fresh chile.");
 });
 
 test("What to make says Ready only covers the Combination while MySous doesn't know the Pantry", async ({

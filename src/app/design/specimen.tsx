@@ -95,8 +95,8 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
         Whether a Suggestion is ready, and where its Ingredients come from, always in words.
       </p>
       <div className="actions" style={{ alignItems: "center" }}>
-        <Readiness needs={0} />
-        <Readiness needs={2} />
+        <Readiness missing={0} />
+        <Readiness missing={2} />
         <EmptyMark />
       </div>
       <div className="mark-groups" style={{ marginTop: "var(--space-4)" }}>
@@ -104,8 +104,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
         <MarkGroup
           label="Suggested"
           ingredients={ingredients.slice(2, 3)}
-          empty={1}
-          emptyLabel="1 Slot nothing pairs with yet"
+          empty={{ count: 1, label: "1 Slot nothing pairs with yet" }}
         />
       </div>
 

@@ -111,3 +111,13 @@ test("the specimen renders components from props alone, without the URL", async 
   await expect(tray).toContainText("1 of 4");
   await expect(page).toHaveURL(/\/design$/);
 });
+
+test("an outlined button fills and darkens its outline under the pointer", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover is for a pointer");
+  await page.goto("/ingredients/lemon?with=lemon");
+  const remove = page.getByRole("button", { name: "Remove Lemon from your basket" });
+  const look = () => remove.evaluate((el) => getComputedStyle(el).backgroundColor);
+  const before = await look();
+  await remove.hover();
+  await expect.poll(look).not.toBe(before);
+});

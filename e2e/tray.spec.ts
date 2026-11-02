@@ -43,7 +43,8 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
     await opener(page).click();
     for (const control of await sheet(page).locator("a, button").all()) {
       const box = (await control.boundingBox())!;
-      expect(box.height, (await control.textContent()) ?? "").toBeGreaterThanOrEqual(44);
+      // Rounded: the sliding sheet can leave a control a sub-pixel short of its 44px.
+      expect(Math.round(box.height), (await control.textContent()) ?? "").toBeGreaterThanOrEqual(44);
     }
     const bar = (await opener(page).boundingBox())!;
     expect(bar.height).toBeGreaterThanOrEqual(44);

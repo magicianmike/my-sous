@@ -291,6 +291,13 @@ main {
   margin: 0;
 }
 
+/* An icon before a button's words, the size of a line of its text. */
+.button-icon {
+  flex: none;
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;

@@ -3,11 +3,12 @@
   display: inline-flex;
 }
 
-/* Above, from the anchor's start, so a drawing at the screen's edge keeps its label on screen. */
+/* Centred above the anchor, a little apart from it. */
 .tooltip {
   position: absolute;
-  bottom: calc(100% + var(--space-1));
-  inset-inline-start: 0;
+  bottom: calc(100% + var(--space-1) * 1.5);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 3;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
@@ -26,5 +27,5 @@
   position: absolute;
   inset-inline: 0;
   top: 100%;
-  height: var(--space-1);
+  height: calc(var(--space-1) * 1.5);
 }

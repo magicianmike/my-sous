@@ -73,7 +73,7 @@ h3 {
 }
 
 /*
- * An Ingredient's drawing as a link: a ring in its colour under the pointer. The padding makes a small
+ * An Ingredient's drawing as a link: a faint ring in its colour under the pointer. The padding makes a small
  * drawing a full-size target, and the matching negative margin keeps it from moving the layout.
  */
 .mark-link {
@@ -88,8 +88,9 @@ h3 {
   transition: box-shadow var(--motion-fast) var(--ease-out);
 }
 
+/* A hairline, half strength: enough to show the pointer is on it without shouting. */
 .mark-link:hover > * {
-  box-shadow: 0 0 0 var(--border-control) var(--stroke);
+  box-shadow: 0 0 0 var(--border-hairline) color-mix(in srgb, var(--stroke) 50%, transparent);
 }
 
 :focus-visible {

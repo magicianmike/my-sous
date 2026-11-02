@@ -1,6 +1,7 @@
+/* Side by side, each as wide as its name, wrapping as needed. */
 .items {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: var(--space-2);
   margin: 0 0 var(--space-3);
   padding: 0;
@@ -9,19 +10,8 @@
 
 .items li > span {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  border-radius: var(--radius-md);
-}
-
-.wrap {
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.wrap li > span {
-  width: auto;
   gap: var(--space-1);
+  border-radius: var(--radius-md);
 }
 
 .notice {
@@ -62,6 +52,13 @@
   .items li:hover .remove,
   .remove:focus-visible {
     opacity: 1;
+  }
+}
+
+/* A mouse needs less room than a finger, so two short names fit side by side in the side panel. */
+@media (pointer: fine) {
+  .items .remove {
+    min-width: var(--space-6);
   }
 }
 

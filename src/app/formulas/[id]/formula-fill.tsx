@@ -9,6 +9,7 @@ import { ListRow } from "@/components/ListRow";
 import { Readiness } from "@/components/Readiness";
 import {
   inSentence,
+  isCooksOwn,
   type FilledSlot,
   type FillSource,
   type Ingredient,
@@ -25,14 +26,26 @@ export const FormulaFill = withSearchParams(function FormulaFill({
   formulaId: string;
 }) {
   const { kitchen } = useKitchen();
-  const { combination } = useCombination();
+  const { combination, add } = useCombination();
+  // The part whose Ingredient was just added to the basket, so focus can return to it after the reset.
+  const [added, setAdded] = useState<string>();
   const suggestion = kitchen
     .suggest(combination.ingredients, [])
     .suggestions
     .find(({ formula }) => formula.id === formulaId)!;
   // A new Combination starts a fresh swap history.
   const combinationKey = combination.ingredients.map(({ id }) => id).join(",");
-  return <SlotEditor key={combinationKey} initial={suggestion} />;
+  return (
+    <SlotEditor
+      key={combinationKey}
+      initial={suggestion}
+      initialFocus={added}
+      onAdd={(slotId, ingredient) => {
+        setAdded(slotId);
+        add(ingredient);
+      }}
+    />
+  );
 });
 
 /** A Suggestion as it stood after a swap, and the Slot that swap changed. */
@@ -49,10 +62,20 @@ const SOURCE_TAG: Record<FillSource, string> = {
   swap: "Swapped",
 };
 
-function SlotEditor({ initial }: { initial: Suggestion }) {
+function SlotEditor({
+  initial,
+  initialFocus,
+  onAdd,
+}: {
+  initial: Suggestion;
+  /** A part to focus on arrival: the one whose Ingredient was just added to the basket. */
+  initialFocus?: string;
+  /** Adds a part's Ingredient to the basket, which starts the page afresh. */
+  onAdd: (slotId: string, ingredient: Ingredient) => void;
+}) {
   const { kitchen, announce } = useKitchen();
   const [history, setHistory] = useState<Step[]>([{ suggestion: initial }]);
-  const [focus, setFocus] = useState<FocusTarget>();
+  const [focus, setFocus] = useState<FocusTarget | undefined>(initialFocus ? { slot: initialFocus } : undefined);
   const undoButton = useRef<HTMLButtonElement>(null);
   const headings = useRef(new Map<string, HTMLHeadingElement>());
   const current = history.at(-1)!;
@@ -126,6 +149,11 @@ function SlotEditor({ initial }: { initial: Suggestion }) {
                         {source && <span className="tag">{SOURCE_TAG[source]}</span>}
                         {!slot.required && <span className="tag">Optional</span>}
                       </p>
+                    )}
+                    {ingredient && source && !isCooksOwn(source) && (
+                      <Button variant="primary" onClick={() => onAdd(slot.id, ingredient)}>
+                        Add<span className="visually-hidden"> {ingredient.name} to your basket</span>
+                      </Button>
                     )}
                     {undoable === slot.id && (
                       <Button ref={undoButton} onClick={undo}>

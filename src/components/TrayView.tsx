@@ -24,8 +24,6 @@ type Props<T extends IngredientLook> = {
   /** "See what to make", as a link the container provides. */
   action?: React.ReactNode;
   titleRef?: React.Ref<HTMLHeadingElement>;
-  /** Ingredients side by side, each as wide as its name, wrapping as needed, rather than one per line. */
-  wrap?: boolean;
 };
 
 /** The Combination tray, from props alone. */
@@ -41,7 +39,6 @@ export function TrayView<T extends IngredientLook>({
   renderMark = (ingredient) => <IngredientMark ingredient={ingredient} size="sm" />,
   action,
   titleRef,
-  wrap = false,
 }: Props<T>) {
   const arrivalClass = useArrivalClass(ingredients.map(({ id }) => id));
   return (
@@ -68,7 +65,7 @@ export function TrayView<T extends IngredientLook>({
         <p className={styles.empty}>Add an Ingredient to start a basket.</p>
       ) : (
         <>
-          <ul className={`${styles.items} ${wrap ? styles.wrap : ""}`}>
+          <ul className={styles.items}>
             {ingredients.map((ingredient) => (
               <li key={ingredient.id} className={arrivalClass(ingredient.id)}>
                 <Chip

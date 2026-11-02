@@ -45,7 +45,6 @@ export const SuggestionList = withSearchParams(
           unknown={combination.unknown}
           overLimit={combination.overLimit}
           titleRef={combinationHeading}
-          wrap
           onRemove={(ingredient) => {
             removedLast.current = combination.ingredients.length === 1;
             remove(ingredient);

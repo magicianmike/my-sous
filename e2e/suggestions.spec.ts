@@ -222,3 +222,27 @@ test("an Ingredient's bin turns red under the pointer", async ({ page, isMobile 
   // The danger token: #b3261e in the light theme.
   await expect.poll(() => remove.evaluate((el) => getComputedStyle(el).color)).toBe("rgb(179, 38, 30)");
 });
+
+test("a suggested Ingredient on a dish can be added to the basket, and its part becomes the Cook's own", async ({
+  page,
+}) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const acid = slotItem(page, "an acid");
+  // The Cook's own parts have nothing to add.
+  await expect(slotItem(page, "an aromatic").getByRole("button", { name: /^Add / })).toHaveCount(0);
+
+  await acid.getByRole("button", { name: "Add Lemon to your basket" }).click();
+  await expect(page).toHaveURL(/with=chicken-thigh,garlic,lemon$/);
+  await expect(page.getByRole("status")).toHaveText("Lemon added to your basket, 3 of 4.");
+  await expect(acid.locator(".tag")).toHaveText(["Yours"]);
+  await expect(acid.getByRole("button", { name: /^Add / })).toHaveCount(0);
+  await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();
+});
+
+test("the basket's Ingredients sit side by side in the side panel too", async ({ page, isMobile }) => {
+  test.skip(isMobile, "the side panel is the wide layout");
+  await page.goto("/ingredients/lemon?with=lemon,garlic");
+  const items = page.locator(".tray-panel li");
+  const [first, second] = await Promise.all([items.nth(0).boundingBox(), items.nth(1).boundingBox()]);
+  expect(second!.y).toBe(first!.y);
+});

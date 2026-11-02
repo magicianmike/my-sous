@@ -44,6 +44,9 @@ export const SLOT_REFERENCE = /\{([^}]+)\}/g;
 /** The most Ingredients a Combination holds, so Suggestions stay focused. */
 export const COMBINATION_LIMIT = 4;
 
+/** The most staples the Pantry's grid shows, so it stays a quick tap rather than a catalogue. */
+export const STAPLES_LIMIT = 24;
+
 /** A Combination read from untrusted ids (such as a URL), with what had to be dropped. */
 export type Combination = {
   ingredients: Ingredient[];
@@ -56,7 +59,7 @@ export type Combination = {
 /** Where a Slot's Ingredient came from: in fill order, then a swap by the Cook. */
 export type FillSource = "combination" | "pantry" | "pairing" | "swap";
 
-/** Whether the Cook has the Ingredient: it's in the Combination or Pantry, not suggested or swapped in. */
+/** Whether the Cook brought the Ingredient (from the Combination or Pantry), not suggested or swapped in. */
 export function isCooksOwn(source: FillSource | undefined): boolean {
   return source === "combination" || source === "pantry";
 }
@@ -82,9 +85,14 @@ export type Suggestion = {
   method: string[];
   /** Why the Suggestion ranked where it did, in a plain sentence. */
   rankReason: string;
-  /** The required Slots the Combination and Pantry don't fill, as filled so far, in Formula order. */
+  /**
+   * What the Cook has on hand: the Pantry, or, while the Pantry is empty, the Combination. A swap
+   * keeps it, so a swap to something on hand counts as had.
+   */
+  onHand: Ingredient[];
+  /** The required Slots not filled from what's on hand, as filled so far, in Formula order. */
   needs: FilledSlot[];
-  /** Whether the Combination and Pantry together fill every required Slot. */
+  /** Whether what's on hand fills every required Slot: the dish can be made now. */
   makeable: boolean;
 };
 
@@ -123,14 +131,18 @@ export type Kitchen = {
   /** What a Blend typically includes (by Ingredient id or in plain words); empty for others. */
   blendComponents(id: string): BlendComponent[];
   combination(ids: string[]): Combination;
+  /** Ingredients marked common, for the Pantry's grid, in name order. */
+  staples(): Ingredient[];
   formulas(): Formula[];
   formula(id: string): Formula | undefined;
   /**
    * Suggestions for a Combination, one per Formula. Slots fill from the Combination first, then
    * the Pantry (each Ingredient filling at most one Slot), then the Ingredient that pairs with
-   * most of the fill; a Slot that no Pairing can justify stays empty. Ranked by coherence (the
-   * number of Pairings among the Ingredients the Cook chose, from the Combination or Pantry, not
-   * those suggested by Pairing), with ties in content order. Deterministic.
+   * most of the fill; a Slot that no Pairing can justify stays empty. With a Pantry, ranked by
+   * fewest required Slots missing from it (so makeable first), then by coherence; with an empty
+   * Pantry, by coherence alone. Coherence is the number of Pairings among the Ingredients the Cook
+   * chose, from the Combination or Pantry, not those suggested by Pairing. Ties keep content
+   * order. Deterministic.
    */
   suggest(combination: Ingredient[], pantry: Ingredient[]): SuggestResult;
   /** The same Suggestion with one Slot holding the Cook's choice; every other fill is kept. */
@@ -298,6 +310,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
   function deriveSuggestion(
     formula: Formula,
     fills: Fill[],
+    onHand: Ingredient[],
   ): { suggestion: Suggestion; coherence: number } {
     const used = usedIn(fills);
     const slots = formula.slots.map((slot, i): FilledSlot => {
@@ -328,10 +341,11 @@ export function createKitchen(content: KitchenContent): Kitchen {
       chosen.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
     );
     const rankReason = explainRank(chosen, arePaired, pairs);
-    // What the Cook has: a Pairing suggestion or a swap may still need getting.
-    const needs = slots.filter(({ slot, source }) => slot.required && !isCooksOwn(source));
+    const needs = slots.filter(
+      ({ slot, ingredient }) => slot.required && !(ingredient && onHand.includes(ingredient)),
+    );
     return {
-      suggestion: { formula, slots, method, rankReason, needs, makeable: needs.length === 0 },
+      suggestion: { formula, slots, method, rankReason, onHand, needs, makeable: needs.length === 0 },
       coherence: pairs.length,
     };
   }
@@ -379,6 +393,11 @@ export function createKitchen(content: KitchenContent): Kitchen {
       });
     },
 
+    staples: () =>
+      [...ingredients.values()]
+        .filter(({ common }) => common)
+        // Plain code-point comparison, so the order is the same in Node and every browser.
+        .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0)),
     formulas: () => content.formulas,
     formula: (id) => content.formulas.find((formula) => formula.id === id),
 
@@ -406,12 +425,16 @@ export function createKitchen(content: KitchenContent): Kitchen {
           });
         }
 
-        return deriveSuggestion(formula, fills);
+        return deriveSuggestion(formula, fills, pantry.length > 0 ? pantry : combination);
       });
-      // A stable sort, so ties keep the order Formulas appear in the content.
+      // With a Pantry, what can be made now comes first, then what needs least; an empty Pantry
+      // says nothing about what's on hand, so then it's Pairings alone. A stable sort, so ties keep
+      // the order Formulas appear in the content.
+      const missing = ({ suggestion }: { suggestion: Suggestion }) =>
+        pantry.length > 0 ? suggestion.needs.length : 0;
       return {
         suggestions: suggestions
-          .sort((a, b) => b.coherence - a.coherence)
+          .sort((a, b) => missing(a) - missing(b) || b.coherence - a.coherence)
           .map(({ suggestion }) => suggestion),
         ...findTensions(combination),
       };
@@ -428,7 +451,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
           ? { ingredient: chosen, source: "swap" as const }
           : ingredient && source && { ingredient, source },
       );
-      return deriveSuggestion(suggestion.formula, fills).suggestion;
+      return deriveSuggestion(suggestion.formula, fills, suggestion.onHand).suggestion;
     },
 
     combination(ids) {

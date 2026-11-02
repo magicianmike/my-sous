@@ -3,7 +3,7 @@ import { basename, join } from "node:path";
 import matter from "gray-matter";
 import { parse } from "yaml";
 import { z } from "zod";
-import { createKitchen, SLOT_REFERENCE, type Kitchen } from "./kitchen";
+import { createKitchen, SLOT_REFERENCE, STAPLES_LIMIT, type Kitchen } from "./kitchen";
 import {
   cuisineSchema,
   formulaSchema,
@@ -122,6 +122,14 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
     for (const cuisine of cuisines.filter((c) => !cuisineIds.has(c))) {
       errors.push({ file, message: `Ingredient ${id} refers to unknown Cuisine "${cuisine}".` });
     }
+  }
+
+  const staples = content.ingredients.filter(({ common }) => common).length;
+  if (staples > STAPLES_LIMIT) {
+    errors.push({
+      file: join(contentDir, "ingredients"),
+      message: `${staples} Ingredients are marked common, but the Pantry's grid of staples shows at most ${STAPLES_LIMIT}. Unmark some.`,
+    });
   }
 
   const pairingsFile = join(contentDir, "pairings.yaml");

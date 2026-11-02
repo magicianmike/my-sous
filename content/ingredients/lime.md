@@ -2,6 +2,7 @@
 name: Lime
 category: citrus
 cuisines: [oaxacan]
+common: true
 slotTypes: [acid]
 tip: Add lime juice at the end; long cooking dulls its fresh flavour.
 colour:

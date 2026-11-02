@@ -2,6 +2,7 @@
 name: Tomato
 category: produce
 cuisines: [southern-italian, oaxacan]
+common: true
 slotTypes: [vegetable]
 tip: Salt cut tomatoes a few minutes before using them to draw out their juice and deepen their flavour.
 colour:

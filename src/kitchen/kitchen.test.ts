@@ -116,6 +116,7 @@ describe("loadKitchen", () => {
       typicallyIncludes: ["dried thyme", "sumac", "sesame"],
       cuisines: [levantine],
       slotTypes: ["seasoning"],
+      common: false,
       tip: "Bloom it in olive oil.",
       culturalContext: "Often eaten with bread and olive oil.",
       essay: "A tangy, herbal blend.\n\nIt burns quickly.",
@@ -252,6 +253,17 @@ describe("loadKitchen", () => {
     });
   });
 
+  it("lists the staples for the Pantry's grid: Ingredients marked common, in name order", async () => {
+    const kitchen = await expectKitchen(
+      writeContent({
+        ingredients: { lemon: { ...lemon, common: true }, garlic: { ...garlic, common: true }, thyme },
+        pairings: [],
+      }),
+    );
+
+    expect(kitchen.staples().map(({ id }) => id)).toEqual(["garlic", "lemon"]);
+  });
+
   describe("a Combination", () => {
     const ingredients = {
       lemon,
@@ -369,15 +381,51 @@ describe("loadKitchen", () => {
       expect(herbSalad.needs.map(({ slot }) => slot.id)).toEqual(["first-herb", "second-herb"]);
     });
 
-    it("counts the Pantry towards makeable, like the Combination", async () => {
+    it("with an empty Pantry, counts the Combination as on hand", async () => {
       const kitchen = await expectKitchen(writeContent(fixture));
 
-      const { suggestions } = kitchen.suggest(
-        kitchen.combination(["garlic"]).ingredients,
-        kitchen.combination(["lemon"]).ingredients,
-      );
+      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic", "lemon"]).ingredients, []);
+      const panSauce = suggestions.find(({ formula }) => formula.id === "pan-sauce")!;
 
-      expect(suggestions.find(({ formula }) => formula.id === "pan-sauce")).toMatchObject({ makeable: true });
+      expect(panSauce.onHand.map(({ id }) => id)).toEqual(["garlic", "lemon"]);
+      expect(panSauce.makeable).toBe(true);
+    });
+
+    it("with a Pantry, counts only the Pantry as on hand, so a Combination Ingredient may still be needed", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+      const ids = (ids: string[]) => kitchen.combination(ids).ingredients;
+
+      const { suggestions } = kitchen.suggest(ids(["garlic", "lemon"]), ids(["garlic", "thyme"]));
+      const panSauce = suggestions.find(({ formula }) => formula.id === "pan-sauce")!;
+
+      expect(panSauce.onHand.map(({ id }) => id)).toEqual(["garlic", "thyme"]);
+      expect(panSauce.slots.find(({ slot }) => slot.id === "acid")).toMatchObject({ source: "combination" });
+      expect(panSauce.needs.map(({ slot }) => slot.id)).toEqual(["acid"]);
+      expect(panSauce.makeable).toBe(false);
+    });
+
+    it("is makeable from the Pantry alone, filling what the Combination doesn't", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+      const ids = (ids: string[]) => kitchen.combination(ids).ingredients;
+
+      const { suggestions } = kitchen.suggest(ids(["garlic"]), ids(["garlic", "lemon"]));
+      const panSauce = suggestions.find(({ formula }) => formula.id === "pan-sauce")!;
+
+      expect(panSauce.slots.map(({ source }) => source)).toEqual(["combination", "pantry", undefined]);
+      expect(panSauce).toMatchObject({ makeable: true, needs: [] });
+    });
+
+    it("counts a swap to something in the Pantry as on hand", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+      const ids = (ids: string[]) => kitchen.combination(ids).ingredients;
+
+      const { suggestions } = kitchen.suggest(ids(["thyme", "basil"]), ids(["lemon", "garlic", "basil"]));
+      const herbSalad = suggestions.find(({ formula }) => formula.id === "herb-salad")!;
+      expect(herbSalad.needs.map(({ slot }) => slot.id)).toEqual(["first-herb"]);
+
+      const swapped = kitchen.swap(herbSalad, "first-herb", "basil");
+      expect(swapped.needs).toEqual([]);
+      expect(swapped.makeable).toBe(true);
     });
 
     it("still needs a required Slot that only a Pairing suggestion or a swap fills", async () => {
@@ -705,6 +753,40 @@ describe("loadKitchen", () => {
       ]);
     });
 
+    it("with a Pantry, puts what can be made now first, then fewer missing, then more Pairings", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({
+          ...fixture,
+          formulas: [
+            formula("tight-missing-two", ["lamb", "lemon", "garlic"]),
+            formula("loose-ready", ["mint", "chocolate"]),
+            formula("tight-missing-one", ["lamb", "mint"]),
+          ],
+        }),
+      );
+      const ids = (ids: string[]) => kitchen.combination(ids).ingredients;
+
+      const { suggestions } = kitchen.suggest(ids(["lamb"]), ids(["mint", "chocolate"]));
+
+      expect(suggestions.map(({ formula, needs }) => [formula.id, needs.length])).toEqual([
+        ["loose-ready", 0],
+        ["tight-missing-one", 1],
+        ["tight-missing-two", 3],
+      ]);
+    });
+
+    it("with an empty Pantry, ranks by Pairings alone, so planning a shop starts from what goes together", async () => {
+      const suggestions = await rank(
+        [formula("ready-but-loose", ["mint", "chocolate"]), formula("tight-needs-more", ["lamb", "lemon", "garlic"])],
+        ["mint", "chocolate", "lamb", "lemon"],
+      );
+
+      expect(suggestions.map(({ formula, makeable }) => [formula.id, makeable])).toEqual([
+        ["tight-needs-more", false],
+        ["ready-but-loose", true],
+      ]);
+    });
+
     it("breaks ties by the order Formulas appear in the content", async () => {
       const suggestions = await rank(
         [formula("second-in-name", ["lamb", "mint"]), formula("a-first-in-name", ["lamb", "lemon"])],
@@ -766,6 +848,17 @@ describe("loadKitchen", () => {
       );
 
       expect(errors).toEqual(['Pairing lemon + garlic refers to unknown Cuisine "asian".']);
+    });
+
+    it("when more Ingredients are staples than the Pantry's grid shows", async () => {
+      const staples = Object.fromEntries(
+        Array.from({ length: 25 }, (_, i) => [`staple-${i}`, { name: `Staple ${i}`, common: true }]),
+      );
+      const errors = await expectErrors(writeContent({ ingredients: staples, pairings: [] }));
+
+      expect(errors).toEqual([
+        "25 Ingredients are marked common, but the Pantry's grid of staples shows at most 24. Unmark some.",
+      ]);
     });
 
     it("when an Ingredient refers to an unknown Cuisine", async () => {

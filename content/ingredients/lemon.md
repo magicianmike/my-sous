@@ -2,6 +2,7 @@
 name: Lemon
 category: citrus
 cuisines: [southern-italian]
+common: true
 slotTypes: [acid]
 tip: Zest before you juice; the zest carries much of the aroma.
 colour:

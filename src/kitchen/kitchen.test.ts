@@ -357,6 +357,42 @@ describe("loadKitchen", () => {
       ]);
     });
 
+    it("is makeable when the Combination fills every required Slot, and otherwise names what it needs", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic", "lemon"]).ingredients, []);
+      const [panSauce, herbSalad] = suggestions;
+
+      // The optional herb is empty, which doesn't stop a pan sauce.
+      expect(panSauce).toMatchObject({ makeable: true, needs: [] });
+      expect(herbSalad.makeable).toBe(false);
+      expect(herbSalad.needs.map(({ id }) => id)).toEqual(["first-herb", "second-herb"]);
+    });
+
+    it("counts the Pantry towards makeable, like the Combination", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      const { suggestions } = kitchen.suggest(
+        kitchen.combination(["garlic"]).ingredients,
+        kitchen.combination(["lemon"]).ingredients,
+      );
+
+      expect(suggestions.find(({ formula }) => formula.id === "pan-sauce")).toMatchObject({ makeable: true });
+    });
+
+    it("still needs a required Slot that only a Pairing suggestion or a swap fills", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({ ...fixture, pairings: [{ ingredients: ["garlic", "lemon"], reasons: [reason("A note.")] }] }),
+      );
+
+      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic"]).ingredients, []);
+      const panSauce = suggestions.find(({ formula }) => formula.id === "pan-sauce")!;
+
+      expect(panSauce.slots.find(({ slot }) => slot.id === "acid")).toMatchObject({ source: "pairing" });
+      expect(panSauce.makeable).toBe(false);
+      expect(panSauce.needs.map(({ id }) => id)).toEqual(["acid"]);
+    });
+
     it("gives the same Suggestions every time for the same Combination", async () => {
       const suggestFrom = async () => {
         const kitchen = await expectKitchen(writeContent(fixture));

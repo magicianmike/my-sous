@@ -77,6 +77,10 @@ export type Suggestion = {
   method: string[];
   /** Why the Suggestion ranked where it did, in a plain sentence. */
   rankReason: string;
+  /** The required Slots the Combination and Pantry don't fill, in Formula order. */
+  needs: Slot[];
+  /** Whether the Combination and Pantry together fill every required Slot. */
+  makeable: boolean;
 };
 
 /** Two Combination Ingredients with no Pairing between them. */
@@ -319,7 +323,14 @@ export function createKitchen(content: KitchenContent): Kitchen {
       chosen.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
     );
     const rankReason = explainRank(chosen, arePaired, pairs);
-    return { suggestion: { formula, slots, method, rankReason }, coherence: pairs.length };
+    // What the Cook has: a Pairing suggestion or a swap may still need getting.
+    const needs = slots
+      .filter(({ slot, source }) => slot.required && source !== "combination" && source !== "pantry")
+      .map(({ slot }) => slot);
+    return {
+      suggestion: { formula, slots, method, rankReason, needs, makeable: needs.length === 0 },
+      coherence: pairs.length,
+    };
   }
 
   return {

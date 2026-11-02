@@ -121,3 +121,13 @@ test("an outlined button fills and darkens its outline under the pointer", async
   await remove.hover();
   await expect.poll(look).not.toBe(before);
 });
+
+test("a solid button eases its fill and lifts under the pointer", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover is for a pointer");
+  await page.goto("/ingredients/lemon?with=garlic");
+  const add = page.getByRole("button", { name: "Add Lemon to your basket" });
+  const look = () => add.evaluate((el) => `${getComputedStyle(el).backgroundColor} ${getComputedStyle(el).boxShadow}`);
+  const before = await look();
+  await add.hover();
+  await expect.poll(look).not.toBe(before);
+});

@@ -17,7 +17,8 @@
   transition:
     transform var(--motion-fast) var(--ease-out),
     background-color var(--motion-fast) var(--ease-out),
-    border-color var(--motion-fast) var(--ease-out);
+    border-color var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out);
 }
 
 /* The outlined button, under the pointer: a recessed fill, and the outline at full ink. */
@@ -34,6 +35,13 @@
   border-color: var(--accent);
   background: var(--accent);
   color: var(--accent-ink);
+}
+
+/* Under the pointer, the solid fill eases a little toward the page and lifts; its words stay over 9:1. */
+.primary:not([aria-disabled="true"]):hover {
+  border-color: color-mix(in srgb, var(--accent) 85%, var(--bg));
+  background: color-mix(in srgb, var(--accent) 85%, var(--bg));
+  box-shadow: var(--shadow-raised);
 }
 
 /* For an icon: the glyph alone, which changes colour under the pointer, as links do. */

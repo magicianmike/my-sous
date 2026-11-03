@@ -5,12 +5,8 @@ import { IngredientLink } from "./ingredient-link";
 const and = new Intl.ListFormat("en", { type: "conjunction" });
 
 /** Whether a Suggestion is ready, or what it still needs and what would fill it, in one sentence. */
-export function ReadinessSentence({ suggestion: { makeable, needs, slots } }: { suggestion: Suggestion }) {
-  if (makeable) {
-    return slots.some(({ source }) => source === "pantry")
-      ? "Ready with your basket and Pantry."
-      : "Ready with your basket.";
-  }
+export function ReadinessSentence({ suggestion: { makeable, needs } }: { suggestion: Suggestion }) {
+  if (makeable) return "Ready with your basket.";
   const parts = needs.map(({ slot, ingredient, source }) => {
     if (!ingredient) return <>{slot.role} (nothing pairs yet)</>;
     const name = <IngredientLink ingredient={ingredient}>{inSentence(ingredient)}</IngredientLink>;

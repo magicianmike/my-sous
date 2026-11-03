@@ -80,7 +80,7 @@ export const SuggestionList = withSearchParams(
       );
     }
 
-    const { suggestions, tensions, fixes } = kitchen.suggest(combination.ingredients, []);
+    const { suggestions, tensions, fixes } = kitchen.suggest(combination.ingredients);
     // Applying a fix removes the button that was pressed, so focus moves to the Suggestions.
     function applyFix({ ingredient, replacement }: CombinationFix) {
       if (replacement) replace(ingredient, replacement);
@@ -98,8 +98,8 @@ export const SuggestionList = withSearchParams(
           Suggestions
         </h2>
         <p className="muted">
-          MySous doesn&rsquo;t know your Pantry yet, so Ready means your basket fills every part a
-          dish needs.
+          Ready means your basket fills every part a dish needs. Those come first; the rest say what
+          else they need.
         </p>
         <ul className="stack" aria-labelledby="suggestions-heading">
           {suggestions.map((suggestion) => (

@@ -43,7 +43,7 @@ _Avoid_: Culture, ethnic food, authentic
 ### Dishes
 
 **Combination**:
-The one to four Ingredients the Cook wants to cook around, whether they're already in the fridge or an idea for a shop. It's the one concept the Cook builds, and Formula suggestions are always made for one. The Cook sees it called their **basket** ("Your basket", "Add to your basket"); "Combination" stays in code, content and docs. MySous keeps no record of what the Cook owns (ADR 0004), so the basket never means a pantry or an inventory.
+The one to four Ingredients the Cook wants to cook around, whether they're already in the fridge or something to shop for. It's the one concept the Cook builds, and Formula suggestions are always made for one. The Cook sees it called their **basket** ("Your basket", "Add to your basket"); "Combination" stays in code, content and docs. MySous keeps no record of what the Cook owns (ADR 0004), so the basket never means a pantry or an inventory.
 _Avoid_: Selection, cart, idea, pantry, inventory
 
 **Formula**:

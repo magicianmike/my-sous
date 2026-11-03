@@ -326,7 +326,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
       chosen.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
     );
     const rankReason = explainRank(chosen, arePaired, pairs);
-    // What the Cook chose: a Pairing suggestion or a swap is something the dish still needs.
+    // What the Cook brought: a Pairing suggestion or a swap is something the dish still needs.
     const needs = slots.filter(({ slot, source }) => slot.required && !isCooksOwn(source));
     return {
       suggestion: { formula, slots, method, rankReason, needs, makeable: needs.length === 0 },
@@ -405,10 +405,10 @@ export function createKitchen(content: KitchenContent): Kitchen {
         return deriveSuggestion(formula, fills);
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
-      const needed = ({ suggestion }: { suggestion: Suggestion }) => suggestion.needs.length;
+      const neededCount = ({ suggestion }: { suggestion: Suggestion }) => suggestion.needs.length;
       return {
         suggestions: suggestions
-          .sort((a, b) => needed(a) - needed(b) || b.coherence - a.coherence)
+          .sort((a, b) => neededCount(a) - neededCount(b) || b.coherence - a.coherence)
           .map(({ suggestion }) => suggestion),
         ...findTensions(combination),
       };

@@ -46,11 +46,13 @@ test("a Suggestion that needs more says how many, what, and what pairs best", as
   await expect(panSauce.getByRole("link", { name: "lemon", exact: true })).toBeVisible();
 });
 
-test("What to make explains Ready in terms of the basket, and puts ready dishes first", async ({ page }) => {
+test("makeable Suggestions come first, each saying so, and Ready is explained by the basket", async ({
+  page,
+}) => {
   await page.goto("/suggestions?with=chicken-thigh,garlic,lemon");
   await expect(page.getByRole("main")).toContainText("Ready means your basket fills every part a dish needs.");
   const first = page.getByRole("list", { name: "Suggestions" }).getByRole("listitem").first();
-  await expect(first).toContainText("Ready");
+  await expect(first).toContainText("Ready with your basket.");
 });
 
 test("a required Slot nothing pairs with shows as open, with the choice still there", async ({ page }) => {

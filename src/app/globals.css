@@ -118,24 +118,21 @@ ul {
 
 /* Page frame */
 
+/* The wordmark, then the nav beside it, where the eye lands first; the Case Study's label at the end. */
 .site-header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0 var(--space-3);
+  gap: 0 var(--space-5);
   max-width: var(--page-width);
   margin: 0 auto;
   padding-block: var(--space-3);
 }
 
-/* Ingredients and Cuisines, at the header's end; the current one underlined as well as marked. */
-.site-nav {
-  margin-inline-start: auto;
-}
-
+/* Ingredients and Cuisines, beside the wordmark; the current one underlined as well as marked. */
 .site-nav ul {
   display: flex;
-  gap: var(--space-1);
+  gap: var(--space-3);
   margin: 0;
 }
 
@@ -143,8 +140,9 @@ ul {
   display: inline-flex;
   align-items: center;
   min-height: var(--target);
-  padding-inline: var(--space-2);
-  font-weight: var(--weight-bold);
+  padding-inline: var(--space-1);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-heavy);
 }
 
 .site-nav a[aria-current="page"] {
@@ -157,7 +155,7 @@ ul {
   align-items: center;
   min-height: var(--target);
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-style: italic;
   font-weight: var(--weight-bold);
   text-decoration: none;
@@ -769,7 +767,7 @@ main {
 /* Page frame: the site label, the footer and the skip links */
 
 .site-label {
-  margin-inline-start: var(--space-3);
+  margin-inline-start: auto;
   color: var(--ink-muted);
   font-weight: var(--weight-bold);
 }

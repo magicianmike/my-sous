@@ -41,8 +41,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <CombinationLink href="/" className="wordmark">
               MySous
             </CombinationLink>
-            <SiteLabel />
             <SiteNav />
+            <SiteLabel />
           </header>
           <div className="app">
             <main id="main">{children}</main>

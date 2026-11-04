@@ -1,0 +1,58 @@
+"use client";
+
+import Link from "next/link";
+import { FixedCombination, hrefWith, useKitchen } from "../combination";
+import { SuggestionCard } from "../suggestions/suggestion-list";
+import { CHAPTERS, type ChapterId } from "./chapters";
+
+/** A chapter: its section and heading, titled and anchored from the one list of chapters. */
+export function Chapter({ id, children }: { id: ChapterId; children: React.ReactNode }) {
+  const { title } = CHAPTERS.find((chapter) => chapter.id === id)!;
+  return (
+    <section id={id} className="chapter" aria-labelledby={`${id}-heading`}>
+      <h2 id={`${id}-heading`} tabIndex={-1}>
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+/** A link that opens MySous with a given basket, so a reader can check a claim for themselves. */
+export function AppLink({ basket, to = "/suggestions", children }: {
+  basket: string[];
+  to?: string;
+  children: React.ReactNode;
+}) {
+  return <Link href={hrefWith(to, basket)}>{children}</Link>;
+}
+
+/**
+ * A real Suggestion card, rendered by the app's own component for a fixed basket: not a screenshot.
+ * Links inside it carry that basket.
+ */
+export function LiveSuggestion({ basket, dish, caption }: {
+  basket: string[];
+  dish: string;
+  caption: React.ReactNode;
+}) {
+  const { kitchen } = useKitchen();
+  const suggestion = kitchen
+    .suggest(kitchen.combination(basket).ingredients)
+    .suggestions.find(({ formula }) => formula.id === dish);
+  if (!suggestion) throw new Error(`The Case Study embeds an unknown dish, "${dish}".`);
+  return (
+    <figure className="live-embed">
+      <FixedCombination ids={basket}>
+        <SuggestionCard suggestion={suggestion} />
+      </FixedCombination>
+      <figcaption>
+        {/* A sentence, so its link reads as one: underlined, and sized as text rather than a button. */}
+        <p>
+          <span className="live-label">Live from MySous</span> {caption}{" "}
+          <AppLink basket={basket}>Open this basket in MySous</AppLink>.
+        </p>
+      </figcaption>
+    </figure>
+  );
+}

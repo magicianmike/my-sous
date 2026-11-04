@@ -1,0 +1,87 @@
+import { AppLink, Chapter, LiveSuggestion } from "./case-study-parts";
+
+export const metadata = {
+  title: "How MySous was made",
+  description:
+    "A Case Study of MySous, a kitchen assistant for what goes with what, and why: the product, design and engineering decisions behind it.",
+  openGraph: {
+    title: "How MySous was made",
+    description: "The product, design and engineering decisions behind MySous, with the live app beside them.",
+    type: "article",
+    url: "/case-study",
+    siteName: "MySous",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How MySous was made",
+    description: "The product, design and engineering decisions behind MySous, with the live app beside them.",
+  },
+};
+
+# How MySous was made
+
+<p className="draft-note">Draft. The chapters are being written; this page shows their shape.</p>
+
+<Chapter id="summary">
+
+**The problem.** A home cook at 6pm stands at the open fridge with half a bunch of cilantro, some chicken thighs and a lime. They can follow a recipe, but they don't trust themselves to improvise. Recipe sites match keywords; chat assistants answer with confident text no one can check. Neither explains what goes with what, and why.
+
+**The hero interaction.** The Cook puts up to four ingredients in a basket. MySous suggests dishes built around them, fills every part of each dish, and says why each part holds what it does. Every part can be swapped, and every swap can be undone.
+
+**The key decisions.**
+
+- A hand-curated graph of ingredient pairings, each with a plain-language reason, and no LLM: every claim can be checked.
+- One way in and one concept to learn, the basket. A Pantry was built, previewed and cut.
+- Every screen's state lives in its URL, so any state can be linked to, including from this page.
+- Accessible by construction: WCAG 2.2 AA in both themes, checked on every change.
+- The Case Study lives inside the app, so the components below are the real ones.
+
+</Chapter>
+
+<Chapter id="one-room">
+
+The spec began with two doors: "Start from an ingredient" and "Start from what you have", where what you have was a Pantry kept on the device. The Pantry was built in full, tested and previewed. Then it was cut.
+
+**The UX decision.** The basket and the Pantry were both "ingredients I care about", told apart only by intent. Every screen had to explain both, and the Pantry asked for work (entering what you own, keeping it current) before it paid anything back. Without it there is one thing to learn, and MySous stays focused on its purpose: what goes with what, and why. The Cook at the open fridge puts what's in front of them in the basket.
+
+**The engineering decision.** The Pantry was the only thing MySous stored in the browser, and it brought every hard edge case: blocked storage, a first render that couldn't know it, other tabs, one device only. Without it, nothing is stored and every state is in the URL.
+
+</Chapter>
+
+<Chapter id="state-you-can-link-to">
+
+The basket lives in the address, as `?with=chicken-thigh,basil,ginger`. Back and forward step through its changes, a shared link reopens it exactly, and this page can open the app in any state.
+
+<LiveSuggestion
+  basket={["chicken-thigh", "basil", "ginger"]}
+  dish="pan-sauce"
+  caption="A basket where not everything pairs: basil has no Pairing with chicken thigh or ginger, and the card says so."
+/>
+
+Opening <AppLink basket={["chicken-thigh", "basil", "ginger"]}>this basket in MySous</AppLink> shows the tension in full, with a fix offered for each Ingredient involved.
+
+</Chapter>
+
+<Chapter id="defaults-not-forms">
+
+A dish is never a blank form. MySous fills every part from the basket first, then with the Ingredient that pairs best with the rest, and says which Pairing justifies each choice. The Cook swaps what they'd rather change, and can undo it.
+
+<LiveSuggestion
+  basket={["chicken-thigh", "garlic"]}
+  dish="pan-sauce"
+  caption="Two Ingredients in the basket; MySous suggests lemon for the acid, and says why."
+/>
+
+</Chapter>
+
+<Chapter id="accessible-by-construction">
+
+Every component is built to WCAG 2.2 AA in light and dark, and the checks run on every change: axe on every screen at phone and desktop widths, no sideways scrolling from 320px to wide desktop and at 200% zoom, touch targets on a phone, and keyboard focus after every action that moves it. Nothing is said by colour alone. Each milestone also gets a VoiceOver pass on an iPhone and a Mac.
+
+</Chapter>
+
+<Chapter id="whats-next">
+
+Rescue, guided help when something goes wrong mid-cook, is where an LLM might earn a place: describing a problem in free text is valuable there. It would come with constrained outputs and a deterministic fallback.
+
+</Chapter>

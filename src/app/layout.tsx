@@ -5,6 +5,7 @@ import { CombinationLink, KitchenProvider } from "./combination";
 import { CombinationTray } from "./combination-tray";
 import "./globals.css";
 import { getKitchen } from "./kitchen";
+import { SiteFooter, SiteLabel, SkipLinks } from "./site-chrome";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -20,6 +21,8 @@ const text = Nunito({
 });
 
 export const metadata: Metadata = {
+  // Link previews need absolute URLs; the production site unless the build says otherwise.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://my-sous.vercel.app"),
   title: { default: "MySous", template: "%s · MySous" },
   description: "Find what goes with what, and why.",
 };
@@ -33,13 +36,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <KitchenProvider content={kitchen.content}>
+          <SkipLinks />
           <header className="site-header">
             <CombinationLink href="/" className="wordmark">
               MySous
             </CombinationLink>
+            <SiteLabel />
           </header>
           <div className="app">
-            <main>{children}</main>
+            <main id="main">{children}</main>
+            {/* Before the tray, so on a phone the docked bar still meets the foot of the screen. */}
+            <SiteFooter />
             <CombinationTray />
           </div>
         </KitchenProvider>

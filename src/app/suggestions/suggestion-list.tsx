@@ -115,7 +115,7 @@ export const SuggestionList = withSearchParams(
 );
 
 /** One Suggestion: whether it's ready, what fills it and from where, why it ranks here. */
-function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
+export function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
   const { formula, slots, rankReason, needs } = suggestion;
   const yours = slots.flatMap(({ ingredient, source }) =>
     ingredient && isCooksOwn(source) ? [ingredient] : [],

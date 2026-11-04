@@ -56,12 +56,24 @@ export function useKitchen(): KitchenState {
   return state;
 }
 
+/**
+ * A Combination fixed by the page rather than read from the URL, so the Case Study can show a live
+ * component in a given state. Links inside carry it, so opening them lands in that state.
+ */
+const FixedCombinationContext = createContext<string[] | null>(null);
+
+export function FixedCombination({ ids, children }: { ids: string[]; children: React.ReactNode }) {
+  return <FixedCombinationContext.Provider value={ids}>{children}</FixedCombinationContext.Provider>;
+}
+
 /** The current Combination, read from the URL, and the ways to change it. */
 export function useCombination() {
   const { kitchen, announce } = useKitchen();
   const router = useRouter();
   const pathname = usePathname();
-  const param = useSearchParams().get(PARAM);
+  const fixed = useContext(FixedCombinationContext);
+  const fromUrl = useSearchParams().get(PARAM);
+  const param = fixed ? fixed.join(",") : fromUrl;
   const combination: Combination = kitchen.combination(param ? param.split(",") : []);
   const ids = combination.ingredients.map(({ id }) => id);
 

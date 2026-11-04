@@ -340,17 +340,15 @@ describe("loadKitchen", () => {
     it("fills each Formula's Slots from the Combination, in order, one Slot per Ingredient", async () => {
       const kitchen = await expectKitchen(writeContent(fixture));
 
-      const { suggestions } = kitchen.suggest(
-        kitchen.combination(["basil", "lemon", "thyme"]).ingredients,
-        [],
-      );
+      const { suggestions } = kitchen.suggest(kitchen.combination(["basil", "lemon", "thyme"]).ingredients);
 
+      // The herb salad comes first: the Combination fills it, while the pan sauce still needs an aromatic.
       expect(suggestions.map(fills)).toEqual([
-        ["pan-sauce", { aromatic: undefined, acid: "lemon", herb: "basil" }],
         ["herb-salad", { "first-herb": "basil", "second-herb": "thyme", acid: "lemon" }],
+        ["pan-sauce", { aromatic: undefined, acid: "lemon", herb: "basil" }],
       ]);
-      expect(suggestions[0].method).toEqual(["Soften an aromatic, add lemon, finish with basil."]);
-      expect(suggestions[1].slots.map(({ source }) => source)).toEqual([
+      expect(suggestions[1].method).toEqual(["Soften an aromatic, add lemon, finish with basil."]);
+      expect(suggestions[0].slots.map(({ source }) => source)).toEqual([
         "combination",
         "combination",
         "combination",
@@ -360,24 +358,13 @@ describe("loadKitchen", () => {
     it("is makeable when the Combination fills every required Slot, else names what it needs", async () => {
       const kitchen = await expectKitchen(writeContent(fixture));
 
-      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic", "lemon"]).ingredients, []);
+      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic", "lemon"]).ingredients);
       const [panSauce, herbSalad] = suggestions;
 
       // The optional herb is empty, which doesn't stop a pan sauce.
       expect(panSauce).toMatchObject({ makeable: true, needs: [] });
       expect(herbSalad.makeable).toBe(false);
       expect(herbSalad.needs.map(({ slot }) => slot.id)).toEqual(["first-herb", "second-herb"]);
-    });
-
-    it("counts the Pantry towards makeable, like the Combination", async () => {
-      const kitchen = await expectKitchen(writeContent(fixture));
-
-      const { suggestions } = kitchen.suggest(
-        kitchen.combination(["garlic"]).ingredients,
-        kitchen.combination(["lemon"]).ingredients,
-      );
-
-      expect(suggestions.find(({ formula }) => formula.id === "pan-sauce")).toMatchObject({ makeable: true });
     });
 
     it("still needs a required Slot that only a Pairing suggestion or a swap fills", async () => {
@@ -388,7 +375,7 @@ describe("loadKitchen", () => {
         }),
       );
 
-      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic"]).ingredients, []);
+      const { suggestions } = kitchen.suggest(kitchen.combination(["garlic"]).ingredients);
       const panSauce = suggestions.find(({ formula }) => formula.id === "pan-sauce")!;
 
       expect(panSauce.slots.find(({ slot }) => slot.id === "acid")).toMatchObject({ source: "pairing" });
@@ -399,7 +386,7 @@ describe("loadKitchen", () => {
     it("gives the same Suggestions every time for the same Combination", async () => {
       const suggestFrom = async () => {
         const kitchen = await expectKitchen(writeContent(fixture));
-        return kitchen.suggest(kitchen.combination(["thyme", "garlic", "basil"]).ingredients, []);
+        return kitchen.suggest(kitchen.combination(["thyme", "garlic", "basil"]).ingredients);
       };
 
       expect(await suggestFrom()).toEqual(await suggestFrom());
@@ -446,22 +433,21 @@ describe("loadKitchen", () => {
       ],
     };
 
-    async function plate(combination: string[], pantry: string[] = []) {
+    async function plate(combination: string[]) {
       const kitchen = await expectKitchen(writeContent(fixture));
-      const ingredients = (ids: string[]) => kitchen.combination(ids).ingredients;
-      const [suggestion] = kitchen.suggest(ingredients(combination), ingredients(pantry)).suggestions;
+      const [suggestion] = kitchen.suggest(kitchen.combination(combination).ingredients).suggestions;
       return { kitchen, suggestion };
     }
 
     const fill = (suggestion: Suggestion) =>
       suggestion.slots.map(({ slot, ingredient, source }) => [slot.id, ingredient?.id, source]);
 
-    it("fills from the Combination first, then the Pantry, then the best-pairing Ingredient", async () => {
-      const { suggestion } = await plate(["lamb"], ["vinegar"]);
+    it("fills from the Combination first, then the best-pairing Ingredient", async () => {
+      const { suggestion } = await plate(["lamb", "vinegar"]);
 
       expect(fill(suggestion)).toEqual([
         ["protein", "lamb", "combination"],
-        ["acid", "vinegar", "pantry"],
+        ["acid", "vinegar", "combination"],
         ["herb", "mint", "pairing"],
       ]);
     });
@@ -604,7 +590,7 @@ describe("loadKitchen", () => {
 
     async function suggestFor(ids: string[]) {
       const kitchen = await expectKitchen(writeContent(fixture));
-      return kitchen.suggest(kitchen.combination(ids).ingredients, []);
+      return kitchen.suggest(kitchen.combination(ids).ingredients);
     }
 
     const summarise = ({ tensions, fixes }: SuggestResult) => ({
@@ -676,7 +662,7 @@ describe("loadKitchen", () => {
 
     async function rank(formulas: unknown[], ids: string[]) {
       const kitchen = await expectKitchen(writeContent({ ...fixture, formulas }));
-      return kitchen.suggest(kitchen.combination(ids).ingredients, []).suggestions;
+      return kitchen.suggest(kitchen.combination(ids).ingredients).suggestions;
     }
 
     it("puts Suggestions with more Pairings among their fills first", async () => {
@@ -702,6 +688,23 @@ describe("loadKitchen", () => {
       expect(suggestions.map(({ formula, rankReason }) => [formula.id, rankReason])).toEqual([
         ["chosen-pair", "Lemon and garlic pair well."],
         ["with-extra", "Mint and lemon don't have a Pairing in MySous yet."],
+      ]);
+    });
+
+    it("puts what the Combination fills first, then fewer Slots still needed, then more Pairings", async () => {
+      const suggestions = await rank(
+        [
+          formula("tight-needs-two", ["lamb", "lemon", "garlic"]),
+          formula("loose-ready", ["mint", "chocolate"]),
+          formula("tight-needs-one", ["lamb", "mint", "lemon"]),
+        ],
+        ["mint", "chocolate", "lamb"],
+      );
+
+      expect(suggestions.map(({ formula, needs }) => [formula.id, needs.length])).toEqual([
+        ["loose-ready", 0],
+        ["tight-needs-one", 1],
+        ["tight-needs-two", 2],
       ]);
     });
 

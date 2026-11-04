@@ -54,11 +54,11 @@ export type Combination = {
 };
 
 /** Where a Slot's Ingredient came from: in fill order, then a swap by the Cook. */
-export type FillSource = "combination" | "pantry" | "pairing" | "swap";
+export type FillSource = "combination" | "pairing" | "swap";
 
-/** Whether the Cook has the Ingredient: it's in the Combination or Pantry, not suggested or swapped in. */
+/** Whether the Ingredient is the Cook's own, from the Combination, not suggested or swapped in. */
 export function isCooksOwn(source: FillSource | undefined): boolean {
-  return source === "combination" || source === "pantry";
+  return source === "combination";
 }
 
 /** A Slot in a Suggestion, with the Ingredient chosen for it, if any, and why. */
@@ -82,9 +82,9 @@ export type Suggestion = {
   method: string[];
   /** Why the Suggestion ranked where it did, in a plain sentence. */
   rankReason: string;
-  /** The required Slots the Combination and Pantry don't fill, as filled so far, in Formula order. */
+  /** The required Slots the Combination doesn't fill, as filled so far, in Formula order. */
   needs: FilledSlot[];
-  /** Whether the Combination and Pantry together fill every required Slot. */
+  /** Whether the Combination fills every required Slot (shown as "Ready"). */
   makeable: boolean;
 };
 
@@ -126,13 +126,13 @@ export type Kitchen = {
   formulas(): Formula[];
   formula(id: string): Formula | undefined;
   /**
-   * Suggestions for a Combination, one per Formula. Slots fill from the Combination first, then
-   * the Pantry (each Ingredient filling at most one Slot), then the Ingredient that pairs with
-   * most of the fill; a Slot that no Pairing can justify stays empty. Ranked by coherence (the
-   * number of Pairings among the Ingredients the Cook chose, from the Combination or Pantry, not
-   * those suggested by Pairing), with ties in content order. Deterministic.
+   * Suggestions for a Combination, one per Formula. Slots fill from the Combination first (each
+   * Ingredient filling at most one Slot), then the Ingredient that pairs with most of the fill; a
+   * Slot that no Pairing can justify stays empty. Ranked by fewest required Slots still needed (so
+   * makeable first), then by coherence: the number of Pairings among the Ingredients the Cook
+   * chose, not those suggested by Pairing. Ties keep content order. Deterministic.
    */
-  suggest(combination: Ingredient[], pantry: Ingredient[]): SuggestResult;
+  suggest(combination: Ingredient[]): SuggestResult;
   /** The same Suggestion with one Slot holding the Cook's choice; every other fill is kept. */
   swap(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
 };
@@ -152,8 +152,6 @@ function explainFill(slot: Slot, fill: Fill, justification: PairingView | undefi
       return `No Pairing here points to ${slot.role} yet.`;
     case "combination":
       return "From your basket.";
-    case "pantry":
-      return "From your Pantry.";
     case "pairing":
       return "Suggested earlier. It doesn't pair with anything else here now.";
     case "swap":
@@ -328,7 +326,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
       chosen.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
     );
     const rankReason = explainRank(chosen, arePaired, pairs);
-    // What the Cook has: a Pairing suggestion or a swap may still need getting.
+    // What the Cook brought: a Pairing suggestion or a swap is something the dish still needs.
     const needs = slots.filter(({ slot, source }) => slot.required && !isCooksOwn(source));
     return {
       suggestion: { formula, slots, method, rankReason, needs, makeable: needs.length === 0 },
@@ -382,18 +380,16 @@ export function createKitchen(content: KitchenContent): Kitchen {
     formulas: () => content.formulas,
     formula: (id) => content.formulas.find((formula) => formula.id === id),
 
-    suggest(combination, pantry) {
+    suggest(combination) {
       const suggestions = content.formulas.map((formula) => {
         const fills: Fill[] = formula.slots.map(() => undefined);
         const used = () => usedIn(fills);
 
-        for (const [source, pool] of [["combination", combination], ["pantry", pantry]] as const) {
-          const unused = pool.filter((ingredient) => !used().includes(ingredient));
-          formula.slots.forEach((slot, i) => {
-            const index = fills[i] ? -1 : unused.findIndex(fits(slot));
-            if (index !== -1) fills[i] = { ingredient: unused.splice(index, 1)[0], source };
-          });
-        }
+        const unused = [...combination];
+        formula.slots.forEach((slot, i) => {
+          const index = unused.findIndex(fits(slot));
+          if (index !== -1) fills[i] = { ingredient: unused.splice(index, 1)[0], source: "combination" };
+        });
         // Repeat until nothing changes: a fill can give an earlier Slot its first Pairing.
         for (let changed = true; changed; ) {
           changed = false;
@@ -409,9 +405,10 @@ export function createKitchen(content: KitchenContent): Kitchen {
         return deriveSuggestion(formula, fills);
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
+      const neededCount = ({ suggestion }: { suggestion: Suggestion }) => suggestion.needs.length;
       return {
         suggestions: suggestions
-          .sort((a, b) => b.coherence - a.coherence)
+          .sort((a, b) => neededCount(a) - neededCount(b) || b.coherence - a.coherence)
           .map(({ suggestion }) => suggestion),
         ...findTensions(combination),
       };

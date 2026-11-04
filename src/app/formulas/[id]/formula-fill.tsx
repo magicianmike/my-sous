@@ -31,7 +31,7 @@ export const FormulaFill = withSearchParams(function FormulaFill({
   // The part whose Ingredient was just added to the basket, so focus can return to it after the reset.
   const [added, setAdded] = useState<string>();
   const suggestion = kitchen
-    .suggest(combination.ingredients, [])
+    .suggest(combination.ingredients)
     .suggestions
     .find(({ formula }) => formula.id === formulaId)!;
   // A new Combination starts a fresh swap history.
@@ -58,7 +58,6 @@ type FocusTarget = { undo: true } | { slot: string };
 /** Where a Slot's Ingredient came from, in a word; never left to colour. */
 const SOURCE_TAG: Record<FillSource, string> = {
   combination: "Yours",
-  pantry: "Yours",
   pairing: "Suggested",
   swap: "Swapped",
 };

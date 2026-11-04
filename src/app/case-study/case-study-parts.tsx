@@ -18,13 +18,9 @@ export function Chapter({ id, children }: { id: ChapterId; children: React.React
   );
 }
 
-/** A link that opens MySous with a given basket, so a reader can check a claim for themselves. */
-export function AppLink({ basket, to = "/suggestions", children }: {
-  basket: string[];
-  to?: string;
-  children: React.ReactNode;
-}) {
-  return <Link href={hrefWith(to, basket)}>{children}</Link>;
+/** A link that opens What to make with a given basket, so a reader can check a claim for themselves. */
+export function AppLink({ basket, children }: { basket: string[]; children: React.ReactNode }) {
+  return <Link href={hrefWith("/suggestions", basket)}>{children}</Link>;
 }
 
 /**

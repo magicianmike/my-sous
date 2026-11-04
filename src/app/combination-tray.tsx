@@ -8,6 +8,7 @@ import { TrayBar } from "@/components/TrayBar";
 import { TrayView } from "@/components/TrayView";
 import { COMBINATION_LIMIT, type Ingredient } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "./combination";
+import { useIsCaseStudy } from "./site-chrome";
 import { IngredientLink, IngredientMarkLink } from "./ingredient-link";
 
 /** Where the tray is a side panel rather than a bar and sheet; matches `.tray-dock` in globals.css. */
@@ -16,16 +17,16 @@ const SIDE_PANEL = "(min-width: 56rem)";
 /**
  * The tray, fed from the Combination in the URL: a side panel on wide screens, and on a phone a
  * bar that opens the same tray as a modal sheet. What to make shows the Combination itself, so it
- * has no tray, nor does the Case Study. Every change is announced from a live region outside the tray, and shown as a toast.
+ * has no tray. Every change is announced from a live region outside the tray, and shown as a toast.
  */
 export const CombinationTray = withSearchParams(function CombinationTray() {
   const { status, statusKey } = useKitchen();
   const pathname = usePathname();
   // The Case Study is a document about MySous, not a place to cook, so it has no tray either.
-  const docked = pathname !== "/suggestions" && !pathname.startsWith("/case-study");
+  const showDock = pathname !== "/suggestions" && !useIsCaseStudy();
   return (
     <>
-      {docked && <TrayDock />}
+      {showDock && <TrayDock />}
       <p role="status" className="visually-hidden">
         {status}
       </p>

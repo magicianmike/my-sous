@@ -38,7 +38,24 @@ The author chose each of these from options.
 
 axe, reflow from 320px and at 200% zoom, touch targets and focus rings now include `/case-study`.
 
+**Honest claims.** The review checked the draft against the journal. Three claims overstated and are corrected:
+
+- A part no pairing justifies stays open; MySous doesn't fill every part.
+- The basket lives in the URL, but swaps on a dish don't yet. ADR 0004's "every screen's state" now reads "every screen's basket".
+- VoiceOver is a hand check of the core journey, not of every milestone.
+
+## VoiceOver pass
+
+**Status: waiting for the author.** On an iPhone and a Mac:
+
+1. From any app screen, find the footer link "How MySous was made" at the end of the page, and open it.
+2. On the Case Study, the first Tab (or the first swipe) reaches "Skip to the Case Study", then "Skip to chapters". Each moves focus to its target.
+3. The "Chapters" navigation lists six links. Each moves to its chapter, whose heading is read.
+4. In "State you can link to", the live card reads as the app's card: "Pan sauce", "Needs 1 more", the groups of drawings, and the sentence. The caption reads "Live from MySous…" and ends with the link "Open this basket in MySous".
+5. That link opens What to make with chicken thigh, basil and ginger in the basket, and "Not everything pairs yet".
+
 ## Open
 
 - **Author review gate:** the layout, the draft summary and the preview deploy.
+- The VoiceOver pass above.
 - **The preview image's font** (for #21).

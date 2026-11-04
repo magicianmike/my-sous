@@ -24,7 +24,9 @@ export default function PreviewImage() {
         }}
       >
         <div style={{ fontSize: 40, fontStyle: "italic", fontWeight: 700 }}>MySous</div>
-        <div style={{ fontSize: 88, fontWeight: 700, lineHeight: 1.05, marginTop: 24 }}>How MySous was made</div>
+        <div style={{ fontSize: 88, fontWeight: 700, lineHeight: 1.05, marginTop: 24 }}>
+          How MySous was made
+        </div>
         <div style={{ fontSize: 40, color: inkMuted, marginTop: 32 }}>
           A Case Study in product, design and engineering decisions.
         </div>

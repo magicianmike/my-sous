@@ -6,12 +6,17 @@ const tensionBasket = "chicken-thigh,basil,ginger";
 /** A live component on the Case Study, found by its caption. */
 const embed = (page: Page, caption: RegExp) => page.getByRole("figure").filter({ hasText: caption });
 
-test("the app links to the Case Study only from its footer, and the Case Study has no tray", async ({ page }) => {
-  for (const path of ["/", "/ingredients/lemon?with=garlic", "/suggestions?with=garlic", "/formulas/pan-sauce"]) {
+const appScreens = ["/", "/ingredients/lemon?with=garlic", "/suggestions?with=garlic", "/formulas/pan-sauce"];
+
+test("the app links to the Case Study only from its footer, and the Case Study has no tray", async ({
+  page,
+}) => {
+  for (const path of appScreens) {
     await page.goto(path);
     const links = page.locator('a[href="/case-study"]');
     await expect(links).toHaveCount(1);
-    await expect(page.getByRole("contentinfo").getByRole("link", { name: "How MySous was made" })).toBeVisible();
+    const footer = page.getByRole("contentinfo");
+    await expect(footer.getByRole("link", { name: "How MySous was made" })).toBeVisible();
   }
   await page.getByRole("link", { name: "How MySous was made" }).click();
   await expect(page).toHaveURL(/\/case-study$/);
@@ -20,7 +25,10 @@ test("the app links to the Case Study only from its footer, and the Case Study h
   await expect(page.getByRole("heading", { name: /Your basket/ })).toHaveCount(0);
 });
 
-test("skip links come first and reach the reading and the chapters by keyboard", async ({ page, isMobile }) => {
+test("skip links come first and reach the reading and the chapters by keyboard", async ({
+  page,
+  isMobile,
+}) => {
   test.skip(isMobile, "skip links are for a keyboard");
   await page.goto("/case-study");
   await page.keyboard.press("Tab");
@@ -49,7 +57,9 @@ test("every chapter in the navigation opens its section", async ({ page }) => {
   }
 });
 
-test("a live Suggestion in a tension state renders from a fixed basket, and its links carry it", async ({ page }) => {
+test("a live Suggestion in a tension state renders from a fixed basket, and its links carry it", async ({
+  page,
+}) => {
   await page.goto("/case-study");
   const live = embed(page, /not everything pairs/);
   await expect(live.getByRole("heading", { level: 3, name: "Pan sauce" })).toBeVisible();
@@ -65,7 +75,8 @@ test("a deep link opens the app with that exact basket", async ({ page }) => {
   await embed(page, /not everything pairs/).getByRole("link", { name: "Open this basket in MySous" }).click();
   await expect(page).toHaveURL(new RegExp(`/suggestions\\?with=${tensionBasket}$`));
   await expect(page.getByRole("heading", { name: "Not everything pairs yet" })).toBeVisible();
-  await expect(page.locator(".suggestions-combination li")).toHaveText([/^Chicken thigh/, /^Basil/, /^Ginger/]);
+  const basket = page.locator(".suggestions-combination li");
+  await expect(basket).toHaveText([/^Chicken thigh/, /^Basil/, /^Ginger/]);
 });
 
 test("the built page carries Open Graph and Twitter metadata for a good link preview", async () => {

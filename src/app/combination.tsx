@@ -73,8 +73,7 @@ export function useCombination() {
   const pathname = usePathname();
   const fixed = useContext(FixedCombinationContext);
   const fromUrl = useSearchParams().get(PARAM);
-  const param = fixed ? fixed.join(",") : fromUrl;
-  const combination: Combination = kitchen.combination(param ? param.split(",") : []);
+  const combination: Combination = kitchen.combination(fixed ?? (fromUrl ? fromUrl.split(",") : []));
   const ids = combination.ingredients.map(({ id }) => id);
 
   function navigateTo(next: Ingredient[]) {

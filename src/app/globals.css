@@ -422,8 +422,9 @@ main {
   gap: var(--space-2);
 }
 
+/* Kept in the page while empty, so screen readers hear it when it fills. */
 .filter-status:empty {
-  display: none;
+  margin: 0;
 }
 
 /* Ingredient */
@@ -549,7 +550,8 @@ main {
   margin: 0;
 }
 
-.tension-marks {
+.tension-marks,
+.pair-marks {
   display: flex;
   flex: none;
   gap: var(--space-1);

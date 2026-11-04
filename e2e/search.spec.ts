@@ -17,7 +17,8 @@ test("a Cook finds an Ingredient by typing, opens it and expands a Pairing", asy
 
   await expect(page).toHaveURL(/\/ingredients\/lemon$/);
   await expect(page.getByRole("heading", { level: 1, name: "Lemon" })).toBeVisible();
-  await expect(page.getByRole("list", { name: "Common in" }).getByRole("link")).toHaveText(["Southern Italian"]);
+  const cuisines = page.getByRole("list", { name: "Common in" });
+  await expect(cuisines.getByRole("link")).toHaveText(["Southern Italian"]);
   await expect(page.getByText("Zest before you juice")).toBeVisible();
 
   const contrast = page.getByRole("region", { name: "Contrast" });

@@ -281,10 +281,8 @@ describe("loadKitchen", () => {
       expect(others("garlic")).toEqual(["lemon", "chile", "thyme"]);
       expect(others("garlic", "sichuan")).toEqual(["chile"]);
       expect(others("garlic", "levantine")).toEqual(["lemon"]);
-      const grouped = kitchen.pairingsByReason("garlic", "sichuan");
-      expect(grouped.flatMap(({ pairings }) => pairings.map(({ ingredient }) => ingredient.id))).toEqual([
-        "chile",
-      ]);
+      expect(kitchen.pairingCuisines("garlic").map(({ id }) => id)).toEqual(["levantine", "sichuan"]);
+      expect(kitchen.pairingCuisines("thyme")).toEqual([]);
     });
 
     it("gives a Cuisine's Ingredients, in name order, and the Pairings common in it", async () => {

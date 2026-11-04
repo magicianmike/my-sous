@@ -50,14 +50,14 @@ export default async function CuisinePage({ params }: Props) {
 
       <h2>Pairings</h2>
       {pairings.length === 0 ? (
-        <p className="muted">No Pairings in MySous are attested in {cuisine.name} cooking yet.</p>
+        <p className="muted">No Pairings in MySous are common in {cuisine.name} cooking yet.</p>
       ) : (
         <ul className="stack cuisine-pairings">
           {pairings.map(({ ingredients: [a, b], reasons }) => (
             <li key={`${a.id}+${b.id}`}>
               {/* A pair of names standing alone, not a sentence, with their drawings as a second way in. */}
               <div className="cuisine-pairing">
-                <span className="tension-marks">
+                <span className="pair-marks">
                   <IngredientMarkLink ingredient={a} />
                   <IngredientMarkLink ingredient={b} />
                 </span>
@@ -66,6 +66,7 @@ export default async function CuisinePage({ params }: Props) {
                   <IngredientLink ingredient={b}>{inSentence(b)}</IngredientLink>
                 </span>
               </div>
+              {/* The first reason, as an Ingredient page's row leads with it; the rest are there. */}
               <p className="muted">{reasons[0].note}</p>
             </li>
           ))}

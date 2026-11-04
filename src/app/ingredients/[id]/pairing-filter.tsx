@@ -8,7 +8,7 @@ import type { Cuisine } from "@/kitchen/kitchen";
 import { withSearchParams } from "../../combination";
 
 /** One Pairing's row, and the Cuisines it's common in, so it can be filtered to one. */
-export type PairingRow = { key: string; cuisines: string[]; node: React.ReactNode };
+export type PairingRow = { key: string; cuisineIds: string[]; node: React.ReactNode };
 
 export type PairingGroupView = { category: PairingReasonCategory; heading: string; rows: PairingRow[] };
 
@@ -18,7 +18,7 @@ type Props = {
   cuisines: Cuisine[];
 };
 
-/** The Cuisine filter lives in the URL beside the basket, so a filtered view can be linked and Back clears it. */
+/** The Cuisine filter lives in the URL beside the basket: a filtered view can be linked; Back clears it. */
 const CUISINE = "cuisine";
 
 /** An Ingredient's Pairings, grouped by Pairing Reason, with filters by reason and by Cuisine. */
@@ -30,7 +30,7 @@ export const PairingFilter = withSearchParams(
     const requested = params.get(CUISINE);
     const cuisine = props.cuisines.find(({ id }) => id === requested);
     return (
-      <Filtered
+      <PairingList
         {...props}
         cuisine={cuisine}
         onCuisine={(id) => {
@@ -44,10 +44,14 @@ export const PairingFilter = withSearchParams(
     );
   },
   // Before the browser takes over, every Pairing shows, unfiltered.
-  (props: Props) => <Filtered {...props} />,
+  (props: Props) => <PairingList {...props} />,
 );
 
-function Filtered({
+/**
+ * The Pairings, filtered by reason here and by Cuisine as given. Without `onCuisine` (before the page is
+ * live), the Cuisine control is hidden.
+ */
+function PairingList({
   groups,
   cuisines,
   cuisine,
@@ -58,10 +62,10 @@ function Filtered({
   const [settled, setSettled] = useState(false);
   const visible = groups.map((group) => ({
     ...group,
-    rows: cuisine ? group.rows.filter((row) => row.cuisines.includes(cuisine.id)) : group.rows,
+    rows: cuisine ? group.rows.filter((row) => row.cuisineIds.includes(cuisine.id)) : group.rows,
   }));
-  const reasons = visible.filter(({ rows }) => rows.length > 0);
-  const pairingCount = new Set(reasons.flatMap(({ rows }) => rows.map(({ key }) => key))).size;
+  // A Pairing with two reasons is in two groups, so count each once.
+  const pairingCount = new Set(visible.flatMap(({ rows }) => rows.map(({ key }) => key))).size;
   // Each row's place on the page, so the rows settle in one after another.
   let row = 0;
 
@@ -97,7 +101,8 @@ function Filtered({
           />
         )}
       </div>
-      <p role="status" className="muted filter-status">
+      {/* A polite live region rather than a second status, so the page keeps one status for the basket. */}
+      <p aria-live="polite" className="muted filter-status">
         {cuisine &&
           `${pairingCount} ${pairingCount === 1 ? "Pairing" : "Pairings"} common in ${cuisine.name} cooking.`}
       </p>

@@ -3,12 +3,13 @@ import { join, relative } from "node:path";
 import { expect, it } from "vitest";
 import { loadKitchen } from "./kitchen";
 
-/** Every file whose words reach the Cook: the curated content, and the app's own copy. */
+/** Every file whose words can reach the Cook: the curated content, and the app's own code and copy. */
 function wordsTheCookReads(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) return wordsTheCookReads(path);
-    return /\.(md|mdx|yaml|tsx)$/.test(entry.name) ? [path] : [];
+    // Copy is built in .ts too (rank reasons, "common in…"); tests are left out.
+    return /\.(md|mdx|yaml|tsx?)$/.test(entry.name) && !entry.name.endsWith(".test.ts") ? [path] : [];
   });
 }
 

@@ -18,7 +18,7 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   ["/cuisines/southern-italian", (page) => page.getByRole("heading", { name: "Pairings" })],
   [
     "/ingredients/garlic?cuisine=southern-italian",
-    (page) => page.getByRole("status").filter({ hasText: "common in Southern Italian cooking" }),
+    (page) => page.locator(".filter-status").filter({ hasText: "common in Southern Italian cooking" }),
   ],
   ["/ingredients/mango", (page) => page.getByRole("heading", { name: "This isn’t in MySous yet" })],
   [

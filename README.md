@@ -19,7 +19,7 @@ npm run test:e2e     # Playwright + axe against out/ (run the build first)
 - `content/pairings.yaml`: every Pairing, stored once per pair, with at least one Pairing Reason (`category`, a one-line `note`, optional `detail`), plus optional `cuisines` and `citations`.
 - `content/formulas.yaml`: every Formula, with its Slots (`id`, `role`, the Slot type it `accepts`, `required` unless set to false) and method steps that refer to Slots as `{slotId}`.
 
-The build fails on any malformed file unknown Ingredient or Cuisine reference, Slot that no Ingredient can fill, or method step that refers to an unknown Slot.
+The build fails on any malformed file, unknown Ingredient or Cuisine reference, Slot that no Ingredient can fill, method step that refers to an unknown Slot, or Cuisine named at continental level (such as "Asian" or "Mediterranean"; name them regionally).
 
 ## Design system
 

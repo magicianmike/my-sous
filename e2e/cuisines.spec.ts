@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("from Home, a Cook explores a Cuisine, opens an Ingredient and filters its Pairings to that Cuisine", async ({
+test("from Home, a Cook explores a Cuisine, opens an Ingredient and filters its Pairings to it", async ({
   page,
 }) => {
   await page.goto("/");
@@ -20,9 +20,9 @@ test("from Home, a Cook explores a Cuisine, opens an Ingredient and filters its 
   const filter = page.getByRole("radiogroup", { name: "Show Pairings common in" });
   await filter.getByRole("radio", { name: "Southern Italian" }).click();
   await expect(page).toHaveURL(/\/ingredients\/garlic\?cuisine=southern-italian$/);
-  await expect(page.getByRole("status").filter({ hasText: "common in Southern Italian cooking" })).toHaveText(
-    /^\d+ Pairings? common in Southern Italian cooking\.$/,
-  );
+  const status = page.locator(".filter-status");
+  await expect(status).toHaveText(/^\d+ Pairings? common in Southern Italian cooking\.$/);
+  await expect(status).toHaveAttribute("aria-live", "polite");
   const filtered = await page.locator(".pairing-group:not([hidden]) li").count();
   expect(filtered).toBeGreaterThan(0);
   expect(filtered).toBeLessThan(all);

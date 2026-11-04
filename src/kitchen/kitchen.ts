@@ -129,7 +129,9 @@ export type Kitchen = {
   /** An Ingredient's Pairings, or only those common in a Cuisine when one is given. */
   pairingsFor(id: string, cuisineId?: string): PairingView[];
   /** The same Pairings grouped by Pairing Reason category; a Pairing with two categories is in both. */
-  pairingsByReason(id: string, cuisineId?: string): PairingGroup[];
+  pairingsByReason(id: string): PairingGroup[];
+  /** The Cuisines an Ingredient's Pairings are common in, once each, in content order. */
+  pairingCuisines(id: string): Cuisine[];
   /** Every Cuisine, in content order. */
   cuisines(): Cuisine[];
   cuisine(id: string): CuisineView | undefined;
@@ -227,22 +229,27 @@ function forSearch(text: string): string {
     .trim();
 }
 
-/** "a", "a and b", "a, b and c". */
 /** The hedged way MySous ties something to Cuisines: "Common in Southern Italian cooking." */
 export function commonIn(cuisines: Cuisine[]): string {
-  return `Common in ${joinWithAnd(cuisines.map(({ name }) => name))} cooking.`;
+  return `${capitalise(commonInPhrase(cuisines))}.`;
 }
 
+/** The same, mid-sentence: "common in Southern Italian cooking". */
+function commonInPhrase(cuisines: Cuisine[]): string {
+  return `common in ${joinWithAnd(cuisines.map(({ name }) => name))} cooking`;
+}
+
+/** "a", "a and b", "a, b and c". */
 function joinWithAnd(items: string[]): string {
   return items.length <= 1 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
 }
 
-/** The same key for a Pairing whichever order its Ingredients come in. */
 /** Name order by plain code-point comparison, so it's the same in Node and every browser. */
 function byName(a: Ingredient, b: Ingredient): number {
   return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
 }
 
+/** The same key for a Pairing whichever order its Ingredients come in. */
 function pairingKey(a: string, b: string): string {
   return [a, b].sort().join("+");
 }
@@ -355,7 +362,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
     const rankReason =
       explainRank(chosen, arePaired, pairs) +
       (shared.length > 0
-        ? ` ${chosen.length === 2 ? "Both are" : "All are"} ${commonIn(shared).replace("Common", "common")}`
+        ? ` ${chosen.length === 2 ? "Both are" : "All are"} ${commonInPhrase(shared)}.`
         : "");
     // What the Cook brought: a Pairing suggestion or a swap is something the dish still needs.
     const needs = slots.filter(({ slot, source }) => slot.required && !isCooksOwn(source));
@@ -389,8 +396,8 @@ export function createKitchen(content: KitchenContent): Kitchen {
     },
     pairingsFor,
 
-    pairingsByReason(id, cuisineId) {
-      const views = pairingsFor(id, cuisineId);
+    pairingsByReason(id) {
+      const views = pairingsFor(id);
       return PAIRING_REASON_CATEGORIES.map((category) => ({
         category,
         heading: PAIRING_REASON_HEADINGS[category],
@@ -400,6 +407,9 @@ export function createKitchen(content: KitchenContent): Kitchen {
         }),
       })).filter(({ pairings }) => pairings.length > 0);
     },
+
+    pairingCuisines: (id) =>
+      content.cuisines.filter(({ id: cuisine }) => pairingsFor(id, cuisine).length > 0),
 
     cuisines: () => content.cuisines,
 

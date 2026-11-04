@@ -31,10 +31,6 @@ export default async function IngredientPage({ params }: Props) {
   const ingredient = kitchen.ingredient(id);
   if (!ingredient) notFound();
   const components = kitchen.blendComponents(id);
-  // The Cuisines this Ingredient's Pairings are common in, once each, in content order.
-  const pairingCuisines = kitchen
-    .cuisines()
-    .filter(({ id: cuisine }) => kitchen.pairingsFor(id, cuisine).length > 0);
 
   return (
     <div className="ingredient">
@@ -102,13 +98,13 @@ export default async function IngredientPage({ params }: Props) {
 
         <h2>Pairs well with</h2>
         <PairingFilter
-          cuisines={pairingCuisines}
+          cuisines={kitchen.pairingCuisines(id)}
           groups={kitchen.pairingsByReason(id).map(({ category, heading, pairings }) => ({
             category,
             heading,
             rows: pairings.map(({ ingredient: paired, reasons, cuisines }) => ({
               key: paired.id,
-              cuisines: cuisines.map(({ id }) => id),
+              cuisineIds: cuisines.map(({ id }) => id),
               node: (
                 <ListRow
                   mark={<IngredientMarkLink ingredient={paired} size="md" />}

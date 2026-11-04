@@ -9,6 +9,9 @@ const screens = [
   "/formulas/pan-sauce?with=chicken-thigh,garlic",
   "/design",
   "/case-study",
+  "/cuisines/southern-italian",
+  "/ingredients",
+  "/ingredients/garlic?cuisine=southern-italian",
 ];
 
 /** Waits for the parts that render in the browser (the tray) to be there. */

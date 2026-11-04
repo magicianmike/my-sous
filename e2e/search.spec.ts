@@ -17,7 +17,8 @@ test("a Cook finds an Ingredient by typing, opens it and expands a Pairing", asy
 
   await expect(page).toHaveURL(/\/ingredients\/lemon$/);
   await expect(page.getByRole("heading", { level: 1, name: "Lemon" })).toBeVisible();
-  await expect(page.getByText("Common in Southern Italian cooking.")).toBeVisible();
+  const cuisines = page.getByRole("list", { name: "Common in" });
+  await expect(cuisines.getByRole("link")).toHaveText(["Southern Italian"]);
   await expect(page.getByText("Zest before you juice")).toBeVisible();
 
   const contrast = page.getByRole("region", { name: "Contrast" });
@@ -64,7 +65,7 @@ test("a name not in MySous says so, with a next step", async ({ page }) => {
   await search(page).fill("mango");
   await expect(page.getByRole("status").first()).toHaveText("“mango” isn’t in MySous yet.");
   await page.getByRole("link", { name: "browse every ingredient" }).click();
-  await expect(page).toHaveURL(/#all-ingredients$/);
+  await expect(page).toHaveURL(/\/ingredients$/);
 });
 
 test("a Blend lists what it typically includes, linking Ingredients in MySous", async ({ page }) => {

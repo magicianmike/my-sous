@@ -6,7 +6,7 @@ import { hueStyle, IngredientMark } from "@/components/IngredientMark";
 import { ListRow } from "@/components/ListRow";
 import type { PairingReasonCategory } from "@/kitchen/categories";
 import { commonIn, inSentence, type Ingredient } from "@/kitchen/kitchen";
-import { AddToCombination } from "../../combination";
+import { AddToCombination, CombinationLink } from "../../combination";
 import { IngredientLink, IngredientMarkLink } from "../../ingredient-link";
 import { getKitchen } from "../../kitchen";
 import { PairingFilter } from "./pairing-filter";
@@ -31,8 +31,6 @@ export default async function IngredientPage({ params }: Props) {
   const ingredient = kitchen.ingredient(id);
   if (!ingredient) notFound();
   const components = kitchen.blendComponents(id);
-  // Each Pairing row's place on the page, so the rows settle in one after another.
-  let row = 0;
 
   return (
     <div className="ingredient">
@@ -43,16 +41,20 @@ export default async function IngredientPage({ params }: Props) {
           <AddToCombination ingredientId={ingredient.id} />
         </div>
         {ingredient.cuisines.length > 0 && (
-          <p className="muted">
-            <span className="visually-hidden">{commonIn(ingredient.cuisines)}</span>
-            <span aria-hidden="true" className="chips">
-              {ingredient.cuisines.map((cuisine) => (
-                <Chip key={cuisine.id} colour={ingredient.colour}>
-                  {cuisine.name}
-                </Chip>
-              ))}
+          <div className="common-in">
+            <span id="common-in-label" className="muted">
+              Common in
             </span>
-          </p>
+            <ul className="chips" aria-labelledby="common-in-label">
+              {ingredient.cuisines.map((cuisine) => (
+                <li key={cuisine.id}>
+                  <Chip colour={ingredient.colour}>
+                    <CombinationLink href={`/cuisines/${cuisine.id}`}>{cuisine.name}</CombinationLink>
+                  </Chip>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
         <div className="about">
           {ingredient.essay.split(/\n\s*\n/).map((paragraph) => (
@@ -96,41 +98,34 @@ export default async function IngredientPage({ params }: Props) {
 
         <h2>Pairs well with</h2>
         <PairingFilter
-          groups={kitchen.pairingsByReason(id).map(({ category, heading, pairings }) => {
-            const headingId = `pairings-${category.replaceAll(" ", "-")}`;
-            const content = (
-              <section className="pairing-group" aria-labelledby={headingId}>
-                <h3 id={headingId}>{heading}</h3>
-                <ul className="stack">
-                  {pairings.map(({ ingredient: paired, reasons, cuisines }) => (
-                    <li key={paired.id} style={{ "--row": row++ } as React.CSSProperties}>
-                      <ListRow
-                        mark={<IngredientMarkLink ingredient={paired} size="md" />}
-                        title={<IngredientLink ingredient={paired} />}
-                        action={<AddToCombination ingredientId={paired.id} />}
-                      >
-                        {reasons.map((reason) => (
-                          <div key={reason.note}>
-                            <p>{reason.note}</p>
-                            {(reason.detail || cuisines.length > 0) && (
-                              <Disclosure
-                                summary="More"
-                                hiddenSummary={moreAbout(ingredient, paired, category)}
-                              >
-                                {reason.detail && <p>{reason.detail}</p>}
-                                {cuisines.length > 0 && <p className="muted">{commonIn(cuisines)}</p>}
-                              </Disclosure>
-                            )}
-                          </div>
-                        ))}
-                      </ListRow>
-                    </li>
+          cuisines={kitchen.pairingCuisines(id)}
+          groups={kitchen.pairingsByReason(id).map(({ category, heading, pairings }) => ({
+            category,
+            heading,
+            rows: pairings.map(({ ingredient: paired, reasons, cuisines }) => ({
+              key: paired.id,
+              cuisineIds: cuisines.map(({ id }) => id),
+              node: (
+                <ListRow
+                  mark={<IngredientMarkLink ingredient={paired} size="md" />}
+                  title={<IngredientLink ingredient={paired} />}
+                  action={<AddToCombination ingredientId={paired.id} />}
+                >
+                  {reasons.map((reason) => (
+                    <div key={reason.note}>
+                      <p>{reason.note}</p>
+                      {(reason.detail || cuisines.length > 0) && (
+                        <Disclosure summary="More" hiddenSummary={moreAbout(ingredient, paired, category)}>
+                          {reason.detail && <p>{reason.detail}</p>}
+                          {cuisines.length > 0 && <p className="muted">{commonIn(cuisines)}</p>}
+                        </Disclosure>
+                      )}
+                    </div>
                   ))}
-                </ul>
-              </section>
-            );
-            return { category, heading, content };
-          })}
+                </ListRow>
+              ),
+            })),
+          }))}
         />
       </div>
     </div>

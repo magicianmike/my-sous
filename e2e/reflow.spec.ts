@@ -21,6 +21,10 @@ const screens = [
   "/suggestions?with=chicken-thigh,basil,ginger",
   "/formulas/sheet-pan-roast?with=ginger",
   "/case-study",
+  "/cuisines",
+  "/ingredients",
+  "/cuisines/southern-italian",
+  "/ingredients/garlic?cuisine=southern-italian",
 ];
 
 // Viewports are set per test, so one project is enough.

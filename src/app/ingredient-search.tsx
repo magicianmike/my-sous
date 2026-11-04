@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Combobox } from "@/components/Combobox";
 import type { Ingredient } from "@/kitchen/kitchen";
-import { useCombination, useKitchen, withSearchParams } from "./combination";
+import { CombinationLink, useCombination, useKitchen, withSearchParams } from "./combination";
 
 /** Type-to-find over the curated Ingredients. */
 export const IngredientSearch = withSearchParams(
@@ -23,7 +23,7 @@ export const IngredientSearch = withSearchParams(
         noMatch={(query) => `“${query}” isn’t in MySous yet.`}
         noMatchHint={
           <>
-            Try another spelling, or <a href="#all-ingredients">browse every ingredient</a>.
+            Try another spelling, or <CombinationLink href="/ingredients">browse every ingredient</CombinationLink>.
           </>
         }
       />

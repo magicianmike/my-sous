@@ -118,10 +118,36 @@ ul {
 
 /* Page frame */
 
+/* The wordmark, then the nav beside it, where the eye lands first; on the Case Study, its label instead. */
 .site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-5);
   max-width: var(--page-width);
   margin: 0 auto;
   padding-block: var(--space-3);
+}
+
+/* Ingredients and Cuisines, beside the wordmark; the current one underlined as well as marked. */
+.site-nav ul {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+  padding-inline: var(--space-1);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-heavy);
+}
+
+.site-nav a[aria-current="page"] {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-control);
 }
 
 .wordmark {
@@ -129,7 +155,7 @@ ul {
   align-items: center;
   min-height: var(--target);
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-style: italic;
   font-weight: var(--weight-bold);
   text-decoration: none;
@@ -349,6 +375,118 @@ main {
   text-decoration: none;
 }
 
+/* Home's two ways to browse, each a card that's one link. */
+.browse-doors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--door-min), 100%), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.door {
+  display: grid;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.door-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+}
+
+.door-marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.door-detail {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.ingredient-group h2 {
+  margin-top: var(--space-6);
+}
+
+/* Cuisines */
+
+.lede {
+  max-width: var(--measure);
+  font-size: var(--text-lg);
+}
+
+.cuisine-list h2 {
+  margin: 0;
+}
+
+.cuisine-list h2 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.cuisine-list p {
+  margin: 0;
+}
+
+.cuisine-pairings p {
+  margin: var(--space-1) 0 0;
+}
+
+.cuisine-pairing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target);
+  font-weight: var(--weight-bold);
+}
+
+.cuisine-pairing a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.cuisine-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--sunk);
+  font-weight: var(--weight-bold);
+}
+
+/* "Common in" and the Cuisines an Ingredient is common in, each a link. */
+.common-in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.common-in a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.pairing-filters {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* Kept in the page while empty, so screen readers hear it when it fills. */
+.filter-status:empty {
+  margin: 0;
+}
+
 /* Ingredient */
 
 /*
@@ -472,7 +610,8 @@ main {
   margin: 0;
 }
 
-.tension-marks {
+.tension-marks,
+.pair-marks {
   display: flex;
   flex: none;
   gap: var(--space-1);
@@ -628,7 +767,6 @@ main {
 /* Page frame: the site label, the footer and the skip links */
 
 .site-label {
-  margin-inline-start: var(--space-3);
   color: var(--ink-muted);
   font-weight: var(--weight-bold);
 }

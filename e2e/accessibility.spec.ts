@@ -14,6 +14,13 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   ["/ingredients/gremolata", (page) => page.getByRole("heading", { name: "Typically includes" })],
   ["/design", (page) => page.getByRole("heading", { name: "Combination tray" })],
   ["/case-study", (page) => page.getByRole("figure").first()],
+  ["/cuisines", (page) => page.getByRole("heading", { level: 1, name: "Cuisines" })],
+  ["/ingredients", (page) => page.getByRole("heading", { level: 2, name: "Herbs" })],
+  ["/cuisines/southern-italian", (page) => page.getByRole("heading", { name: "Pairings" })],
+  [
+    "/ingredients/garlic?cuisine=southern-italian",
+    (page) => page.locator(".filter-status").filter({ hasText: "common in Southern Italian cooking" }),
+  ],
   ["/ingredients/mango", (page) => page.getByRole("heading", { name: "This isn’t in MySous yet" })],
   [
     "/suggestions?with=chicken-thigh,basil,ginger",

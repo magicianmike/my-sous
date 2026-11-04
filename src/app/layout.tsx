@@ -5,7 +5,7 @@ import { CombinationLink, KitchenProvider } from "./combination";
 import { CombinationTray } from "./combination-tray";
 import "./globals.css";
 import { getKitchen } from "./kitchen";
-import { SiteFooter, SiteLabel, SkipLinks } from "./site-chrome";
+import { SiteFooter, SiteLabel, SiteNav, SkipLinks } from "./site-chrome";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -41,6 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <CombinationLink href="/" className="wordmark">
               MySous
             </CombinationLink>
+            <SiteNav />
             <SiteLabel />
           </header>
           <div className="app">

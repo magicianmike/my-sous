@@ -5,7 +5,7 @@ test("Home says what MySous does, offers one way in, and what the basket is for"
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Find what goes with what, and why.");
   await expect(page.getByRole("heading", { level: 2, name: "Start from an ingredient" })).toBeVisible();
   await expect(page.getByRole("main")).toContainText(
-    "Add up to four you want to cook around to your basket, from your fridge or not, and MySous suggests what to make.",
+    "Add up to four ingredients you want to cook around to your basket, from your fridge or not",
   );
   // One way in: no second door.
   await expect(page.getByRole("main").getByRole("heading", { level: 2 })).toHaveCount(1);

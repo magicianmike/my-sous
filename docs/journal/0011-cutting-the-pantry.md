@@ -72,6 +72,6 @@ The chapter pairs the two sides:
 
 The evidence is the prototype screens above against today's What to make, the spec's struck stories, and ADR 0004. It shows the judgement to build something properly, look at it honestly, and remove it, not only to add.
 
-## Open
+## Review
 
-- **Author review gate:** ADR 0004 and this entry.
+- **Author review gate:** approved on 2026-11-04, ADR 0004 and this entry as written.

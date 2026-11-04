@@ -306,6 +306,22 @@ main {
 
 /* Home */
 
+/* What the basket is for, with its sign, at the measure of a line of text. */
+.home-intro {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  max-width: var(--measure);
+  font-size: var(--text-lg);
+}
+
+.home-intro svg {
+  flex: none;
+  width: var(--space-5);
+  height: var(--space-5);
+  margin-top: var(--space-1);
+}
+
 .ingredient-links {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--tile-min), 1fr));

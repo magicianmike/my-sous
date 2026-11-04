@@ -67,7 +67,7 @@ The author's review of the first build asked for five changes, made as follows:
 
 ## VoiceOver pass
 
-**Status: waiting for the author.** Suggestions → Formula → swap → undo, on an iPhone and a Mac:
+**Status: passed.** The author ran this script on 2026-11-04, on the app as it stands after 0011, and every step behaved as written. Suggestions → Formula → swap → undo, on an iPhone and a Mac:
 
 1. Open What to make with chicken thigh and garlic. On the Pan sauce card, expect the heading "Pan sauce", then "Needs 1 more", the groups "Yours" (links Chicken thigh, Garlic), "Suggested" (Lemon) and "Optional" (Basil, Fresh chile), and "Also needs an acid (lemon pairs best)."
 2. Open Pan sauce. Expect "Needs 1 more" and the same sentence under the description. Each Slot reads its role (a heading), its Ingredient, and its tag ("Suggested").
@@ -77,8 +77,9 @@ The author's review of the first build asked for five changes, made as follows:
 
 Record anything that differs here, with the device and OS version.
 
-## Open
+## Review
 
-- **Author review gate:** the shots above and the preview deploy. The "after" shots predate the changes under "After the first review"; they're retaken once the author approves the second round.
-- **Author approval:** the Ready badge's solid ink fill (see the first decision).
-- The VoiceOver pass above. #16 shouldn't close until its notes are recorded here.
+- **Author review gate:** two rounds. The changes asked for in the first are under "After the first review"; the author approved the second and merged it in PR #31.
+- **The Ready badge's solid ink fill** shipped as is in PR #31, which the author reviewed and merged.
+- **VoiceOver pass:** passed on 2026-11-04.
+- **Screenshots:** the "after" shots predate the changes under "After the first review". 0011 shows What to make as it is now.

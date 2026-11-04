@@ -56,7 +56,7 @@ axe now waits for running animations to finish, because it had caught rows halfw
 
 ## VoiceOver pass
 
-**Status: waiting for the author.** It needs a real iPhone and a Mac, which an automated run can't stand in for. The flow to check, with what each step should say:
+**Status: passed.** The author ran this script on 2026-11-04 and every step behaved as written. Since this entry, the Combination is called "basket" on screen (0010), so it now reads, for example, "Garlic added to your basket, 2 of 4." The flow checked, with what each step should say:
 
 1. Open an Ingredient page (`/ingredients/lemon`). The heading "Lemon" is read. The Pairings filter, if shown, is read as a radio group, "Show Pairings by reason".
 2. Activate "Add Lemon to Combination". Expect "Lemon added to Combination, 1 of 4." Focus stays on the button, now "Remove Lemon from Combination".
@@ -67,8 +67,9 @@ axe now waits for running animations to finish, because it had caught rows halfw
 
 Record anything that differs here, with the device and OS version.
 
-## Open
+## Review
 
-- **Author review gate:** the before/after shots above and the preview deploy.
-- **Author approval:** the Ingredient column not sticking, a departure from 0002.
-- The VoiceOver pass above. #15 shouldn't close until its notes are recorded here.
+- **Author review gate:** approved, and merged in PR #30.
+- **The Ingredient column not sticking,** a departure from 0002: approved by the author ("looks good").
+- **VoiceOver pass:** passed on 2026-11-04.
+- **Screenshots:** the "after" shots show the app as merged in #30. Later milestones changed some wording ("basket" for Combination) and the tray's details; 0010 and 0011 show the current state.

@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 test("a Cook opens an Ingredient and follows a Pairing to another Ingredient", async ({ page }) => {
-  await page.goto("/");
-  await page.getByRole("link", { name: "Lemon" }).click();
+  await page.goto("/ingredients");
+  await page.getByRole("main").getByRole("link", { name: "Lemon" }).click();
 
   await expect(page.getByRole("heading", { level: 1, name: "Lemon" })).toBeVisible();
   const garlic = page.getByRole("listitem").filter({ hasText: "Garlic" });

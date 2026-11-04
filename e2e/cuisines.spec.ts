@@ -4,7 +4,7 @@ test("from Home, a Cook explores a Cuisine, opens an Ingredient and filters its 
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: "explore by cuisine" }).click();
+  await page.getByRole("link", { name: "Browse cuisines" }).click();
   await expect(page).toHaveURL(/\/cuisines$/);
   await page.getByRole("link", { name: "Southern Italian" }).click();
 

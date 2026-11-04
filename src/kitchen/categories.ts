@@ -10,3 +10,19 @@ export const PAIRING_REASON_HEADINGS: Record<PairingReasonCategory, string> = {
   texture: "Texture",
   tradition: "Tradition",
 };
+
+/** The kinds of Ingredient, in the order the Ingredients page lists them. */
+export const INGREDIENT_CATEGORIES = ["herb", "allium", "aromatic", "citrus", "produce", "meat", "blend"] as const;
+
+export type IngredientCategory = (typeof INGREDIENT_CATEGORIES)[number];
+
+/** How each kind is headed for the Cook. */
+export const INGREDIENT_CATEGORY_HEADINGS: Record<IngredientCategory, string> = {
+  herb: "Herbs",
+  allium: "Alliums",
+  aromatic: "Aromatics",
+  citrus: "Citrus",
+  produce: "Produce",
+  meat: "Meat",
+  blend: "Blends",
+};

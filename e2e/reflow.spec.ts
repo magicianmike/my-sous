@@ -22,6 +22,7 @@ const screens = [
   "/formulas/sheet-pan-roast?with=ginger",
   "/case-study",
   "/cuisines",
+  "/ingredients",
   "/cuisines/southern-italian",
   "/ingredients/garlic?cuisine=southern-italian",
 ];

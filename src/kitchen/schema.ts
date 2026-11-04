@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PAIRING_REASON_CATEGORIES } from "./categories";
+import { INGREDIENT_CATEGORIES, PAIRING_REASON_CATEGORIES } from "./categories";
 
 /** The content format, as checked at build time. */
 
@@ -21,7 +21,7 @@ const ingredientColourSchema = z.object({
 
 export const ingredientSchema = z.object({
   name: z.string().min(1),
-  category: z.string().min(1),
+  category: z.enum(INGREDIENT_CATEGORIES),
   /** For a Blend: what it typically includes, in plain words. */
   typicallyIncludes: z.array(z.string().min(1)).optional(),
   cuisines: z.array(z.string()).default([]),

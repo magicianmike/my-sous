@@ -65,7 +65,7 @@ test("a name not in MySous says so, with a next step", async ({ page }) => {
   await search(page).fill("mango");
   await expect(page.getByRole("status").first()).toHaveText("“mango” isn’t in MySous yet.");
   await page.getByRole("link", { name: "browse every ingredient" }).click();
-  await expect(page).toHaveURL(/#all-ingredients$/);
+  await expect(page).toHaveURL(/\/ingredients$/);
 });
 
 test("a Blend lists what it typically includes, linking Ingredients in MySous", async ({ page }) => {

@@ -149,7 +149,7 @@ test("only a drawing shown without its name rings under the pointer", async ({ p
     target.locator(".ingredient-mark").evaluate((el) => getComputedStyle(el).boxShadow);
   const places: [string, (page: Page) => ReturnType<Page["locator"]>, boolean][] = [
     ["/suggestions?with=chicken-thigh,garlic", (page) => marks(page, "Pan sauce", "Suggested").first(), true],
-    ["/", (page) => page.getByRole("link", { name: "Lemon" }), false],
+    ["/ingredients", (page) => page.getByRole("main").getByRole("link", { name: "Lemon" }), false],
     ["/formulas/pan-sauce?with=chicken-thigh,garlic", (page) => slotItem(page, "an acid").locator("a.mark-link"), false],
   ];
   for (const [path, target, rings] of places) {

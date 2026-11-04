@@ -1,6 +1,9 @@
 import {
+  INGREDIENT_CATEGORIES,
+  INGREDIENT_CATEGORY_HEADINGS,
   PAIRING_REASON_CATEGORIES,
   PAIRING_REASON_HEADINGS,
+  type IngredientCategory,
   type PairingReasonCategory,
 } from "./categories";
 import type {
@@ -34,6 +37,9 @@ export type PairingGroup = {
   heading: string;
   pairings: PairingView[];
 };
+
+/** Ingredients of one kind, such as herbs, as the Ingredients page lists them. */
+export type IngredientGroup = { category: IngredientCategory; heading: string; ingredients: Ingredient[] };
 
 /** A Cuisine, the Ingredients common in it and the Pairings attested in it. */
 export type CuisineView = {
@@ -120,6 +126,8 @@ export type Kitchen = {
   content: KitchenContent;
   ingredients(): Ingredient[];
   ingredient(id: string): Ingredient | undefined;
+  /** Every Ingredient by category, categories in a fixed order and names in order within each; none empty. */
+  ingredientsByCategory(): IngredientGroup[];
   /**
    * Ingredients whose name contains every word of `query`, in any order, ignoring case, accents,
    * apostrophes and extra spaces. Names that start with the query come first, then names where
@@ -376,6 +384,13 @@ export function createKitchen(content: KitchenContent): Kitchen {
     content,
     ingredients: () => [...ingredients.values()],
     ingredient: (id) => ingredients.get(id),
+
+    ingredientsByCategory: () =>
+      INGREDIENT_CATEGORIES.map((category) => ({
+        category,
+        heading: INGREDIENT_CATEGORY_HEADINGS[category],
+        ingredients: [...ingredients.values()].filter((i) => i.category === category).sort(byName),
+      })).filter(({ ingredients }) => ingredients.length > 0),
 
     search(query) {
       const q = forSearch(query);

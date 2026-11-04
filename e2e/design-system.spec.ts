@@ -10,6 +10,7 @@ const screens = [
   "/design",
   "/case-study",
   "/cuisines/southern-italian",
+  "/ingredients",
   "/ingredients/garlic?cuisine=southern-italian",
 ];
 

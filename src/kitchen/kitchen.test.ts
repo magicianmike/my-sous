@@ -252,6 +252,27 @@ describe("loadKitchen", () => {
     });
   });
 
+  it("groups every Ingredient by category, in a fixed order of categories and by name within each", async () => {
+    const kitchen = await expectKitchen(
+      writeContent({
+        ingredients: {
+          lemon: { ...lemon, category: "citrus" },
+          garlic: { ...garlic, category: "allium" },
+          thyme: { ...thyme, category: "herb" },
+          basil: { name: "Basil", category: "herb" },
+        },
+        pairings: [],
+      }),
+    );
+
+    const groups = kitchen.ingredientsByCategory();
+    expect(groups.map(({ heading, ingredients }) => [heading, ingredients.map(({ id }) => id)])).toEqual([
+      ["Herbs", ["basil", "thyme"]],
+      ["Alliums", ["garlic"]],
+      ["Citrus", ["lemon"]],
+    ]);
+  });
+
   describe("Cuisines", () => {
     const sichuan = { id: "sichuan", name: "Sichuan", description: "The cooking of Sichuan province." };
     const fixture = {
@@ -868,6 +889,14 @@ describe("loadKitchen", () => {
         ]);
       },
     );
+
+    it("when an Ingredient's category isn't one MySous groups by", async () => {
+      const errors = await expectErrors(
+        writeContent({ ingredients: { lemon: { ...lemon, category: "fruity" } }, pairings: [] }),
+      );
+
+      expect(errors).toEqual([expect.stringMatching(/^category: Invalid option: expected one of "herb"\|/)]);
+    });
 
     it("when an Ingredient refers to an unknown Cuisine", async () => {
       const errors = await expectErrors(

@@ -132,6 +132,8 @@ const scales = {
   // The Case Study's chapter list, beside its text on wide screens.
   "chapter-nav-width": "14rem",
   "tile-min": "11rem",
+  // Home's two browse cards sit side by side only when each has this much room.
+  "door-min": "16rem",
   // Borders: hairlines for decoration, a heavier line for controls.
   "border-hairline": "1px",
   "border-control": "2px",

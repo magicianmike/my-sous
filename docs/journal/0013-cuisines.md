@@ -9,7 +9,8 @@ Milestone: #12 (part of #2). Cuisines become a way to browse the graph: a page f
 | Southern Italian, desktop light | ![](0013-cuisines/after-cuisine-desktop-light.png) |
 | Cuisines, phone dark | ![](0013-cuisines/after-cuisines-phone-dark.png) |
 | Garlic, filtered to Southern Italian, desktop light | ![](0013-cuisines/after-ingredient-filtered-desktop-light.png) |
-| Home, with "Or explore by cuisine" | ![](0013-cuisines/after-home-desktop-light.png) |
+| Home, with the top nav and two ways to browse | ![](0013-cuisines/after-home-desktop-light.png) |
+| Ingredients by kind, desktop light | ![](0013-cuisines/after-ingredients-desktop-light.png) |
 
 ## Decisions
 
@@ -19,7 +20,13 @@ The author chose each of these from options.
 
 **A Cuisine bonus that breaks ties, not Pairings.** When every Ingredient the Cook chose (not those MySous suggested, which pair by construction, as with Pairings) shares a Cuisine, coherence gains half a Pairing. It decides between dishes that pair equally well, but never outweighs a real Pairing. The rank reason says why: "Lamb and mint pair well. Both are common in Levantine cooking."
 
-**A Cuisines list, linked from Home.** "Or explore by cuisine: Southern Italian, Ligurian, Cantonese and Oaxacan." sits under the ingredient grid. It's a sentence, not a second heading, so Home keeps one way in: browsing by Cuisine leads to the same Ingredients and the same basket. Each Cuisine page lists the Ingredients common in it, the Pairings attested in it (both drawings and both names lead onward), and the other Cuisines. An Ingredient's "Common in" chips now link to their Cuisines.
+**Cuisines up front: a top nav, an Ingredients page, and Home's two ways to browse.** After seeing the first build, the author asked for more emphasis on Cuisines:
+
+- A top nav, "Ingredients" and "Cuisines", sits in the header on every screen, the Case Study included. It marks the current section with `aria-current` and an underline. On a phone, the Case Study's label drops under the wordmark so the nav keeps the first row.
+- `/ingredients` lists every Ingredient by kind, in a fixed order: Herbs, Alliums, Aromatics, Citrus, Produce, Meat, Blends. The categories are now a fixed list that validation checks, as Pairing Reasons are.
+- Home keeps the premise, the basket line and the search, then "Or browse" with two cards: "Browse ingredients" (a glimpse of drawings) and "Browse cuisines". The full grid moved to `/ingredients`.
+
+Browsing either way leads to the same Ingredients and the same basket, so there's still one concept to learn (ADR 0004). Each Cuisine page lists the Ingredients common in it, the Pairings attested in it (both drawings and both names lead onward), and the other Cuisines. An Ingredient's "Common in" chips now link to their Cuisines.
 
 **Named regionally, never "authentic".** Validation rejects a Cuisine named at continental or broad-regional level ("Asian", "European", "Middle Eastern", "Mediterranean", …). A copy check fails if "authentic" appears in content or app copy. Both run against the real content in Vitest.
 
@@ -34,7 +41,7 @@ The author chose each of these from options.
 
 **Status: waiting for the author.** On an iPhone and a Mac:
 
-1. On Home, the sentence "Or explore by cuisine: …" reads as text with five links.
+1. The header's "Main" navigation lists "Ingredients" and "Cuisines", and the current one is read as "current page". On Home, "Or browse" leads to two links, "Browse ingredients…" and "Browse cuisines…".
 2. On Southern Italian, the headings are "Southern Italian", "Common in Southern Italian cooking", "Pairings" and "Other cuisines". The Ingredient list is named "Ingredients common in Southern Italian cooking".
 3. On Garlic, "Show Pairings common in" reads as a radio group. Choosing "Southern Italian" announces "2 Pairings common in Southern Italian cooking."
 4. "Any cuisine" clears it, and Back brings it back.

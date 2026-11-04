@@ -118,7 +118,7 @@ ul {
 
 /* Page frame */
 
-/* The wordmark, then the nav beside it, where the eye lands first; the Case Study's label at the end. */
+/* The wordmark, then the nav beside it, where the eye lands first; on the Case Study, its label instead. */
 .site-header {
   display: flex;
   flex-wrap: wrap;
@@ -767,18 +767,8 @@ main {
 /* Page frame: the site label, the footer and the skip links */
 
 .site-label {
-  margin-inline-start: auto;
   color: var(--ink-muted);
   font-weight: var(--weight-bold);
-}
-
-/* On a phone, "Case Study" drops under the wordmark, so the nav keeps its place on the first row. */
-@media (max-width: 40rem) {
-  .site-label {
-    order: 1;
-    flex-basis: 100%;
-    margin-inline-start: 0;
-  }
 }
 
 .site-footer {

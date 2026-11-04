@@ -35,9 +35,14 @@ export function SkipLinks() {
   );
 }
 
-/** The two ways to browse, on every screen; the current section is marked, in words and with an underline. */
+/**
+ * The two ways to browse, on every app screen; the current section is marked, in words and with an
+ * underline. The Case Study is a document about MySous, so it keeps a quiet header without it.
+ */
 export function SiteNav() {
   const pathname = usePathname();
+  const isCaseStudy = useIsCaseStudy();
+  if (isCaseStudy) return null;
   const sections = [
     { href: "/ingredients", label: "Ingredients" },
     { href: "/cuisines", label: "Cuisines" },

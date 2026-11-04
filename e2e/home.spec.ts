@@ -38,14 +38,18 @@ test("the Ingredients page lists every Ingredient by kind", async ({ page }) => 
   await expect(herbs.getByRole("link")).toHaveText(["Basil", "Cilantro"]);
 });
 
-test("the top nav reaches Ingredients and Cuisines everywhere, marks the current one, keeps the basket", async ({
+test("the top nav reaches Ingredients and Cuisines on app screens, marks the current one, keeps the basket", async ({
   page,
 }) => {
-  for (const path of ["/", "/ingredients/lemon?with=garlic", "/suggestions?with=garlic", "/case-study"]) {
+  for (const path of ["/", "/ingredients/lemon?with=garlic", "/suggestions?with=garlic", "/formulas/pan-sauce"]) {
     await page.goto(path);
     const nav = page.getByRole("navigation", { name: "Main" });
     await expect(nav.getByRole("link")).toHaveText(["Ingredients", "Cuisines"]);
   }
+  // The Case Study keeps a quiet header: the wordmark and its label.
+  await page.goto("/case-study");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Main" })).toHaveCount(0);
   await page.goto("/cuisines/ligurian?with=garlic");
   const nav = page.getByRole("navigation", { name: "Main" });
   await expect(nav.getByRole("link", { name: "Cuisines" })).toHaveAttribute("aria-current", "page");

@@ -22,7 +22,7 @@ The author chose each of these from options.
 
 **Cuisines up front: a top nav, an Ingredients page, and Home's two ways to browse.** After seeing the first build, the author asked for more emphasis on Cuisines:
 
-- A top nav, "Ingredients" and "Cuisines", sits in the header on every screen, the Case Study included. It marks the current section with `aria-current` and an underline. It began at the header's end, where the author found it easy to miss: small, and blending into the basket panel below it. It now sits beside the wordmark, both larger, where the eye lands first. The Case Study's label moves to the far end, or under the wordmark on a phone.
+- A top nav, "Ingredients" and "Cuisines", sits in the header on every app screen. The Case Study keeps its quieter header, the wordmark and "Case Study", at the author's request. It marks the current section with `aria-current` and an underline. It began at the header's end, where the author found it easy to miss: small, and blending into the basket panel below it. It now sits beside the wordmark, both larger, where the eye lands first.
 - `/ingredients` lists every Ingredient by kind, in a fixed order: Herbs, Alliums, Aromatics, Citrus, Produce, Meat, Blends. The categories are now a fixed list that validation checks, as Pairing Reasons are.
 - Home keeps the premise, the basket line and the search, then "Or browse" with two cards: "Browse ingredients" (a glimpse of drawings) and "Browse cuisines". The full grid moved to `/ingredients`.
 

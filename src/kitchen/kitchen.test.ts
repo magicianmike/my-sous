@@ -22,6 +22,8 @@ function writeContent(fixture: {
   pairings: unknown[];
   cuisines?: unknown[];
   formulas?: unknown[];
+  /** Showcase Recipes by Formula id: frontmatter plus an intro body. */
+  recipes?: Record<string, { intro?: string } & Record<string, unknown>>;
 }): string {
   const dir = mkdtempSync(join(tmpdir(), "kitchen-"));
   mkdirSync(join(dir, "ingredients"));
@@ -37,6 +39,12 @@ function writeContent(fixture: {
   writeFileSync(join(dir, "pairings.yaml"), stringify(fixture.pairings));
   writeFileSync(join(dir, "cuisines.yaml"), stringify(fixture.cuisines ?? []));
   writeFileSync(join(dir, "formulas.yaml"), stringify(fixture.formulas ?? []));
+  if (fixture.recipes) {
+    mkdirSync(join(dir, "recipes"));
+    for (const [id, { intro = "An intro.", ...frontmatter }] of Object.entries(fixture.recipes)) {
+      writeFileSync(join(dir, "recipes", `${id}.md`), `---\n${stringify(frontmatter)}---\n${intro}\n`);
+    }
+  }
   return dir;
 }
 
@@ -840,6 +848,151 @@ describe("loadKitchen", () => {
       );
 
       expect(suggestion.rankReason).toBe(expected);
+    });
+  });
+
+  describe("Showcase Recipes", () => {
+    const fixture = {
+      ingredients: {
+        lemon: { ...lemon, slotTypes: ["acid"] },
+        garlic: { ...garlic, slotTypes: ["aromatic"] },
+        thyme: { ...thyme, slotTypes: ["herb"] },
+      },
+      pairings: [],
+      formulas: [
+        {
+          id: "pan-sauce",
+          name: "Pan sauce",
+          description: "A quick sauce from the pan.",
+          slots: [
+            { id: "aromatic", role: "an aromatic", accepts: "aromatic" },
+            { id: "acid", role: "an acid", accepts: "acid" },
+            { id: "herb", role: "a herb", accepts: "herb", required: false },
+          ],
+          method: ["Soften {aromatic}, add {acid}, finish with {herb}."],
+        },
+      ],
+    };
+    const recipe = {
+      name: "Garlic and lemon pan sauce",
+      intro: "A worked example.",
+      serves: 2,
+      time: { prep: 5, cook: 10 },
+      fills: { aromatic: "garlic", acid: "lemon" },
+      ingredients: [
+        { amount: "2 cloves", slot: "aromatic", note: "thinly sliced" },
+        { amount: "1", slot: "acid" },
+        { amount: "2 tbsp", name: "butter" },
+      ],
+      steps: [
+        { text: "Cook {aromatic} gently for a minute." },
+        {
+          text: "Add the juice of {acid} and simmer.",
+          safety: true,
+          citations: [{ title: "A food safety guide", url: "https://example.org/guide" }],
+        },
+      ],
+    };
+
+    it("gives a Formula's Showcase Recipe with its fills, quantities, timings and steps filled in", async () => {
+      const kitchen = await expectKitchen(writeContent({ ...fixture, recipes: { "pan-sauce": recipe } }));
+
+      const showcase = kitchen.showcase("pan-sauce")!;
+      expect(showcase.formula.id).toBe("pan-sauce");
+      expect(showcase.name).toBe("Garlic and lemon pan sauce");
+      expect(showcase.intro).toBe("A worked example.");
+      expect(showcase.serves).toBe(2);
+      expect(showcase.time).toEqual({ prep: 5, cook: 10, total: 15 });
+      expect(showcase.fills.map(({ slot, ingredient }) => [slot.id, ingredient.id])).toEqual([
+        ["aromatic", "garlic"],
+        ["acid", "lemon"],
+      ]);
+      expect(showcase.ingredients.map(({ amount, name, ingredient, note }) => [amount, name, ingredient?.id, note])).toEqual([
+        ["2 cloves", "garlic", "garlic", "thinly sliced"],
+        ["1", "lemon", "lemon", undefined],
+        ["2 tbsp", "butter", undefined, undefined],
+      ]);
+      expect(showcase.steps).toEqual([
+        { text: "Cook garlic gently for a minute.", safety: false, citations: [] },
+        {
+          text: "Add the juice of lemon and simmer.",
+          safety: true,
+          citations: [{ title: "A food safety guide", url: "https://example.org/guide" }],
+        },
+      ]);
+    });
+
+    it("has none for a Formula without one", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      expect(kitchen.showcase("pan-sauce")).toBeUndefined();
+    });
+
+    describe("rejects one", () => {
+      async function errorsFor(recipes: Record<string, Record<string, unknown>>) {
+        return expectErrors(writeContent({ ...fixture, recipes }));
+      }
+
+      it("when it's for a Formula that doesn't exist", async () => {
+        expect(await errorsFor({ "pan-sauce": recipe, "fried-rice": recipe })).toEqual([
+          'Showcase Recipe fried-rice is for unknown Formula "fried-rice"; name its file for a Formula.',
+        ]);
+      });
+
+      it("when it leaves a required Slot unfilled", async () => {
+        const { acid: _acid, ...fills } = recipe.fills;
+        const ingredients = recipe.ingredients.filter(({ slot }) => slot !== "acid");
+        const steps = recipe.steps.slice(0, 1);
+
+        expect(await errorsFor({ "pan-sauce": { ...recipe, fills, ingredients, steps } })).toEqual([
+          'Showcase Recipe pan-sauce leaves the required Slot "acid" unfilled.',
+        ]);
+      });
+
+      it("when a fill names an unknown Slot or Ingredient, or doesn't fit its Slot", async () => {
+        const fills = { ...recipe.fills, sauce: "lemon", herb: "basil", aromatic: "lemon" };
+        const ingredients = [...recipe.ingredients, { amount: "1", slot: "sauce" }, { amount: "1", slot: "herb" }];
+
+        expect(await errorsFor({ "pan-sauce": { ...recipe, fills, ingredients } })).toEqual([
+          'Showcase Recipe pan-sauce fills "aromatic" with lemon, which isn\'t an aromatic.',
+          'Showcase Recipe pan-sauce fills unknown Slot "sauce".',
+          'Showcase Recipe pan-sauce fills "herb" with unknown Ingredient "basil".',
+        ]);
+      });
+
+      it("when it fills a Slot without saying how much to use", async () => {
+        const ingredients = recipe.ingredients.filter(({ slot }) => slot !== "acid");
+
+        expect(await errorsFor({ "pan-sauce": { ...recipe, ingredients } })).toEqual([
+          'Showcase Recipe pan-sauce fills "acid" but doesn\'t say how much to use in its ingredients.',
+        ]);
+      });
+
+      it("when an ingredient line or step refers to a Slot it doesn't fill", async () => {
+        const ingredients = [...recipe.ingredients, { amount: "a handful", slot: "herb" }];
+        const steps = [...recipe.steps, { text: "Scatter over {herb}." }];
+
+        expect(await errorsFor({ "pan-sauce": { ...recipe, ingredients, steps } })).toEqual([
+          'Showcase Recipe pan-sauce lists "herb", a Slot it doesn\'t fill.',
+          'Showcase Recipe pan-sauce refers to "{herb}" in step 3, a Slot it doesn\'t fill.',
+        ]);
+      });
+
+      it("when a safety-sensitive step has no citation", async () => {
+        const steps = [{ text: "Cook to 165°F / 74°C.", safety: true }];
+
+        expect(await errorsFor({ "pan-sauce": { ...recipe, steps } })).toEqual([
+          "Showcase Recipe pan-sauce marks step 1 safety-sensitive but gives it no citation.",
+        ]);
+      });
+
+      it("when an ingredient line has both a slot and a name", async () => {
+        const ingredients = [...recipe.ingredients, { amount: "1", slot: "acid", name: "lemon" }];
+
+        expect(await errorsFor({ "pan-sauce": { ...recipe, ingredients } })).toEqual([
+          "ingredients.3: give either a slot or a name",
+        ]);
+      });
     });
   });
 

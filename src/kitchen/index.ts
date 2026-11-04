@@ -9,8 +9,10 @@ import {
   formulaSchema,
   ingredientSchema,
   pairingSchema,
+  showcaseSchema,
   type IngredientContent,
   type KitchenContent,
+  type ShowcaseContent,
 } from "./schema";
 
 export * from "./kitchen";
@@ -19,9 +21,10 @@ export type ContentError = { file: string; message: string };
 
 export type LoadResult = { ok: true; kitchen: Kitchen } | { ok: false; errors: ContentError[] };
 
-/** Content as read, before its references are checked; each Ingredient keeps its file for errors. */
-type RawContent = Omit<KitchenContent, "ingredients"> & {
+/** Content as read, before its references are checked; Ingredients and Showcase Recipes keep their file for errors. */
+type RawContent = Omit<KitchenContent, "ingredients" | "showcases"> & {
   ingredients: (IngredientContent & { file: string })[];
+  showcases: (ShowcaseContent & { file: string })[];
 };
 
 const SHAPE =
@@ -44,7 +47,8 @@ function isSimpleDrawing(drawing: string): boolean {
 /**
  * Reads and validates the curated content in `contentDir`: every Cuisine in `cuisines.yaml`,
  * one Markdown file per Ingredient under `ingredients/` (frontmatter plus an essay), and every
- * Pairing, stored once, in `pairings.yaml`, and every Formula in `formulas.yaml`.
+ * Pairing, stored once, in `pairings.yaml`, every Formula in `formulas.yaml`, and any Showcase
+ * Recipes under `recipes/`, one Markdown file each, named for its Formula.
  */
 export async function loadKitchen(contentDir: string): Promise<LoadResult> {
   const errors: ContentError[] = [];
@@ -52,7 +56,8 @@ export async function loadKitchen(contentDir: string): Promise<LoadResult> {
   if (errors.length === 0) checkReferences(contentDir, content, errors);
   if (errors.length > 0) return { ok: false, errors };
   const ingredients = content.ingredients.map(({ file: _file, ...ingredient }) => ingredient);
-  return { ok: true, kitchen: createKitchen({ ...content, ingredients }) };
+  const showcases = content.showcases.map(({ file: _file, ...showcase }) => showcase);
+  return { ok: true, kitchen: createKitchen({ ...content, ingredients, showcases }) };
 }
 
 async function readContent(contentDir: string, errors: ContentError[]): Promise<RawContent> {
@@ -110,11 +115,26 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
     if (ingredient) ingredients.push({ id, file, ...ingredient });
   }
 
+  const showcases: RawContent["showcases"] = [];
+  const recipesDir = join(contentDir, "recipes");
+  // Showcase Recipes are optional, so content can have no folder for them.
+  const recipeFiles = await readdir(recipesDir).catch((error: NodeJS.ErrnoException) => {
+    if (error.code === "ENOENT") return [];
+    throw error;
+  });
+  for (const name of recipeFiles.filter((f) => f.endsWith(".md")).sort()) {
+    const file = join(recipesDir, name);
+    const { data, content: intro } = matter(await readFile(file, "utf8"));
+    const showcase = check(showcaseSchema, { ...data, intro: intro.trim() }, file);
+    if (showcase) showcases.push({ formula: basename(name, ".md"), file, ...showcase });
+  }
+
   return {
     cuisines: await readYamlList("cuisines.yaml", cuisineSchema),
     ingredients,
     pairings: await readYamlList("pairings.yaml", pairingSchema),
     formulas: await readYamlList("formulas.yaml", formulaSchema),
+    showcases,
   };
 }
 
@@ -176,5 +196,44 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
         });
       }
     }
+  }
+
+  const ingredientsById = new Map(content.ingredients.map((ingredient) => [ingredient.id, ingredient]));
+  for (const { formula: formulaId, file, fills, ingredients, steps } of content.showcases) {
+    const recipe = `Showcase Recipe ${formulaId}`;
+    const report = (problem: string) => errors.push({ file, message: `${recipe} ${problem}` });
+    const formula = content.formulas.find(({ id }) => id === formulaId);
+    if (!formula) {
+      report(`is for unknown Formula "${formulaId}"; name its file for a Formula.`);
+      continue;
+    }
+
+    for (const [slotId, ingredientId] of Object.entries(fills)) {
+      const slot = formula.slots.find(({ id }) => id === slotId);
+      const ingredient = ingredientsById.get(ingredientId);
+      if (!slot) report(`fills unknown Slot "${slotId}".`);
+      else if (!ingredient) report(`fills "${slotId}" with unknown Ingredient "${ingredientId}".`);
+      else if (!ingredient.slotTypes.includes(slot.accepts)) {
+        report(`fills "${slotId}" with ${ingredientId}, which isn't ${slot.role}.`);
+      }
+    }
+    for (const slot of formula.slots.filter(({ id, required }) => required && !(id in fills))) {
+      report(`leaves the required Slot "${slot.id}" unfilled.`);
+    }
+    const listed = new Set(ingredients.map(({ slot }) => slot));
+    for (const slotId of Object.keys(fills).filter((id) => !listed.has(id))) {
+      report(`fills "${slotId}" but doesn't say how much to use in its ingredients.`);
+    }
+    for (const slotId of [...listed].filter((id) => id !== undefined && !(id in fills))) {
+      report(`lists "${slotId}", a Slot it doesn't fill.`);
+    }
+    steps.forEach(({ text, safety, citations }, i) => {
+      for (const [, id] of text.matchAll(SLOT_REFERENCE)) {
+        if (!(id in fills)) report(`refers to "{${id}}" in step ${i + 1}, a Slot it doesn't fill.`);
+      }
+      if (safety && citations.length === 0) {
+        report(`marks step ${i + 1} safety-sensitive but gives it no citation.`);
+      }
+    });
   }
 }

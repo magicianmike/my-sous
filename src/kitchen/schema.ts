@@ -70,6 +70,39 @@ export const formulaSchema = z.object({
   method: z.array(z.string().min(1)).min(1),
 });
 
+const recipeIngredientSchema = z
+  .object({
+    /** How much, in plain words, such as "2 cloves" or "1 tbsp". */
+    amount: z.string().min(1),
+    /** The Slot whose Ingredient this is; or, for something outside the Formula, its name. */
+    slot: z.string().min(1).optional(),
+    name: z.string().min(1).optional(),
+    note: z.string().min(1).optional(),
+  })
+  .refine(({ slot, name }) => (slot === undefined) !== (name === undefined), {
+    message: "give either a slot or a name",
+  });
+
+const recipeStepSchema = z.object({
+  /** Refers to Slots as {slotId}, like a Formula's method. */
+  text: z.string().min(1),
+  /** Poultry and pork temperatures, cooked rice, quick pickles: guidance that must be cited. */
+  safety: z.boolean().default(false),
+  citations: z.array(citationSchema).default([]),
+});
+
+export const showcaseSchema = z.object({
+  name: z.string().min(1),
+  intro: z.string().min(1, "the Showcase Recipe needs an intro below its frontmatter"),
+  serves: z.number().int().positive(),
+  /** In minutes. */
+  time: z.object({ prep: z.number().int().nonnegative(), cook: z.number().int().nonnegative() }),
+  /** Each Slot's Ingredient, by Slot id. */
+  fills: z.record(z.string(), z.string()),
+  ingredients: z.array(recipeIngredientSchema).min(1),
+  steps: z.array(recipeStepSchema).min(1),
+});
+
 export type Cuisine = z.infer<typeof cuisineSchema>;
 export type PairingReason = z.infer<typeof pairingReasonSchema>;
 export type Citation = z.infer<typeof citationSchema>;
@@ -77,6 +110,8 @@ export type Slot = z.infer<typeof slotSchema>;
 export type Formula = z.infer<typeof formulaSchema>;
 export type IngredientContent = { id: string } & z.infer<typeof ingredientSchema>;
 export type PairingContent = z.infer<typeof pairingSchema>;
+/** A Showcase Recipe, named by the Formula it's a worked example of. */
+export type ShowcaseContent = { formula: string } & z.infer<typeof showcaseSchema>;
 
 /** Validated content, plain data: what a Kitchen is built from, on the server or in the browser. */
 export type KitchenContent = {
@@ -84,4 +119,5 @@ export type KitchenContent = {
   ingredients: IngredientContent[];
   pairings: PairingContent[];
   formulas: Formula[];
+  showcases: ShowcaseContent[];
 };

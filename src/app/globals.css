@@ -744,6 +744,56 @@ main {
   margin-bottom: var(--space-2);
 }
 
+/* Showcase Recipe */
+
+/* The finished dish's frame, its space reserved; it holds the drawings of what's in it until there's an image. */
+.recipe-image {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  aspect-ratio: 3 / 2;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--sunk);
+}
+
+.recipe-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+}
+
+.recipe-facts dt {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.recipe-facts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+}
+
+/* Amount, then what: two columns, so the names line up down the list. */
+.recipe-ingredients li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+  border-bottom: var(--border-hairline) solid var(--line);
+}
+
+.recipe-amount {
+  font-weight: var(--weight-bold);
+}
+
+.safety-note {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+}
+
 .back-link {
   display: inline-flex;
   align-items: center;

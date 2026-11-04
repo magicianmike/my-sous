@@ -121,6 +121,25 @@ export type SuggestResult = {
   fixes: CombinationFix[];
 };
 
+/** A line of a Showcase Recipe's ingredient list, its name lower-case like the rest; `ingredient` is set when it fills a Slot. */
+export type RecipeIngredient = { amount: string; name: string; ingredient?: Ingredient; note?: string };
+
+export type RecipeStep = { text: string; safety: boolean; citations: Citation[] };
+
+/** A Formula worked through in full, with its Slot references filled in. */
+export type ShowcaseRecipe = {
+  formula: Formula;
+  name: string;
+  intro: string;
+  serves: number;
+  /** In minutes. */
+  time: { prep: number; cook: number; total: number };
+  /** The filled Slots, in the Formula's order. */
+  fills: { slot: Slot; ingredient: Ingredient }[];
+  ingredients: RecipeIngredient[];
+  steps: RecipeStep[];
+};
+
 export type Kitchen = {
   /** The validated content this Kitchen was built from, to rebuild it in the browser. */
   content: KitchenContent;
@@ -148,6 +167,8 @@ export type Kitchen = {
   combination(ids: string[]): Combination;
   formulas(): Formula[];
   formula(id: string): Formula | undefined;
+  /** A Formula's Showcase Recipe, if it has one. */
+  showcase(formulaId: string): ShowcaseRecipe | undefined;
   /**
    * Suggestions for a Combination, one per Formula. Slots fill from the Combination first (each
    * Ingredient filling at most one Slot), then the Ingredient that pairs with most of the fill; a
@@ -185,6 +206,11 @@ function explainFill(slot: Slot, fill: Fill, justification: PairingView | undefi
 /** How an Ingredient is named mid-sentence, as in "season chicken thigh". */
 export function inSentence(ingredient: Ingredient): string {
   return ingredient.name.toLowerCase();
+}
+
+/** A method step with each {slotId} replaced by what `name` gives for that Slot. */
+function fillIn(step: string, name: (slotId: string) => string): string {
+  return step.replace(SLOT_REFERENCE, (_, id: string) => name(id));
 }
 
 /**
@@ -353,7 +379,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
       };
     });
     const method = formula.method.map((step) =>
-      step.replace(SLOT_REFERENCE, (_, id: string) => {
+      fillIn(step, (id) => {
         const { slot, ingredient } = slots.find(({ slot }) => slot.id === id)!;
         return ingredient ? inSentence(ingredient) : slot.role;
       }),
@@ -379,6 +405,8 @@ export function createKitchen(content: KitchenContent): Kitchen {
       coherence: pairs.length + (shared.length > 0 ? 0.5 : 0),
     };
   }
+
+  const formula = (id: string) => content.formulas.find((formula) => formula.id === id);
 
   return {
     content,
@@ -451,7 +479,32 @@ export function createKitchen(content: KitchenContent): Kitchen {
     },
 
     formulas: () => content.formulas,
-    formula: (id) => content.formulas.find((formula) => formula.id === id),
+    formula,
+    showcase: (formulaId) => {
+      const showcase = content.showcases.find(({ formula }) => formula === formulaId);
+      if (!showcase) return undefined;
+      const { slots } = formula(formulaId)!;
+      const filled = (slotId: string) => ingredients.get(showcase.fills[slotId])!;
+      return {
+        formula: formula(formulaId)!,
+        name: showcase.name,
+        intro: showcase.intro,
+        serves: showcase.serves,
+        time: { ...showcase.time, total: showcase.time.prep + showcase.time.cook },
+        fills: slots
+          .filter(({ id }) => id in showcase.fills)
+          .map((slot) => ({ slot, ingredient: filled(slot.id) })),
+        ingredients: showcase.ingredients.map(({ amount, slot, name, note }) => {
+          const ingredient = slot === undefined ? undefined : filled(slot);
+          return { amount, name: ingredient ? inSentence(ingredient) : name!, ingredient, note };
+        }),
+        steps: showcase.steps.map(({ text, safety, citations }) => ({
+          text: fillIn(text, (id) => inSentence(filled(id))),
+          safety,
+          citations,
+        })),
+      };
+    },
 
     suggest(combination) {
       const suggestions = content.formulas.map((formula) => {

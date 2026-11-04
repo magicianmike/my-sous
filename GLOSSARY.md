@@ -63,7 +63,7 @@ Two Ingredients in a Combination that have no Pairing between them. MySous names
 _Avoid_: Conflict, clash, mismatch
 
 **Showcase Recipe**:
-A complete, fixed recipe that serves as a worked example of a Formula filled in.
+A complete, fixed recipe that serves as a worked example of a Formula filled in: quantities, timings, ordered steps, and a citation for every safety-sensitive step. The Cook sees it called a **worked recipe** ("See a worked recipe"); "Showcase Recipe" stays in code, content and docs.
 _Avoid_: Sample recipe, example
 
 ### Later

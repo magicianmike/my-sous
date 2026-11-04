@@ -1,56 +1,27 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { IngredientMark } from "@/components/IngredientMark";
-import type { Citation } from "@/kitchen/kitchen";
-import { CombinationLink } from "../../../combination";
-import { IngredientLink } from "../../../ingredient-link";
-import { getKitchen } from "../../../kitchen";
-
-type Props = { params: Promise<{ id: string }> };
-
-export const dynamicParams = false;
-
-export async function generateStaticParams() {
-  const kitchen = await getKitchen();
-  return kitchen
-    .formulas()
-    .filter(({ id }) => kitchen.showcase(id))
-    .map(({ id }) => ({ id }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  return { title: (await getKitchen()).showcase(id)?.name };
-}
+import type { Citation, Recipe, Suggestion } from "@/kitchen/kitchen";
+import { IngredientLink } from "../../ingredient-link";
 
 /** A source, linked when it's online. */
 function Source({ citation: { title, url } }: { citation: Citation }) {
   return url ? <a href={url}>{title}</a> : <cite>{title}</cite>;
 }
 
-export default async function ShowcaseRecipePage({ params }: Props) {
-  const { id } = await params;
-  const recipe = (await getKitchen()).showcase(id);
-  if (!recipe) notFound();
-  const { formula, time } = recipe;
-
+/** The finished dish's frame, and how long it takes and how many it serves. */
+export function RecipeHeader({ recipe, suggestion }: { recipe: Recipe; suggestion: Suggestion }) {
+  const { serves, time } = recipe;
   return (
     <>
-      <CombinationLink href={`/formulas/${formula.id}`} className="back-link">
-        Back to {formula.name}
-      </CombinationLink>
-      <h1>{recipe.name}</h1>
       {/* Where the image of the finished dish goes (#32); until then, the drawings of what's in it. */}
       <div className="recipe-image" aria-hidden="true">
-        {recipe.fills.map(({ ingredient }) => (
-          <IngredientMark key={ingredient.id} ingredient={ingredient} />
-        ))}
+        {suggestion.slots.flatMap(({ ingredient }) =>
+          ingredient ? [<IngredientMark key={ingredient.id} ingredient={ingredient} />] : [],
+        )}
       </div>
-      <p>{recipe.intro}</p>
       <dl className="recipe-facts">
         <div>
           <dt>Serves</dt>
-          <dd>{recipe.serves}</dd>
+          <dd>{serves}</dd>
         </div>
         <div>
           <dt>Prep</dt>
@@ -65,6 +36,14 @@ export default async function ShowcaseRecipePage({ params }: Props) {
           <dd>{time.total} minutes</dd>
         </div>
       </dl>
+    </>
+  );
+}
+
+/** How much of each Ingredient, then the full method, written for what fills the dish now. */
+export function RecipeBody({ recipe }: { recipe: Recipe }) {
+  return (
+    <>
       <h2 id="ingredients-heading">Ingredients</h2>
       <ul className="recipe-ingredients" aria-labelledby="ingredients-heading">
         {recipe.ingredients.map(({ amount, name, ingredient, note }, i) => (
@@ -80,15 +59,15 @@ export default async function ShowcaseRecipePage({ params }: Props) {
       </ul>
       <h2 id="method-heading">Method</h2>
       <ol className="method" aria-labelledby="method-heading">
-        {recipe.steps.map(({ text, safety, citations }, i) => (
+        {recipe.steps.map(({ text, safety }, i) => (
           // Steps never change order.
           <li key={i}>
             {text}
             {safety && (
               <p className="safety-note">
-                {/* Validation gives every safety-sensitive step at least one citation. */}
-                <span className="tag">Food safety</span> Source:{" "}
-                {citations.map((citation, j) => (
+                {/* Validation gives all safety guidance at least one citation. */}
+                <span className="tag">Food safety</span> {safety.guidance.note} Source:{" "}
+                {safety.guidance.citations.map((citation, j) => (
                   <span key={j}>
                     {j > 0 && "; "}
                     <Source citation={citation} />
@@ -99,9 +78,6 @@ export default async function ShowcaseRecipePage({ params }: Props) {
           </li>
         ))}
       </ol>
-      <p>
-        <CombinationLink href={`/formulas/${formula.id}`}>Fill this dish from your basket</CombinationLink>
-      </p>
     </>
   );
 }

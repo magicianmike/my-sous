@@ -20,7 +20,7 @@ const screens = [
   "/formulas/pan-sauce?with=chicken-thigh,garlic",
   "/suggestions?with=chicken-thigh,basil,ginger",
   "/formulas/sheet-pan-roast?with=ginger",
-  "/formulas/pan-sauce/recipe",
+  "/formulas/pan-sauce",
   "/case-study",
   "/cuisines",
   "/ingredients",

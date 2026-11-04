@@ -19,8 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function FormulaPage({ params }: Props) {
   const { id } = await params;
-  const kitchen = await getKitchen();
-  const formula = kitchen.formula(id);
+  const formula = (await getKitchen()).formula(id);
   if (!formula) notFound();
 
   return (
@@ -30,11 +29,6 @@ export default async function FormulaPage({ params }: Props) {
       </CombinationLink>
       <h1>{formula.name}</h1>
       <p>{formula.description}</p>
-      {kitchen.showcase(formula.id) && (
-        <p>
-          <CombinationLink href={`/formulas/${formula.id}/recipe`}>See a worked recipe</CombinationLink>
-        </p>
-      )}
       <FormulaFill formulaId={formula.id} />
     </>
   );

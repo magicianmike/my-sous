@@ -19,6 +19,7 @@ import {
 import { useCombination, useKitchen, withSearchParams } from "../../combination";
 import { IngredientLink, IngredientMarkLink } from "../../ingredient-link";
 import { ReadinessSentence } from "../../readiness";
+import { RecipeBody, RecipeHeader } from "./recipe";
 
 /** The Formula's Slots and method, filled from the current Combination. */
 export const FormulaFill = withSearchParams(function FormulaFill({
@@ -59,6 +60,7 @@ type FocusTarget = { undo: true } | { slot: string };
 const SOURCE_TAG: Record<FillSource, string> = {
   combination: "Yours",
   pairing: "Suggested",
+  recipe: "Suggested",
   swap: "Swapped",
 };
 
@@ -79,6 +81,7 @@ function SlotEditor({
   const undoButton = useRef<HTMLButtonElement>(null);
   const headings = useRef(new Map<string, HTMLHeadingElement>());
   const current = history.at(-1)!;
+  const recipe = kitchen.recipe(current.suggestion);
   // Only the latest swap can be undone, so only its Slot offers Undo.
   const undoable = current.swapped?.slot.id;
 
@@ -112,6 +115,7 @@ function SlotEditor({
 
   return (
     <>
+      {recipe && <RecipeHeader recipe={recipe} suggestion={current.suggestion} />}
       <div className="formula-readiness">
         <Readiness missing={current.suggestion.needs.length} />
         <p>
@@ -201,13 +205,19 @@ function SlotEditor({
           );
         })}
       </ul>
-      <h2>Method</h2>
-      <ol className="method">
-        {current.suggestion.method.map((step, i) => (
-          // Steps can repeat once filled in, and their order never changes.
-          <li key={i}>{step}</li>
-        ))}
-      </ol>
+      {recipe ? (
+        <RecipeBody recipe={recipe} />
+      ) : (
+        <>
+          <h2>Method</h2>
+          <ol className="method">
+            {current.suggestion.method.map((step, i) => (
+              // Steps can repeat once filled in, and their order never changes.
+              <li key={i}>{step}</li>
+            ))}
+          </ol>
+        </>
+      )}
     </>
   );
 }

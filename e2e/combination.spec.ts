@@ -67,7 +67,7 @@ test("a Cook builds a Combination, sees Suggestions and opens a Formula", async 
   await expect(slot(page, "something to sear")).toHaveText("Chicken thigh");
   await expect(slot(page, "an aromatic")).toHaveText("Garlic");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
-  await expect(page.getByRole("listitem").filter({ hasText: /^Season chicken thigh/ })).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: /^Pat each piece of chicken thigh dry/ })).toBeVisible();
   const formulaUrl = page.url();
 
   // Back and forward step through the Combination's history.
@@ -165,7 +165,7 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
   await expect(slot(page, "an acid")).toHaveText("Lime");
   await expect(acid.locator(".tag")).toHaveText(["Swapped"]);
   await expect(page.getByRole("status")).toHaveText("Lime is now an acid. Undo brings back lemon.");
-  await expect(page.getByText(/then add lime a little at a time/)).toBeVisible();
+  await expect(page.getByText(/then lime juice a little at a time/)).toBeVisible();
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (you chose lime).");
   const undo = acid.getByRole("button", { name: "Undo swap of an acid" });
   await expect(undo).toBeFocused();
@@ -173,7 +173,7 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
   await undo.click();
   await expect(slot(page, "an acid")).toHaveText("Lemon");
   await expect(page.getByRole("status")).toHaveText("Undone: Lemon is an acid again.");
-  await expect(page.getByText(/then add lemon a little at a time/)).toBeVisible();
+  await expect(page.getByText(/then lemon juice a little at a time/)).toBeVisible();
   await expect(acid.getByRole("button", { name: /^Undo/ })).toHaveCount(0);
   await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();
 });

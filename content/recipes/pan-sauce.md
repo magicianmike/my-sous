@@ -1,9 +1,11 @@
 ---
-# A Showcase Recipe: a Formula worked through in full. The file is named for its Formula.
-# `fills` gives each Slot's Ingredient (every required Slot must be filled); an ingredient line names
-# a `slot` or, for anything outside the Formula, a `name`. Steps refer to Slots as {slotId}; a step
-# marked `safety: true` needs at least one citation.
-name: Chicken thighs with a garlic, lemon and basil pan sauce
+# A Formula's Recipe: quantities, timings and the full method. The file is named for its Formula.
+# `fills` is the recipe as written: an Ingredient for every required Slot, used for any part the
+# Cook's basket and its Pairings leave empty. Every Slot needs an ingredient line: `amount` and `note`
+# are for whatever fills it, and `for` gives particular Ingredients their own amount, note, and the
+# name as it reads after that amount (a plural, such as "limes"). Lines outside
+# the Formula give a `name` instead. Steps refer to Slots as {slotId}; a step whose safety depends on
+# a Slot's Ingredient names it in `safety`, and shows that Ingredient's cited guidance.
 serves: 2
 time: { prep: 10, cook: 30 }
 fills:
@@ -12,34 +14,45 @@ fills:
   acid: lemon
   herb: basil
 ingredients:
-  - { amount: "4", slot: protein, note: "boneless and skin-on, about 1¼ lb / 550 g; bone-in thighs take 10 to 15 minutes longer" }
-  - { amount: "1 tsp", name: kosher salt }
-  - { amount: "1 tbsp", name: neutral oil }
-  - { amount: "3 cloves", slot: aromatic, note: thinly sliced }
-  - { amount: "½ cup / 120 ml", name: chicken stock or water }
-  - { amount: "2 tbsp", name: cold butter }
-  - { amount: "1", slot: acid, note: "juiced, about 3 tbsp" }
-  - { amount: "a small handful", slot: herb, note: leaves torn }
-  - { amount: "a few grinds", name: black pepper }
+  - slot: protein
+    amount: about 1¼ lb / 550 g
+    for:
+      chicken-thigh: { amount: "4", name: chicken thighs, note: "boneless and skin-on, about 1¼ lb / 550 g; bone-in thighs take 10 to 15 minutes longer" }
+  - { name: kosher salt, amount: 1 tsp }
+  - { name: neutral oil, amount: 1 tbsp }
+  - slot: aromatic
+    amount: 1 tbsp
+    note: finely chopped
+    for:
+      garlic: { amount: 3 cloves, note: thinly sliced }
+      ginger: { amount: a thumb-sized piece, note: peeled and cut into fine matchsticks }
+      scallion: { amount: "3", name: scallions, note: white parts thinly sliced }
+  - { name: chicken stock or water, amount: ½ cup / 120 ml }
+  - { name: butter, amount: 2 tbsp, note: cold }
+  - slot: acid
+    amount: 3 tbsp
+    note: juice
+    for:
+      lemon: { amount: "1", note: "juiced, about 3 tbsp" }
+      lime: { amount: "2", name: limes, note: "juiced, about 3 tbsp" }
+  - slot: herb
+    amount: a small handful
+    for:
+      basil: { amount: a small handful, note: leaves torn }
+      cilantro: { amount: a small handful, note: "leaves and tender stems, roughly chopped" }
+  - slot: heat
+    amount: to taste
+    for:
+      chile: { amount: ½ to 1, note: thinly sliced }
+  - { name: black pepper, amount: a few grinds }
 steps:
-  - text: Without rinsing it, pat each {protein} dry with paper towels and season it all over with the salt. Then wash your hands with soap and warm water for 20 seconds, and wash anything the raw chicken touched.
-    safety: true
-    citations:
-      - title: "Keep Food Safe! Food Safety Basics, USDA Food Safety and Inspection Service"
-        url: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/steps-keep-food-safe
-      - title: "Washing Food: Does it Promote Food Safety? USDA Food Safety and Inspection Service"
-        url: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/washing-food-does-it-promote-food
-  - text: Heat the oil in a large skillet over medium-high heat. Lay each {protein} in skin side down and cook it without moving until the skin is deep golden and crisp, 8 to 10 minutes.
-  - text: Turn the chicken and cook 5 to 7 minutes more, until an instant-read thermometer in the thickest part reads 165°F / 74°C. Move it to a clean plate, not the one that held it raw, to rest.
-    safety: true
-    citations:
-      - title: Safe Minimum Internal Temperature Chart, USDA Food Safety and Inspection Service
-        url: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart
-      - title: Chicken from Farm to Table, USDA Food Safety and Inspection Service
-        url: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/poultry/chicken-farm-table
-  - text: Pour off all but a spoonful of the fat. Lower the heat to medium, add {aromatic} and stir for about a minute, until it smells sweet and barely colours.
+  - text: Pat each piece of {protein} dry with paper towels and season it all over with the salt. Throw the paper towels away.
+    safety: { slot: protein, about: handling }
+  - text: Heat the oil in a large skillet over medium-high heat. Lay in the {protein}, skin side down if it has skin, and cook it without moving until deep golden underneath, 8 to 10 minutes.
+  - text: Turn it and cook 5 to 7 minutes more (10 to 15 minutes longer if it's on the bone), until cooked through. Move it to a clean plate to rest.
+    safety: { slot: protein, about: cooking }
+  - text: Pour off all but a spoonful of the fat. Lower the heat to medium, add {aromatic} and stir for about a minute, until fragrant.
   - text: Pour in the stock and scrape up the browned bits. Let it bubble until it has reduced by about half, 2 to 3 minutes.
   - text: Off the heat, swirl in the butter, then {acid} juice a little at a time, tasting as you go. Season with pepper.
-  - text: Spoon the sauce over the chicken and scatter over {herb}.
+  - text: Spoon the sauce over the {protein} and scatter over {herb} and {heat}.
 ---
-A worked example of a pan sauce: crisp-skinned chicken thighs, then a sauce built in the same pan from garlic, lemon and the browned bits the chicken leaves behind. Swap any part for another that fits and the method holds.

@@ -744,7 +744,7 @@ main {
   margin-bottom: var(--space-2);
 }
 
-/* Showcase Recipe */
+/* Recipe */
 
 /* The finished dish's frame, its space reserved; it holds the drawings of what's in it until there's an image. */
 .recipe-image {
@@ -780,9 +780,18 @@ main {
 .recipe-ingredients li {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  align-items: center;
+  min-height: var(--target);
   gap: var(--space-3);
-  padding-block: var(--space-2);
+  padding-block: var(--space-1);
   border-bottom: var(--border-hairline) solid var(--line);
+}
+
+/* A name standing alone in its row, so it's a full-size target to tap. */
+.recipe-ingredients a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
 }
 
 .recipe-amount {

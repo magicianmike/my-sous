@@ -47,8 +47,8 @@ The one to four Ingredients the Cook wants to cook around, whether they're alrea
 _Avoid_: Selection, cart, idea, pantry, inventory
 
 **Formula**:
-An adaptable dish template (for example a pan sauce or a grain bowl) made of Slots that the Cook's Ingredients fill. The Cook sees it called a **dish**; "Formula" stays in code, content and docs.
-_Avoid_: Template, recipe, pattern
+An adaptable dish template (for example a pan sauce or a grain bowl) made of Slots that the Cook's Ingredients fill. The Cook sees it called a **dish**; "Formula" stays in code, content and docs. A Formula can have a Recipe; the two aren't the same thing.
+_Avoid_: Template, pattern
 
 **Slot**:
 A named role within a Formula, such as "an acid" or "a soft herb", that one or more Ingredients can fill. The Cook sees it called a **part** ("every part a dish needs"); "Slot" stays in code, content and docs.
@@ -62,9 +62,9 @@ _Avoid_: Result, match, recommendation
 Two Ingredients in a Combination that have no Pairing between them. MySous names each tension and offers one fix for every Ingredient involved: a swap for an Ingredient that pairs with all the rest of the Combination, or, when none does, removing it.
 _Avoid_: Conflict, clash, mismatch
 
-**Showcase Recipe**:
-A complete, fixed recipe that serves as a worked example of a Formula filled in: quantities, timings, ordered steps, and a citation for every safety-sensitive step. The Cook sees it called a **worked recipe** ("See a worked recipe"); "Showcase Recipe" stays in code, content and docs.
-_Avoid_: Sample recipe, example
+**Recipe**:
+A Formula's quantities, timings and full method, shown on the dish's page. It's written for its own Ingredients (the recipe as written), which fill any part the Combination and its Pairings leave empty, and it follows every fill and swap: each part's amount is given for particular Ingredients, with a general amount for the rest. A step whose safety depends on a part (poultry temperatures, say) shows the cited safety guidance of the Ingredient that fills it. The Cook sees it called a **recipe**.
+_Avoid_: Showcase Recipe (its earlier name, in the original spec), worked example
 
 ### Later
 

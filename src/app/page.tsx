@@ -1,5 +1,6 @@
 import { BasketIcon } from "@/components/BasketIcon";
 import { IngredientMark } from "@/components/IngredientMark";
+import { CombinationLink } from "./combination";
 import { IngredientLink } from "./ingredient-link";
 import { IngredientSearch } from "./ingredient-search";
 import { getKitchen } from "./kitchen";
@@ -29,6 +30,16 @@ export default async function Home() {
           </li>
         ))}
       </ul>
+      <p className="explore-cuisines">
+        Or <CombinationLink href="/cuisines">explore by cuisine</CombinationLink>:{" "}
+        {kitchen.cuisines().map(({ id, name }, i, all) => (
+          <span key={id}>
+            {i > 0 && (i === all.length - 1 ? " and " : ", ")}
+            <CombinationLink href={`/cuisines/${id}`}>{name}</CombinationLink>
+          </span>
+        ))}
+        .
+      </p>
     </>
   );
 }

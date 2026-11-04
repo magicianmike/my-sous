@@ -349,6 +349,83 @@ main {
   text-decoration: none;
 }
 
+.explore-cuisines {
+  margin-top: var(--space-5);
+}
+
+/* Cuisines */
+
+.lede {
+  max-width: var(--measure);
+  font-size: var(--text-lg);
+}
+
+.cuisine-list h2 {
+  margin: 0;
+}
+
+.cuisine-list h2 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.cuisine-list p {
+  margin: 0;
+}
+
+.cuisine-pairings p {
+  margin: var(--space-1) 0 0;
+}
+
+.cuisine-pairing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target);
+  font-weight: var(--weight-bold);
+}
+
+.cuisine-pairing a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.cuisine-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--sunk);
+  font-weight: var(--weight-bold);
+}
+
+/* "Common in" and the Cuisines an Ingredient is common in, each a link. */
+.common-in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.common-in a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.pairing-filters {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.filter-status:empty {
+  display: none;
+}
+
 /* Ingredient */
 
 /*

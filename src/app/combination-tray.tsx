@@ -8,6 +8,7 @@ import { TrayBar } from "@/components/TrayBar";
 import { TrayView } from "@/components/TrayView";
 import { COMBINATION_LIMIT, type Ingredient } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "./combination";
+import { useIsCaseStudy } from "./site-chrome";
 import { IngredientLink, IngredientMarkLink } from "./ingredient-link";
 
 /** Where the tray is a side panel rather than a bar and sheet; matches `.tray-dock` in globals.css. */
@@ -21,9 +22,11 @@ const SIDE_PANEL = "(min-width: 56rem)";
 export const CombinationTray = withSearchParams(function CombinationTray() {
   const { status, statusKey } = useKitchen();
   const pathname = usePathname();
+  // The Case Study is a document about MySous, not a place to cook, so it has no tray either.
+  const showDock = pathname !== "/suggestions" && !useIsCaseStudy();
   return (
     <>
-      {pathname !== "/suggestions" && <TrayDock />}
+      {showDock && <TrayDock />}
       <p role="status" className="visually-hidden">
         {status}
       </p>

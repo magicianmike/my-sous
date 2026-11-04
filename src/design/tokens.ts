@@ -129,6 +129,8 @@ const scales = {
   "page-width-wide": "78rem",
   "ingredient-column": "20rem",
   "tray-width": "20rem",
+  // The Case Study's chapter list, beside its text on wide screens.
+  "chapter-nav-width": "14rem",
   "tile-min": "11rem",
   // Borders: hairlines for decoration, a heavier line for controls.
   "border-hairline": "1px",

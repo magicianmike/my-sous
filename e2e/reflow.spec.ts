@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { trayShown } from "./tray";
+import { screenShown, trayShown } from "./tray";
 
 /** Widths from the smallest phone to wide desktop; 640×360 is a 1280×720 screen at 200% zoom. */
 const viewports = [
@@ -20,6 +20,7 @@ const screens = [
   "/formulas/pan-sauce?with=chicken-thigh,garlic",
   "/suggestions?with=chicken-thigh,basil,ginger",
   "/formulas/sheet-pan-roast?with=ginger",
+  "/case-study",
 ];
 
 // Viewports are set per test, so one project is enough.
@@ -27,7 +28,7 @@ test.skip(({ isMobile }) => isMobile, "each test sets its own viewport");
 
 async function open(page: Page, path: string) {
   await page.goto(path);
-  await expect(trayShown(page)).toBeVisible();
+  await expect(screenShown(page, path)).toBeVisible();
 }
 
 for (const viewport of viewports) {

@@ -252,6 +252,63 @@ describe("loadKitchen", () => {
     });
   });
 
+  describe("Cuisines", () => {
+    const sichuan = { id: "sichuan", name: "Sichuan", description: "The cooking of Sichuan province." };
+    const fixture = {
+      cuisines: [levantine, sichuan],
+      ingredients: {
+        lemon: { ...lemon, cuisines: ["levantine"] },
+        garlic: { ...garlic, cuisines: ["levantine", "sichuan"] },
+        thyme: { ...thyme, cuisines: ["levantine"] },
+        chile: { name: "Chile", cuisines: ["sichuan"] },
+      },
+      pairings: [
+        {
+          ingredients: ["lemon", "garlic"],
+          reasons: [reason("Lemon cuts garlic.")],
+          cuisines: ["levantine"],
+        },
+        { ingredients: ["garlic", "chile"], reasons: [reason("Heat and pungency.")], cuisines: ["sichuan"] },
+        { ingredients: ["garlic", "thyme"], reasons: [reason("Herbal and sweet.")] },
+      ],
+    };
+
+    it("filters an Ingredient's Pairings to the ones common in a Cuisine", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+      const others = (id: string, cuisine?: string) =>
+        kitchen.pairingsFor(id, cuisine).map(({ ingredient }) => ingredient.id);
+
+      expect(others("garlic")).toEqual(["lemon", "chile", "thyme"]);
+      expect(others("garlic", "sichuan")).toEqual(["chile"]);
+      expect(others("garlic", "levantine")).toEqual(["lemon"]);
+      const grouped = kitchen.pairingsByReason("garlic", "sichuan");
+      expect(grouped.flatMap(({ pairings }) => pairings.map(({ ingredient }) => ingredient.id))).toEqual([
+        "chile",
+      ]);
+    });
+
+    it("gives a Cuisine's Ingredients, in name order, and the Pairings common in it", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      const view = kitchen.cuisine("levantine")!;
+
+      expect(view.cuisine).toEqual(levantine);
+      expect(view.ingredients.map(({ id }) => id)).toEqual(["garlic", "lemon", "thyme"]);
+      const pairings = view.pairings.map(({ ingredients, reasons }) => [
+        ingredients.map(({ id }) => id),
+        reasons[0].note,
+      ]);
+      expect(pairings).toEqual([[["lemon", "garlic"], "Lemon cuts garlic."]]);
+      expect(kitchen.cuisine("atlantis")).toBeUndefined();
+    });
+
+    it("lists every Cuisine, in content order", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      expect(kitchen.cuisines().map(({ id }) => id)).toEqual(["levantine", "sichuan"]);
+    });
+  });
+
   describe("a Combination", () => {
     const ingredients = {
       lemon,
@@ -708,6 +765,32 @@ describe("loadKitchen", () => {
       ]);
     });
 
+    it("breaks a tie in Pairings in favour of Ingredients that share a Cuisine, and says so", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({
+          cuisines: [levantine],
+          ingredients: {
+            ...fixture.ingredients,
+            lamb: { ...fixture.ingredients.lamb, cuisines: ["levantine"] },
+            mint: { ...fixture.ingredients.mint, cuisines: ["levantine"] },
+          },
+          pairings: fixture.pairings,
+          formulas: [
+            formula("first-in-content", ["lemon", "garlic"]),
+            formula("shared-cuisine", ["lamb", "mint"]),
+          ],
+        }),
+      );
+
+      const basket = kitchen.combination(["lamb", "mint", "lemon", "garlic"]).ingredients;
+      const { suggestions } = kitchen.suggest(basket);
+
+      expect(suggestions.map(({ formula, rankReason }) => [formula.id, rankReason])).toEqual([
+        ["shared-cuisine", "Lamb and mint pair well. Both are common in Levantine cooking."],
+        ["first-in-content", "Lemon and garlic pair well."],
+      ]);
+    });
+
     it("breaks ties by the order Formulas appear in the content", async () => {
       const suggestions = await rank(
         [formula("second-in-name", ["lamb", "mint"]), formula("a-first-in-name", ["lamb", "lemon"])],
@@ -770,6 +853,23 @@ describe("loadKitchen", () => {
 
       expect(errors).toEqual(['Pairing lemon + garlic refers to unknown Cuisine "asian".']);
     });
+
+    it.each(["Asian", "European Home Cooking", "Middle Eastern", "Latin American"])(
+      "when a Cuisine is named at continental level, as %j",
+      async (name) => {
+        const errors = await expectErrors(
+          writeContent({
+            ingredients: { lemon },
+            cuisines: [{ id: "broad", name, description: "Too broad." }],
+            pairings: [],
+          }),
+        );
+
+        expect(errors).toEqual([
+          `Cuisine broad is named "${name}"; name Cuisines regionally, such as "Sichuan" or "Levantine".`,
+        ]);
+      },
+    );
 
     it("when an Ingredient refers to an unknown Cuisine", async () => {
       const errors = await expectErrors(

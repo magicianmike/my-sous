@@ -35,6 +35,15 @@ export type PairingGroup = {
   pairings: PairingView[];
 };
 
+/** A Cuisine, the Ingredients common in it and the Pairings attested in it. */
+export type CuisineView = {
+  cuisine: Cuisine;
+  /** In name order. */
+  ingredients: Ingredient[];
+  /** In content order, each with both its Ingredients. */
+  pairings: { ingredients: [Ingredient, Ingredient]; reasons: PairingReason[] }[];
+};
+
 /** One thing a Blend typically includes, linked to its Ingredient when that's in MySous. */
 export type BlendComponent = { name: string; ingredient?: Ingredient };
 
@@ -117,9 +126,13 @@ export type Kitchen = {
    * every query word starts a word, then the rest; alphabetical within each.
    */
   search(query: string): Ingredient[];
-  pairingsFor(id: string): PairingView[];
+  /** An Ingredient's Pairings, or only those common in a Cuisine when one is given. */
+  pairingsFor(id: string, cuisineId?: string): PairingView[];
   /** The same Pairings grouped by Pairing Reason category; a Pairing with two categories is in both. */
-  pairingsByReason(id: string): PairingGroup[];
+  pairingsByReason(id: string, cuisineId?: string): PairingGroup[];
+  /** Every Cuisine, in content order. */
+  cuisines(): Cuisine[];
+  cuisine(id: string): CuisineView | undefined;
   /** What a Blend typically includes (by Ingredient id or in plain words); empty for others. */
   blendComponents(id: string): BlendComponent[];
   combination(ids: string[]): Combination;
@@ -225,6 +238,11 @@ function joinWithAnd(items: string[]): string {
 }
 
 /** The same key for a Pairing whichever order its Ingredients come in. */
+/** Name order by plain code-point comparison, so it's the same in Node and every browser. */
+function byName(a: Ingredient, b: Ingredient): number {
+  return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+}
+
 function pairingKey(a: string, b: string): string {
   return [a, b].sort().join("+");
 }
@@ -251,6 +269,11 @@ export function createKitchen(content: KitchenContent): Kitchen {
       views.push({ ingredient: ingredients.get(to)!, reasons, cuisines: toCuisines(cuisines), citations });
       pairingsByIngredient.set(from, views);
     }
+  }
+
+  function pairingsFor(id: string, cuisineId?: string): PairingView[] {
+    const views = pairingsByIngredient.get(id) ?? [];
+    return cuisineId ? views.filter(({ cuisines }) => cuisines.some(({ id }) => id === cuisineId)) : views;
   }
 
   /** How many of `others` an Ingredient pairs with. */
@@ -325,12 +348,20 @@ export function createKitchen(content: KitchenContent): Kitchen {
     const pairs = chosen.flatMap((a, i) =>
       chosen.slice(i + 1).flatMap((b): [Ingredient, Ingredient][] => (arePaired(a, b) ? [[a, b]] : [])),
     );
-    const rankReason = explainRank(chosen, arePaired, pairs);
+    // Ingredients the Cook chose that all share a Cuisine: a tie-breaker worth half a Pairing, so it
+    // decides between equally paired dishes but never outweighs a Pairing.
+    const shared =
+      chosen.length < 2 ? [] : chosen[0].cuisines.filter((c) => chosen.every((i) => i.cuisines.includes(c)));
+    const rankReason =
+      explainRank(chosen, arePaired, pairs) +
+      (shared.length > 0
+        ? ` ${chosen.length === 2 ? "Both are" : "All are"} ${commonIn(shared).replace("Common", "common")}`
+        : "");
     // What the Cook brought: a Pairing suggestion or a swap is something the dish still needs.
     const needs = slots.filter(({ slot, source }) => slot.required && !isCooksOwn(source));
     return {
       suggestion: { formula, slots, method, rankReason, needs, makeable: needs.length === 0 },
-      coherence: pairs.length,
+      coherence: pairs.length + (shared.length > 0 ? 0.5 : 0),
     };
   }
 
@@ -356,10 +387,10 @@ export function createKitchen(content: KitchenContent): Kitchen {
         .sort((a, b) => a.rank - b.rank || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
         .map(({ ingredient }) => ingredient);
     },
-    pairingsFor: (id) => pairingsByIngredient.get(id) ?? [],
+    pairingsFor,
 
-    pairingsByReason(id) {
-      const views = pairingsByIngredient.get(id) ?? [];
+    pairingsByReason(id, cuisineId) {
+      const views = pairingsFor(id, cuisineId);
       return PAIRING_REASON_CATEGORIES.map((category) => ({
         category,
         heading: PAIRING_REASON_HEADINGS[category],
@@ -368,6 +399,23 @@ export function createKitchen(content: KitchenContent): Kitchen {
           return reasons.length > 0 ? [{ ...view, reasons }] : [];
         }),
       })).filter(({ pairings }) => pairings.length > 0);
+    },
+
+    cuisines: () => content.cuisines,
+
+    cuisine(id) {
+      const cuisine = cuisines.get(id);
+      if (!cuisine) return undefined;
+      return {
+        cuisine,
+        ingredients: [...ingredients.values()].filter((i) => i.cuisines.includes(cuisine)).sort(byName),
+        pairings: content.pairings
+          .filter(({ cuisines }) => cuisines.includes(id))
+          .map(({ ingredients: [a, b], reasons }) => ({
+            ingredients: [ingredients.get(a)!, ingredients.get(b)!],
+            reasons,
+          })),
+      };
     },
 
     blendComponents(id) {

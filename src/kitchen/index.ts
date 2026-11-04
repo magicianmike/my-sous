@@ -27,6 +27,10 @@ type RawContent = Omit<KitchenContent, "ingredients"> & {
 const SHAPE =
   /^<(path|circle|ellipse|line|polyline|rect)(\s+(d|cx|cy|r|rx|ry|x|y|x1|y1|x2|y2|width|height|points)="[-0-9.,\sa-zA-Z]*")*\s*\/>$/;
 
+/** Names that flatten a continent or a broad region into one Cuisine. */
+const CONTINENTAL =
+  /\b(Asian|African|European|American|Latin American|Oceanian|Middle Eastern|Mediterranean|Oriental)\b/i;
+
 /**
  * Whether a drawing is only self-closing shapes with geometry attributes. Drawings are rendered
  * as markup, so nothing else (scripts, event handlers, links, images) may get in.
@@ -117,6 +121,16 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
 function checkReferences(contentDir: string, content: RawContent, errors: ContentError[]) {
   const cuisineIds = new Set(content.cuisines.map(({ id }) => id));
   const ingredientIds = new Set(content.ingredients.map(({ id }) => id));
+
+  const cuisinesFile = join(contentDir, "cuisines.yaml");
+  for (const { id, name } of content.cuisines.filter(({ name }) => CONTINENTAL.test(name))) {
+    errors.push({
+      file: cuisinesFile,
+      message:
+        `Cuisine ${id} is named "${name}"; name Cuisines regionally, ` +
+        `such as "Sichuan" or "Levantine".`,
+    });
+  }
 
   for (const { id, file, cuisines } of content.ingredients) {
     for (const cuisine of cuisines.filter((c) => !cuisineIds.has(c))) {

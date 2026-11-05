@@ -677,48 +677,102 @@ main {
   font-size: var(--text-xs);
 }
 
-/* A part's last line: Swap at the start, Add at the end, so Add sits in the row's bottom corner. */
+/* Add to the basket, in the bottom corner of its Ingredient's row. */
 .slot-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-2);
+  justify-content: flex-end;
 }
 
-.slot-actions details {
-  flex: 1;
+/* What could be in a part, each ticked while it's in it; a row is a full-size target. */
+.checklist {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  border: 0;
 }
 
-.slot-actions .slot-add {
-  margin-inline-start: auto;
+.checklist ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.alternatives {
+.checklist li {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: var(--space-2) 0 0;
+  align-items: center;
+  column-gap: var(--space-2);
 }
 
-.alternative {
+.checklist > p {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+}
+
+.check {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   min-height: var(--target);
-  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-1);
-  border: var(--border-control) solid var(--ink-muted);
-  border-radius: var(--radius-pill);
-  background: var(--surface);
-  color: var(--ink);
-  font: inherit;
-  font-size: var(--text-sm);
+  padding-inline-end: var(--space-2);
+  border-radius: var(--radius-sm);
   font-weight: var(--weight-bold);
   cursor: pointer;
 }
 
-.alternative:hover {
-  background: var(--sunk);
+/* The checkbox covers the whole row, so the row is the target; the box beside the name shows it. */
+.check input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.check-box {
+  display: grid;
+  place-items: center;
+  width: var(--check-size);
+  height: var(--check-size);
+  border: var(--border-control) solid var(--ink-muted);
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+}
+
+.check:has(:checked) .check-box {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* The tick, drawn in the box. */
+.check:has(:checked) .check-box::after {
+  content: "";
+  width: 0.35em;
+  height: 0.65em;
+  margin-top: -0.15em;
+  border: solid var(--accent-ink);
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+.check:has(:focus-visible) {
+  outline: var(--focus-width) solid var(--focus);
+  outline-offset: var(--focus-offset);
+}
+
+.check:has(:disabled) {
+  cursor: default;
+}
+
+/* The last one in a part, which stays: muted, like a disabled button. */
+.check:has(:disabled) .check-box {
+  border-color: var(--ink-muted);
+  background: var(--ink-muted);
+}
+
+.check-hint {
+  font-size: var(--text-sm);
 }
 
 /* A part of a dish: its role as a label across the top, then what fills it and why, then its actions. */
@@ -772,7 +826,7 @@ main {
   gap: var(--space-2);
 }
 
-/* Add another and Undo, below the part's Ingredients. */
+/* Change and Undo, below the part's Ingredients. */
 .part-foot {
   display: flex;
   flex-wrap: wrap;

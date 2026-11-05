@@ -98,14 +98,26 @@ The role stays the part's heading, so screen readers and focus after a swap work
 - **No limit.** A part holds any number of Ingredients. The first build let each part set a limit in content (two aromatics, one acid); the author dropped it.
 - **From the basket.** Every basket Ingredient that fits goes in, in basket order. Each part takes one first, in part order, before any takes a second, so an Ingredient that fits two parts (scallion is an aromatic and a garnish) fills an empty part before doubling up in another. That rule wasn't asked for; it keeps a dish from leaving a part empty that the basket could fill. What's left goes into the first part it fits. Pairings and the recipe only fill empty parts.
 - **Ready.** A required part counts as covered only when everything in it is from the basket. Adding ginger beside the basket's garlic makes the dish need ginger, and the readiness line names it.
-- **What to add.** A part's choices rank by pairing with everything in the dish, its own Ingredients included, since a new one goes alongside them.
-- **On the dish page.** Each Ingredient in a part has its own row: name and tag, why it's there, Swap, Remove (once there are two), and Add to the basket. "Add another" sits below while anything else could go in. "Choose" offers the same list for an empty part. Undo covers every change and says what it undoes.
+- **On the dish page.** Each Ingredient in a part has its own row: name and tag, why it's there, and Add to the basket. Changing what's in the part is one control, below (see the next section). Undo covers every change and says what it undoes.
 - **Amounts.** Each Ingredient keeps the full amount the recipe gives it, as a cook would: 3 cloves of garlic and a thumb of ginger, not half of each.
 - **Elsewhere.** The method names them all ("add garlic and ginger"). A safety step shows the guidance of every Ingredient in its part.
 
 | A part holding two | |
 | --- | --- |
 | Garlic and ginger as aromatics, desktop light | ![](0014-recipes/after-two-aromatics-desktop-light.png) |
+
+**Swap and Add another became one checklist.** The author saw that the two did much the same thing. They chose a checklist from three options; the others were "add, then remove" and one list with a button for each:
+
+- **Change.** Each part has one "Change" ("Choose" while it's empty). It opens every Ingredient that could be in the part, ticked while it's in it. Ticking one adds it; unticking takes it out. A swap is one of each. Remove and the separate Swap went with it.
+- **The last one stays.** It can't be unticked, and a note, which the dimmed checkbox points to for screen readers, says to tick another first. An empty part would read as one nothing pairs into.
+- **Order holds.** The list ranks by pairing with what's outside the part, so ticking moves nothing, and focus stays on the checkbox for the next change. Each choice says what in the dish it pairs with, such as "pairs with chicken thigh and garlic". That hint includes the part's own Ingredients, so a choice that goes with garlic says so, though the rank leaves them out to keep the order still.
+- **Yours stays yours.** Untick a basket Ingredient and tick it again, and it's back as "Yours", so the dish is Ready again and there's no Add to the basket for something already in it. The Spec review caught it reading "Added".
+- **The tag.** Whatever the Cook ticks reads "Added", so "Swapped" is gone, along with the Kitchen's `swap`.
+- **Tap targets.** A bare checkbox is 20px. The whole row is the checkbox instead, with the box drawn beside the name, the way the segmented control already works, so the 44px phone check passes.
+
+| The Change list, desktop light | The Change list, phone dark |
+| --- | --- |
+| ![](0014-recipes/after-change-desktop-light.png) | ![](0014-recipes/after-change-phone-dark.png) |
 
 ## Tests
 
@@ -119,16 +131,19 @@ The role stays the part's heading, so screen readers and focus after a swap work
 - **Vitest, parts that hold any number:**
   - every basket Ingredient that fits goes in, and the method names them all;
   - each part takes one before any takes two;
-  - add, remove and swap keep the rest, and refuse to empty a part or repeat an Ingredient;
+  - add and remove keep the rest, and refuse to empty a part or repeat an Ingredient;
+  - a part lists every Ingredient that could be in it, in an order ticking doesn't change, with what each pairs with;
   - a part needs whatever in it isn't from the basket;
-  - choices for a part with room rank as companions;
+  - a part's choices keep their order as the Cook ticks;
+  - a basket Ingredient taken out and put back is the Cook's own again;
   - a recipe gives each its full amount.
 - **Playwright:**
   - an empty basket shows the recipe as written, with timings, amounts and the cited cooking guidance;
   - the recipe follows the basket and a swap, amounts and method included;
   - a dish without a recipe keeps its short method;
   - two aromatics from the basket, each with its full amount, and removing one then undoing;
-  - adding aromatics until none are left to add.
+  - ticking aromatics until all are in;
+  - a swap as a tick and an untick, then two undos, with focus staying on the checkbox.
 - **axe** covers the dish page with a recipe (both themes, phone and desktop), and so does the **reflow** check. The **phone tap-target** check passes.
 
 ## VoiceOver pass (for the author)
@@ -137,7 +152,7 @@ On `/formulas/pan-sauce?with=chicken-thigh,lime` in Safari, with VoiceOver on:
 
 1. Rotor → Headings: Pan sauce (level 1), then What goes in, Ingredients and Method (level 2), with the parts at level 3.
 2. Rotor → Lists: "Ingredients" and "Method".
-3. The acid line reads "2 limes, juiced, about 3 tbsp". Swap the acid to lemon: the announcement says so, and the line now reads "1 lemon, juiced, about 3 tbsp". The announcement names the swap, not the new amount.
+3. The acid line reads "2 limes, juiced, about 3 tbsp". Open "Change an acid": the group reads "Ingredients for an acid", Lime reads ticked and dimmed, and Lemon reads "pairs with chicken thigh". Tick Lemon, then untick Lime: each change is announced, focus stays on the checkbox, and the line now reads "1 lemon, juiced, about 3 tbsp". The announcements name the change, not the new amount.
 4. Method steps 1 and 3 read their text, then "Food safety", the guidance, and the linked USDA sources.
 5. The drawings frame isn't announced.
 

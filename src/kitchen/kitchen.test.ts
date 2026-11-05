@@ -14,6 +14,10 @@ type FixtureIngredient = { name: string; body?: string; drawing?: string | null 
   unknown
 >;
 
+/** The Cook swaps one Ingredient for another as they do on the page: tick the new one, untick the old. */
+const swap = (kitchen: Kitchen, suggestion: Suggestion, slotId: string, out: string, chosen: string) =>
+  kitchen.removeFromSlot(kitchen.addToSlot(suggestion, slotId, chosen), slotId, out);
+
 const defaultColour = { wash: "#dcebc4", washDark: "#26361a", stroke: "#2f5714", strokeDark: "#c3e39a" };
 const defaultDrawing = '<circle cx="24" cy="24" r="17"/>';
 
@@ -579,7 +583,7 @@ describe("loadKitchen", () => {
         "Pairs with lamb: Mint's coolness lifts rich lamb.",
       ]);
       // Swapping lamb out leaves mint, which was there for lamb, without a Pairing.
-      expect(reasons(kitchen.swap(suggestion, "protein", "lamb", "chicken"))).toEqual([
+      expect(reasons(swap(kitchen, suggestion, "protein", "lamb", "chicken"))).toEqual([
         "Your choice. It doesn't pair with anything else here yet.",
         "From your basket.",
         "Suggested earlier. It doesn't pair with anything else here now.",
@@ -605,33 +609,38 @@ describe("loadKitchen", () => {
       ]);
     });
 
-    it("ranks each Slot's alternatives by how well they pair with the rest of the fill", async () => {
+    it("lists every Ingredient that could be in each Slot, ranked by pairing with the rest of the dish", async () => {
       const { suggestion } = await plate(["lamb"]);
 
       expect(
-        suggestion.slots.map(({ slot, alternatives }) => [slot.id, alternatives.map(({ id }) => id)]),
+        suggestion.slots.map(({ slot, choices }) => [slot.id, choices.map(({ ingredient }) => ingredient.id)]),
       ).toEqual([
-        // Ties keep content order.
-        ["protein", ["chicken"]],
-        ["acid", ["lime", "vinegar"]],
-        ["herb", ["parsley", "basil"]],
+        // What's in the Slot is listed too; ties keep content order.
+        ["protein", ["lamb", "chicken"]],
+        ["acid", ["lemon", "lime", "vinegar"]],
+        ["herb", ["mint", "parsley", "basil"]],
+      ]);
+      expect(suggestion.slots[2].choices.map(({ pairsWith }) => pairsWith.map(({ id }) => id))).toEqual([
+        ["lamb", "lemon"],
+        ["lamb"],
+        [],
       ]);
     });
 
-    it("swaps a Slot, and the method, justification and alternatives follow", async () => {
+    it("swaps a Slot, and the method and justification follow while the choices keep their order", async () => {
       const { kitchen, suggestion } = await plate(["lamb"]);
 
-      const swapped = kitchen.swap(suggestion, "herb", "mint", "parsley");
+      const swapped = swap(kitchen, suggestion, "herb", "mint", "parsley");
 
       expect(fill(swapped)).toEqual([
         ["protein", "lamb", "combination"],
         ["acid", "lemon", "pairing"],
-        ["herb", "parsley", "swap"],
+        ["herb", "parsley", "added"],
       ]);
       expect(swapped.method).toEqual(["Sear lamb, squeeze over lemon, scatter parsley."]);
       const herb = swapped.slots[2];
       expect(herb.fills[0].justification?.reasons[0].note).toBe("Parsley freshens lamb.");
-      expect(herb.alternatives.map(({ id }) => id)).toEqual(["mint", "basil"]);
+      expect(herb.choices.map(({ ingredient }) => ingredient.id)).toEqual(["mint", "parsley", "basil"]);
       expect(fill(suggestion)[2]).toEqual(["herb", "mint", "pairing"]);
     });
   });
@@ -695,13 +704,11 @@ describe("loadKitchen", () => {
         ["garlic", "combination"],
         ["ginger", "added"],
       ]);
-      expect(added.slots[0].alternatives.map(({ id }) => id)).toEqual(["scallion", "shallot"]);
       // There's no limit: every aromatic can go in.
       const all = kitchen.addToSlot(kitchen.addToSlot(added, "aromatic", "scallion"), "aromatic", "shallot");
       expect(held(all).aromatic).toEqual(["garlic", "ginger", "scallion", "shallot"]);
-      expect(all.slots[0].alternatives).toEqual([]);
 
-      expect(held(kitchen.swap(added, "aromatic", "garlic", "scallion")).aromatic).toEqual(["scallion", "ginger"]);
+      expect(held(swap(kitchen, added, "aromatic", "garlic", "scallion")).aromatic).toEqual(["ginger", "scallion"]);
       expect(held(kitchen.removeFromSlot(added, "aromatic", "garlic")).aromatic).toEqual(["ginger"]);
       // A Slot keeps at least one; an Ingredient goes in a dish once.
       expect(() => kitchen.removeFromSlot(suggestion, "aromatic", "garlic")).toThrow("keeps at least one");
@@ -718,7 +725,20 @@ describe("loadKitchen", () => {
       expect(added.needs.map(({ slot }) => slot.id)).toEqual(["aromatic"]);
     });
 
-    it("ranks what could go in a Slot by pairing with everything in the dish, its own Slot included", async () => {
+    it("puts a basket Ingredient back as the Cook's own when they take it out and tick it again", async () => {
+      const { kitchen, suggestion } = await stirFry(["garlic", "lemon"]);
+
+      const out = swap(kitchen, suggestion, "aromatic", "garlic", "ginger");
+      const again = kitchen.addToSlot(out, "aromatic", "garlic");
+
+      expect(again.slots[0].fills.map(({ ingredient, source }) => [ingredient.id, source])).toEqual([
+        ["ginger", "added"],
+        ["garlic", "combination"],
+      ]);
+      expect(kitchen.removeFromSlot(again, "aromatic", "ginger").makeable).toBe(true);
+    });
+
+    it("keeps a Slot's choices in one order as the Cook ticks them, saying what each pairs with in the dish", async () => {
       const kitchen = await expectKitchen(
         writeContent({
           ...fixture,
@@ -728,9 +748,22 @@ describe("loadKitchen", () => {
         }),
       );
       const [suggestion] = kitchen.suggest(kitchen.combination(["garlic", "lemon"]).ingredients);
+      const choices = (s: Suggestion) =>
+        s.slots[0].choices.map(({ ingredient, pairsWith }) => [ingredient.id, pairsWith.map(({ id }) => id)]);
 
-      // Scallion pairs with garlic, already an aromatic, so it ranks above ginger as a companion.
-      expect(suggestion.slots[0].alternatives.map(({ id }) => id)).toEqual(["scallion", "ginger", "shallot"]);
+      expect(choices(suggestion)).toEqual([
+        ["garlic", []],
+        ["ginger", []],
+        ["scallion", ["garlic"]],
+        ["shallot", []],
+      ]);
+      // Ranked against what's outside the Slot, so ticking scallion moves nothing.
+      expect(choices(kitchen.addToSlot(suggestion, "aromatic", "scallion"))).toEqual([
+        ["garlic", ["scallion"]],
+        ["ginger", []],
+        ["scallion", ["garlic"]],
+        ["shallot", []],
+      ]);
     });
   });
 
@@ -983,7 +1016,7 @@ describe("loadKitchen", () => {
     it("follows a swap", async () => {
       const kitchen = await expectKitchen(writeContent({ ...fixture, recipes: { "pan-sauce": recipe } }));
 
-      const swapped = kitchen.swap(panSauce(kitchen, ["lime"]), "acid", "lime", "lemon");
+      const swapped = swap(kitchen, panSauce(kitchen, ["lime"]), "acid", "lime", "lemon");
       const { ingredients, steps } = kitchen.recipe(swapped)!;
 
       expect(ingredients[2]).toMatchObject({ amount: "1", name: "lemon", note: "juiced" });

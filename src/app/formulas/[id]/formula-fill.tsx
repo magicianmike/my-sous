@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { BasketIcon } from "@/components/BasketIcon";
 import { Button } from "@/components/Button";
 import { Disclosure } from "@/components/Disclosure";
@@ -10,6 +10,7 @@ import { Readiness } from "@/components/Readiness";
 import {
   inSentence,
   isCooksOwn,
+  joinWithAnd,
   type FilledSlot,
   type FillSource,
   type Ingredient,
@@ -33,7 +34,7 @@ export const FormulaFill = withSearchParams(function FormulaFill({
   const suggestion = kitchen
     .suggest(combination.ingredients)
     .find(({ formula }) => formula.id === formulaId)!;
-  // A new Combination starts a fresh swap history.
+  // A new Combination starts a fresh history of changes.
   const combinationKey = combination.ingredients.map(({ id }) => id).join(",");
   return (
     <SlotEditor
@@ -51,7 +52,7 @@ export const FormulaFill = withSearchParams(function FormulaFill({
 /** A Suggestion as it stood after one of the Cook's changes, the Slot it changed, and what undoing it says. */
 type Step = { suggestion: Suggestion; changed?: { slotId: string; undone: string } };
 
-/** Where focus goes after a change or an undo; a fresh object each time, so it moves even to the same place. */
+/** Where focus goes after an undo; a fresh object each time, so it moves even to the same place. */
 type FocusTarget = { undo: true } | { slot: string };
 
 /** Where an Ingredient in a part came from, in a word; never left to colour. */
@@ -59,13 +60,11 @@ const SOURCE_TAG: Record<FillSource, string> = {
   combination: "Yours",
   pairing: "Suggested",
   recipe: "Suggested",
-  swap: "Swapped",
   added: "Added",
 };
 
 /** The Cook's changes to a part, each with what it changed. */
 type PartActions = {
-  swap: (filled: FilledSlot, previous: Ingredient, ingredient: Ingredient) => void;
   add: (filled: FilledSlot, ingredient: Ingredient) => void;
   remove: (filled: FilledSlot, ingredient: Ingredient) => void;
   addToBasket: (slotId: string, ingredient: Ingredient) => void;
@@ -101,19 +100,11 @@ function SlotEditor({
 
   function record(slotId: string, suggestion: Suggestion, done: string, undone: string) {
     setHistory([...history, { suggestion, changed: { slotId, undone } }]);
+    // Focus stays on the checkbox the Cook just changed, ready for the next.
     announce(done);
-    setFocus({ undo: true });
   }
 
   const actions: PartActions = {
-    swap({ slot }, previous, ingredient) {
-      record(
-        slot.id,
-        kitchen.swap(current.suggestion, slot.id, previous.id, ingredient.id),
-        `${ingredient.name} is now ${slot.role}. Undo brings back ${inSentence(previous)}.`,
-        `${previous.name} is ${slot.role} again`,
-      );
-    },
     add({ slot, fills }, ingredient) {
       record(
         slot.id,
@@ -182,27 +173,59 @@ function SlotEditor({
   );
 }
 
-/** Ingredients to choose from, each a button that says what choosing it does. */
-function Choices({ ingredients, verb, onChoose }: { ingredients: Ingredient[]; verb: string; onChoose: (ingredient: Ingredient) => void }) {
+/**
+ * Every Ingredient that could be in a part, ticked while it's in it: ticking adds one, unticking takes
+ * one out, so a swap is one of each. The last one ticked can't be unticked.
+ */
+function Checklist({ filled, actions }: { filled: FilledSlot; actions: PartActions }) {
+  const { slot, fills, choices } = filled;
+  const id = useId();
+  const only = fills.length === 1 ? fills[0].ingredient : undefined;
   return (
-    <ul className="alternatives">
-      {ingredients.map((ingredient) => (
-        <li key={ingredient.id}>
-          <button type="button" className="alternative" onClick={() => onChoose(ingredient)}>
-            <IngredientMark ingredient={ingredient} size="sm" />
-            <span className="visually-hidden">{verb} </span>
-            {ingredient.name}
-          </button>
-        </li>
-      ))}
-    </ul>
+    <fieldset className="checklist">
+      <legend className="visually-hidden">Ingredients for {slot.role}</legend>
+      <ul>
+        {choices.map(({ ingredient, pairsWith }) => {
+          const ticked = fills.some((fill) => fill.ingredient === ingredient);
+          const hint = `${id}-${ingredient.id}`;
+          return (
+            <li key={ingredient.id}>
+              <label className="check">
+                <input
+                  type="checkbox"
+                  checked={ticked}
+                  disabled={ingredient === only}
+                  aria-describedby={
+                    [pairsWith.length > 0 && hint, ingredient === only && `${id}-stays`].filter(Boolean).join(" ") || undefined
+                  }
+                  onChange={() => (ticked ? actions.remove(filled, ingredient) : actions.add(filled, ingredient))}
+                />
+                <span className="check-box" aria-hidden="true" />
+                <IngredientMark ingredient={ingredient} size="sm" />
+                {ingredient.name}
+              </label>
+              {pairsWith.length > 0 && (
+                <span id={hint} className="muted check-hint">
+                  pairs with {joinWithAnd(pairsWith.map(inSentence))}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      {only && (
+        <p id={`${id}-stays`} className="muted">
+          Tick another before taking {inSentence(only)} out.
+        </p>
+      )}
+    </fieldset>
   );
 }
 
 /**
  * One part of the dish: its role as a label across the top, then each Ingredient in it, with why it's
- * there, Swap, Remove (while there's more than one) and Add to the basket; then Add another while
- * anything else could go in, and Undo after the Cook's latest change here.
+ * there and Add to the basket; then Change, to tick what's in it, and Undo after the Cook's latest
+ * change here.
  */
 function PartCard({
   filled,
@@ -216,8 +239,7 @@ function PartCard({
   /** Set on the part whose change can be undone. */
   undoRef?: React.Ref<HTMLButtonElement>;
 }) {
-  const { slot, fills, alternatives, emptyReason } = filled;
-  const room = alternatives.length > 0;
+  const { slot, fills, choices, emptyReason } = filled;
   return (
     <>
       <div className="part-head">
@@ -251,45 +273,24 @@ function PartCard({
                   <span className="tag">{SOURCE_TAG[source]}</span>
                 </div>
                 <p className="muted">{reason}</p>
-                {/* Swap and Remove at the start, Add to the basket at the end. */}
-                <div className="slot-actions">
-                  {alternatives.length > 0 && (
-                    // Keyed by the fill, so a swap closes the list.
-                    <Disclosure key={ingredient.id} summary="Swap" hiddenSummary={`${inSentence(ingredient)} in ${slot.role}`}>
-                      <Choices
-                        ingredients={alternatives}
-                        verb="Use"
-                        onChoose={(choice) => actions.swap(filled, ingredient, choice)}
-                      />
-                    </Disclosure>
-                  )}
-                  {fills.length > 1 && (
-                    <Button onClick={() => actions.remove(filled, ingredient)}>
-                      Remove<span className="visually-hidden"> {inSentence(ingredient)} from {slot.role}</span>
-                    </Button>
-                  )}
-                  {!isCooksOwn(source) && (
-                    <Button variant="primary" className="slot-add" onClick={() => actions.addToBasket(slot.id, ingredient)}>
+                {!isCooksOwn(source) && (
+                  <div className="slot-actions">
+                    <Button variant="primary" onClick={() => actions.addToBasket(slot.id, ingredient)}>
                       <BasketIcon className="button-icon" />
                       Add<span className="visually-hidden"> {ingredient.name} to your basket</span>
                     </Button>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </li>
           ))}
         </ul>
       )}
-      {(room || undoRef) && (
+      {(choices.length > 0 || undoRef) && (
         <div className="part-foot">
-          {room && (
-            // Keyed by what's in the part, so a choice closes the list.
-            <Disclosure
-              key={fills.map(({ ingredient }) => ingredient.id).join()}
-              summary={fills.length === 0 ? "Choose" : "Add another"}
-              hiddenSummary={fills.length === 0 ? slot.role : `to ${slot.role}`}
-            >
-              <Choices ingredients={alternatives} verb="Add" onChoose={(choice) => actions.add(filled, choice)} />
+          {choices.length > 0 && (
+            <Disclosure summary={fills.length === 0 ? "Choose" : "Change"} hiddenSummary={slot.role}>
+              <Checklist filled={filled} actions={actions} />
             </Disclosure>
           )}
           {undoRef && (

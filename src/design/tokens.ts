@@ -138,6 +138,8 @@ const scales = {
   "border-hairline": "1px",
   "border-control": "2px",
   // Radius.
+  // A checkbox's corner: any rounder and it reads as a radio.
+  "radius-xs": "0.25rem",
   "radius-sm": "0.625rem",
   "radius-md": "0.875rem",
   "radius-lg": "1.25rem",
@@ -161,6 +163,8 @@ const scales = {
   // Touch targets: the smallest a tappable control may be.
   "target": "2.75rem",
   "chip-height": "2rem",
+  // The box a checkbox draws; the whole row around it is the target.
+  "check-size": "1.25rem",
   // Ingredient marks: the drawing's plate, and the drawing on it.
   "mark-sm": "2.25rem",
   "mark-sm-drawing": "1.75rem",

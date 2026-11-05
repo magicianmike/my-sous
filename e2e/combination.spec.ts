@@ -107,7 +107,9 @@ test("a Combination that doesn't pair still gets its closest Suggestions, each s
   await expect(page.getByRole("heading", { name: "Not everything pairs yet" })).toHaveCount(0);
 });
 
-test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page }) => {
+test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees the method follow, and undoes it", async ({
+  page,
+}) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
@@ -118,20 +120,31 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
   await expect(slotItem(page, "a soft herb")).toContainText("Optional");
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (lemon pairs best).");
 
-  await acid.getByText("Swap").click();
-  await acid.getByRole("button", { name: "Use Lime" }).click();
+  await acid.getByText("Change").click();
+  // The last one in a part can't be unticked: an empty part would read as one nothing pairs into.
+  await expect(acid.getByRole("checkbox", { name: "Lemon" })).toBeDisabled();
+  await acid.getByRole("checkbox", { name: "Lime" }).check();
+  await expect(page.getByRole("status")).toHaveText("Lime is now also an acid. Undo takes it out.");
+  await expect(acid.getByRole("checkbox", { name: "Lime" })).toBeFocused();
+  await acid.getByRole("checkbox", { name: "Lemon" }).uncheck();
 
   await expect(slot(page, "an acid")).toHaveText("Lime");
-  await expect(acid.locator(".tag")).toHaveText(["Swapped"]);
-  await expect(page.getByRole("status")).toHaveText("Lime is now an acid. Undo brings back lemon.");
+  await expect(acid.locator(".tag")).toHaveText(["Added"]);
+  await expect(page.getByRole("status")).toHaveText("Lemon taken out of an acid. Undo puts it back.");
   await expect(page.getByText(/then lime juice a little at a time/)).toBeVisible();
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (you chose lime).");
-  const undo = acid.getByRole("button", { name: "Undo change to an acid" });
-  await expect(undo).toBeFocused();
+  // The list stays open, in the same order, for the next change.
+  await expect(acid.getByRole("checkbox")).toHaveCount(2);
+  await expect(acid.getByRole("checkbox", { name: "Lemon" })).toBeFocused();
 
+  const undo = acid.getByRole("button", { name: "Undo change to an acid" });
+  await undo.click();
+  await expect(slot(page, "an acid")).toHaveText(["Lemon", "Lime"]);
+  await expect(page.getByRole("status")).toHaveText("Undone: Lemon is back in an acid.");
+  await expect(undo).toBeFocused();
   await undo.click();
   await expect(slot(page, "an acid")).toHaveText("Lemon");
-  await expect(page.getByRole("status")).toHaveText("Undone: Lemon is an acid again.");
+  await expect(page.getByRole("status")).toHaveText("Undone: Lime taken out of an acid.");
   await expect(page.getByText(/then lemon juice a little at a time/)).toBeVisible();
   await expect(acid.getByRole("button", { name: /^Undo/ })).toHaveCount(0);
   await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();
@@ -140,11 +153,11 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
 test("only the latest change offers Undo, and undoing it moves Undo to the change before", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
-  await acid.getByText("Swap").click();
-  await acid.getByRole("button", { name: "Use Lime" }).click();
+  await acid.getByText("Change").click();
+  await acid.getByRole("checkbox", { name: "Lime" }).check();
   const aromatic = slotItem(page, "an aromatic");
-  await aromatic.getByText("Swap").click();
-  await aromatic.getByRole("button", { name: /^Use / }).first().click();
+  await aromatic.getByText("Change").click();
+  await aromatic.getByRole("checkbox", { checked: false }).first().check();
 
   await expect(page.getByRole("button", { name: /^Undo change/ })).toHaveCount(1);
   await aromatic.getByRole("button", { name: "Undo change to an aromatic" }).click();
@@ -209,13 +222,13 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Pan sauce" })).toBeVisible();
   await expect(slot(page, "an aromatic")).toHaveText("Garlic");
 
-  // Swap and undo, still by keyboard.
-  await tabTo(page, page.getByText("Swap lemon in an acid"));
+  // Change and undo, still by keyboard.
+  await tabTo(page, page.getByText("Change an acid"));
   await page.keyboard.press("Enter");
-  await tabTo(page, page.getByRole("button", { name: "Use Lime" }));
-  await page.keyboard.press("Enter");
-  await expect(slot(page, "an acid")).toHaveText("Lime");
-  await expect(page.getByRole("button", { name: "Undo change to an acid" })).toBeFocused();
+  await tabTo(page, page.getByRole("checkbox", { name: "Lime" }));
+  await page.keyboard.press("Space");
+  await expect(slot(page, "an acid")).toHaveText(["Lemon", "Lime"]);
+  await tabTo(page, page.getByRole("button", { name: "Undo change to an acid" }));
   await page.keyboard.press("Enter");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
 });

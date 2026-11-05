@@ -259,7 +259,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
         report(`marks step ${i + 1} safety-sensitive for unknown Slot "${safety.slot}".`);
         return;
       }
-      // Swaps can bring in any Ingredient that fits, so each needs the guidance.
+      // The Cook can put in any Ingredient that fits, so each needs the guidance.
       for (const { id } of content.ingredients.filter(
         ({ slotTypes, safety: guidance }) => slotTypes.includes(slot.accepts) && !guidance?.[safety.about],
       )) {

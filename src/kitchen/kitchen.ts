@@ -70,16 +70,16 @@ export type Combination = {
 };
 
 /** Where an Ingredient in a Slot came from: in fill order, then the Cook's own changes on the dish. */
-export type FillSource = "combination" | "pairing" | "recipe" | "swap" | "added";
+export type FillSource = "combination" | "pairing" | "recipe" | "added";
 
-/** Whether the Ingredient is the Cook's own, from the Combination, not suggested or swapped in. */
+/** Whether the Ingredient is the Cook's own, from the Combination, not suggested or added on the dish. */
 export function isCooksOwn(source: FillSource): boolean {
   return source === "combination";
 }
 
 /** Whether the Cook chose the Ingredient: from the Combination, or by a change on the dish. */
 export function isCooksChoice(source: FillSource): boolean {
-  return source === "combination" || source === "swap" || source === "added";
+  return source === "combination" || source === "added";
 }
 
 /** One Ingredient in a Slot of a Suggestion: where it came from, and why it's there. */
@@ -92,13 +92,19 @@ export type SlotFill = {
   reason: string;
 };
 
+/** An Ingredient that could be in a Slot, and what in the dish it pairs with, in Slot order. */
+export type SlotChoice = { ingredient: Ingredient; pairsWith: Ingredient[] };
+
 /** A Slot in a Suggestion, with the Ingredients chosen for it, and why. */
 export type FilledSlot = {
   slot: Slot;
   /** In the order they went in; empty while nothing pairs into the Slot. */
   fills: SlotFill[];
-  /** Other Ingredients that could go in the Slot, best-pairing with the rest of the dish first. */
-  alternatives: Ingredient[];
+  /**
+   * Every Ingredient that could be in the Slot, those in it included, best-pairing with the rest of
+   * the dish first. Ranked against what's outside the Slot, so the order holds as the Cook changes it.
+   */
+  choices: SlotChoice[];
   /** Why the Slot is empty, in one line for the Cook; only while it is. */
   emptyReason?: string;
 };
@@ -106,6 +112,8 @@ export type FilledSlot = {
 /** A Formula recommended for a Combination, with its Slots filled and a stated reason for its rank. */
 export type Suggestion = {
   formula: Formula;
+  /** The Combination it was made for. */
+  combination: Ingredient[];
   slots: FilledSlot[];
   /** The Formula's method, naming each Slot's Ingredients, or its role while it's empty. */
   method: string[];
@@ -169,8 +177,6 @@ export type Kitchen = {
    * chose, not those suggested by Pairing. Ties keep content order. Deterministic.
    */
   suggest(combination: Ingredient[]): Suggestion[];
-  /** The same Suggestion with one Ingredient in a Slot swapped for the Cook's choice; every other fill is kept. */
-  swap(suggestion: Suggestion, slotId: string, replacingId: string, ingredientId: string): Suggestion;
   /** The same Suggestion with the Cook's choice added to a Slot. */
   addToSlot(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
   /** The same Suggestion with one Ingredient taken out of a Slot. */
@@ -195,7 +201,6 @@ function explainFill(source: FillSource, justification: PairingView | undefined)
       return "Suggested earlier. It doesn't pair with anything else here now.";
     case "recipe":
       return "From the recipe.";
-    case "swap":
     case "added":
       return "Your choice. It doesn't pair with anything else here yet.";
   }
@@ -275,7 +280,7 @@ function commonInPhrase(cuisines: Cuisine[]): string {
 }
 
 /** "a", "a and b", "a, b and c". */
-function joinWithAnd(items: string[]): string {
+export function joinWithAnd(items: string[]): string {
   return items.length <= 1 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
 }
 
@@ -322,16 +327,17 @@ export function createKitchen(content: KitchenContent): Kitchen {
   const pairsWithCount = (ingredient: Ingredient, others: Ingredient[]) =>
     others.filter((other) => arePaired(ingredient, other)).length;
 
-  /** Ingredients that fit a Slot and aren't used, best-pairing with `rest` first; ties in content order. */
-  const rankByPairing = (slot: Slot, used: Ingredient[]) =>
+  /** Ingredients that fit a Slot and aren't in `outside` (the rest of the dish), best-pairing with it first; ties in content order. */
+  const rankByPairing = (slot: Slot, outside: Ingredient[]) =>
     [...ingredients.values()]
-      .filter((i) => fits(slot)(i) && !used.includes(i))
-      .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, used) }))
+      .filter((i) => fits(slot)(i) && !outside.includes(i))
+      .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, outside) }))
       .sort((a, b) => b.score - a.score);
 
-  /** Everything derived from a Formula's fills: justifications, alternatives, method, rank. */
+  /** Everything derived from a Formula's fills: justifications, choices, method, rank. */
   function deriveSuggestion(
     formula: Formula,
+    combination: Ingredient[],
     fills: Fill[][],
   ): { suggestion: Suggestion; coherence: number } {
     const used = usedIn(fills);
@@ -343,11 +349,14 @@ export function createKitchen(content: KitchenContent): Kitchen {
           partner && pairingsByIngredient.get(ingredient.id)!.find((view) => view.ingredient === partner);
         return { ingredient, source, justification, reason: explainFill(source, justification) };
       });
+      const outside = used.filter((other) => !fills[i].some(({ ingredient }) => ingredient === other));
       return {
         slot,
         fills: slotFills,
-        // Ranked as a companion to everything in the dish, what's in the Slot included.
-        alternatives: rankByPairing(slot, used).map(({ ingredient }) => ingredient),
+        choices: rankByPairing(slot, outside).map(({ ingredient }) => ({
+          ingredient,
+          pairsWith: used.filter((other) => other !== ingredient && arePaired(ingredient, other)),
+        })),
         ...(slotFills.length === 0 && { emptyReason: `No Pairing here points to ${slot.role} yet.` }),
       };
     });
@@ -370,13 +379,13 @@ export function createKitchen(content: KitchenContent): Kitchen {
       (shared.length > 0
         ? ` ${chosen.length === 2 ? "Both are" : "All are"} ${commonInPhrase(shared)}.`
         : "");
-    // What the Cook brought: a Pairing suggestion or a swap is something the dish still needs.
+    // What the Cook brought: a Pairing suggestion or an Ingredient they added is something the dish still needs.
     // A required Slot is covered only when everything in it is from the basket.
     const needs = slots.filter(
       ({ slot, fills }) => slot.required && (fills.length === 0 || fills.some(({ source }) => !isCooksOwn(source))),
     );
     return {
-      suggestion: { formula, slots, method, rankReason, needs, makeable: needs.length === 0 },
+      suggestion: { formula, combination, slots, method, rankReason, needs, makeable: needs.length === 0 },
       coherence: pairs.length + (shared.length > 0 ? 0.5 : 0),
     };
   }
@@ -397,7 +406,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
       const kept = fills.map(({ ingredient, source }) => ({ ingredient, source }));
       return id === slotId ? update(kept, chosen) : kept;
     });
-    return deriveSuggestion(suggestion.formula, fills).suggestion;
+    return deriveSuggestion(suggestion.formula, suggestion.combination, fills).suggestion;
   }
 
   const formula = (id: string) => content.formulas.find((formula) => formula.id === id);
@@ -552,7 +561,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
         });
         fillByPairing();
 
-        return deriveSuggestion(formula, fills);
+        return deriveSuggestion(formula, combination, fills);
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
       const neededCount = ({ suggestion }: { suggestion: Suggestion }) => suggestion.needs.length;
@@ -561,26 +570,19 @@ export function createKitchen(content: KitchenContent): Kitchen {
         .map(({ suggestion }) => suggestion);
     },
 
-    swap(suggestion, slotId, replacingId, ingredientId) {
-      return change(suggestion, slotId, ingredientId, (fills, chosen) => {
-        if (!fills.some(({ ingredient }) => ingredient.id === replacingId)) {
-          throw new Error(`${replacingId} isn't in Slot "${slotId}"`);
-        }
-        return fills.map((fill) => (fill.ingredient.id === replacingId ? { ingredient: chosen, source: "swap" } : fill));
-      });
-    },
-
     addToSlot(suggestion, slotId, ingredientId) {
       const inDish = suggestion.slots.some(({ fills }) => fills.some(({ ingredient }) => ingredient.id === ingredientId));
       if (inDish) throw new Error(`${ingredientId} is in this dish already`);
       return change(suggestion, slotId, ingredientId, (fills, chosen) => {
-        return [...fills, { ingredient: chosen, source: "added" }];
+        // One of the Cook's own, taken out and put back, is theirs again.
+        const source = suggestion.combination.includes(chosen) ? "combination" : "added";
+        return [...fills, { ingredient: chosen, source }];
       });
     },
 
     removeFromSlot(suggestion, slotId, ingredientId) {
       return change(suggestion, slotId, ingredientId, (fills) => {
-        // The Cook swaps the last one instead: an empty Slot would read as one nothing pairs into.
+        // The Cook adds another first: an empty Slot would read as one nothing pairs into.
         if (fills.length < 2) throw new Error(`Slot "${slotId}" keeps at least one Ingredient`);
         return fills.filter(({ ingredient }) => ingredient.id !== ingredientId);
       });

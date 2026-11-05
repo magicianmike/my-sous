@@ -59,7 +59,7 @@ A Formula recommended for a Combination, with its Slots filled and a stated reas
 _Avoid_: Result, match, recommendation
 
 **Recipe**:
-A Formula's quantities, timings and full method, shown on the dish's page. It's written for its own Ingredients (the recipe as written), which fill any part the Combination and its Pairings leave empty, and it follows every fill and swap: each part's amount is given for particular Ingredients, with a general amount for the rest. A step whose safety depends on a part (poultry temperatures, say) shows the cited safety guidance of the Ingredient that fills it. The Cook sees it called a **recipe**.
+A Formula's quantities, timings and full method, shown on the dish's page. It's written for its own Ingredients (the recipe as written), which fill any part the Combination and its Pairings leave empty, and it follows every fill and change: each part's amount is given for particular Ingredients, with a general amount for the rest. A step whose safety depends on a part (poultry temperatures, say) shows the cited safety guidance of the Ingredient that fills it. The Cook sees it called a **recipe**.
 _Avoid_: Showcase Recipe (its earlier name, in the original spec), worked example
 
 ### Later

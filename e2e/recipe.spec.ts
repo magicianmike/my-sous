@@ -68,7 +68,7 @@ test("a part can hold two Ingredients from the basket, each with its full amount
   await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic", "Ginger"]);
 });
 
-test("the Cook can add another Ingredient to a part, up to what it holds", async ({ page }) => {
+test("the Cook can keep adding Ingredients to a part, with no limit", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const aromatic = part(page, "an aromatic");
   await aromatic.getByText("Add another").click();
@@ -77,6 +77,11 @@ test("the Cook can add another Ingredient to a part, up to what it holds", async
   await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic", "Ginger"]);
   await expect(aromatic.locator(".tag")).toHaveText(["Yours", "Added"]);
   await expect(page.getByRole("status")).toHaveText("Ginger is now also an aromatic. Undo takes it out.");
-  // An aromatic holds two, so there's no room for a third.
+
+  await aromatic.getByText("Add another").click();
+  await aromatic.getByRole("button", { name: "Add Scallion" }).click();
+  await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic", "Ginger", "Scallion"]);
+  await expect(page.getByRole("main").getByRole("list", { name: "Method" })).toContainText("garlic, ginger and scallion");
+  // Every aromatic is in, so there's nothing left to add.
   await expect(aromatic.getByText("Add another")).toHaveCount(0);
 });

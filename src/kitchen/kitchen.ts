@@ -92,7 +92,7 @@ export type SlotFill = {
   reason: string;
 };
 
-/** A Slot in a Suggestion, with the Ingredients chosen for it (at most its `max`), and why. */
+/** A Slot in a Suggestion, with the Ingredients chosen for it, and why. */
 export type FilledSlot = {
   slot: Slot;
   /** In the order they went in; empty while nothing pairs into the Slot. */
@@ -171,7 +171,7 @@ export type Kitchen = {
   suggest(combination: Ingredient[]): Suggestion[];
   /** The same Suggestion with one Ingredient in a Slot swapped for the Cook's choice; every other fill is kept. */
   swap(suggestion: Suggestion, slotId: string, replacingId: string, ingredientId: string): Suggestion;
-  /** The same Suggestion with the Cook's choice added to a Slot that has room. */
+  /** The same Suggestion with the Cook's choice added to a Slot. */
   addToSlot(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
   /** The same Suggestion with one Ingredient taken out of a Slot. */
   removeFromSlot(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
@@ -323,10 +323,10 @@ export function createKitchen(content: KitchenContent): Kitchen {
     others.filter((other) => arePaired(ingredient, other)).length;
 
   /** Ingredients that fit a Slot and aren't used, best-pairing with `rest` first; ties in content order. */
-  const rankByPairing = (slot: Slot, used: Ingredient[], rest: Ingredient[]) =>
+  const rankByPairing = (slot: Slot, used: Ingredient[]) =>
     [...ingredients.values()]
       .filter((i) => fits(slot)(i) && !used.includes(i))
-      .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, rest) }))
+      .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, used) }))
       .sort((a, b) => b.score - a.score);
 
   /** Everything derived from a Formula's fills: justifications, alternatives, method, rank. */
@@ -343,14 +343,11 @@ export function createKitchen(content: KitchenContent): Kitchen {
           partner && pairingsByIngredient.get(ingredient.id)!.find((view) => view.ingredient === partner);
         return { ingredient, source, justification, reason: explainFill(source, justification) };
       });
-      // Alternatives rank by pairing with the rest of the dish: with room, as a companion to everything
-      // (what's in the Slot included); when full, as a swap, with everything outside the Slot.
-      const room = fills[i].length < slot.max;
-      const rest = room ? used : used.filter((other) => !fills[i].some(({ ingredient }) => ingredient === other));
       return {
         slot,
         fills: slotFills,
-        alternatives: rankByPairing(slot, used, rest).map(({ ingredient }) => ingredient),
+        // Ranked as a companion to everything in the dish, what's in the Slot included.
+        alternatives: rankByPairing(slot, used).map(({ ingredient }) => ingredient),
         ...(slotFills.length === 0 && { emptyReason: `No Pairing here points to ${slot.role} yet.` }),
       };
     });
@@ -389,7 +386,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
     suggestion: Suggestion,
     slotId: string,
     ingredientId: string,
-    update: (fills: Fill[], chosen: Ingredient, slot: Slot) => Fill[],
+    update: (fills: Fill[], chosen: Ingredient) => Fill[],
   ): Suggestion {
     const slot = suggestion.formula.slots.find(({ id }) => id === slotId);
     const chosen = ingredients.get(ingredientId);
@@ -398,7 +395,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
     }
     const fills = suggestion.slots.map(({ slot: { id }, fills }) => {
       const kept = fills.map(({ ingredient, source }) => ({ ingredient, source }));
-      return id === slotId ? update(kept, chosen, slot) : kept;
+      return id === slotId ? update(kept, chosen) : kept;
     });
     return deriveSuggestion(suggestion.formula, fills).suggestion;
   }
@@ -517,7 +514,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
         const fills: Fill[][] = formula.slots.map(() => []);
         const used = () => usedIn(fills);
 
-        // The basket first: one Ingredient per Slot, in Slot order, then what's left into Slots with room.
+        // The basket first: one Ingredient per Slot, in Slot order, then what's left into the first Slot it fits.
         const unused = [...combination];
         const fromBasket = (slot: Slot, i: number, room: number) => {
           while (fills[i].length < room) {
@@ -527,14 +524,14 @@ export function createKitchen(content: KitchenContent): Kitchen {
           }
         };
         formula.slots.forEach((slot, i) => fromBasket(slot, i, 1));
-        formula.slots.forEach((slot, i) => fromBasket(slot, i, slot.max));
+        formula.slots.forEach((slot, i) => fromBasket(slot, i, Infinity));
         // Repeat until nothing changes: a fill can give an earlier Slot its first Pairing. Pairings
         // only fill empty Slots, with one Ingredient each.
         const fillByPairing = () => {
           for (let changed = true; changed; ) {
             changed = false;
             formula.slots.forEach((slot, i) => {
-              const [best] = fills[i].length > 0 ? [] : rankByPairing(slot, used(), used());
+              const [best] = fills[i].length > 0 ? [] : rankByPairing(slot, used());
               if (best?.score > 0) {
                 fills[i].push({ ingredient: best.ingredient, source: "pairing" });
                 changed = true;
@@ -576,8 +573,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
     addToSlot(suggestion, slotId, ingredientId) {
       const inDish = suggestion.slots.some(({ fills }) => fills.some(({ ingredient }) => ingredient.id === ingredientId));
       if (inDish) throw new Error(`${ingredientId} is in this dish already`);
-      return change(suggestion, slotId, ingredientId, (fills, chosen, slot) => {
-        if (fills.length >= slot.max) throw new Error(`Slot "${slotId}" holds at most ${slot.max}`);
+      return change(suggestion, slotId, ingredientId, (fills, chosen) => {
         return [...fills, { ingredient: chosen, source: "added" }];
       });
     },

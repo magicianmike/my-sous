@@ -421,7 +421,7 @@ describe("loadKitchen", () => {
       ];
     }
 
-    it("fills each Formula's Slots from the Combination, in order, one Slot per Ingredient", async () => {
+    it("fills each Formula's Slots from the Combination, in order, each Ingredient in one Slot", async () => {
       const kitchen = await expectKitchen(writeContent(fixture));
 
       const suggestions = kitchen.suggest(kitchen.combination(["basil", "lemon", "thyme"]).ingredients);
@@ -431,7 +431,8 @@ describe("loadKitchen", () => {
         ["herb-salad", { "first-herb": "basil", "second-herb": "thyme", acid: "lemon" }],
         ["pan-sauce", { aromatic: undefined, acid: "lemon", herb: "basil" }],
       ]);
-      expect(suggestions[1].method).toEqual(["Soften an aromatic, add lemon, finish with basil."]);
+      // Thyme fits the pan sauce's herb too, and goes in beside basil.
+      expect(suggestions[1].method).toEqual(["Soften an aromatic, add lemon, finish with basil and thyme."]);
       expect(suggestions[0].slots.map(({ fills }) => fills[0].source)).toEqual([
         "combination",
         "combination",
@@ -635,12 +636,13 @@ describe("loadKitchen", () => {
     });
   });
 
-  describe("Slots that hold more than one Ingredient", () => {
+  describe("Slots that hold any number of Ingredients", () => {
     const fixture = {
       ingredients: {
         garlic: { ...garlic, slotTypes: ["aromatic"] },
         ginger: { name: "Ginger", slotTypes: ["aromatic"] },
         scallion: { name: "Scallion", slotTypes: ["aromatic", "garnish"] },
+        shallot: { name: "Shallot", slotTypes: ["aromatic"] },
         lemon: { ...lemon, slotTypes: ["acid"] },
       },
       pairings: [],
@@ -650,7 +652,7 @@ describe("loadKitchen", () => {
           name: "Stir-fry",
           description: "Quick and hot.",
           slots: [
-            { id: "aromatic", role: "an aromatic", accepts: "aromatic", max: 2 },
+            { id: "aromatic", role: "an aromatic", accepts: "aromatic" },
             { id: "acid", role: "an acid", accepts: "acid" },
             { id: "garnish", role: "a garnish", accepts: "garnish", required: false },
           ],
@@ -668,11 +670,11 @@ describe("loadKitchen", () => {
     const held = (suggestion: Suggestion) =>
       Object.fromEntries(suggestion.slots.map(({ slot, fills }) => [slot.id, fills.map(({ ingredient }) => ingredient.id)]));
 
-    it("puts every basket Ingredient that fits into a Slot, up to its limit, and names them all in the method", async () => {
-      const { suggestion } = await stirFry(["garlic", "ginger", "lemon"]);
+    it("puts every basket Ingredient that fits into a Slot and names them all in the method", async () => {
+      const { suggestion } = await stirFry(["garlic", "ginger", "shallot", "lemon"]);
 
-      expect(held(suggestion)).toEqual({ aromatic: ["garlic", "ginger"], acid: ["lemon"], garnish: [] });
-      expect(suggestion.method).toEqual(["Fry garlic and ginger, add lemon, finish with a garnish."]);
+      expect(held(suggestion)).toEqual({ aromatic: ["garlic", "ginger", "shallot"], acid: ["lemon"], garnish: [] });
+      expect(suggestion.method).toEqual(["Fry garlic, ginger and shallot, add lemon, finish with a garnish."]);
       expect(suggestion.makeable).toBe(true);
     });
 
@@ -685,7 +687,7 @@ describe("loadKitchen", () => {
       expect(held((await stirFry(["garlic", "ginger", "scallion"])).suggestion).aromatic).toEqual(["garlic", "ginger"]);
     });
 
-    it("lets the Cook add to a Slot with room, take one out, or swap one, keeping the rest", async () => {
+    it("lets the Cook add to a Slot, take one out, or swap one, keeping the rest", async () => {
       const { kitchen, suggestion } = await stirFry(["garlic", "lemon"]);
 
       const added = kitchen.addToSlot(suggestion, "aromatic", "ginger");
@@ -693,8 +695,11 @@ describe("loadKitchen", () => {
         ["garlic", "combination"],
         ["ginger", "added"],
       ]);
-      expect(added.slots[0].alternatives.map(({ id }) => id)).toEqual(["scallion"]);
-      expect(() => kitchen.addToSlot(added, "aromatic", "scallion")).toThrow("holds at most 2");
+      expect(added.slots[0].alternatives.map(({ id }) => id)).toEqual(["scallion", "shallot"]);
+      // There's no limit: every aromatic can go in.
+      const all = kitchen.addToSlot(kitchen.addToSlot(added, "aromatic", "scallion"), "aromatic", "shallot");
+      expect(held(all).aromatic).toEqual(["garlic", "ginger", "scallion", "shallot"]);
+      expect(all.slots[0].alternatives).toEqual([]);
 
       expect(held(kitchen.swap(added, "aromatic", "garlic", "scallion")).aromatic).toEqual(["scallion", "ginger"]);
       expect(held(kitchen.removeFromSlot(added, "aromatic", "garlic")).aromatic).toEqual(["ginger"]);
@@ -713,7 +718,7 @@ describe("loadKitchen", () => {
       expect(added.needs.map(({ slot }) => slot.id)).toEqual(["aromatic"]);
     });
 
-    it("ranks what could go in a Slot with room by pairing with everything in the dish, its own Slot included", async () => {
+    it("ranks what could go in a Slot by pairing with everything in the dish, its own Slot included", async () => {
       const kitchen = await expectKitchen(
         writeContent({
           ...fixture,
@@ -725,7 +730,7 @@ describe("loadKitchen", () => {
       const [suggestion] = kitchen.suggest(kitchen.combination(["garlic", "lemon"]).ingredients);
 
       // Scallion pairs with garlic, already an aromatic, so it ranks above ginger as a companion.
-      expect(suggestion.slots[0].alternatives.map(({ id }) => id)).toEqual(["scallion", "ginger"]);
+      expect(suggestion.slots[0].alternatives.map(({ id }) => id)).toEqual(["scallion", "ginger", "shallot"]);
     });
   });
 
@@ -989,12 +994,6 @@ describe("loadKitchen", () => {
       const content = {
         ...fixture,
         ingredients: { ...fixture.ingredients, ginger: { name: "Ginger", slotTypes: ["aromatic"] } },
-        formulas: [
-          {
-            ...fixture.formulas[0],
-            slots: fixture.formulas[0].slots.map((slot) => (slot.id === "aromatic" ? { ...slot, max: 2 } : slot)),
-          },
-        ],
       };
       const ginger = { amount: "a thumb", note: "grated" };
       const ingredients = recipe.ingredients.map((line) =>
@@ -1042,14 +1041,6 @@ describe("loadKitchen", () => {
 
         expect(await errorsFor({ "pan-sauce": { ...recipe, fills } })).toEqual([
           'Recipe pan-sauce leaves the required Slot "acid" without an Ingredient as written.',
-        ]);
-      });
-
-      it("when it fills a Slot with more Ingredients than it holds", async () => {
-        const fills = { ...recipe.fills, acid: ["lemon", "lime"] };
-
-        expect(await errorsFor({ "pan-sauce": { ...recipe, fills } })).toEqual([
-          'Recipe pan-sauce fills "acid" with 2 Ingredients; it holds at most 1.',
         ]);
       });
 

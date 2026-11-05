@@ -201,8 +201,8 @@ function Choices({ ingredients, verb, onChoose }: { ingredients: Ingredient[]; v
 
 /**
  * One part of the dish: its role as a label across the top, then each Ingredient in it, with why it's
- * there, Swap, Remove (while there's more than one) and Add to the basket; then Add another while the
- * part has room, and Undo after the Cook's latest change here.
+ * there, Swap, Remove (while there's more than one) and Add to the basket; then Add another while
+ * anything else could go in, and Undo after the Cook's latest change here.
  */
 function PartCard({
   filled,
@@ -217,7 +217,7 @@ function PartCard({
   undoRef?: React.Ref<HTMLButtonElement>;
 }) {
   const { slot, fills, alternatives, emptyReason } = filled;
-  const room = fills.length < slot.max && alternatives.length > 0;
+  const room = alternatives.length > 0;
   return (
     <>
       <div className="part-head">

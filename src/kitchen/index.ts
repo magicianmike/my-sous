@@ -213,9 +213,6 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
         report(`fills unknown Slot "${slotId}".`);
         continue;
       }
-      if (ingredientIds.length > slot.max) {
-        report(`fills "${slotId}" with ${ingredientIds.length} Ingredients; it holds at most ${slot.max}.`);
-      }
       for (const ingredientId of ingredientIds) {
         const ingredient = ingredientsById.get(ingredientId);
         if (!ingredient) report(`fills "${slotId}" with unknown Ingredient "${ingredientId}".`);

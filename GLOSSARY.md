@@ -51,7 +51,7 @@ An adaptable dish template (for example a pan sauce or a grain bowl) made of Slo
 _Avoid_: Template, pattern
 
 **Slot**:
-A named role within a Formula, such as "an acid" or "a soft herb", that Ingredients listing its Slot type can fill. A Slot holds one Ingredient unless the Formula says it holds more, such as two aromatics (garlic and ginger). The Cook sees it called a **part** ("every part a dish needs"); "Slot" stays in code, content and docs.
+A named role within a Formula, such as "an acid" or "a soft herb", that Ingredients listing its Slot type can fill. A Slot holds any number of Ingredients, such as garlic and ginger as the aromatic. The Cook sees it called a **part** ("every part a dish needs"); "Slot" stays in code, content and docs.
 _Avoid_: Placeholder, component
 
 **Suggestion**:

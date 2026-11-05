@@ -70,7 +70,6 @@ const slotSchema = z.object({
   accepts: z.string().min(1),
   required: z.boolean().default(true),
   /** How many Ingredients the Slot can hold, such as 2 aromatics; one unless it says. */
-  max: z.number().int().positive().default(1),
 });
 
 export const formulaSchema = z.object({

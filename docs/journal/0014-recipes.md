@@ -95,13 +95,13 @@ The role stays the part's heading, so screen readers and focus after a swap work
 
 **A part can hold more than one Ingredient.** The author asked for garlic and ginger together as aromatics. They chose each of these from options:
 
-- **Where.** Each Slot in content says how many it holds (`max`, one unless it says). Aromatics, soft herbs and vegetables hold two; a protein or an acid holds one.
-- **From the basket.** Every basket Ingredient that fits goes in, up to the limit, in basket order. Each part takes one first, in part order, before any takes a second, so an Ingredient that fits two parts (scallion is an aromatic and a garnish) fills an empty part before doubling up in another. That rule wasn't asked for; it keeps a dish from leaving a part empty that the basket could fill. Pairings and the recipe only fill empty parts.
+- **No limit.** A part holds any number of Ingredients. The first build let each part set a limit in content (two aromatics, one acid); the author dropped it.
+- **From the basket.** Every basket Ingredient that fits goes in, in basket order. Each part takes one first, in part order, before any takes a second, so an Ingredient that fits two parts (scallion is an aromatic and a garnish) fills an empty part before doubling up in another. That rule wasn't asked for; it keeps a dish from leaving a part empty that the basket could fill. What's left goes into the first part it fits. Pairings and the recipe only fill empty parts.
 - **Ready.** A required part counts as covered only when everything in it is from the basket. Adding ginger beside the basket's garlic makes the dish need ginger, and the readiness line names it.
-- **What to add.** While a part has room, its choices rank by pairing with everything in the dish, its own Ingredients included, since a second one goes alongside them. Once it's full, they rank as swaps, by pairing with everything outside the part.
-- **On the dish page.** Each Ingredient in a part has its own row: name and tag, why it's there, Swap, Remove (once there are two), and Add to the basket. "Add another" sits below while the part has room. "Choose" offers the same list for an empty part. Undo covers every change and says what it undoes.
+- **What to add.** A part's choices rank by pairing with everything in the dish, its own Ingredients included, since a new one goes alongside them.
+- **On the dish page.** Each Ingredient in a part has its own row: name and tag, why it's there, Swap, Remove (once there are two), and Add to the basket. "Add another" sits below while anything else could go in. "Choose" offers the same list for an empty part. Undo covers every change and says what it undoes.
 - **Amounts.** Each Ingredient keeps the full amount the recipe gives it, as a cook would: 3 cloves of garlic and a thumb of ginger, not half of each.
-- **Elsewhere.** The method names them all ("add garlic and ginger"). A safety step shows the guidance of every Ingredient in its part. Recipe validation rejects more Ingredients as written than a part holds.
+- **Elsewhere.** The method names them all ("add garlic and ginger"). A safety step shows the guidance of every Ingredient in its part.
 
 | A part holding two | |
 | --- | --- |
@@ -116,8 +116,8 @@ The role stays the part's heading, so screen readers and focus after a swap work
   - a safety step carries its Ingredient's cited guidance;
   - a dish without a recipe fills from the basket and Pairings alone;
   - each validation rule fails with its own message.
-- **Vitest, parts that hold more than one:**
-  - every basket Ingredient that fits goes in, up to the limit, and the method names them all;
+- **Vitest, parts that hold any number:**
+  - every basket Ingredient that fits goes in, and the method names them all;
   - each part takes one before any takes two;
   - add, remove and swap keep the rest, and refuse to empty a part or repeat an Ingredient;
   - a part needs whatever in it isn't from the basket;
@@ -128,7 +128,7 @@ The role stays the part's heading, so screen readers and focus after a swap work
   - the recipe follows the basket and a swap, amounts and method included;
   - a dish without a recipe keeps its short method;
   - two aromatics from the basket, each with its full amount, and removing one then undoing;
-  - adding another aromatic, up to the two it holds.
+  - adding aromatics until none are left to add.
 - **axe** covers the dish page with a recipe (both themes, phone and desktop), and so does the **reflow** check. The **phone tap-target** check passes.
 
 ## VoiceOver pass (for the author)

@@ -247,6 +247,32 @@ test("the basket's Ingredients sit side by side in the side panel too", async ({
   expect(second!.y).toBe(first!.y);
 });
 
+test("a part's Options sit at the end of its top row, and open above what's in it", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const acid = slotItem(page, "an acid");
+  const options = acid.getByRole("button", { name: "Options for an acid" });
+  await expect(options).toHaveAttribute("aria-expanded", "false");
+  await options.click();
+  await expect(options).toHaveAttribute("aria-expanded", "true");
+
+  const [toggle, role, card, list, fill] = await Promise.all([
+    options.boundingBox(),
+    acid.getByRole("heading", { name: "an acid" }).boundingBox(),
+    acid.boundingBox(),
+    acid.getByRole("group", { name: "Ingredients for an acid" }).boundingBox(),
+    acid.locator(".part-fill").boundingBox(),
+  ]);
+  // Level with the part's name, at the right of the card.
+  expect(Math.abs(toggle!.y + toggle!.height / 2 - (role!.y + role!.height / 2))).toBeLessThan(4);
+  expect(toggle!.x + toggle!.width).toBeGreaterThan(card!.x + card!.width * 0.85);
+  // The list opens between the top row and the Ingredients.
+  expect(list!.y).toBeGreaterThan(toggle!.y + toggle!.height);
+  expect(list!.y + list!.height).toBeLessThanOrEqual(fill!.y);
+
+  await options.click();
+  await expect(acid.getByRole("group", { name: "Ingredients for an acid" })).toBeHidden();
+});
+
 test("a part's Add sits in its Ingredient's bottom corner", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");

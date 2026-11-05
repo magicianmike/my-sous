@@ -685,7 +685,7 @@ main {
 
 /* What could be in a part, each ticked while it's in it; a row is a full-size target. */
 .checklist {
-  margin: var(--space-2) 0 0;
+  margin: 0;
   padding: 0;
   border: 0;
 }
@@ -784,11 +784,11 @@ main {
   background: var(--surface);
 }
 
+/* The role, then its tags, then Options at the far end. */
 .part-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-2);
   padding-bottom: var(--space-2);
   border-bottom: var(--border-hairline) solid var(--line);
@@ -826,7 +826,7 @@ main {
   gap: var(--space-2);
 }
 
-/* Options and Undo, below the part's Ingredients. */
+/* Undo, below the part's Ingredients. */
 .part-foot {
   display: flex;
   flex-wrap: wrap;
@@ -836,8 +836,15 @@ main {
   border-top: var(--border-hairline) solid var(--line);
 }
 
-.part-foot details {
-  flex: 1;
+.part-head > button {
+  margin-inline-start: auto;
+}
+
+/* The Options list, opened between the top row and what's in the part. */
+.part-options {
+  padding: 0 var(--space-3) var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--sunk);
 }
 
 .part-detail {

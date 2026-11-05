@@ -109,6 +109,7 @@ The role stays the part's heading, so screen readers and focus after a swap work
 **Swap and Add another became one checklist, "Options".** The author saw that the two did much the same thing. They chose a checklist from three options; the others were "add, then remove" and one list with a button for each:
 
 - **Options.** Each part has one "Options", empty or not; it was "Change" (and "Choose" while empty) until the author renamed it. It opens every Ingredient that could be in the part, ticked while it's in it. Ticking one adds it; unticking takes it out. A swap is one of each. Remove and the separate Swap went with it.
+- **Where it sits.** The author then moved Options to the end of the part's top row, level with its role, with the list opening between that row and the Ingredients. A native disclosure opens right under its toggle, so this is a toggle button (`DisclosureToggle`, sharing the disclosure's look) with `aria-expanded`, controlling a panel placed below the row. Undo stays at the foot of the part.
 - **The last one stays.** It can't be unticked, and a note, which the dimmed checkbox points to for screen readers, says "Choose another before taking lemon out." An empty part would read as one nothing pairs into.
 - **Order holds.** The list ranks by pairing with what's outside the part, so ticking moves nothing, and focus stays on the checkbox for the next change. Each choice says what in the dish it pairs with, such as "pairs with chicken thigh and garlic". That hint includes the part's own Ingredients, so a choice that goes with garlic says so, though the rank leaves them out to keep the order still.
 - **Yours stays yours.** Untick a basket Ingredient and tick it again, and it's back as "Yours", so the dish is Ready again and there's no Add to the basket for something already in it. The Spec review caught it reading "Added".
@@ -144,6 +145,7 @@ The role stays the part's heading, so screen readers and focus after a swap work
   - two aromatics from the basket, each with its full amount, and removing one then undoing;
   - ticking aromatics until all are in;
   - a swap as a tick and an untick, then two undos, with focus staying on the checkbox.
+  - Options sits at the end of the top row and opens above what's in the part.
 - **axe** covers the dish page with a recipe (both themes, phone and desktop), and so does the **reflow** check. The **phone tap-target** check passes.
 
 ## VoiceOver pass (for the author)

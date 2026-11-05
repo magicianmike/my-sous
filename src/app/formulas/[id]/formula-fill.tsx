@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { BasketIcon } from "@/components/BasketIcon";
 import { Button } from "@/components/Button";
-import { Disclosure } from "@/components/Disclosure";
+import { DisclosureToggle } from "@/components/Disclosure";
 import { EmptyMark } from "@/components/EmptyMark";
 import { IngredientMark } from "@/components/IngredientMark";
 import { Readiness } from "@/components/Readiness";
@@ -223,9 +223,9 @@ function Checklist({ filled, actions }: { filled: FilledSlot; actions: PartActio
 }
 
 /**
- * One part of the dish: its role as a label across the top, then each Ingredient in it, with why it's
- * there and Add to the basket; then Options, to tick what's in it, and Undo after the Cook's latest
- * change here.
+ * One part of the dish: its role as a label across the top, with Options at the end to tick what's in
+ * it, opening just below; then each Ingredient in it, with why it's there and Add to the basket; then
+ * Undo after the Cook's latest change here.
  */
 function PartCard({
   filled,
@@ -240,6 +240,8 @@ function PartCard({
   undoRef?: React.Ref<HTMLButtonElement>;
 }) {
   const { slot, fills, choices, emptyReason } = filled;
+  const [open, setOpen] = useState(false);
+  const optionsId = useId();
   return (
     <>
       <div className="part-head">
@@ -251,7 +253,21 @@ function PartCard({
             <span className="tag">Optional</span>
           </p>
         )}
+        {choices.length > 0 && (
+          <DisclosureToggle
+            summary="Options"
+            hiddenSummary={`for ${slot.role}`}
+            open={open}
+            controls={optionsId}
+            onToggle={() => setOpen(!open)}
+          />
+        )}
       </div>
+      {choices.length > 0 && (
+        <div id={optionsId} className="part-options" hidden={!open}>
+          <Checklist filled={filled} actions={actions} />
+        </div>
+      )}
       {fills.length === 0 ? (
         <div className="part-fill">
           <EmptyMark size="md" />
@@ -286,18 +302,11 @@ function PartCard({
           ))}
         </ul>
       )}
-      {(choices.length > 0 || undoRef) && (
+      {undoRef && (
         <div className="part-foot">
-          {choices.length > 0 && (
-            <Disclosure summary="Options" hiddenSummary={`for ${slot.role}`}>
-              <Checklist filled={filled} actions={actions} />
-            </Disclosure>
-          )}
-          {undoRef && (
-            <Button ref={undoRef} onClick={actions.undo}>
-              Undo<span className="visually-hidden"> change to {slot.role}</span>
-            </Button>
-          )}
+          <Button ref={undoRef} onClick={actions.undo}>
+            Undo<span className="visually-hidden"> change to {slot.role}</span>
+          </Button>
         </div>
       )}
     </>

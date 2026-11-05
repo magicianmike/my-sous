@@ -1,4 +1,5 @@
-.disclosure summary {
+.disclosure summary,
+.toggle {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
@@ -10,7 +11,17 @@
 }
 
 /* The chevron says it opens, so no underline; under the pointer it changes colour, as links do. */
-.disclosure summary:hover {
+.toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--weight-bold);
+}
+
+.disclosure summary:hover,
+.toggle:hover {
   color: var(--link-hover);
 }
 
@@ -18,7 +29,8 @@
   display: none;
 }
 
-.disclosure summary::after {
+.disclosure summary::after,
+.toggle::after {
   content: "";
   width: 0.5em;
   height: 0.5em;
@@ -28,7 +40,8 @@
   transition: transform var(--motion-base) var(--ease-out);
 }
 
-.disclosure[open] summary::after {
+.disclosure[open] summary::after,
+.toggle[aria-expanded="true"]::after {
   transform: rotate(-135deg) translate(-0.15em, 0);
 }
 

@@ -70,6 +70,29 @@ The sources are USDA Food Safety and Inspection Service pages. Swaps can bring i
 
 The image frame keeps its space and shows the drawings of what's in the dish, which now update with every swap, until #32 brings images.
 
+## Then: two more changes from the author
+
+**"Not everything pairs yet" is gone.** What to make used to open with a box naming each pair in the basket that has no Pairing, offering a swap or a removal for each Ingredient involved. The author cut it: it isn't something the Cook needs to know. Each Suggestion's rank reason still says plainly which Ingredients don't pair, such as "Chicken thigh and basil don't have a Pairing in MySous yet.", and the closest dishes still show, so nothing is a dead end. These went with the box, since nothing else used them:
+
+- the Kitchen's tensions and fixes, so `suggest` now returns the Suggestions alone;
+- the basket's "replace";
+- the glossary's "Tension";
+- their tests.
+
+The Case Study's linked basket now promises every dish for it, each saying what pairs and what doesn't. Spec stories 42 and 43 no longer hold.
+
+**Part cards lead with the role.** The author asked for a better layout, with more weight on the part's role ("an aromatic"), and chose this one from three:
+
+- The role is a bold, upper-case label across the top of the card, with its tags at the other end, and a rule beneath.
+- Below it, a larger drawing sits beside the Ingredient's name.
+- Then comes the reason, with Swap (and Undo) and Add along the foot.
+
+The role stays the part's heading, so screen readers and focus after a swap work as before.
+
+| Part cards, desktop light | Part cards, phone dark |
+| --- | --- |
+| ![](0014-recipes/after-parts-desktop-light.png) | ![](0014-recipes/after-parts-phone-dark.png) |
+
 ## Tests
 
 - **Vitest, through `loadKitchen`:**

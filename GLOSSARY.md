@@ -58,10 +58,6 @@ _Avoid_: Placeholder, component
 A Formula recommended for a Combination, with its Slots filled and a stated reason for its rank. A Suggestion is **makeable** (shown as "Ready") when the Combination fills every required Slot.
 _Avoid_: Result, match, recommendation
 
-**Tension**:
-Two Ingredients in a Combination that have no Pairing between them. MySous names each tension and offers one fix for every Ingredient involved: a swap for an Ingredient that pairs with all the rest of the Combination, or, when none does, removing it.
-_Avoid_: Conflict, clash, mismatch
-
 **Recipe**:
 A Formula's quantities, timings and full method, shown on the dish's page. It's written for its own Ingredients (the recipe as written), which fill any part the Combination and its Pairings leave empty, and it follows every fill and swap: each part's amount is given for particular Ingredients, with a general amount for the rest. A step whose safety depends on a part (poultry temperatures, say) shows the cited safety guidance of the Ingredient that fills it. The Cook sees it called a **recipe**.
 _Avoid_: Showcase Recipe (its earlier name, in the original spec), worked example

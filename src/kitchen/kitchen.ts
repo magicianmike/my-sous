@@ -104,24 +104,6 @@ export type Suggestion = {
   makeable: boolean;
 };
 
-/** Two Combination Ingredients with no Pairing between them. */
-export type Tension = { ingredients: [Ingredient, Ingredient] };
-
-/**
- * The next step for one Ingredient in a tension: swap it for `replacement`, which pairs with
- * all the rest of the Combination, or, when nothing does, remove it.
- */
-export type CombinationFix = { ingredient: Ingredient; replacement?: Ingredient };
-
-/** What `suggest` gives for a Combination: ranked Suggestions, never empty while Formulas exist. */
-export type SuggestResult = {
-  suggestions: Suggestion[];
-  /** Pairs of Combination Ingredients with no Pairing between them, in Combination order. */
-  tensions: Tension[];
-  /** One fix for each Ingredient in a tension, in Combination order. */
-  fixes: CombinationFix[];
-};
-
 /** A line of a Recipe's ingredient list, its name lower-case like the rest; `ingredient` is set when it fills a Slot. */
 export type RecipeIngredient = { amount: string; name: string; ingredient?: Ingredient; note?: string };
 
@@ -173,7 +155,7 @@ export type Kitchen = {
    * makeable first), then by coherence: the number of Pairings among the Ingredients the Cook
    * chose, not those suggested by Pairing. Ties keep content order. Deterministic.
    */
-  suggest(combination: Ingredient[]): SuggestResult;
+  suggest(combination: Ingredient[]): Suggestion[];
   /** The same Suggestion with one Slot holding the Cook's choice; every other fill is kept. */
   swap(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
 };
@@ -329,34 +311,6 @@ export function createKitchen(content: KitchenContent): Kitchen {
       .filter((i) => fits(slot)(i) && !used.includes(i))
       .map((ingredient) => ({ ingredient, score: pairsWithCount(ingredient, rest) }))
       .sort((a, b) => b.score - a.score);
-
-  /**
-   * Tensions in a Combination, and one fix per Ingredient involved. A swap must share a Slot
-   * type with the Ingredient it replaces (so it plays the same role), not be in the Combination
-   * already, and pair with all the rest, so accepting it leaves that Ingredient in no tension.
-   * The first such Ingredient in content order is proposed; with none, the fix is removal.
-   */
-  function findTensions(combination: Ingredient[]): Pick<SuggestResult, "tensions" | "fixes"> {
-    const tensions = combination.flatMap((a, i) =>
-      combination
-        .slice(i + 1)
-        .filter((b) => !arePaired(a, b))
-        .map((b): Tension => ({ ingredients: [a, b] })),
-    );
-    const fixes = combination
-      .filter((ingredient) => tensions.some(({ ingredients }) => ingredients.includes(ingredient)))
-      .map((ingredient): CombinationFix => {
-        const rest = combination.filter((other) => other !== ingredient);
-        const replacement = [...ingredients.values()].find(
-          (candidate) =>
-            !combination.includes(candidate) &&
-            candidate.slotTypes.some((type) => ingredient.slotTypes.includes(type)) &&
-            rest.every((other) => arePaired(candidate, other)),
-        );
-        return { ingredient, replacement };
-      });
-    return { tensions, fixes };
-  }
 
   /** Everything derived from a Formula's fills: justifications, alternatives, method, rank. */
   function deriveSuggestion(
@@ -547,12 +501,9 @@ export function createKitchen(content: KitchenContent): Kitchen {
       });
       // A stable sort, so ties keep the order Formulas appear in the content.
       const neededCount = ({ suggestion }: { suggestion: Suggestion }) => suggestion.needs.length;
-      return {
-        suggestions: suggestions
-          .sort((a, b) => neededCount(a) - neededCount(b) || b.coherence - a.coherence)
-          .map(({ suggestion }) => suggestion),
-        ...findTensions(combination),
-      };
+      return suggestions
+        .sort((a, b) => neededCount(a) - neededCount(b) || b.coherence - a.coherence)
+        .map(({ suggestion }) => suggestion);
     },
 
     swap(suggestion, slotId, ingredientId) {

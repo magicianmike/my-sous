@@ -25,7 +25,7 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   ["/ingredients/mango", (page) => page.getByRole("heading", { name: "This isn’t in MySous yet" })],
   [
     "/suggestions?with=chicken-thigh,basil,ginger",
-    (page) => page.getByRole("heading", { name: "Not everything pairs yet" }),
+    (page) => page.getByRole("heading", { name: "Suggestions" }),
   ],
 ];
 

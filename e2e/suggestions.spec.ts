@@ -83,13 +83,6 @@ test("removing the last Ingredient on What to make moves focus to what replaces 
   await expect(page.getByRole("heading", { name: "Nothing to suggest yet" })).toBeFocused();
 });
 
-test("a tension shows both Ingredients and names them in words", async ({ page }) => {
-  await page.goto("/suggestions?with=chicken-thigh,basil,ginger");
-  const tension = page.locator(".tension").first();
-  await expect(tension.locator("svg")).toHaveCount(2);
-  await expect(tension).toHaveText("Chicken thigh and basil don’t have a Pairing in MySous.");
-});
-
 test("an Ingredient's drawing and its name both open its page", async ({ page }) => {
   await page.goto("/suggestions?with=chicken-thigh,garlic");
   await marks(page, "Pan sauce", "Suggested").first().click();

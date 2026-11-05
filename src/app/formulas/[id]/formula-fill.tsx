@@ -6,7 +6,6 @@ import { Button } from "@/components/Button";
 import { Disclosure } from "@/components/Disclosure";
 import { EmptyMark } from "@/components/EmptyMark";
 import { IngredientMark } from "@/components/IngredientMark";
-import { ListRow } from "@/components/ListRow";
 import { Readiness } from "@/components/Readiness";
 import {
   inSentence,
@@ -33,7 +32,6 @@ export const FormulaFill = withSearchParams(function FormulaFill({
   const [added, setAdded] = useState<string>();
   const suggestion = kitchen
     .suggest(combination.ingredients)
-    .suggestions
     .find(({ formula }) => formula.id === formulaId)!;
   // A new Combination starts a fresh swap history.
   const combinationKey = combination.ingredients.map(({ id }) => id).join(",");
@@ -129,78 +127,74 @@ function SlotEditor({
           // What fills it isn't in the basket yet, so the Cook can add it.
           const addable = ingredient && source && !isCooksOwn(source) ? ingredient : undefined;
           return (
-            <li key={slot.id}>
-              <ListRow
-                mark={ingredient ? <IngredientMarkLink ingredient={ingredient} /> : <EmptyMark />}
-                title={
-                  <>
-                    <h3
-                      className="slot-role"
-                      tabIndex={-1}
-                      ref={(heading) => {
-                        if (heading) headings.current.set(slot.id, heading);
-                      }}
-                    >
-                      {slot.role}
-                    </h3>
-                    <p className="slot-fill">
-                      {ingredient ? <IngredientLink ingredient={ingredient} /> : "Nothing yet"}
-                    </p>
-                  </>
-                }
-                action={
-                  <>
-                    {(source || !slot.required) && (
-                      <p className="tags">
-                        {source && <span className="tag">{SOURCE_TAG[source]}</span>}
-                        {!slot.required && <span className="tag">Optional</span>}
-                      </p>
-                    )}
-                    {undoable === slot.id && (
-                      <Button ref={undoButton} onClick={undo}>
-                        Undo<span className="visually-hidden"> swap of {slot.role}</span>
-                      </Button>
-                    )}
-                  </>
-                }
-              >
-                <p className="muted">{filled.reason}</p>
-                {/* Swap at the start, Add at the end: the row's last line. */}
-                {(alternatives.length > 0 || addable) && (
-                  <div className="slot-actions">
-                    {alternatives.length > 0 && (
-                      // Keyed by the fill, so a swap closes the list.
-                      <Disclosure
-                        key={ingredient?.id}
-                        summary={ingredient ? "Swap" : "Choose"}
-                        hiddenSummary={slot.role}
-                      >
-                        <ul className="alternatives">
-                          {alternatives.map((alternative) => (
-                            <li key={alternative.id}>
-                              <button
-                                type="button"
-                                className="alternative"
-                                onClick={() => swap(filled, alternative)}
-                              >
-                                <IngredientMark ingredient={alternative} size="sm" />
-                                <span className="visually-hidden">Use </span>
-                                {alternative.name}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </Disclosure>
-                    )}
-                    {addable && (
-                      <Button variant="primary" className="slot-add" onClick={() => onAdd(slot.id, addable)}>
-                        <BasketIcon className="button-icon" />
-                        Add<span className="visually-hidden"> {addable.name} to your basket</span>
-                      </Button>
-                    )}
-                  </div>
+            <li key={slot.id} className="part">
+              {/* The part's role, as a label across the top, with where its Ingredient came from. */}
+              <div className="part-head">
+                <h3
+                  className="slot-role"
+                  tabIndex={-1}
+                  ref={(heading) => {
+                    if (heading) headings.current.set(slot.id, heading);
+                  }}
+                >
+                  {slot.role}
+                </h3>
+                {(source || !slot.required) && (
+                  <p className="tags">
+                    {source && <span className="tag">{SOURCE_TAG[source]}</span>}
+                    {!slot.required && <span className="tag">Optional</span>}
+                  </p>
                 )}
-              </ListRow>
+              </div>
+              <div className="part-body">
+                {ingredient ? <IngredientMarkLink ingredient={ingredient} size="md" /> : <EmptyMark size="md" />}
+                <div className="part-detail">
+                  <p className="slot-fill">
+                    {ingredient ? <IngredientLink ingredient={ingredient} /> : "Nothing yet"}
+                  </p>
+                  <p className="muted">{filled.reason}</p>
+                  {/* Swap and Undo at the start, Add at the end: the part's last line. */}
+                  {(alternatives.length > 0 || addable || undoable === slot.id) && (
+                    <div className="slot-actions">
+                      {alternatives.length > 0 && (
+                        // Keyed by the fill, so a swap closes the list.
+                        <Disclosure
+                          key={ingredient?.id}
+                          summary={ingredient ? "Swap" : "Choose"}
+                          hiddenSummary={slot.role}
+                        >
+                          <ul className="alternatives">
+                            {alternatives.map((alternative) => (
+                              <li key={alternative.id}>
+                                <button
+                                  type="button"
+                                  className="alternative"
+                                  onClick={() => swap(filled, alternative)}
+                                >
+                                  <IngredientMark ingredient={alternative} size="sm" />
+                                  <span className="visually-hidden">Use </span>
+                                  {alternative.name}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </Disclosure>
+                      )}
+                      {undoable === slot.id && (
+                        <Button ref={undoButton} onClick={undo}>
+                          Undo<span className="visually-hidden"> swap of {slot.role}</span>
+                        </Button>
+                      )}
+                      {addable && (
+                        <Button variant="primary" className="slot-add" onClick={() => onAdd(slot.id, addable)}>
+                          <BasketIcon className="button-icon" />
+                          Add<span className="visually-hidden"> {addable.name} to your basket</span>
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
             </li>
           );
         })}

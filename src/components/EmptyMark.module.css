@@ -1,9 +1,17 @@
 .empty {
   display: inline-block;
   flex: none;
-  width: var(--mark-sm);
-  height: var(--mark-sm);
   border: var(--border-control) dashed var(--line);
   border-radius: 50%;
   background: var(--sunk);
+}
+
+.sm {
+  width: var(--mark-sm);
+  height: var(--mark-sm);
+}
+
+.md {
+  width: var(--mark-md);
+  height: var(--mark-md);
 }

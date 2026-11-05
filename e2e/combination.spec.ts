@@ -120,12 +120,7 @@ test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees 
   await expect(slotItem(page, "a soft herb")).toContainText("Optional");
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (lemon pairs best).");
 
-  await acid.getByText("Options").click();
-  // The last one in a part can't be unticked: an empty part would read as one nothing pairs into.
-  await expect(acid.getByRole("checkbox", { name: "Lemon" })).toBeDisabled();
-  await expect(acid.getByRole("checkbox", { name: "Lemon" })).toHaveAccessibleDescription(
-    /Choose another before taking lemon out\./,
-  );
+  await acid.getByRole("button", { name: /^Options/ }).click();
   await acid.getByRole("checkbox", { name: "Lime" }).check();
   await expect(page.getByRole("status")).toHaveText("Lime is now also an acid. Undo takes it out.");
   await expect(acid.getByRole("checkbox", { name: "Lime" })).toBeFocused();
@@ -153,13 +148,30 @@ test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees 
   await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();
 });
 
+test("a Cook can take out a part's only Ingredient, and the part says it needs one", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const aromatic = slotItem(page, "an aromatic");
+  await aromatic.getByRole("button", { name: /^Options/ }).click();
+  await aromatic.getByRole("checkbox", { name: "Garlic" }).uncheck();
+
+  await expect(slot(page, "an aromatic")).toHaveText("Needs an aromatic");
+  await expect(aromatic).toContainText("Empty for now. Garlic pairs best with the rest of the dish. Choose one in Options.");
+  await expect(page.getByRole("status")).toHaveText("Garlic taken out of an aromatic. Undo puts it back.");
+  await expect(page.locator(".formula-readiness")).toContainText("Also needs an aromatic (garlic pairs best) and an acid");
+  await expect(aromatic.getByRole("checkbox", { name: "Garlic" })).toBeFocused();
+
+  await aromatic.getByRole("checkbox", { name: "Ginger" }).check();
+  await expect(slot(page, "an aromatic")).toHaveText("Ginger");
+  await expect(page.getByRole("status")).toHaveText("Ginger is now an aromatic. Undo takes it out.");
+});
+
 test("only the latest change offers Undo, and undoing it moves Undo to the change before", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
-  await acid.getByText("Options").click();
+  await acid.getByRole("button", { name: /^Options/ }).click();
   await acid.getByRole("checkbox", { name: "Lime" }).check();
   const aromatic = slotItem(page, "an aromatic");
-  await aromatic.getByText("Options").click();
+  await aromatic.getByRole("button", { name: /^Options/ }).click();
   await aromatic.getByRole("checkbox", { checked: false }).first().check();
 
   await expect(page.getByRole("button", { name: /^Undo change/ })).toHaveCount(1);

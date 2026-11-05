@@ -175,12 +175,11 @@ function SlotEditor({
 
 /**
  * Every Ingredient that could be in a part, ticked while it's in it: ticking adds one, unticking takes
- * one out, so a swap is one of each. The last one ticked can't be unticked.
+ * one out, so a swap is one of each. Unticking the last leaves the part empty.
  */
 function Checklist({ filled, actions }: { filled: FilledSlot; actions: PartActions }) {
   const { slot, fills, choices } = filled;
   const id = useId();
-  const only = fills.length === 1 ? fills[0].ingredient : undefined;
   return (
     <fieldset className="checklist">
       <legend className="visually-hidden">Ingredients for {slot.role}</legend>
@@ -194,10 +193,7 @@ function Checklist({ filled, actions }: { filled: FilledSlot; actions: PartActio
                 <input
                   type="checkbox"
                   checked={ticked}
-                  disabled={ingredient === only}
-                  aria-describedby={
-                    [pairsWith.length > 0 && hint, ingredient === only && `${id}-stays`].filter(Boolean).join(" ") || undefined
-                  }
+                  aria-describedby={pairsWith.length > 0 ? hint : undefined}
                   onChange={() => (ticked ? actions.remove(filled, ingredient) : actions.add(filled, ingredient))}
                 />
                 <span className="check-box" aria-hidden="true" />
@@ -213,11 +209,6 @@ function Checklist({ filled, actions }: { filled: FilledSlot; actions: PartActio
           );
         })}
       </ul>
-      {only && (
-        <p id={`${id}-stays`} className="muted">
-          Choose another before taking {inSentence(only)} out.
-        </p>
-      )}
     </fieldset>
   );
 }
@@ -272,8 +263,11 @@ function PartCard({
         <div className="part-fill">
           <EmptyMark size="md" />
           <div className="part-detail">
-            <p className="slot-fill">Nothing yet</p>
-            <p className="muted">{emptyReason}</p>
+            <p className="slot-fill">{slot.required ? `Needs ${slot.role}` : "Nothing yet"}</p>
+            <p className="muted">
+              {emptyReason}
+              {choices.length > 0 && " Choose one in Options."}
+            </p>
           </div>
         </div>
       ) : (

@@ -58,11 +58,11 @@ test("makeable Suggestions come first, each saying so, and Ready is explained by
 test("a required Slot nothing pairs with shows as open, with the choice still there", async ({ page }) => {
   await page.goto("/formulas/sheet-pan-roast?with=ginger");
   const vegetable = slotItem(page, "a vegetable");
-  await expect(vegetable.locator(".slot-fill")).toHaveText("Nothing yet");
+  await expect(vegetable.locator(".slot-fill")).toHaveText("Needs a vegetable");
   await expect(vegetable.locator(".tag")).toHaveCount(0);
   await expect(page.locator(".formula-readiness")).toContainText("a vegetable (nothing pairs yet)");
 
-  await vegetable.getByText("Options").click();
+  await vegetable.getByRole("button", { name: /^Options/ }).click();
   await vegetable.getByRole("checkbox").first().check();
   await expect(vegetable.locator(".tag")).toHaveText(["Added"]);
   await expect(page.getByRole("status")).toHaveText("Tomato is now a vegetable. Undo takes it out.");

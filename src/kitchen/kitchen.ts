@@ -179,7 +179,7 @@ export type Kitchen = {
   suggest(combination: Ingredient[]): Suggestion[];
   /** The same Suggestion with the Cook's choice added to a Slot. */
   addToSlot(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
-  /** The same Suggestion with one Ingredient taken out of a Slot. */
+  /** The same Suggestion with one Ingredient taken out of a Slot, which can leave it empty. */
   removeFromSlot(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
 };
 
@@ -204,6 +204,13 @@ function explainFill(source: FillSource, justification: PairingView | undefined)
     case "added":
       return "Your choice. It doesn't pair with anything else here yet.";
   }
+}
+
+/** Why a Slot is empty: nothing pairs into it, or the Cook took out what was there, though something pairs. */
+function explainEmpty(slot: Slot, best: { ingredient: Ingredient; score: number } | undefined): string {
+  return best && best.score > 0
+    ? `Empty for now. ${best.ingredient.name} pairs best with the rest of the dish.`
+    : `No Pairing here points to ${slot.role} yet.`;
 }
 
 /** How an Ingredient is named mid-sentence, as in "season chicken thigh". */
@@ -350,14 +357,15 @@ export function createKitchen(content: KitchenContent): Kitchen {
         return { ingredient, source, justification, reason: explainFill(source, justification) };
       });
       const outside = used.filter((other) => !fills[i].some(({ ingredient }) => ingredient === other));
+      const ranked = rankByPairing(slot, outside);
       return {
         slot,
         fills: slotFills,
-        choices: rankByPairing(slot, outside).map(({ ingredient }) => ({
+        choices: ranked.map(({ ingredient }) => ({
           ingredient,
           pairsWith: used.filter((other) => other !== ingredient && arePaired(ingredient, other)),
         })),
-        ...(slotFills.length === 0 && { emptyReason: `No Pairing here points to ${slot.role} yet.` }),
+        ...(slotFills.length === 0 && { emptyReason: explainEmpty(slot, ranked[0]) }),
       };
     });
     const method = formula.method.map((step) => fillIn(step, slots));
@@ -582,8 +590,6 @@ export function createKitchen(content: KitchenContent): Kitchen {
 
     removeFromSlot(suggestion, slotId, ingredientId) {
       return change(suggestion, slotId, ingredientId, (fills) => {
-        // The Cook adds another first: an empty Slot would read as one nothing pairs into.
-        if (fills.length < 2) throw new Error(`Slot "${slotId}" keeps at least one Ingredient`);
         return fills.filter(({ ingredient }) => ingredient.id !== ingredientId);
       });
     },

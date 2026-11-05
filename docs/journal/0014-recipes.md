@@ -110,7 +110,7 @@ The role stays the part's heading, so screen readers and focus after a swap work
 
 - **Options.** Each part has one "Options", empty or not; it was "Change" (and "Choose" while empty) until the author renamed it. It opens every Ingredient that could be in the part, ticked while it's in it. Ticking one adds it; unticking takes it out. A swap is one of each. Remove and the separate Swap went with it.
 - **Where it sits.** The author then moved Options to the end of the part's top row, level with its role, with the list opening between that row and the Ingredients. A native disclosure opens right under its toggle, so this is a toggle button (`DisclosureToggle`, sharing the disclosure's look) with `aria-expanded`, controlling a panel placed below the row. Undo stays at the foot of the part.
-- **The last one stays.** It can't be unticked, and a note, which the dimmed checkbox points to for screen readers, says "Choose another before taking lemon out." An empty part would read as one nothing pairs into.
+- **The last one can go.** At first the last Ingredient in a part couldn't be unticked, with a note saying to choose another first. The author found that confusing, so now unticking it empties the part. A required part then reads "Needs an aromatic", and says what pairs best ("Empty for now. Garlic pairs best with the rest of the dish. Choose one in Options."). An empty part where nothing pairs still says "No Pairing here points to …". The readiness line names it too: "an aromatic (garlic pairs best)". Nothing refills the part until the Cook ticks one, and Undo puts back what was there.
 - **Order holds.** The list ranks by pairing with what's outside the part, so ticking moves nothing, and focus stays on the checkbox for the next change. Each choice says what in the dish it pairs with, such as "pairs with chicken thigh and garlic". That hint includes the part's own Ingredients, so a choice that goes with garlic says so, though the rank leaves them out to keep the order still.
 - **Yours stays yours.** Untick a basket Ingredient and tick it again, and it's back as "Yours", so the dish is Ready again and there's no Add to the basket for something already in it. The Spec review caught it reading "Added".
 - **The tag.** Whatever the Cook ticks reads "Added", so "Swapped" is gone, along with the Kitchen's `swap`.
@@ -119,6 +119,8 @@ The role stays the part's heading, so screen readers and focus after a swap work
 | The Options list, desktop light | The Options list, phone dark |
 | --- | --- |
 | ![](0014-recipes/after-options-desktop-light.png) | ![](0014-recipes/after-options-phone-dark.png) |
+| A part emptied by the Cook, desktop light | The same, phone dark |
+| ![](0014-recipes/after-empty-part-desktop-light.png) | ![](0014-recipes/after-empty-part-phone-dark.png) |
 
 ## Tests
 
@@ -145,6 +147,7 @@ The role stays the part's heading, so screen readers and focus after a swap work
   - two aromatics from the basket, each with its full amount, and removing one then undoing;
   - ticking aromatics until all are in;
   - a swap as a tick and an untick, then two undos, with focus staying on the checkbox.
+  - unticking a part's only Ingredient leaves it saying what it needs, and ticking another fills it;
   - Options sits at the end of the top row and opens above what's in the part.
 - **axe** covers the dish page with a recipe (both themes, phone and desktop), and so does the **reflow** check. The **phone tap-target** check passes.
 
@@ -154,7 +157,7 @@ On `/formulas/pan-sauce?with=chicken-thigh,lime` in Safari, with VoiceOver on:
 
 1. Rotor → Headings: Pan sauce (level 1), then What goes in, Ingredients and Method (level 2), with the parts at level 3.
 2. Rotor → Lists: "Ingredients" and "Method".
-3. The acid line reads "2 limes, juiced, about 3 tbsp". Open "Options for an acid": the group reads "Ingredients for an acid", Lime reads ticked and dimmed, and Lemon reads "pairs with chicken thigh". Tick Lemon, then untick Lime: each change is announced, focus stays on the checkbox, and the line now reads "1 lemon, juiced, about 3 tbsp". The announcements name the change, not the new amount.
+3. The acid line reads "2 limes, juiced, about 3 tbsp". Open "Options for an acid": the group reads "Ingredients for an acid", Lime reads ticked, and Lemon reads "pairs with chicken thigh". Tick Lemon, then untick Lime: each change is announced, focus stays on the checkbox, and the line now reads "1 lemon, juiced, about 3 tbsp". The announcements name the change, not the new amount.
 4. Method steps 1 and 3 read their text, then "Food safety", the guidance, and the linked USDA sources.
 5. The drawings frame isn't announced.
 

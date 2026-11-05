@@ -761,15 +761,6 @@ main {
   outline-offset: var(--focus-offset);
 }
 
-.check:has(:disabled) {
-  cursor: default;
-}
-
-/* The last one in a part, which stays: muted, like a disabled button. */
-.check:has(:disabled) .check-box {
-  border-color: var(--ink-muted);
-  background: var(--ink-muted);
-}
 
 .check-hint {
   font-size: var(--text-sm);

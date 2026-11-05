@@ -7,10 +7,19 @@ const and = new Intl.ListFormat("en", { type: "conjunction" });
 /** Whether a Suggestion is ready, or what it still needs and what would fill it, in one sentence. */
 export function ReadinessSentence({ suggestion: { makeable, needs } }: { suggestion: Suggestion }) {
   if (makeable) return "Ready with your basket.";
-  const parts = needs.map(({ slot, fills }) => {
+  const parts = needs.map(({ slot, fills, choices: [best] }) => {
+    if (fills.length === 0) {
+      // Empty because nothing pairs into it, or because the Cook took out what was there.
+      return best?.pairsWith.length ? (
+        <>
+          {slot.role} (<IngredientLink ingredient={best.ingredient}>{inSentence(best.ingredient)}</IngredientLink> pairs best)
+        </>
+      ) : (
+        <>{slot.role} (nothing pairs yet)</>
+      );
+    }
     // What the part still needs: everything in it that isn't from the basket.
     const missing = fills.filter(({ source }) => !isCooksOwn(source));
-    if (missing.length === 0) return <>{slot.role} (nothing pairs yet)</>;
     const names = joined(
       missing.map(({ ingredient }) => (
         <IngredientLink key={ingredient.id} ingredient={ingredient}>

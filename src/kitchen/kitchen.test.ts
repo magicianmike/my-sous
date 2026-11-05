@@ -593,6 +593,21 @@ describe("loadKitchen", () => {
       );
     });
 
+    it("lets the Cook take out a Slot's last Ingredient, leaving it empty and needed, saying what pairs best", async () => {
+      const { kitchen, suggestion } = await plate(["lamb"]);
+
+      const emptied = kitchen.removeFromSlot(suggestion, "protein", "lamb");
+
+      expect(fill(emptied)[0]).toEqual(["protein", undefined, undefined]);
+      expect(emptied.slots[0].emptyReason).toBe("Empty for now. Lamb pairs best with the rest of the dish.");
+      expect(emptied.makeable).toBe(false);
+      // The acid was already needed: lemon is a Pairing suggestion.
+      expect(emptied.needs.map(({ slot }) => slot.id)).toEqual(["protein", "acid"]);
+      expect(emptied.method).toEqual(["Sear something to sear, squeeze over lemon, scatter mint."]);
+      // Nothing refills it until the Cook ticks one.
+      expect(kitchen.removeFromSlot(emptied, "herb", "mint").slots[0].fills).toEqual([]);
+    });
+
     it("gives each filled Slot the Pairing that justifies it", async () => {
       const { suggestion } = await plate(["lamb"]);
 
@@ -710,8 +725,7 @@ describe("loadKitchen", () => {
 
       expect(held(swap(kitchen, added, "aromatic", "garlic", "scallion")).aromatic).toEqual(["ginger", "scallion"]);
       expect(held(kitchen.removeFromSlot(added, "aromatic", "garlic")).aromatic).toEqual(["ginger"]);
-      // A Slot keeps at least one; an Ingredient goes in a dish once.
-      expect(() => kitchen.removeFromSlot(suggestion, "aromatic", "garlic")).toThrow("keeps at least one");
+      // An Ingredient goes in a dish once.
       expect(() => kitchen.addToSlot(suggestion, "aromatic", "garlic")).toThrow("in this dish already");
     });
 

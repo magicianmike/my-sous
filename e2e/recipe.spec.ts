@@ -32,6 +32,24 @@ test("with an empty basket, a dish with a recipe fills its parts from the recipe
   await expect(cooking.getByRole("link", { name: /Safe Minimum Internal Temperature/ })).toBeVisible();
 });
 
+test("food safety guidance stands out from the step around it, on its own background", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce");
+  const steps = page.getByRole("main").getByRole("list", { name: "Method" }).getByRole("listitem");
+  const background = (locator: ReturnType<typeof steps.first>) =>
+    locator.evaluate((el) => {
+      // The colour painted behind it: its own, or the nearest ancestor's.
+      for (let node: Element | null = el; node; node = node.parentElement) {
+        const colour = getComputedStyle(node).backgroundColor;
+        if (colour !== "rgba(0, 0, 0, 0)") return colour;
+      }
+      return "";
+    });
+  const cooking = steps.filter({ hasText: "cooked through" });
+  const note = cooking.locator(".safety-note");
+
+  expect(await background(note)).not.toBe(await background(cooking));
+});
+
 test("the recipe follows the basket and every change, amounts included", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,lime");
   const acidLine = ingredientLines(page).filter({ has: page.getByRole("link", { name: /^(limes|lemon)$/ }) });

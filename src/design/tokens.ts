@@ -23,6 +23,10 @@ export type Palette = {
   linkHover: string;
   /** Something that removes or undoes, under the pointer, such as the tray's bin. */
   danger: string;
+  /** Behind guidance the Cook mustn't miss, such as food safety in a recipe's method. */
+  caution: string;
+  /** The rule beside `caution` guidance (decorative; the label says what it is). */
+  cautionLine: string;
   /** Primary actions. */
   accent: string;
   /** Text on `accent`. */
@@ -42,6 +46,8 @@ export const palettes: Record<"light" | "dark", Palette> = {
     inkMuted: "#4d574f",
     linkHover: "#2f6a3a",
     danger: "#b3261e",
+    caution: "#fbefd3",
+    cautionLine: "#c98a1b",
     accent: "#1f2620",
     accentInk: "#ffffff",
     focus: "#1f2620",
@@ -56,6 +62,8 @@ export const palettes: Record<"light" | "dark", Palette> = {
     inkMuted: "#aab3ab",
     linkHover: "#9dd4a6",
     danger: "#ff8f85",
+    caution: "#33291a",
+    cautionLine: "#d9a03a",
     accent: "#ebefe9",
     accentInk: "#121412",
     focus: "#ebefe9",
@@ -80,6 +88,9 @@ export const textPairings: [keyof Palette, keyof Palette][] = [
   ["danger", "surface"],
   ["danger", "floating"],
   ["danger", "sunk"],
+  ["ink", "caution"],
+  ["inkMuted", "caution"],
+  ["linkHover", "caution"],
   ["accentInk", "accent"],
 ];
 
@@ -94,6 +105,7 @@ export const nonTextPairings: [keyof Palette, keyof Palette][] = [
   ["accent", "surface"],
   ["accent", "floating"],
   ["focus", "floating"],
+  ["focus", "caution"],
 ];
 
 const scales = {

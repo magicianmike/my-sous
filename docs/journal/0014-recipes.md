@@ -122,6 +122,12 @@ The role stays the part's heading, so screen readers and focus after a swap work
 | A part emptied by the Cook, desktop light | The same, phone dark |
 | ![](0014-recipes/after-empty-part-desktop-light.png) | ![](0014-recipes/after-empty-part-phone-dark.png) |
 
+**Food safety stands out in the method.** The author asked for a background around the safety guidance so it isn't read as more instructions. Each note now sits on a warm "caution" ground, a new palette token (light `#fbefd3`, dark `#33291a`), with an amber rule down its side and the "Food safety" label in bold. The token tests check its text contrast in both themes: ink, muted ink and the link colour on it, and the focus ring against it.
+
+| Method with food safety, desktop light | The same, phone dark |
+| --- | --- |
+| ![](0014-recipes/after-safety-desktop-light.png) | ![](0014-recipes/after-safety-phone-dark.png) |
+
 ## Tests
 
 - **Vitest, through `loadKitchen`:**
@@ -143,6 +149,7 @@ The role stays the part's heading, so screen readers and focus after a swap work
 - **Playwright:**
   - an empty basket shows the recipe as written, with timings, amounts and the cited cooking guidance;
   - the recipe follows the basket and a swap, amounts and method included;
+  - food safety guidance sits on its own background, apart from its step;
   - a dish without a recipe keeps its short method;
   - two aromatics from the basket, each with its full amount, and removing one then undoing;
   - ticking aromatics until all are in;

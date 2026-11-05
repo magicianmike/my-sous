@@ -69,6 +69,8 @@ const slotSchema = z.object({
   /** The Slot type an Ingredient must list to fill this Slot. */
   accepts: z.string().min(1),
   required: z.boolean().default(true),
+  /** How many Ingredients the Slot can hold, such as 2 aromatics; one unless it says. */
+  max: z.number().int().positive().default(1),
 });
 
 export const formulaSchema = z.object({
@@ -120,8 +122,11 @@ export const recipeSchema = z.object({
   serves: z.number().int().positive(),
   /** In minutes. */
   time: z.object({ prep: z.number().int().nonnegative(), cook: z.number().int().nonnegative() }),
-  /** The recipe as written: each Slot's Ingredient, by Slot id, for parts the basket leaves empty. */
-  fills: z.record(z.string(), z.string()),
+  /** The recipe as written: each Slot's Ingredients (one, or a list), by Slot id, for parts the basket leaves empty. */
+  fills: z.record(
+    z.string(),
+    z.union([z.string(), z.array(z.string()).min(1)]).transform((ids) => (typeof ids === "string" ? [ids] : ids)),
+  ),
   ingredients: z.array(recipeIngredientSchema).min(1),
   steps: z.array(recipeStepSchema).min(1),
 });

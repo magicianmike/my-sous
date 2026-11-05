@@ -48,18 +48,28 @@ export const FormulaFill = withSearchParams(function FormulaFill({
   );
 });
 
-/** A Suggestion as it stood after a swap, and the Slot that swap changed. */
-type Step = { suggestion: Suggestion; swapped?: FilledSlot };
+/** A Suggestion as it stood after one of the Cook's changes, the Slot it changed, and what undoing it says. */
+type Step = { suggestion: Suggestion; changed?: { slotId: string; undone: string } };
 
-/** Where focus goes after a swap or an undo; a fresh object each time, so it moves even to the same place. */
+/** Where focus goes after a change or an undo; a fresh object each time, so it moves even to the same place. */
 type FocusTarget = { undo: true } | { slot: string };
 
-/** Where a Slot's Ingredient came from, in a word; never left to colour. */
+/** Where an Ingredient in a part came from, in a word; never left to colour. */
 const SOURCE_TAG: Record<FillSource, string> = {
   combination: "Yours",
   pairing: "Suggested",
   recipe: "Suggested",
   swap: "Swapped",
+  added: "Added",
+};
+
+/** The Cook's changes to a part, each with what it changed. */
+type PartActions = {
+  swap: (filled: FilledSlot, previous: Ingredient, ingredient: Ingredient) => void;
+  add: (filled: FilledSlot, ingredient: Ingredient) => void;
+  remove: (filled: FilledSlot, ingredient: Ingredient) => void;
+  addToBasket: (slotId: string, ingredient: Ingredient) => void;
+  undo: () => void;
 };
 
 function SlotEditor({
@@ -80,8 +90,8 @@ function SlotEditor({
   const headings = useRef(new Map<string, HTMLHeadingElement>());
   const current = history.at(-1)!;
   const recipe = kitchen.recipe(current.suggestion);
-  // Only the latest swap can be undone, so only its Slot offers Undo.
-  const undoable = current.swapped?.slot.id;
+  // Only the latest change can be undone, so only its part offers Undo.
+  const undoable = current.changed?.slotId;
 
   useEffect(() => {
     if (!focus) return;
@@ -89,27 +99,47 @@ function SlotEditor({
     else headings.current.get(focus.slot)?.focus();
   }, [focus]);
 
-  function swap(filled: FilledSlot, ingredient: Ingredient) {
-    const { slot, ingredient: previous } = filled;
-    const suggestion = kitchen.swap(current.suggestion, slot.id, ingredient.id);
-    setHistory([...history, { suggestion, swapped: filled }]);
-    announce(
-      `${ingredient.name} is now ${slot.role}.` +
-        (previous ? ` Undo brings back ${inSentence(previous)}.` : ""),
-    );
+  function record(slotId: string, suggestion: Suggestion, done: string, undone: string) {
+    setHistory([...history, { suggestion, changed: { slotId, undone } }]);
+    announce(done);
     setFocus({ undo: true });
   }
 
-  function undo() {
-    const { slot, ingredient } = current.swapped!;
-    const rest = history.slice(0, -1);
-    setHistory(rest);
-    announce(
-      `Undone: ${ingredient ? `${ingredient.name} is ${slot.role} again` : `${slot.role} is empty again`}.`,
-    );
-    // To the swap before, if there is one, so the Cook can keep undoing; otherwise back to the Slot.
-    setFocus(rest.length > 1 ? { undo: true } : { slot: slot.id });
-  }
+  const actions: PartActions = {
+    swap({ slot }, previous, ingredient) {
+      record(
+        slot.id,
+        kitchen.swap(current.suggestion, slot.id, previous.id, ingredient.id),
+        `${ingredient.name} is now ${slot.role}. Undo brings back ${inSentence(previous)}.`,
+        `${previous.name} is ${slot.role} again`,
+      );
+    },
+    add({ slot, fills }, ingredient) {
+      record(
+        slot.id,
+        kitchen.addToSlot(current.suggestion, slot.id, ingredient.id),
+        `${ingredient.name} is now ${fills.length > 0 ? "also " : ""}${slot.role}. Undo takes it out.`,
+        `${ingredient.name} taken out of ${slot.role}`,
+      );
+    },
+    remove({ slot }, ingredient) {
+      record(
+        slot.id,
+        kitchen.removeFromSlot(current.suggestion, slot.id, ingredient.id),
+        `${ingredient.name} taken out of ${slot.role}. Undo puts it back.`,
+        `${ingredient.name} is back in ${slot.role}`,
+      );
+    },
+    addToBasket: onAdd,
+    undo() {
+      const { slotId, undone } = current.changed!;
+      const rest = history.slice(0, -1);
+      setHistory(rest);
+      announce(`Undone: ${undone}.`);
+      // To the change before, if there is one, so the Cook can keep undoing; otherwise back to the part.
+      setFocus(rest.length > 1 ? { undo: true } : { slot: slotId });
+    },
+  };
 
   return (
     <>
@@ -122,82 +152,18 @@ function SlotEditor({
       </div>
       <h2>What goes in</h2>
       <ul className="slots stack">
-        {current.suggestion.slots.map((filled) => {
-          const { slot, ingredient, source, alternatives } = filled;
-          // What fills it isn't in the basket yet, so the Cook can add it.
-          const addable = ingredient && source && !isCooksOwn(source) ? ingredient : undefined;
-          return (
-            <li key={slot.id} className="part">
-              {/* The part's role, as a label across the top, with where its Ingredient came from. */}
-              <div className="part-head">
-                <h3
-                  className="slot-role"
-                  tabIndex={-1}
-                  ref={(heading) => {
-                    if (heading) headings.current.set(slot.id, heading);
-                  }}
-                >
-                  {slot.role}
-                </h3>
-                {(source || !slot.required) && (
-                  <p className="tags">
-                    {source && <span className="tag">{SOURCE_TAG[source]}</span>}
-                    {!slot.required && <span className="tag">Optional</span>}
-                  </p>
-                )}
-              </div>
-              <div className="part-body">
-                {ingredient ? <IngredientMarkLink ingredient={ingredient} size="md" /> : <EmptyMark size="md" />}
-                <div className="part-detail">
-                  <p className="slot-fill">
-                    {ingredient ? <IngredientLink ingredient={ingredient} /> : "Nothing yet"}
-                  </p>
-                  <p className="muted">{filled.reason}</p>
-                  {/* Swap and Undo at the start, Add at the end: the part's last line. */}
-                  {(alternatives.length > 0 || addable || undoable === slot.id) && (
-                    <div className="slot-actions">
-                      {alternatives.length > 0 && (
-                        // Keyed by the fill, so a swap closes the list.
-                        <Disclosure
-                          key={ingredient?.id}
-                          summary={ingredient ? "Swap" : "Choose"}
-                          hiddenSummary={slot.role}
-                        >
-                          <ul className="alternatives">
-                            {alternatives.map((alternative) => (
-                              <li key={alternative.id}>
-                                <button
-                                  type="button"
-                                  className="alternative"
-                                  onClick={() => swap(filled, alternative)}
-                                >
-                                  <IngredientMark ingredient={alternative} size="sm" />
-                                  <span className="visually-hidden">Use </span>
-                                  {alternative.name}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        </Disclosure>
-                      )}
-                      {undoable === slot.id && (
-                        <Button ref={undoButton} onClick={undo}>
-                          Undo<span className="visually-hidden"> swap of {slot.role}</span>
-                        </Button>
-                      )}
-                      {addable && (
-                        <Button variant="primary" className="slot-add" onClick={() => onAdd(slot.id, addable)}>
-                          <BasketIcon className="button-icon" />
-                          Add<span className="visually-hidden"> {addable.name} to your basket</span>
-                        </Button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </li>
-          );
-        })}
+        {current.suggestion.slots.map((filled) => (
+          <li key={filled.slot.id} className="part">
+            <PartCard
+              filled={filled}
+              actions={actions}
+              headingRef={(heading) => {
+                if (heading) headings.current.set(filled.slot.id, heading);
+              }}
+              undoRef={undoable === filled.slot.id ? undoButton : undefined}
+            />
+          </li>
+        ))}
       </ul>
       {recipe ? (
         <RecipeBody recipe={recipe} />
@@ -211,6 +177,127 @@ function SlotEditor({
             ))}
           </ol>
         </>
+      )}
+    </>
+  );
+}
+
+/** Ingredients to choose from, each a button that says what choosing it does. */
+function Choices({ ingredients, verb, onChoose }: { ingredients: Ingredient[]; verb: string; onChoose: (ingredient: Ingredient) => void }) {
+  return (
+    <ul className="alternatives">
+      {ingredients.map((ingredient) => (
+        <li key={ingredient.id}>
+          <button type="button" className="alternative" onClick={() => onChoose(ingredient)}>
+            <IngredientMark ingredient={ingredient} size="sm" />
+            <span className="visually-hidden">{verb} </span>
+            {ingredient.name}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * One part of the dish: its role as a label across the top, then each Ingredient in it, with why it's
+ * there, Swap, Remove (while there's more than one) and Add to the basket; then Add another while the
+ * part has room, and Undo after the Cook's latest change here.
+ */
+function PartCard({
+  filled,
+  actions,
+  headingRef,
+  undoRef,
+}: {
+  filled: FilledSlot;
+  actions: PartActions;
+  headingRef: (heading: HTMLHeadingElement | null) => void;
+  /** Set on the part whose change can be undone. */
+  undoRef?: React.Ref<HTMLButtonElement>;
+}) {
+  const { slot, fills, alternatives, emptyReason } = filled;
+  const room = fills.length < slot.max && alternatives.length > 0;
+  return (
+    <>
+      <div className="part-head">
+        <h3 className="slot-role" tabIndex={-1} ref={headingRef}>
+          {slot.role}
+        </h3>
+        {!slot.required && (
+          <p className="tags">
+            <span className="tag">Optional</span>
+          </p>
+        )}
+      </div>
+      {fills.length === 0 ? (
+        <div className="part-fill">
+          <EmptyMark size="md" />
+          <div className="part-detail">
+            <p className="slot-fill">Nothing yet</p>
+            <p className="muted">{emptyReason}</p>
+          </div>
+        </div>
+      ) : (
+        <ul className="part-fills">
+          {fills.map(({ ingredient, source, reason }) => (
+            <li key={ingredient.id} className="part-fill">
+              <IngredientMarkLink ingredient={ingredient} size="md" />
+              <div className="part-detail">
+                <div className="part-fill-title">
+                  <p className="slot-fill">
+                    <IngredientLink ingredient={ingredient} />
+                  </p>
+                  <span className="tag">{SOURCE_TAG[source]}</span>
+                </div>
+                <p className="muted">{reason}</p>
+                {/* Swap and Remove at the start, Add to the basket at the end. */}
+                <div className="slot-actions">
+                  {alternatives.length > 0 && (
+                    // Keyed by the fill, so a swap closes the list.
+                    <Disclosure key={ingredient.id} summary="Swap" hiddenSummary={`${inSentence(ingredient)} in ${slot.role}`}>
+                      <Choices
+                        ingredients={alternatives}
+                        verb="Use"
+                        onChoose={(choice) => actions.swap(filled, ingredient, choice)}
+                      />
+                    </Disclosure>
+                  )}
+                  {fills.length > 1 && (
+                    <Button onClick={() => actions.remove(filled, ingredient)}>
+                      Remove<span className="visually-hidden"> {inSentence(ingredient)} from {slot.role}</span>
+                    </Button>
+                  )}
+                  {!isCooksOwn(source) && (
+                    <Button variant="primary" className="slot-add" onClick={() => actions.addToBasket(slot.id, ingredient)}>
+                      <BasketIcon className="button-icon" />
+                      Add<span className="visually-hidden"> {ingredient.name} to your basket</span>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      {(room || undoRef) && (
+        <div className="part-foot">
+          {room && (
+            // Keyed by what's in the part, so a choice closes the list.
+            <Disclosure
+              key={fills.map(({ ingredient }) => ingredient.id).join()}
+              summary={fills.length === 0 ? "Choose" : "Add another"}
+              hiddenSummary={fills.length === 0 ? slot.role : `to ${slot.role}`}
+            >
+              <Choices ingredients={alternatives} verb="Add" onChoose={(choice) => actions.add(filled, choice)} />
+            </Disclosure>
+          )}
+          {undoRef && (
+            <Button ref={undoRef} onClick={actions.undo}>
+              Undo<span className="visually-hidden"> change to {slot.role}</span>
+            </Button>
+          )}
+        </div>
       )}
     </>
   );

@@ -103,17 +103,16 @@ export const SuggestionList = withSearchParams(
 /** One Suggestion: whether it's ready, what fills it and from where, why it ranks here. */
 export function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
   const { formula, slots, rankReason, needs } = suggestion;
-  const yours = slots.flatMap(({ ingredient, source }) =>
-    ingredient && isCooksOwn(source) ? [ingredient] : [],
-  );
+  const fills = slots.flatMap(({ slot, fills }) => fills.map((fill) => ({ ...fill, required: slot.required })));
+  const yours = fills.flatMap(({ ingredient, source }) => (isCooksOwn(source) ? [ingredient] : []));
   // Suggested: what a required Slot still needs. Optional: extras, which never block Ready.
-  const suggested = slots.flatMap(({ slot, ingredient, source }) =>
-    ingredient && !isCooksOwn(source) && slot.required ? [ingredient] : [],
+  const suggested = fills.flatMap(({ ingredient, source, required }) =>
+    !isCooksOwn(source) && required ? [ingredient] : [],
   );
-  const optional = slots.flatMap(({ slot, ingredient, source }) =>
-    ingredient && !isCooksOwn(source) && !slot.required ? [ingredient] : [],
+  const optional = fills.flatMap(({ ingredient, source, required }) =>
+    !isCooksOwn(source) && !required ? [ingredient] : [],
   );
-  const open = needs.filter(({ ingredient }) => !ingredient).length;
+  const open = needs.filter(({ fills }) => fills.length === 0).length;
   // Nothing else on the card names these Ingredients, so each drawing carries its name, and shows it on hover.
   const markLink = (ingredient: Ingredient) => <IngredientMarkLink ingredient={ingredient} named alone />;
   return (

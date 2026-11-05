@@ -1,5 +1,6 @@
 # Formulas: adaptable dish templates. Each Slot accepts one Slot type that Ingredients list in
-# their `slotTypes`; `required` defaults to true. Method steps refer to Slots as {slotId}.
+# their `slotTypes`; `required` defaults to true, and `max`, how many Ingredients it holds, to 1.
+# Method steps refer to Slots as {slotId}, which names every Ingredient in the Slot.
 
 - id: pan-sauce
   name: Pan sauce
@@ -10,12 +11,14 @@
       accepts: protein
     - id: aromatic
       role: an aromatic
+      max: 2
       accepts: aromatic
     - id: acid
       role: an acid
       accepts: acid
     - id: herb
       role: a soft herb
+      max: 2
       accepts: soft herb
       required: false
     - id: heat
@@ -38,9 +41,11 @@
       accepts: protein
     - id: vegetable
       role: a vegetable
+      max: 2
       accepts: vegetable
     - id: aromatic
       role: an aromatic
+      max: 2
       accepts: aromatic
     - id: acid
       role: an acid
@@ -48,6 +53,7 @@
       required: false
     - id: herb
       role: a soft herb
+      max: 2
       accepts: soft herb
       required: false
   method:

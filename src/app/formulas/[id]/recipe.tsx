@@ -14,8 +14,8 @@ export function RecipeHeader({ recipe, suggestion }: { recipe: Recipe; suggestio
     <>
       {/* Where the image of the finished dish goes (#32); until then, the drawings of what's in it. */}
       <div className="recipe-image" aria-hidden="true">
-        {suggestion.slots.flatMap(({ ingredient }) =>
-          ingredient ? [<IngredientMark key={ingredient.id} ingredient={ingredient} />] : [],
+        {suggestion.slots.flatMap(({ fills }) =>
+          fills.map(({ ingredient }) => <IngredientMark key={ingredient.id} ingredient={ingredient} />),
         )}
       </div>
       <dl className="recipe-facts">
@@ -63,18 +63,18 @@ export function RecipeBody({ recipe }: { recipe: Recipe }) {
           // Steps never change order.
           <li key={i}>
             {text}
-            {safety && (
-              <p className="safety-note">
+            {safety.map(({ ingredient, guidance }) => (
+              <p key={ingredient.id} className="safety-note">
                 {/* Validation gives all safety guidance at least one citation. */}
-                <span className="tag">Food safety</span> {safety.guidance.note} Source:{" "}
-                {safety.guidance.citations.map((citation, j) => (
+                <span className="tag">Food safety</span> {guidance.note} Source:{" "}
+                {guidance.citations.map((citation, j) => (
                   <span key={j}>
                     {j > 0 && "; "}
                     <Source citation={citation} />
                   </span>
                 ))}
               </p>
-            )}
+            ))}
           </li>
         ))}
       </ol>

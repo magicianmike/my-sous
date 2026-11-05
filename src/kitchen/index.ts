@@ -207,13 +207,21 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
     }
     const slotFor = (id: string) => formula.slots.find((slot) => slot.id === id);
 
-    for (const [slotId, ingredientId] of Object.entries(fills)) {
+    for (const [slotId, ingredientIds] of Object.entries(fills)) {
       const slot = slotFor(slotId);
-      const ingredient = ingredientsById.get(ingredientId);
-      if (!slot) report(`fills unknown Slot "${slotId}".`);
-      else if (!ingredient) report(`fills "${slotId}" with unknown Ingredient "${ingredientId}".`);
-      else if (!ingredient.slotTypes.includes(slot.accepts)) {
-        report(`fills "${slotId}" with ${ingredientId}, which isn't ${slot.role}.`);
+      if (!slot) {
+        report(`fills unknown Slot "${slotId}".`);
+        continue;
+      }
+      if (ingredientIds.length > slot.max) {
+        report(`fills "${slotId}" with ${ingredientIds.length} Ingredients; it holds at most ${slot.max}.`);
+      }
+      for (const ingredientId of ingredientIds) {
+        const ingredient = ingredientsById.get(ingredientId);
+        if (!ingredient) report(`fills "${slotId}" with unknown Ingredient "${ingredientId}".`);
+        else if (!ingredient.slotTypes.includes(slot.accepts)) {
+          report(`fills "${slotId}" with ${ingredientId}, which isn't ${slot.role}.`);
+        }
       }
     }
     for (const slot of formula.slots.filter(({ id, required }) => required && !(id in fills))) {

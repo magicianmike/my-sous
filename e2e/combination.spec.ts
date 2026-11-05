@@ -126,7 +126,7 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
   await expect(page.getByRole("status")).toHaveText("Lime is now an acid. Undo brings back lemon.");
   await expect(page.getByText(/then lime juice a little at a time/)).toBeVisible();
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (you chose lime).");
-  const undo = acid.getByRole("button", { name: "Undo swap of an acid" });
+  const undo = acid.getByRole("button", { name: "Undo change to an acid" });
   await expect(undo).toBeFocused();
 
   await undo.click();
@@ -137,7 +137,7 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
   await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();
 });
 
-test("only the latest swap offers Undo, and undoing it moves Undo to the swap before", async ({ page }) => {
+test("only the latest change offers Undo, and undoing it moves Undo to the change before", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
   await acid.getByText("Swap").click();
@@ -146,9 +146,9 @@ test("only the latest swap offers Undo, and undoing it moves Undo to the swap be
   await aromatic.getByText("Swap").click();
   await aromatic.getByRole("button", { name: /^Use / }).first().click();
 
-  await expect(page.getByRole("button", { name: /^Undo swap/ })).toHaveCount(1);
-  await aromatic.getByRole("button", { name: "Undo swap of an aromatic" }).click();
-  await expect(acid.getByRole("button", { name: "Undo swap of an acid" })).toBeFocused();
+  await expect(page.getByRole("button", { name: /^Undo change/ })).toHaveCount(1);
+  await aromatic.getByRole("button", { name: "Undo change to an aromatic" }).click();
+  await expect(acid.getByRole("button", { name: "Undo change to an acid" })).toBeFocused();
 });
 
 test("a Formula ready with the Combination says so, in words", async ({ page }) => {
@@ -210,12 +210,12 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await expect(slot(page, "an aromatic")).toHaveText("Garlic");
 
   // Swap and undo, still by keyboard.
-  await tabTo(page, page.getByText("Swap an acid"));
+  await tabTo(page, page.getByText("Swap lemon in an acid"));
   await page.keyboard.press("Enter");
   await tabTo(page, page.getByRole("button", { name: "Use Lime" }));
   await page.keyboard.press("Enter");
   await expect(slot(page, "an acid")).toHaveText("Lime");
-  await expect(page.getByRole("button", { name: "Undo swap of an acid" })).toBeFocused();
+  await expect(page.getByRole("button", { name: "Undo change to an acid" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
 });

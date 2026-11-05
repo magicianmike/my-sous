@@ -414,10 +414,10 @@ describe("loadKitchen", () => {
       ],
     };
 
-    function fills(suggestion: { formula: { id: string }; slots: { slot: { id: string }; ingredient?: { id: string } }[] }) {
+    function fills(suggestion: Suggestion) {
       return [
         suggestion.formula.id,
-        Object.fromEntries(suggestion.slots.map(({ slot, ingredient }) => [slot.id, ingredient?.id])),
+        Object.fromEntries(suggestion.slots.map(({ slot, fills }) => [slot.id, fills[0]?.ingredient.id])),
       ];
     }
 
@@ -432,7 +432,7 @@ describe("loadKitchen", () => {
         ["pan-sauce", { aromatic: undefined, acid: "lemon", herb: "basil" }],
       ]);
       expect(suggestions[1].method).toEqual(["Soften an aromatic, add lemon, finish with basil."]);
-      expect(suggestions[0].slots.map(({ source }) => source)).toEqual([
+      expect(suggestions[0].slots.map(({ fills }) => fills[0].source)).toEqual([
         "combination",
         "combination",
         "combination",
@@ -462,7 +462,7 @@ describe("loadKitchen", () => {
       const suggestions = kitchen.suggest(kitchen.combination(["garlic"]).ingredients);
       const panSauce = suggestions.find(({ formula }) => formula.id === "pan-sauce")!;
 
-      expect(panSauce.slots.find(({ slot }) => slot.id === "acid")).toMatchObject({ source: "pairing" });
+      expect(panSauce.slots.find(({ slot }) => slot.id === "acid")!.fills).toMatchObject([{ source: "pairing" }]);
       expect(panSauce.makeable).toBe(false);
       expect(panSauce.needs.map(({ slot }) => slot.id)).toEqual(["acid"]);
     });
@@ -524,7 +524,7 @@ describe("loadKitchen", () => {
     }
 
     const fill = (suggestion: Suggestion) =>
-      suggestion.slots.map(({ slot, ingredient, source }) => [slot.id, ingredient?.id, source]);
+      suggestion.slots.map(({ slot, fills: [first] }) => [slot.id, first?.ingredient.id, first?.source]);
 
     it("fills from the Combination first, then the best-pairing Ingredient", async () => {
       const { suggestion } = await plate(["lamb", "vinegar"]);
@@ -570,7 +570,7 @@ describe("loadKitchen", () => {
 
     it("says in one line why each Slot holds what it does", async () => {
       const { kitchen, suggestion } = await plate(["vinegar", "lamb"]);
-      const reasons = (s: Suggestion) => s.slots.map(({ reason }) => reason);
+      const reasons = (s: Suggestion) => s.slots.map(({ fills, emptyReason }) => fills[0]?.reason ?? emptyReason);
 
       expect(reasons(suggestion)).toEqual([
         "Pairs with mint: Mint's coolness lifts rich lamb.",
@@ -578,7 +578,7 @@ describe("loadKitchen", () => {
         "Pairs with lamb: Mint's coolness lifts rich lamb.",
       ]);
       // Swapping lamb out leaves mint, which was there for lamb, without a Pairing.
-      expect(reasons(kitchen.swap(suggestion, "protein", "chicken"))).toEqual([
+      expect(reasons(kitchen.swap(suggestion, "protein", "lamb", "chicken"))).toEqual([
         "Your choice. It doesn't pair with anything else here yet.",
         "From your basket.",
         "Suggested earlier. It doesn't pair with anything else here now.",
@@ -592,7 +592,7 @@ describe("loadKitchen", () => {
       const { suggestion } = await plate(["lamb"]);
 
       expect(
-        suggestion.slots.map(({ slot, justification }) => [
+        suggestion.slots.map(({ slot, fills: [{ justification }] }) => [
           slot.id,
           justification?.ingredient.id,
           justification?.reasons[0].note,
@@ -620,7 +620,7 @@ describe("loadKitchen", () => {
     it("swaps a Slot, and the method, justification and alternatives follow", async () => {
       const { kitchen, suggestion } = await plate(["lamb"]);
 
-      const swapped = kitchen.swap(suggestion, "herb", "parsley");
+      const swapped = kitchen.swap(suggestion, "herb", "mint", "parsley");
 
       expect(fill(swapped)).toEqual([
         ["protein", "lamb", "combination"],
@@ -629,9 +629,103 @@ describe("loadKitchen", () => {
       ]);
       expect(swapped.method).toEqual(["Sear lamb, squeeze over lemon, scatter parsley."]);
       const herb = swapped.slots[2];
-      expect(herb.justification?.reasons[0].note).toBe("Parsley freshens lamb.");
+      expect(herb.fills[0].justification?.reasons[0].note).toBe("Parsley freshens lamb.");
       expect(herb.alternatives.map(({ id }) => id)).toEqual(["mint", "basil"]);
       expect(fill(suggestion)[2]).toEqual(["herb", "mint", "pairing"]);
+    });
+  });
+
+  describe("Slots that hold more than one Ingredient", () => {
+    const fixture = {
+      ingredients: {
+        garlic: { ...garlic, slotTypes: ["aromatic"] },
+        ginger: { name: "Ginger", slotTypes: ["aromatic"] },
+        scallion: { name: "Scallion", slotTypes: ["aromatic", "garnish"] },
+        lemon: { ...lemon, slotTypes: ["acid"] },
+      },
+      pairings: [],
+      formulas: [
+        {
+          id: "stir-fry",
+          name: "Stir-fry",
+          description: "Quick and hot.",
+          slots: [
+            { id: "aromatic", role: "an aromatic", accepts: "aromatic", max: 2 },
+            { id: "acid", role: "an acid", accepts: "acid" },
+            { id: "garnish", role: "a garnish", accepts: "garnish", required: false },
+          ],
+          method: ["Fry {aromatic}, add {acid}, finish with {garnish}."],
+        },
+      ],
+    };
+
+    async function stirFry(ids: string[]) {
+      const kitchen = await expectKitchen(writeContent(fixture));
+      const [suggestion] = kitchen.suggest(kitchen.combination(ids).ingredients);
+      return { kitchen, suggestion };
+    }
+
+    const held = (suggestion: Suggestion) =>
+      Object.fromEntries(suggestion.slots.map(({ slot, fills }) => [slot.id, fills.map(({ ingredient }) => ingredient.id)]));
+
+    it("puts every basket Ingredient that fits into a Slot, up to its limit, and names them all in the method", async () => {
+      const { suggestion } = await stirFry(["garlic", "ginger", "lemon"]);
+
+      expect(held(suggestion)).toEqual({ aromatic: ["garlic", "ginger"], acid: ["lemon"], garnish: [] });
+      expect(suggestion.method).toEqual(["Fry garlic and ginger, add lemon, finish with a garnish."]);
+      expect(suggestion.makeable).toBe(true);
+    });
+
+    it("gives every Slot one basket Ingredient before any Slot takes a second", async () => {
+      // Scallion could be a second aromatic, but it's the only garnish.
+      expect(held((await stirFry(["garlic", "scallion"])).suggestion)).toMatchObject({
+        aromatic: ["garlic"],
+        garnish: ["scallion"],
+      });
+      expect(held((await stirFry(["garlic", "ginger", "scallion"])).suggestion).aromatic).toEqual(["garlic", "ginger"]);
+    });
+
+    it("lets the Cook add to a Slot with room, take one out, or swap one, keeping the rest", async () => {
+      const { kitchen, suggestion } = await stirFry(["garlic", "lemon"]);
+
+      const added = kitchen.addToSlot(suggestion, "aromatic", "ginger");
+      expect(added.slots[0].fills.map(({ ingredient, source }) => [ingredient.id, source])).toEqual([
+        ["garlic", "combination"],
+        ["ginger", "added"],
+      ]);
+      expect(added.slots[0].alternatives.map(({ id }) => id)).toEqual(["scallion"]);
+      expect(() => kitchen.addToSlot(added, "aromatic", "scallion")).toThrow("holds at most 2");
+
+      expect(held(kitchen.swap(added, "aromatic", "garlic", "scallion")).aromatic).toEqual(["scallion", "ginger"]);
+      expect(held(kitchen.removeFromSlot(added, "aromatic", "garlic")).aromatic).toEqual(["ginger"]);
+      // A Slot keeps at least one; an Ingredient goes in a dish once.
+      expect(() => kitchen.removeFromSlot(suggestion, "aromatic", "garlic")).toThrow("keeps at least one");
+      expect(() => kitchen.addToSlot(suggestion, "aromatic", "garlic")).toThrow("in this dish already");
+    });
+
+    it("needs a required Slot until everything in it is from the basket", async () => {
+      const { kitchen, suggestion } = await stirFry(["garlic", "lemon"]);
+      expect(suggestion.makeable).toBe(true);
+
+      const added = kitchen.addToSlot(suggestion, "aromatic", "ginger");
+
+      expect(added.makeable).toBe(false);
+      expect(added.needs.map(({ slot }) => slot.id)).toEqual(["aromatic"]);
+    });
+
+    it("ranks what could go in a Slot with room by pairing with everything in the dish, its own Slot included", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({
+          ...fixture,
+          // Without its garnish, so scallion is free to be a second aromatic.
+          formulas: [{ ...fixture.formulas[0], slots: fixture.formulas[0].slots.slice(0, 2), method: ["Fry {aromatic}, add {acid}."] }],
+          pairings: [{ ingredients: ["garlic", "scallion"], reasons: [reason("A note.")] }],
+        }),
+      );
+      const [suggestion] = kitchen.suggest(kitchen.combination(["garlic", "lemon"]).ingredients);
+
+      // Scallion pairs with garlic, already an aromatic, so it ranks above ginger as a companion.
+      expect(suggestion.slots[0].alternatives.map(({ id }) => id)).toEqual(["scallion", "ginger"]);
     });
   });
 
@@ -660,7 +754,7 @@ describe("loadKitchen", () => {
     expect(suggestions.map(({ formula, rankReason }) => [formula.id, rankReason])).toEqual([
       ["dessert", "None of your basket fits this dish yet."],
     ]);
-    expect(suggestions[0].slots.map(({ ingredient }) => ingredient)).toEqual([undefined, undefined]);
+    expect(suggestions[0].slots.map(({ fills }) => fills)).toEqual([[], []]);
   });
 
   describe("ranking Suggestions", () => {
@@ -854,13 +948,13 @@ describe("loadKitchen", () => {
 
       const { slots, needs } = panSauce(kitchen, ["lime"]);
 
-      expect(slots.map(({ slot, ingredient, source }) => [slot.id, ingredient?.id, source])).toEqual([
-        ["protein", "chicken", "recipe"],
-        ["aromatic", "garlic", "recipe"],
-        ["acid", "lime", "combination"],
-        ["herb", undefined, undefined],
+      expect(slots.map(({ slot, fills }) => [slot.id, fills.map(({ ingredient, source }) => [ingredient.id, source])])).toEqual([
+        ["protein", [["chicken", "recipe"]]],
+        ["aromatic", [["garlic", "recipe"]]],
+        ["acid", [["lime", "combination"]]],
+        ["herb", []],
       ]);
-      expect(slots[0].reason).toBe("From the recipe.");
+      expect(slots[0].fills[0].reason).toBe("From the recipe.");
       expect(needs.map(({ slot }) => slot.id)).toEqual(["protein", "aromatic"]);
     });
 
@@ -884,11 +978,34 @@ describe("loadKitchen", () => {
     it("follows a swap", async () => {
       const kitchen = await expectKitchen(writeContent({ ...fixture, recipes: { "pan-sauce": recipe } }));
 
-      const swapped = kitchen.swap(panSauce(kitchen, ["lime"]), "acid", "lemon");
+      const swapped = kitchen.swap(panSauce(kitchen, ["lime"]), "acid", "lime", "lemon");
       const { ingredients, steps } = kitchen.recipe(swapped)!;
 
       expect(ingredients[2]).toMatchObject({ amount: "1", name: "lemon", note: "juiced" });
       expect(steps[1].text).toBe("Soften garlic, then add lemon and a herb.");
+    });
+
+    it("gives each Ingredient in a part its full amount", async () => {
+      const content = {
+        ...fixture,
+        ingredients: { ...fixture.ingredients, ginger: { name: "Ginger", slotTypes: ["aromatic"] } },
+        formulas: [
+          {
+            ...fixture.formulas[0],
+            slots: fixture.formulas[0].slots.map((slot) => (slot.id === "aromatic" ? { ...slot, max: 2 } : slot)),
+          },
+        ],
+      };
+      const ginger = { amount: "a thumb", note: "grated" };
+      const ingredients = recipe.ingredients.map((line) =>
+        line.slot === "aromatic" ? { ...line, for: { ...line.for, ginger } } : line,
+      );
+      const kitchen = await expectKitchen(writeContent({ ...content, recipes: { "pan-sauce": { ...recipe, ingredients } } }));
+
+      const { ingredients: lines, steps } = kitchen.recipe(panSauce(kitchen, ["garlic", "ginger"]))!;
+
+      expect(lines.slice(1, 3).map(({ amount, name }) => `${amount} ${name}`)).toEqual(["2 cloves garlic", "a thumb ginger"]);
+      expect(steps[1].text).toBe("Soften garlic and ginger, then add lemon and a herb.");
     });
 
     it("gives a safety step the cited guidance of the Ingredient that fills its part", async () => {
@@ -896,8 +1013,8 @@ describe("loadKitchen", () => {
 
       const { steps } = kitchen.recipe(panSauce(kitchen, []))!;
 
-      expect(steps[0].safety).toEqual({ ingredient: kitchen.ingredient("chicken"), guidance: cookedThrough });
-      expect(steps[1].safety).toBeUndefined();
+      expect(steps[0].safety).toEqual([{ ingredient: kitchen.ingredient("chicken"), guidance: cookedThrough }]);
+      expect(steps[1].safety).toEqual([]);
     });
 
     it("has none for a dish without one, which fills from the basket and Pairings alone", async () => {
@@ -906,7 +1023,7 @@ describe("loadKitchen", () => {
       const dressing = kitchen.suggest([]).find(({ formula }) => formula.id === "dressing")!;
 
       expect(kitchen.recipe(dressing)).toBeUndefined();
-      expect(dressing.slots[0].ingredient).toBeUndefined();
+      expect(dressing.slots[0].fills).toEqual([]);
     });
 
     describe("rejects one", () => {
@@ -925,6 +1042,14 @@ describe("loadKitchen", () => {
 
         expect(await errorsFor({ "pan-sauce": { ...recipe, fills } })).toEqual([
           'Recipe pan-sauce leaves the required Slot "acid" without an Ingredient as written.',
+        ]);
+      });
+
+      it("when it fills a Slot with more Ingredients than it holds", async () => {
+        const fills = { ...recipe.fills, acid: ["lemon", "lime"] };
+
+        expect(await errorsFor({ "pan-sauce": { ...recipe, fills } })).toEqual([
+          'Recipe pan-sauce fills "acid" with 2 Ingredients; it holds at most 1.',
         ]);
       });
 

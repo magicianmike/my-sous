@@ -63,9 +63,9 @@ test("a required Slot nothing pairs with shows as open, with the choice still th
   await expect(page.locator(".formula-readiness")).toContainText("a vegetable (nothing pairs yet)");
 
   await vegetable.getByText("Choose").click();
-  await vegetable.getByRole("button", { name: /^Use / }).first().click();
-  await expect(vegetable.locator(".tag")).toHaveText(["Swapped"]);
-  await expect(page.getByRole("status")).toHaveText(/ is now a vegetable\.$/);
+  await vegetable.getByRole("button", { name: /^Add / }).first().click();
+  await expect(vegetable.locator(".tag")).toHaveText(["Added"]);
+  await expect(page.getByRole("status")).toHaveText("Tomato is now a vegetable. Undo takes it out.");
 });
 
 test("with no Combination, What to make shows four open Slots and one way forward", async ({ page }) => {
@@ -117,7 +117,7 @@ test("links stand without underlines except in a sentence, and change colour und
   await expect.poll(colour).not.toBe(before);
 });
 
-test("where a part's Ingredient came from sits quietly in the row's top corner", async ({ page }) => {
+test("where a part's Ingredient came from sits quietly at the end of its name's line", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
   const [tag, fill, row] = await Promise.all([
@@ -125,7 +125,8 @@ test("where a part's Ingredient came from sits quietly in the row's top corner",
     acid.locator(".slot-fill").boundingBox(),
     acid.boundingBox(),
   ]);
-  expect(tag!.y).toBeLessThan(fill!.y);
+  expect(tag!.y + tag!.height / 2).toBeGreaterThan(fill!.y);
+  expect(tag!.y + tag!.height / 2).toBeLessThan(fill!.y + fill!.height);
   expect(tag!.x + tag!.width).toBeGreaterThan(row!.x + row!.width * 0.75);
 });
 

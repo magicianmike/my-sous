@@ -49,3 +49,34 @@ test("a dish without a recipe keeps its short method and gives no amounts", asyn
   await expect(page.getByRole("heading", { level: 2, name: "Method" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Ingredients" })).toHaveCount(0);
 });
+
+test("a part can hold two Ingredients from the basket, each with its full amount, and the Cook can take one out", async ({
+  page,
+}) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic,ginger");
+  const aromatic = part(page, "an aromatic");
+  await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic", "Ginger"]);
+  await expect(ingredientLines(page).filter({ hasText: /^3 cloves garlic/ })).toHaveCount(1);
+  await expect(ingredientLines(page).filter({ hasText: /^a thumb-sized piece ginger/ })).toHaveCount(1);
+  await expect(page.getByRole("main").getByRole("list", { name: "Method" })).toContainText("add garlic and ginger");
+
+  await aromatic.getByRole("button", { name: "Remove ginger from an aromatic" }).click();
+  await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic"]);
+  await expect(page.getByRole("status")).toHaveText("Ginger taken out of an aromatic. Undo puts it back.");
+  await expect(aromatic.getByRole("button", { name: "Undo change to an aromatic" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic", "Ginger"]);
+});
+
+test("the Cook can add another Ingredient to a part, up to what it holds", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const aromatic = part(page, "an aromatic");
+  await aromatic.getByText("Add another").click();
+  await aromatic.getByRole("button", { name: "Add Ginger" }).click();
+
+  await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic", "Ginger"]);
+  await expect(aromatic.locator(".tag")).toHaveText(["Yours", "Added"]);
+  await expect(page.getByRole("status")).toHaveText("Ginger is now also an aromatic. Undo takes it out.");
+  // An aromatic holds two, so there's no room for a third.
+  await expect(aromatic.getByText("Add another")).toHaveCount(0);
+});

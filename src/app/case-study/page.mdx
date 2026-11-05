@@ -1,6 +1,6 @@
 import { AppLink, Chapter, LiveSuggestion } from "./case-study-parts";
 
-export const tension = ["chicken-thigh", "basil", "ginger"];
+export const notPaired = ["chicken-thigh", "basil", "ginger"];
 
 export const metadata = {
   title: "How MySous was made",
@@ -52,15 +52,15 @@ The spec began with two doors: "Start from an ingredient" and "Start from what y
 
 <Chapter id="state-you-can-link-to">
 
-The basket lives in the address, as `?with=chicken-thigh,basil,ginger`. Back and forward step through its changes, a shared link reopens it exactly, and this page can open the app with any basket. Swaps on a dish stay on that screen for now, with their own undo.
+The basket lives in the address, as `?with=chicken-thigh,basil,ginger`. Back and forward step through its changes, a shared link reopens it exactly, and this page can open the app with any basket. Changes to a dish stay on that screen for now, with their own undo.
 
 <LiveSuggestion
-  basket={tension}
+  basket={notPaired}
   dish="pan-sauce"
   caption="A basket where not everything pairs: basil has no pairing with chicken thigh or ginger, and the card says so."
 />
 
-Opening <AppLink basket={tension}>this basket in MySous</AppLink> shows the tension in full, with a fix offered for each ingredient involved.
+Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows every dish for it, each saying what pairs and what doesn't.
 
 </Chapter>
 

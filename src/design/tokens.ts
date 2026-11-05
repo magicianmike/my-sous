@@ -23,6 +23,12 @@ export type Palette = {
   linkHover: string;
   /** Something that removes or undoes, under the pointer, such as the tray's bin. */
   danger: string;
+  /** Behind guidance the Cook mustn't miss, such as food safety in a recipe's method. */
+  caution: string;
+  /** The rule beside `caution` guidance, and its label's ground. */
+  cautionLine: string;
+  /** Text on `cautionLine`, such as the "Food safety" label. */
+  cautionInk: string;
   /** Primary actions. */
   accent: string;
   /** Text on `accent`. */
@@ -42,6 +48,9 @@ export const palettes: Record<"light" | "dark", Palette> = {
     inkMuted: "#4d574f",
     linkHover: "#2f6a3a",
     danger: "#b3261e",
+    caution: "#fbefd3",
+    cautionLine: "#c98a1b",
+    cautionInk: "#1f2620",
     accent: "#1f2620",
     accentInk: "#ffffff",
     focus: "#1f2620",
@@ -56,6 +65,9 @@ export const palettes: Record<"light" | "dark", Palette> = {
     inkMuted: "#aab3ab",
     linkHover: "#9dd4a6",
     danger: "#ff8f85",
+    caution: "#33291a",
+    cautionLine: "#d9a03a",
+    cautionInk: "#121412",
     accent: "#ebefe9",
     accentInk: "#121412",
     focus: "#ebefe9",
@@ -80,6 +92,10 @@ export const textPairings: [keyof Palette, keyof Palette][] = [
   ["danger", "surface"],
   ["danger", "floating"],
   ["danger", "sunk"],
+  ["ink", "caution"],
+  ["inkMuted", "caution"],
+  ["linkHover", "caution"],
+  ["cautionInk", "cautionLine"],
   ["accentInk", "accent"],
 ];
 
@@ -94,6 +110,7 @@ export const nonTextPairings: [keyof Palette, keyof Palette][] = [
   ["accent", "surface"],
   ["accent", "floating"],
   ["focus", "floating"],
+  ["focus", "caution"],
 ];
 
 const scales = {
@@ -138,6 +155,8 @@ const scales = {
   "border-hairline": "1px",
   "border-control": "2px",
   // Radius.
+  // A checkbox's corner: any rounder and it reads as a radio.
+  "radius-xs": "0.25rem",
   "radius-sm": "0.625rem",
   "radius-md": "0.875rem",
   "radius-lg": "1.25rem",
@@ -161,6 +180,8 @@ const scales = {
   // Touch targets: the smallest a tappable control may be.
   "target": "2.75rem",
   "chip-height": "2rem",
+  // The box a checkbox draws; the whole row around it is the target.
+  "check-size": "1.25rem",
   // Ingredient marks: the drawing's plate, and the drawing on it.
   "mark-sm": "2.25rem",
   "mark-sm-drawing": "1.75rem",

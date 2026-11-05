@@ -1,5 +1,6 @@
 # Formulas: adaptable dish templates. Each Slot accepts one Slot type that Ingredients list in
-# their `slotTypes`; `required` defaults to true. Method steps refer to Slots as {slotId}.
+# their `slotTypes`; `required` defaults to true. A Slot holds any number of Ingredients.
+# Method steps refer to Slots as {slotId}, which names every Ingredient in the Slot.
 
 - id: pan-sauce
   name: Pan sauce

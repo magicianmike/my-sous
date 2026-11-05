@@ -599,18 +599,7 @@ main {
 
 /* Suggestions and Formula */
 
-/* A tension: the two Ingredients' drawings, side by side, then the sentence that names it. */
-.tension {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.tension p {
-  margin: 0;
-}
-
-.tension-marks,
+/* A Pairing's two drawings, side by side. */
 .pair-marks {
   display: flex;
   flex: none;
@@ -688,60 +677,249 @@ main {
   font-size: var(--text-xs);
 }
 
-/* A part's last line: Swap at the start, Add at the end, so Add sits in the row's bottom corner. */
+/* Add to the basket, in the bottom corner of its Ingredient's row. */
 .slot-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-2);
+  justify-content: flex-end;
 }
 
-.slot-actions details {
-  flex: 1;
+/* What could be in a part, each ticked while it's in it; a row is a full-size target. */
+.checklist {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-.slot-actions .slot-add {
-  margin-inline-start: auto;
+.checklist ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.alternatives {
+.checklist li {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: var(--space-2) 0 0;
+  align-items: center;
+  column-gap: var(--space-2);
 }
 
-.alternative {
+.checklist > p {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+}
+
+.check {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   min-height: var(--target);
-  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-1);
-  border: var(--border-control) solid var(--ink-muted);
-  border-radius: var(--radius-pill);
-  background: var(--surface);
-  color: var(--ink);
-  font: inherit;
-  font-size: var(--text-sm);
+  padding-inline-end: var(--space-2);
+  border-radius: var(--radius-sm);
   font-weight: var(--weight-bold);
   cursor: pointer;
 }
 
-.alternative:hover {
-  background: var(--sunk);
+/* The checkbox covers the whole row, so the row is the target; the box beside the name shows it. */
+.check input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.check-box {
+  display: grid;
+  place-items: center;
+  width: var(--check-size);
+  height: var(--check-size);
+  border: var(--border-control) solid var(--ink-muted);
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+}
+
+.check:has(:checked) .check-box {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* The tick, drawn in the box. */
+.check:has(:checked) .check-box::after {
+  content: "";
+  width: 0.35em;
+  height: 0.65em;
+  margin-top: -0.15em;
+  border: solid var(--accent-ink);
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+.check:has(:focus-visible) {
+  outline: var(--focus-width) solid var(--focus);
+  outline-offset: var(--focus-offset);
+}
+
+
+.check-hint {
+  font-size: var(--text-sm);
+}
+
+/* A part of a dish: its role as a label across the top, then what fills it and why, then its actions. */
+.part {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+/* The role, then its tags, then Options at the far end. */
+.part-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-hairline) solid var(--line);
 }
 
 .slot-role {
   margin: 0;
   font-family: var(--font-text);
   font-size: var(--text-sm);
-  font-weight: var(--weight-regular);
-  color: var(--ink-muted);
+  font-weight: var(--weight-heavy);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.part-fills {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+/* One Ingredient in the part: its drawing beside its name, why it's there, and its actions. */
+.part-fill {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.part-fill-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* Undo, below the part's Ingredients. */
+.part-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: var(--border-hairline) solid var(--line);
+}
+
+.part-head > button {
+  margin-inline-start: auto;
+}
+
+/* The Options list, opened between the top row and what's in the part. */
+.part-options {
+  padding: 0 var(--space-3) var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--sunk);
+}
+
+.part-detail {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.part-detail > p {
+  margin: 0;
 }
 
 .method li {
   margin-bottom: var(--space-2);
+}
+
+/* Recipe */
+
+/* The finished dish's frame, its space reserved; it holds the drawings of what's in it until there's an image. */
+.recipe-image {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  aspect-ratio: 3 / 2;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--sunk);
+}
+
+.recipe-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+}
+
+.recipe-facts dt {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.recipe-facts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+}
+
+/* Amount, then what: two columns, so the names line up down the list. */
+.recipe-ingredients li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  align-items: center;
+  min-height: var(--target);
+  gap: var(--space-3);
+  padding-block: var(--space-1);
+  border-bottom: var(--border-hairline) solid var(--line);
+}
+
+/* A name standing alone in its row, so it's a full-size target to tap. */
+.recipe-ingredients a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.recipe-amount {
+  font-weight: var(--weight-bold);
+}
+
+/* Food safety in a step: on its own warm ground, with a rule down its side, so it can't be skimmed past. */
+.safety-note {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-3);
+  border-inline-start: var(--border-control) solid var(--caution-line);
+  border-radius: var(--radius-sm);
+  background: var(--caution);
+  font-size: var(--text-sm);
+}
+
+/* The label takes the rule's amber, so the two read as one mark. */
+.safety-note .tag {
+  background: var(--caution-line);
+  color: var(--caution-ink);
+  font-weight: var(--weight-bold);
 }
 
 .back-link {

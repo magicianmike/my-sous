@@ -58,14 +58,14 @@ test("makeable Suggestions come first, each saying so, and Ready is explained by
 test("a required Slot nothing pairs with shows as open, with the choice still there", async ({ page }) => {
   await page.goto("/formulas/sheet-pan-roast?with=ginger");
   const vegetable = slotItem(page, "a vegetable");
-  await expect(vegetable.locator(".slot-fill")).toHaveText("Nothing yet");
+  await expect(vegetable.locator(".slot-fill")).toHaveText("Needs a vegetable");
   await expect(vegetable.locator(".tag")).toHaveCount(0);
   await expect(page.locator(".formula-readiness")).toContainText("a vegetable (nothing pairs yet)");
 
-  await vegetable.getByText("Choose").click();
-  await vegetable.getByRole("button", { name: /^Use / }).first().click();
-  await expect(vegetable.locator(".tag")).toHaveText(["Swapped"]);
-  await expect(page.getByRole("status")).toHaveText(/ is now a vegetable\.$/);
+  await vegetable.getByRole("button", { name: /^Options/ }).click();
+  await vegetable.getByRole("checkbox").first().check();
+  await expect(vegetable.locator(".tag")).toHaveText(["Added"]);
+  await expect(page.getByRole("status")).toHaveText("Tomato is now a vegetable. Undo takes it out.");
 });
 
 test("with no Combination, What to make shows four open Slots and one way forward", async ({ page }) => {
@@ -81,13 +81,6 @@ test("removing the last Ingredient on What to make moves focus to what replaces 
   await page.goto("/suggestions?with=lemon");
   await page.getByRole("button", { name: "Remove Lemon" }).click();
   await expect(page.getByRole("heading", { name: "Nothing to suggest yet" })).toBeFocused();
-});
-
-test("a tension shows both Ingredients and names them in words", async ({ page }) => {
-  await page.goto("/suggestions?with=chicken-thigh,basil,ginger");
-  const tension = page.locator(".tension").first();
-  await expect(tension.locator("svg")).toHaveCount(2);
-  await expect(tension).toHaveText("Chicken thigh and basil don’t have a Pairing in MySous.");
 });
 
 test("an Ingredient's drawing and its name both open its page", async ({ page }) => {
@@ -124,7 +117,7 @@ test("links stand without underlines except in a sentence, and change colour und
   await expect.poll(colour).not.toBe(before);
 });
 
-test("where a part's Ingredient came from sits quietly in the row's top corner", async ({ page }) => {
+test("where a part's Ingredient came from sits quietly at the end of its name's line", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
   const [tag, fill, row] = await Promise.all([
@@ -132,7 +125,8 @@ test("where a part's Ingredient came from sits quietly in the row's top corner",
     acid.locator(".slot-fill").boundingBox(),
     acid.boundingBox(),
   ]);
-  expect(tag!.y).toBeLessThan(fill!.y);
+  expect(tag!.y + tag!.height / 2).toBeGreaterThan(fill!.y);
+  expect(tag!.y + tag!.height / 2).toBeLessThan(fill!.y + fill!.height);
   expect(tag!.x + tag!.width).toBeGreaterThan(row!.x + row!.width * 0.75);
 });
 
@@ -253,15 +247,39 @@ test("the basket's Ingredients sit side by side in the side panel too", async ({
   expect(second!.y).toBe(first!.y);
 });
 
-test("a part's Add sits in the row's bottom corner, after Swap", async ({ page }) => {
+test("a part's Options sit at the end of its top row, and open above what's in it", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
-  const [add, swap, row] = await Promise.all([
-    acid.getByRole("button", { name: "Add Lemon to your basket" }).boundingBox(),
-    acid.getByText("Swap").boundingBox(),
+  const options = acid.getByRole("button", { name: "Options for an acid" });
+  await expect(options).toHaveAttribute("aria-expanded", "false");
+  await options.click();
+  await expect(options).toHaveAttribute("aria-expanded", "true");
+
+  const [toggle, role, card, list, fill] = await Promise.all([
+    options.boundingBox(),
+    acid.getByRole("heading", { name: "an acid" }).boundingBox(),
     acid.boundingBox(),
+    acid.getByRole("group", { name: "Ingredients for an acid" }).boundingBox(),
+    acid.locator(".part-fill").boundingBox(),
+  ]);
+  // Level with the part's name, at the right of the card.
+  expect(Math.abs(toggle!.y + toggle!.height / 2 - (role!.y + role!.height / 2))).toBeLessThan(4);
+  expect(toggle!.x + toggle!.width).toBeGreaterThan(card!.x + card!.width * 0.85);
+  // The list opens between the top row and the Ingredients.
+  expect(list!.y).toBeGreaterThan(toggle!.y + toggle!.height);
+  expect(list!.y + list!.height).toBeLessThanOrEqual(fill!.y);
+
+  await options.click();
+  await expect(acid.getByRole("group", { name: "Ingredients for an acid" })).toBeHidden();
+});
+
+test("a part's Add sits in its Ingredient's bottom corner", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const acid = slotItem(page, "an acid");
+  const [add, row] = await Promise.all([
+    acid.getByRole("button", { name: "Add Lemon to your basket" }).boundingBox(),
+    acid.locator(".part-fill").boundingBox(),
   ]);
   expect(add!.y + add!.height).toBeGreaterThan(row!.y + row!.height * 0.6);
   expect(add!.x + add!.width).toBeGreaterThan(row!.x + row!.width * 0.75);
-  expect(add!.x).toBeGreaterThan(swap!.x);
 });

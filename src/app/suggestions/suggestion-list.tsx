@@ -1,21 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Button, buttonClass } from "@/components/Button";
+import { buttonClass } from "@/components/Button";
 import { EmptyMark } from "@/components/EmptyMark";
 import { ListRow } from "@/components/ListRow";
 import { MarkGroup } from "@/components/MarkGroup";
-import { Panel } from "@/components/Panel";
 import { Readiness } from "@/components/Readiness";
 import { TrayView } from "@/components/TrayView";
 import {
   COMBINATION_LIMIT,
-  inSentence,
   isCooksOwn,
-  type CombinationFix,
   type Ingredient,
   type Suggestion,
-  type Tension,
 } from "@/kitchen/kitchen";
 import { CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
 import { IngredientLink, IngredientMarkLink } from "../ingredient-link";
@@ -24,8 +20,7 @@ import { ReadinessSentence } from "../readiness";
 export const SuggestionList = withSearchParams(
   function SuggestionList() {
     const { kitchen } = useKitchen();
-    const { combination, remove, replace } = useCombination();
-    const heading = useRef<HTMLHeadingElement>(null);
+    const { combination, remove } = useCombination();
     const combinationHeading = useRef<HTMLHeadingElement>(null);
     const emptyHeading = useRef<HTMLHeadingElement>(null);
     // Removing the last Ingredient takes its heading away, so focus moves to what replaces it.
@@ -80,21 +75,12 @@ export const SuggestionList = withSearchParams(
       );
     }
 
-    const { suggestions, tensions, fixes } = kitchen.suggest(combination.ingredients);
-    // Applying a fix removes the button that was pressed, so focus moves to the Suggestions.
-    function applyFix({ ingredient, replacement }: CombinationFix) {
-      if (replacement) replace(ingredient, replacement);
-      else remove(ingredient);
-      heading.current?.focus();
-    }
+    const suggestions = kitchen.suggest(combination.ingredients);
 
     return (
       <>
         {shown}
-        {tensions.length > 0 && (
-          <Tensions tensions={tensions} fixes={fixes} onFix={applyFix} />
-        )}
-        <h2 id="suggestions-heading" ref={heading} tabIndex={-1}>
+        <h2 id="suggestions-heading">
           Suggestions
         </h2>
         <p className="muted">
@@ -117,17 +103,16 @@ export const SuggestionList = withSearchParams(
 /** One Suggestion: whether it's ready, what fills it and from where, why it ranks here. */
 export function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
   const { formula, slots, rankReason, needs } = suggestion;
-  const yours = slots.flatMap(({ ingredient, source }) =>
-    ingredient && isCooksOwn(source) ? [ingredient] : [],
+  const fills = slots.flatMap(({ slot, fills }) => fills.map((fill) => ({ ...fill, required: slot.required })));
+  const yours = fills.flatMap(({ ingredient, source }) => (isCooksOwn(source) ? [ingredient] : []));
+  // Suggested: what a required Slot still needs. Optional: extras, which never block Ready.
+  const suggested = fills.flatMap(({ ingredient, source, required }) =>
+    !isCooksOwn(source) && required ? [ingredient] : [],
   );
-  // Suggested: what a required Slot still needs. Optional: extras that pair, which never block Ready.
-  const suggested = slots.flatMap(({ slot, ingredient, source }) =>
-    ingredient && source === "pairing" && slot.required ? [ingredient] : [],
+  const optional = fills.flatMap(({ ingredient, source, required }) =>
+    !isCooksOwn(source) && !required ? [ingredient] : [],
   );
-  const optional = slots.flatMap(({ slot, ingredient, source }) =>
-    ingredient && source === "pairing" && !slot.required ? [ingredient] : [],
-  );
-  const open = needs.filter(({ ingredient }) => !ingredient).length;
+  const open = needs.filter(({ fills }) => fills.length === 0).length;
   // Nothing else on the card names these Ingredients, so each drawing carries its name, and shows it on hover.
   const markLink = (ingredient: Ingredient) => <IngredientMarkLink ingredient={ingredient} named alone />;
   return (
@@ -157,49 +142,5 @@ export function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
       </p>
       <p className="muted">{formula.description}</p>
     </ListRow>
-  );
-}
-
-/** Every tension, then the one fix offered for each Ingredient involved. */
-function Tensions({
-  tensions,
-  fixes,
-  onFix,
-}: {
-  tensions: Tension[];
-  fixes: CombinationFix[];
-  onFix: (fix: CombinationFix) => void;
-}) {
-  const swaps = fixes.filter(({ replacement }) => replacement).length;
-  const prompt =
-    swaps === fixes.length ? "Swap one?" : swaps === 0 ? "Removing one would help." : "Swap or remove one?";
-
-  return (
-    <Panel title="Not everything pairs yet" titleId="tensions-heading">
-      <ul className="stack">
-        {tensions.map(({ ingredients: [a, b] }) => (
-          <li key={`${a.id}+${b.id}`} className="tension">
-            <span className="tension-marks">
-              <IngredientMarkLink ingredient={a} />
-              <IngredientMarkLink ingredient={b} />
-            </span>
-            <p>
-              <IngredientLink ingredient={a} /> and{" "}
-              <IngredientLink ingredient={b}>{inSentence(b)}</IngredientLink> don&rsquo;t have a Pairing in MySous.
-            </p>
-          </li>
-        ))}
-      </ul>
-      <p>{prompt}</p>
-      <div className="actions">
-        {fixes.map((fix) => (
-          <Button key={fix.ingredient.id} variant={fix.replacement ? "primary" : "secondary"} onClick={() => onFix(fix)}>
-            {fix.replacement
-              ? `Swap ${inSentence(fix.ingredient)} for ${inSentence(fix.replacement)}`
-              : `Remove ${inSentence(fix.ingredient)}`}
-          </Button>
-        ))}
-      </div>
-    </Panel>
   );
 }

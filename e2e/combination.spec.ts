@@ -67,7 +67,7 @@ test("a Cook builds a Combination, sees Suggestions and opens a Formula", async 
   await expect(slot(page, "something to sear")).toHaveText("Chicken thigh");
   await expect(slot(page, "an aromatic")).toHaveText("Garlic");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
-  await expect(page.getByRole("listitem").filter({ hasText: /^Season chicken thigh/ })).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: /^Pat each piece of chicken thigh dry/ })).toBeVisible();
   const formulaUrl = page.url();
 
   // Back and forward step through the Combination's history.
@@ -98,57 +98,18 @@ test("Suggestions are ranked by how well their Ingredients pair, with a reason",
   await expect(suggestions.nth(1)).toContainText("Chicken thigh and garlic pair well.");
 });
 
-test("a Combination that doesn't pair names the tension, and a swap resolves it", async ({
+test("a Combination that doesn't pair still gets its closest Suggestions, each saying what doesn't pair", async ({
   page,
 }) => {
   await page.goto("/suggestions?with=chicken-thigh,basil");
-  const tensions = page.getByRole("region", { name: "Not everything pairs yet" });
-  await expect(tensions.getByRole("listitem")).toHaveText([
-    "Chicken thigh and basil don’t have a Pairing in MySous.",
-  ]);
-  await expect(tensions).toContainText("Swap or remove one?");
-  // The closest Suggestions still show, with their gaps.
   await expect(suggestionList(page).getByRole("heading")).toHaveText(["Pan sauce", "Sheet-pan roast"]);
-
-  await tensions.getByRole("button", { name: "Swap basil for cilantro" }).click();
-
-  await expect(page).toHaveURL(/\/suggestions\?with=chicken-thigh,cilantro$/);
-  await expectCombination(page, ["Chicken thigh", "Cilantro"]);
-  await expect(tensions).toBeHidden();
-  await expect(page.getByRole("heading", { name: "Suggestions" })).toBeFocused();
-  await expect(suggestionList(page).getByRole("listitem").first()).toContainText(
-    "Chicken thigh and cilantro pair well.",
-  );
-  await expect(page.getByRole("status")).toHaveText(
-    "Basil swapped for cilantro in your basket.",
-  );
-
-  await page.goBack();
-  await expect(tensions).toBeVisible();
+  await expect(suggestionList(page).getByRole("listitem").first()).toContainText("Chicken thigh and basil don't have a Pairing in MySous yet.");
+  await expect(page.getByRole("heading", { name: "Not everything pairs yet" })).toHaveCount(0);
 });
 
-test("every Ingredient in a tension gets one next step, and removing works too", async ({
+test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees the method follow, and undoes it", async ({
   page,
 }) => {
-  await page.goto("/suggestions?with=chicken-thigh,basil,ginger");
-  const tensions = page.getByRole("region", { name: "Not everything pairs yet" });
-  await expect(tensions.getByRole("listitem")).toHaveText([
-    "Chicken thigh and basil don’t have a Pairing in MySous.",
-    "Basil and ginger don’t have a Pairing in MySous.",
-  ]);
-  // Garlic pairs with chicken thigh and basil; nothing pairs with all the rest for the others.
-  await expect(tensions.getByRole("button")).toHaveText([
-    "Remove chicken thigh",
-    "Remove basil",
-    "Swap ginger for garlic",
-  ]);
-
-  await tensions.getByRole("button", { name: "Remove basil" }).click();
-  await expectCombination(page, ["Chicken thigh", "Ginger"]);
-  await expect(tensions).toBeHidden();
-});
-
-test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
@@ -159,37 +120,63 @@ test("a Cook swaps a Slot, sees the method follow, and undoes it", async ({ page
   await expect(slotItem(page, "a soft herb")).toContainText("Optional");
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (lemon pairs best).");
 
-  await acid.getByText("Swap").click();
-  await acid.getByRole("button", { name: "Use Lime" }).click();
+  await acid.getByRole("button", { name: /^Options/ }).click();
+  await acid.getByRole("checkbox", { name: "Lime" }).check();
+  await expect(page.getByRole("status")).toHaveText("Lime is now also an acid. Undo takes it out.");
+  await expect(acid.getByRole("checkbox", { name: "Lime" })).toBeFocused();
+  await acid.getByRole("checkbox", { name: "Lemon" }).uncheck();
 
   await expect(slot(page, "an acid")).toHaveText("Lime");
-  await expect(acid.locator(".tag")).toHaveText(["Swapped"]);
-  await expect(page.getByRole("status")).toHaveText("Lime is now an acid. Undo brings back lemon.");
-  await expect(page.getByText(/then add lime a little at a time/)).toBeVisible();
+  await expect(acid.locator(".tag")).toHaveText(["Added"]);
+  await expect(page.getByRole("status")).toHaveText("Lemon taken out of an acid. Undo puts it back.");
+  await expect(page.getByText(/then lime juice a little at a time/)).toBeVisible();
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (you chose lime).");
-  const undo = acid.getByRole("button", { name: "Undo swap of an acid" });
-  await expect(undo).toBeFocused();
+  // The list stays open, in the same order, for the next change.
+  await expect(acid.getByRole("checkbox")).toHaveCount(2);
+  await expect(acid.getByRole("checkbox", { name: "Lemon" })).toBeFocused();
 
+  const undo = acid.getByRole("button", { name: "Undo change to an acid" });
+  await undo.click();
+  await expect(slot(page, "an acid")).toHaveText(["Lemon", "Lime"]);
+  await expect(page.getByRole("status")).toHaveText("Undone: Lemon is back in an acid.");
+  await expect(undo).toBeFocused();
   await undo.click();
   await expect(slot(page, "an acid")).toHaveText("Lemon");
-  await expect(page.getByRole("status")).toHaveText("Undone: Lemon is an acid again.");
-  await expect(page.getByText(/then add lemon a little at a time/)).toBeVisible();
+  await expect(page.getByRole("status")).toHaveText("Undone: Lime taken out of an acid.");
+  await expect(page.getByText(/then lemon juice a little at a time/)).toBeVisible();
   await expect(acid.getByRole("button", { name: /^Undo/ })).toHaveCount(0);
   await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();
 });
 
-test("only the latest swap offers Undo, and undoing it moves Undo to the swap before", async ({ page }) => {
+test("a Cook can take out a part's only Ingredient, and the part says it needs one", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+  const aromatic = slotItem(page, "an aromatic");
+  await aromatic.getByRole("button", { name: /^Options/ }).click();
+  await aromatic.getByRole("checkbox", { name: "Garlic" }).uncheck();
+
+  await expect(slot(page, "an aromatic")).toHaveText("Needs an aromatic");
+  await expect(aromatic).toContainText("Empty for now. Garlic pairs best with the rest of the dish. Choose one in Options.");
+  await expect(page.getByRole("status")).toHaveText("Garlic taken out of an aromatic. Undo puts it back.");
+  await expect(page.locator(".formula-readiness")).toContainText("Also needs an aromatic (garlic pairs best) and an acid");
+  await expect(aromatic.getByRole("checkbox", { name: "Garlic" })).toBeFocused();
+
+  await aromatic.getByRole("checkbox", { name: "Ginger" }).check();
+  await expect(slot(page, "an aromatic")).toHaveText("Ginger");
+  await expect(page.getByRole("status")).toHaveText("Ginger is now an aromatic. Undo takes it out.");
+});
+
+test("only the latest change offers Undo, and undoing it moves Undo to the change before", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
-  await acid.getByText("Swap").click();
-  await acid.getByRole("button", { name: "Use Lime" }).click();
+  await acid.getByRole("button", { name: /^Options/ }).click();
+  await acid.getByRole("checkbox", { name: "Lime" }).check();
   const aromatic = slotItem(page, "an aromatic");
-  await aromatic.getByText("Swap").click();
-  await aromatic.getByRole("button", { name: /^Use / }).first().click();
+  await aromatic.getByRole("button", { name: /^Options/ }).click();
+  await aromatic.getByRole("checkbox", { checked: false }).first().check();
 
-  await expect(page.getByRole("button", { name: /^Undo swap/ })).toHaveCount(1);
-  await aromatic.getByRole("button", { name: "Undo swap of an aromatic" }).click();
-  await expect(acid.getByRole("button", { name: "Undo swap of an acid" })).toBeFocused();
+  await expect(page.getByRole("button", { name: /^Undo change/ })).toHaveCount(1);
+  await aromatic.getByRole("button", { name: "Undo change to an aromatic" }).click();
+  await expect(acid.getByRole("button", { name: "Undo change to an acid" })).toBeFocused();
 });
 
 test("a Formula ready with the Combination says so, in words", async ({ page }) => {
@@ -250,13 +237,13 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Pan sauce" })).toBeVisible();
   await expect(slot(page, "an aromatic")).toHaveText("Garlic");
 
-  // Swap and undo, still by keyboard.
-  await tabTo(page, page.getByText("Swap an acid"));
+  // Options and undo, still by keyboard.
+  await tabTo(page, page.getByText("Options for an acid"));
   await page.keyboard.press("Enter");
-  await tabTo(page, page.getByRole("button", { name: "Use Lime" }));
-  await page.keyboard.press("Enter");
-  await expect(slot(page, "an acid")).toHaveText("Lime");
-  await expect(page.getByRole("button", { name: "Undo swap of an acid" })).toBeFocused();
+  await tabTo(page, page.getByRole("checkbox", { name: "Lime" }));
+  await page.keyboard.press("Space");
+  await expect(slot(page, "an acid")).toHaveText(["Lemon", "Lime"]);
+  await tabTo(page, page.getByRole("button", { name: "Undo change to an acid" }));
   await page.keyboard.press("Enter");
   await expect(slot(page, "an acid")).toHaveText("Lemon");
 });

@@ -29,8 +29,29 @@ for (const reduced of [false, true]) {
     });
 
     test("Pairing rows settle in one after another, once", async ({ page }) => {
-      await page.goto("/ingredients/chicken-thigh");
+      // Note each row that starts to settle, from the page as first sent to the page once it's live.
+      await page.addInitScript(() => {
+        const settled: Element[] = [];
+        Object.assign(window, { settled });
+        document.addEventListener(
+          "animationstart",
+          (event) => event.animationName === "settle" && settled.push(event.target as Element),
+          true,
+        );
+      });
+      await page.goto("/ingredients/garlic");
+      // The Cuisine control appears only once the page is live, so by then any swap would have happened.
+      await expect(page.getByRole("radiogroup", { name: "Show Pairings common in" })).toBeVisible();
       const rows = page.locator(".pairing-group li");
+      const count = await rows.count();
+      const settledRows = () =>
+        page.evaluate(() => {
+          const settled = (window as unknown as { settled: Element[] }).settled;
+          return { live: settled.filter((row) => row.isConnected).length, replaced: settled.filter((row) => !row.isConnected).length };
+        });
+      // Every row settles, and none is swapped for another that settles again as the page goes live.
+      await expect.poll(async () => (await settledRows()).live).toBe(count);
+      expect(await settledRows()).toEqual({ live: count, replaced: 0 });
       expect(await animation(rows.nth(0))).toEqual({
         name: "settle",
         duration: reduced ? "0s" : "0.4s",

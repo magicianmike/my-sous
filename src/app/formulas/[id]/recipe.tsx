@@ -1,10 +1,16 @@
 import { IngredientMark } from "@/components/IngredientMark";
+import { Tooltip } from "@/components/Tooltip";
 import type { Citation, Recipe, Suggestion } from "@/kitchen/kitchen";
 import { IngredientLink } from "../../ingredient-link";
 
 /** A source, linked when it's online. */
-function Source({ citation: { title, url } }: { citation: Citation }) {
-  return url ? <a href={url}>{title}</a> : <cite>{title}</cite>;
+function Source({ citation: { title, url }, label }: { citation: Citation; label: string }) {
+  // Just the word, so the guidance reads first; the title is its tooltip, and its description.
+  return (
+    <Tooltip label={title} describes>
+      {url ? <a href={url}>{label}</a> : <cite tabIndex={0}>{label}</cite>}
+    </Tooltip>
+  );
 }
 
 /** The finished dish's frame, and how long it takes and how many it serves. */
@@ -66,11 +72,11 @@ export function RecipeBody({ recipe }: { recipe: Recipe }) {
             {safety.map(({ ingredient, guidance }) => (
               <p key={ingredient.id} className="safety-note">
                 {/* Validation gives all safety guidance at least one citation. */}
-                <span className="tag">Food safety</span> {guidance.note} Source:{" "}
-                {guidance.citations.map((citation, j) => (
+                <span className="tag">Food safety</span> {guidance.note}{" "}
+                {guidance.citations.map((citation, j, { length }) => (
                   <span key={j}>
-                    {j > 0 && "; "}
-                    <Source citation={citation} />
+                    {j > 0 && ", "}
+                    <Source citation={citation} label={length > 1 ? `Source ${j + 1}` : "Source"} />
                   </span>
                 ))}
               </p>

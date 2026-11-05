@@ -915,9 +915,10 @@ main {
   font-size: var(--text-sm);
 }
 
+/* The label takes the rule's amber, so the two read as one mark. */
 .safety-note .tag {
-  background: var(--surface);
-  color: var(--ink);
+  background: var(--caution-line);
+  color: var(--caution-ink);
   font-weight: var(--weight-bold);
 }
 

@@ -25,8 +25,10 @@ export type Palette = {
   danger: string;
   /** Behind guidance the Cook mustn't miss, such as food safety in a recipe's method. */
   caution: string;
-  /** The rule beside `caution` guidance (decorative; the label says what it is). */
+  /** The rule beside `caution` guidance, and its label's ground. */
   cautionLine: string;
+  /** Text on `cautionLine`, such as the "Food safety" label. */
+  cautionInk: string;
   /** Primary actions. */
   accent: string;
   /** Text on `accent`. */
@@ -48,6 +50,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
     danger: "#b3261e",
     caution: "#fbefd3",
     cautionLine: "#c98a1b",
+    cautionInk: "#1f2620",
     accent: "#1f2620",
     accentInk: "#ffffff",
     focus: "#1f2620",
@@ -64,6 +67,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
     danger: "#ff8f85",
     caution: "#33291a",
     cautionLine: "#d9a03a",
+    cautionInk: "#121412",
     accent: "#ebefe9",
     accentInk: "#121412",
     focus: "#ebefe9",
@@ -91,6 +95,7 @@ export const textPairings: [keyof Palette, keyof Palette][] = [
   ["ink", "caution"],
   ["inkMuted", "caution"],
   ["linkHover", "caution"],
+  ["cautionInk", "cautionLine"],
   ["accentInk", "accent"],
 ];
 

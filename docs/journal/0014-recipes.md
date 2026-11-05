@@ -128,6 +128,21 @@ The role stays the part's heading, so screen readers and focus after a swap work
 | --- | --- |
 | ![](0014-recipes/after-safety-desktop-light.png) | ![](0014-recipes/after-safety-phone-dark.png) |
 
+Then the author asked for three changes. These are their choices except where noted:
+
+- **The label.** "Food safety" takes the rule's amber, so the two read as one mark. Text on it is a new `cautionInk` token: dark in both themes, since light ink fails on amber. Its contrast is checked like the rest.
+- **Sources.** Just the word now: "Source", or "Source 1, Source 2" when there are several (numbering them was my call, since one word can't link to two places). The title shows in a tooltip.
+- **Tooltips, app-wide, on a library.** The author asked for a tooltip component in place of the browser's own tooltips. The app's only native one was the `title` on a source link, and it already had a `Tooltip`, used on Ingredient drawings that stand without their names. Rather than run two, that `Tooltip` is rebuilt on Floating UI (`@floating-ui/react`, pinned at 0.27.20). It keeps what it did:
+  - it shows on mouse hover and on keyboard focus, not on touch;
+  - it stays while the pointer moves onto it;
+  - Escape dismisses it (WCAG 1.4.13).
+
+  It now also flips and shifts to stay on screen, and wraps long text. A new `describes` mode makes the tooltip the control's accessible description, kept in the page while hidden. A source link's name is "Source 1", and its description is the source's title. The drawings keep the visual-only mode, since their name is already the link's. The tooltip renders in place, with fixed positioning, so a card that clips its overflow can't clip it.
+
+| A source's tooltip, desktop light |
+| --- |
+| ![](0014-recipes/after-source-tooltip-desktop-light.png) |
+
 ## Tests
 
 - **Vitest, through `loadKitchen`:**
@@ -150,6 +165,7 @@ The role stays the part's heading, so screen readers and focus after a swap work
   - an empty basket shows the recipe as written, with timings, amounts and the cited cooking guidance;
   - the recipe follows the basket and a swap, amounts and method included;
   - food safety guidance sits on its own background, apart from its step;
+  - a source shows as "Source 1", with its title as the link's description, in a tooltip on hover and focus that Escape closes;
   - a dish without a recipe keeps its short method;
   - two aromatics from the basket, each with its full amount, and removing one then undoing;
   - ticking aromatics until all are in;

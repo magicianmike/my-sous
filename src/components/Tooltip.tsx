@@ -1,44 +1,76 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  autoUpdate,
+  flip,
+  offset,
+  safePolygon,
+  shift,
+  useDismiss,
+  useFloating,
+  useFocus,
+  useHover,
+  useInteractions,
+} from "@floating-ui/react";
+import { cloneElement, useId, useState } from "react";
 import styles from "./Tooltip.module.css";
 
 type Props = {
-  /** What the tooltip says; the control it labels must carry the same words as its name, or be hidden. */
+  /** What the tooltip says. */
   label: string;
-  children: React.ReactNode;
+  /**
+   * How assistive technology hears it. By default it's visual only, for a control whose own name has
+   * the same words, such as an Ingredient's drawing. With `describes`, it's the control's description,
+   * such as a source's title on a link that just says "Source".
+   */
+  describes?: boolean;
+  /** One element, the control; with `describes`, it's given `aria-describedby`. */
+  children: React.ReactElement<{ "aria-describedby"?: string }>;
 };
 
 /**
- * A short label above something with no words of its own, such as an Ingredient's drawing. It shows on
- * hover and on keyboard focus, stays while the pointer is over it, and Escape dismisses it (WCAG 1.4.13).
- * Visual only: assistive technology hears the control's own name.
+ * A short label beside a control, above it where there's room. It shows on mouse hover and on keyboard
+ * focus, stays while the pointer is over it, and Escape dismisses it (WCAG 1.4.13). Touch has no hover,
+ * so the control must make sense without it.
  */
-export function Tooltip({ label, children }: Props) {
+export function Tooltip({ label, describes = false, children }: Props) {
   const [shown, setShown] = useState(false);
-  useEffect(() => {
-    if (!shown) return;
-    const dismiss = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setShown(false);
-    };
-    document.addEventListener("keydown", dismiss);
-    return () => document.removeEventListener("keydown", dismiss);
-  }, [shown]);
+  const id = useId();
+  const { refs, floatingStyles, context } = useFloating({
+    open: shown,
+    onOpenChange: setShown,
+    placement: "top",
+    // Fixed, so a card or panel that clips its overflow doesn't clip the tooltip; it stays in place in the page.
+    strategy: "fixed",
+    middleware: [offset(6), flip(), shift({ padding: 8 })],
+    whileElementsMounted: autoUpdate,
+  });
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    useHover(context, { mouseOnly: true, handleClose: safePolygon() }),
+    useFocus(context),
+    useDismiss(context),
+  ]);
 
   return (
-    <span
-      className={styles.anchor}
-      onPointerEnter={(event) => event.pointerType === "mouse" && setShown(true)}
-      onPointerLeave={() => setShown(false)}
-      onFocus={(event) => event.target.matches(":focus-visible") && setShown(true)}
-      onBlur={() => setShown(false)}
-    >
-      {children}
-      {shown && (
-        <span className={styles.tooltip} aria-hidden="true">
+    <>
+      <span ref={refs.setReference} className={styles.anchor} {...getReferenceProps()}>
+        {describes ? cloneElement(children, { "aria-describedby": id }) : children}
+      </span>
+      {/* A description has to be in the page to be read, so it's hidden rather than left out. */}
+      {(shown || describes) && (
+        <span
+          ref={refs.setFloating}
+          id={id}
+          role={describes ? "tooltip" : undefined}
+          aria-hidden={describes ? undefined : true}
+          hidden={!shown}
+          className={styles.tooltip}
+          style={floatingStyles}
+          {...getFloatingProps()}
+        >
           {label}
         </span>
       )}
-    </span>
+    </>
   );
 }

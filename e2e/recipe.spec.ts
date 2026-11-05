@@ -29,7 +29,36 @@ test("with an empty basket, a dish with a recipe fills its parts from the recipe
   const cooking = steps.filter({ hasText: "cooked through" });
   await expect(cooking).toContainText("Food safety");
   await expect(cooking).toContainText("165°F / 74°C");
-  await expect(cooking.getByRole("link", { name: /Safe Minimum Internal Temperature/ })).toBeVisible();
+  // Each source is a short link; its title is a tooltip, which screen readers hear as its description.
+  const source = cooking.getByRole("link", { name: "Source 1", exact: true });
+  await expect(source).toHaveAccessibleDescription(/^Safe Minimum Internal Temperature Chart/);
+  await expect(cooking.getByRole("link", { name: "Source 2", exact: true })).toHaveAccessibleDescription(
+    /^Chicken from Farm to Table/,
+  );
+  // What shows: the guidance, then just the words; the titles stay hidden until a tooltip opens.
+  // innerText breaks lines around each link's inline-flex anchor; on screen they sit in the sentence.
+  const shown = (await cooking.locator(".safety-note").innerText()).replace(/\s+/g, " ").replace(/ ,/g, ",").trim();
+  expect(shown).toMatch(/raw\. Source 1, Source 2$/);
+  await expect(source).not.toHaveAttribute("title");
+});
+
+test("a source's title shows in a tooltip on hover and on focus, and Escape closes it", async ({ page }) => {
+  await page.goto("/formulas/pan-sauce");
+  const cooking = page.getByRole("main").getByRole("list", { name: "Method" }).getByRole("listitem").filter({ hasText: "cooked through" });
+  const source = cooking.getByRole("link", { name: "Source 1", exact: true });
+  const tooltip = page.getByRole("tooltip");
+  await expect(tooltip).toHaveCount(0);
+
+  await source.hover();
+  await expect(tooltip).toHaveText(/^Safe Minimum Internal Temperature Chart/);
+  await page.mouse.move(0, 0);
+  await expect(tooltip).toHaveCount(0);
+
+  await source.focus();
+  await expect(tooltip).toHaveText(/^Safe Minimum Internal Temperature Chart/);
+  await page.keyboard.press("Escape");
+  await expect(tooltip).toHaveCount(0);
+  await expect(source).toBeFocused();
 });
 
 test("food safety guidance stands out from the step around it, on its own background", async ({ page }) => {

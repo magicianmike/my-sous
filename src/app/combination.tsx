@@ -105,7 +105,12 @@ function changed(ingredient: Ingredient, change: string, size: number): string {
   return `${ingredient.name} ${change} your basket, ${size} of ${COMBINATION_LIMIT}.`;
 }
 
-/** Wraps components that read the URL, which static pages can only do in the browser. */
+/**
+ * Wraps components that read the URL, which static pages can only do in the browser. Once it can, the
+ * Component replaces the Fallback as new elements, so anything the Fallback started (a first-paint
+ * animation, focus) starts again. Where that shows, read the URL in a small child instead and keep the
+ * rest mounted, as the Pairing filter does.
+ */
 export function withSearchParams<P extends object>(
   Component: React.ComponentType<P>,
   Fallback: React.ComponentType<P> = () => null,

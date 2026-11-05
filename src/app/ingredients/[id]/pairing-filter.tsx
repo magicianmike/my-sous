@@ -1,11 +1,10 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useLayoutEffect, useState } from "react";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import type { PairingReasonCategory } from "@/kitchen/categories";
 import type { Cuisine } from "@/kitchen/kitchen";
-import { withSearchParams } from "../../combination";
 
 /** One Pairing's row, and the Cuisines it's common in, so it can be filtered to one. */
 export type PairingRow = { key: string; cuisineIds: string[]; node: React.ReactNode };
@@ -21,31 +20,51 @@ type Props = {
 /** The Cuisine filter lives in the URL beside the basket: a filtered view can be linked; Back clears it. */
 const CUISINE = "cuisine";
 
-/** An Ingredient's Pairings, grouped by Pairing Reason, with filters by reason and by Cuisine. */
-export const PairingFilter = withSearchParams(
-  function PairingFilter(props: Props) {
-    const router = useRouter();
-    const pathname = usePathname();
-    const params = useSearchParams();
-    const requested = params.get(CUISINE);
-    const cuisine = props.cuisines.find(({ id }) => id === requested);
-    return (
+/**
+ * An Ingredient's Pairings, grouped by Pairing Reason, with filters by reason and by Cuisine. The list
+ * stays the same elements from the page as first sent to the page once it's live, so its rows settle in
+ * once; only reading the Cuisine from the URL waits for the browser.
+ */
+export function PairingFilter(props: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  // The Cuisine in the URL, or null for none; undefined until the browser takes over, when every
+  // Pairing shows, unfiltered, with no Cuisine control.
+  const [requested, setRequested] = useState<string | null>();
+  const cuisine = props.cuisines.find(({ id }) => id === requested);
+  return (
+    <>
+      <Suspense>
+        <CuisineParam onRead={setRequested} />
+      </Suspense>
       <PairingList
         {...props}
         cuisine={cuisine}
-        onCuisine={(id) => {
-          const next = new URLSearchParams(params);
-          if (id) next.set(CUISINE, id);
-          else next.delete(CUISINE);
-          const query = next.toString();
-          router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
-        }}
+        onCuisine={
+          requested !== undefined
+            ? (id) => {
+                const next = new URLSearchParams(window.location.search);
+                if (id) next.set(CUISINE, id);
+                else next.delete(CUISINE);
+                const query = next.toString();
+                router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+              }
+            : undefined
+        }
       />
-    );
-  },
-  // Before the browser takes over, every Pairing shows, unfiltered.
-  (props: Props) => <PairingList {...props} />,
-);
+    </>
+  );
+}
+
+/**
+ * Reads the Cuisine from the URL, once the browser has it and whenever it changes; shows nothing. Before
+ * paint, so Back and Forward never show a frame of the old filter.
+ */
+function CuisineParam({ onRead }: { onRead: (id: string | null) => void }) {
+  const requested = useSearchParams().get(CUISINE);
+  useLayoutEffect(() => onRead(requested), [onRead, requested]);
+  return null;
+}
 
 /**
  * The Pairings, filtered by reason here and by Cuisine as given. Without `onCuisine` (before the page is

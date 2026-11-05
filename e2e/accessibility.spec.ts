@@ -76,13 +76,13 @@ for (const colorScheme of ["light", "dark"] as const) {
       await expectNoViolations(page);
     });
 
-    test("a Formula with an empty Slot, an open Change list and a change made has no axe violations", async ({
+    test("a Formula with an empty Slot, an open Options list and a change made has no axe violations", async ({
       page,
     }) => {
       await page.goto("/formulas/sheet-pan-roast?with=ginger");
       await expect(page.getByText("No Pairing here points to a vegetable yet.")).toBeVisible();
       const acid = page.getByRole("main").getByRole("listitem").filter({ hasText: /^an acid/ });
-      await acid.getByText("Change").click();
+      await acid.getByText("Options").click();
       await expectNoViolations(page);
       await acid.getByRole("checkbox", { checked: false }).first().check();
       await expect(acid.getByRole("button", { name: /^Undo change/ })).toBeVisible();

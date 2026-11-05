@@ -38,7 +38,7 @@ test("the recipe follows the basket and every change, amounts included", async (
   await expect(acidLine).toHaveText(/^2 limes, juiced/);
 
   const acid = part(page, "an acid");
-  await acid.getByText("Change").click();
+  await acid.getByText("Options").click();
   await acid.getByRole("checkbox", { name: "Lemon" }).check();
   await acid.getByRole("checkbox", { name: "Lime" }).uncheck();
 
@@ -62,7 +62,7 @@ test("a part can hold two Ingredients from the basket, each with its full amount
   await expect(ingredientLines(page).filter({ hasText: /^a thumb-sized piece ginger/ })).toHaveCount(1);
   await expect(page.getByRole("main").getByRole("list", { name: "Method" })).toContainText("add garlic and ginger");
 
-  await aromatic.getByText("Change").click();
+  await aromatic.getByText("Options").click();
   await aromatic.getByRole("checkbox", { name: "Ginger" }).uncheck();
   await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic"]);
   await expect(page.getByRole("status")).toHaveText("Ginger taken out of an aromatic. Undo puts it back.");
@@ -73,7 +73,7 @@ test("a part can hold two Ingredients from the basket, each with its full amount
 test("the Cook can keep adding Ingredients to a part, with no limit", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const aromatic = part(page, "an aromatic");
-  await aromatic.getByText("Change").click();
+  await aromatic.getByText("Options").click();
   await aromatic.getByRole("checkbox", { name: "Ginger" }).check();
 
   await expect(aromatic.locator(".slot-fill")).toHaveText(["Garlic", "Ginger"]);

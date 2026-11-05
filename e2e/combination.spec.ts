@@ -120,9 +120,12 @@ test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees 
   await expect(slotItem(page, "a soft herb")).toContainText("Optional");
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (lemon pairs best).");
 
-  await acid.getByText("Change").click();
+  await acid.getByText("Options").click();
   // The last one in a part can't be unticked: an empty part would read as one nothing pairs into.
   await expect(acid.getByRole("checkbox", { name: "Lemon" })).toBeDisabled();
+  await expect(acid.getByRole("checkbox", { name: "Lemon" })).toHaveAccessibleDescription(
+    /Choose another before taking lemon out\./,
+  );
   await acid.getByRole("checkbox", { name: "Lime" }).check();
   await expect(page.getByRole("status")).toHaveText("Lime is now also an acid. Undo takes it out.");
   await expect(acid.getByRole("checkbox", { name: "Lime" })).toBeFocused();
@@ -153,10 +156,10 @@ test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees 
 test("only the latest change offers Undo, and undoing it moves Undo to the change before", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");
-  await acid.getByText("Change").click();
+  await acid.getByText("Options").click();
   await acid.getByRole("checkbox", { name: "Lime" }).check();
   const aromatic = slotItem(page, "an aromatic");
-  await aromatic.getByText("Change").click();
+  await aromatic.getByText("Options").click();
   await aromatic.getByRole("checkbox", { checked: false }).first().check();
 
   await expect(page.getByRole("button", { name: /^Undo change/ })).toHaveCount(1);
@@ -222,8 +225,8 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Pan sauce" })).toBeVisible();
   await expect(slot(page, "an aromatic")).toHaveText("Garlic");
 
-  // Change and undo, still by keyboard.
-  await tabTo(page, page.getByText("Change an acid"));
+  // Options and undo, still by keyboard.
+  await tabTo(page, page.getByText("Options for an acid"));
   await page.keyboard.press("Enter");
   await tabTo(page, page.getByRole("checkbox", { name: "Lime" }));
   await page.keyboard.press("Space");

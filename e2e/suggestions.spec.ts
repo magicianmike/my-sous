@@ -62,7 +62,7 @@ test("a required Slot nothing pairs with shows as open, with the choice still th
   await expect(vegetable.locator(".tag")).toHaveCount(0);
   await expect(page.locator(".formula-readiness")).toContainText("a vegetable (nothing pairs yet)");
 
-  await vegetable.getByText("Choose").click();
+  await vegetable.getByText("Options").click();
   await vegetable.getByRole("checkbox").first().check();
   await expect(vegetable.locator(".tag")).toHaveText(["Added"]);
   await expect(page.getByRole("status")).toHaveText("Tomato is now a vegetable. Undo takes it out.");

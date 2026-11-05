@@ -106,18 +106,18 @@ The role stays the part's heading, so screen readers and focus after a swap work
 | --- | --- |
 | Garlic and ginger as aromatics, desktop light | ![](0014-recipes/after-two-aromatics-desktop-light.png) |
 
-**Swap and Add another became one checklist.** The author saw that the two did much the same thing. They chose a checklist from three options; the others were "add, then remove" and one list with a button for each:
+**Swap and Add another became one checklist, "Options".** The author saw that the two did much the same thing. They chose a checklist from three options; the others were "add, then remove" and one list with a button for each:
 
-- **Change.** Each part has one "Change" ("Choose" while it's empty). It opens every Ingredient that could be in the part, ticked while it's in it. Ticking one adds it; unticking takes it out. A swap is one of each. Remove and the separate Swap went with it.
-- **The last one stays.** It can't be unticked, and a note, which the dimmed checkbox points to for screen readers, says to tick another first. An empty part would read as one nothing pairs into.
+- **Options.** Each part has one "Options", empty or not; it was "Change" (and "Choose" while empty) until the author renamed it. It opens every Ingredient that could be in the part, ticked while it's in it. Ticking one adds it; unticking takes it out. A swap is one of each. Remove and the separate Swap went with it.
+- **The last one stays.** It can't be unticked, and a note, which the dimmed checkbox points to for screen readers, says "Choose another before taking lemon out." An empty part would read as one nothing pairs into.
 - **Order holds.** The list ranks by pairing with what's outside the part, so ticking moves nothing, and focus stays on the checkbox for the next change. Each choice says what in the dish it pairs with, such as "pairs with chicken thigh and garlic". That hint includes the part's own Ingredients, so a choice that goes with garlic says so, though the rank leaves them out to keep the order still.
 - **Yours stays yours.** Untick a basket Ingredient and tick it again, and it's back as "Yours", so the dish is Ready again and there's no Add to the basket for something already in it. The Spec review caught it reading "Added".
 - **The tag.** Whatever the Cook ticks reads "Added", so "Swapped" is gone, along with the Kitchen's `swap`.
 - **Tap targets.** A bare checkbox is 20px. The whole row is the checkbox instead, with the box drawn beside the name, the way the segmented control already works, so the 44px phone check passes.
 
-| The Change list, desktop light | The Change list, phone dark |
+| The Options list, desktop light | The Options list, phone dark |
 | --- | --- |
-| ![](0014-recipes/after-change-desktop-light.png) | ![](0014-recipes/after-change-phone-dark.png) |
+| ![](0014-recipes/after-options-desktop-light.png) | ![](0014-recipes/after-options-phone-dark.png) |
 
 ## Tests
 
@@ -152,7 +152,7 @@ On `/formulas/pan-sauce?with=chicken-thigh,lime` in Safari, with VoiceOver on:
 
 1. Rotor → Headings: Pan sauce (level 1), then What goes in, Ingredients and Method (level 2), with the parts at level 3.
 2. Rotor → Lists: "Ingredients" and "Method".
-3. The acid line reads "2 limes, juiced, about 3 tbsp". Open "Change an acid": the group reads "Ingredients for an acid", Lime reads ticked and dimmed, and Lemon reads "pairs with chicken thigh". Tick Lemon, then untick Lime: each change is announced, focus stays on the checkbox, and the line now reads "1 lemon, juiced, about 3 tbsp". The announcements name the change, not the new amount.
+3. The acid line reads "2 limes, juiced, about 3 tbsp". Open "Options for an acid": the group reads "Ingredients for an acid", Lime reads ticked and dimmed, and Lemon reads "pairs with chicken thigh". Tick Lemon, then untick Lime: each change is announced, focus stays on the checkbox, and the line now reads "1 lemon, juiced, about 3 tbsp". The announcements name the change, not the new amount.
 4. Method steps 1 and 3 read their text, then "Food safety", the guidance, and the linked USDA sources.
 5. The drawings frame isn't announced.
 

@@ -215,7 +215,7 @@ function Checklist({ filled, actions }: { filled: FilledSlot; actions: PartActio
       </ul>
       {only && (
         <p id={`${id}-stays`} className="muted">
-          Tick another before taking {inSentence(only)} out.
+          Choose another before taking {inSentence(only)} out.
         </p>
       )}
     </fieldset>
@@ -224,7 +224,7 @@ function Checklist({ filled, actions }: { filled: FilledSlot; actions: PartActio
 
 /**
  * One part of the dish: its role as a label across the top, then each Ingredient in it, with why it's
- * there and Add to the basket; then Change, to tick what's in it, and Undo after the Cook's latest
+ * there and Add to the basket; then Options, to tick what's in it, and Undo after the Cook's latest
  * change here.
  */
 function PartCard({
@@ -289,7 +289,7 @@ function PartCard({
       {(choices.length > 0 || undoRef) && (
         <div className="part-foot">
           {choices.length > 0 && (
-            <Disclosure summary={fills.length === 0 ? "Choose" : "Change"} hiddenSummary={slot.role}>
+            <Disclosure summary="Options" hiddenSummary={`for ${slot.role}`}>
               <Checklist filled={filled} actions={actions} />
             </Disclosure>
           )}

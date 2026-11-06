@@ -19,7 +19,7 @@ import {
 import { useCombination, useKitchen, withSearchParams } from "../../combination";
 import { IngredientLink, IngredientMarkLink } from "../../ingredient-link";
 import { ReadinessSentence } from "../../readiness";
-import { RecipeBody, RecipeHeader } from "./recipe";
+import { DishImage, RecipeBody, RecipeHeader } from "./recipe";
 
 /** The Formula's Slots and method, filled from the current Combination. */
 export const FormulaFill = withSearchParams(function FormulaFill({
@@ -134,7 +134,8 @@ function SlotEditor({
 
   return (
     <>
-      {recipe && <RecipeHeader recipe={recipe} suggestion={current.suggestion} />}
+      <DishImage suggestion={current.suggestion} recipe={recipe} />
+      {recipe && <RecipeHeader recipe={recipe} />}
       <div className="formula-readiness">
         <Readiness missing={current.suggestion.needs.length} />
         <p>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Chip } from "@/components/Chip";
+import { BANNER_SIZES, ContentImage } from "@/components/ContentImage";
 import { Disclosure } from "@/components/Disclosure";
 import { hueStyle, IngredientMark } from "@/components/IngredientMark";
 import { ListRow } from "@/components/ListRow";
@@ -35,7 +36,13 @@ export default async function IngredientPage({ params }: Props) {
   return (
     <div className="ingredient">
       <section className="hero hue" aria-labelledby="ingredient-name" style={hueStyle(ingredient.colour)}>
-        <IngredientMark ingredient={ingredient} size="lg" drawIn />
+        {ingredient.image && (
+          <ContentImage image={ingredient.image} sizes={BANNER_SIZES} priority noteOnImage className="hero-image" />
+        )}
+        {/* The drawing stays the Ingredient's mark; with an image, smaller, on its corner, clear of what it shows. */}
+        <div className="hero-mark">
+          <IngredientMark ingredient={ingredient} size={ingredient.image ? "md" : "lg"} drawIn />
+        </div>
         <div className="title">
           <h1 id="ingredient-name">{ingredient.name}</h1>
           <AddToCombination ingredientId={ingredient.id} />

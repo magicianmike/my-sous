@@ -24,6 +24,38 @@ const safetyGuidanceSchema = z.object({
   citations: z.array(citationSchema).min(1, "cite at least one source for safety guidance"),
 });
 
+/** A day, as YAML writes it; frontmatter reads an unquoted date as a Date, so either is taken. */
+const day = z.union([z.iso.date(), z.date().transform((date) => date.toISOString().slice(0, 10))]);
+
+/** The author's check that an image shows what it's for: the right Ingredient, or the dish as written. */
+const reviewSchema = z.strictObject({ date: day, matches: z.boolean() });
+
+/** How an image was made. AI-generated images are made while writing content, never while the app runs. */
+const provenanceSchema = z.discriminatedUnion(
+  "made",
+  [
+    z.strictObject({
+      made: z.literal("ai-generated"),
+      model: z.string({ error: "name the model that made the image" }).min(1, "name the model that made the image"),
+      prompt: z.string({ error: "give the prompt the image was made from" }).min(1, "give the prompt the image was made from"),
+      date: day,
+      review: reviewSchema.optional(),
+    }),
+    // Rendered from the drawings, to stand in until the real image arrives.
+    z.strictObject({ made: z.literal("placeholder"), date: day, review: reviewSchema.optional() }),
+  ],
+  { error: 'say how the image was made: "ai-generated" (with its model, prompt and date) or "placeholder"' },
+);
+
+/** An image file under `images/`, its alt text, and where it came from. */
+export const imageSchema = z.object({
+  file: z.string().min(1),
+  alt: z
+    .string({ error: "give the image alt text, written for the Cook" })
+    .min(1, "give the image alt text, written for the Cook"),
+  provenance: provenanceSchema,
+});
+
 /** An Ingredient's own colours: its drawing's stroke sits on its wash, in each theme. */
 const ingredientColourSchema = z.object({
   wash: hex,
@@ -47,6 +79,7 @@ export const ingredientSchema = z.object({
   safety: z.partialRecord(z.enum(SAFETY_TOPICS), safetyGuidanceSchema).optional(),
   /** Single-line drawing on a 48-unit grid: the inside of an <svg viewBox="0 0 48 48">. */
   drawing: z.string(),
+  image: imageSchema.optional(),
 });
 
 const pairingReasonSchema = z.object({
@@ -69,7 +102,6 @@ const slotSchema = z.object({
   /** The Slot type an Ingredient must list to fill this Slot. */
   accepts: z.string().min(1),
   required: z.boolean().default(true),
-  /** How many Ingredients the Slot can hold, such as 2 aromatics; one unless it says. */
 });
 
 export const formulaSchema = z.object({
@@ -79,6 +111,8 @@ export const formulaSchema = z.object({
   slots: z.array(slotSchema).min(1),
   /** Steps that refer to Slots as {slotId}. */
   method: z.array(z.string().min(1)).min(1),
+  /** A typical result. */
+  image: imageSchema.optional(),
 });
 
 // Strict, so a stray key fails: an unquoted comma in a YAML `{ … }` line splits a note into one.
@@ -128,18 +162,32 @@ export const recipeSchema = z.object({
   ),
   ingredients: z.array(recipeIngredientSchema).min(1),
   steps: z.array(recipeStepSchema).min(1),
+  /** The finished dish, as written. */
+  image: imageSchema.optional(),
 });
+
+/** An image as the app uses it: its file, alt text, size in pixels, and how it was made. */
+export type Image = {
+  file: string;
+  alt: string;
+  width: number;
+  height: number;
+  made: z.infer<typeof provenanceSchema>["made"];
+};
+
+/** Content as written, with its image (if any) checked and measured. */
+type WithImage<T> = Omit<T, "image"> & { image?: Image };
 
 export type Cuisine = z.infer<typeof cuisineSchema>;
 export type PairingReason = z.infer<typeof pairingReasonSchema>;
 export type Citation = z.infer<typeof citationSchema>;
 export type Slot = z.infer<typeof slotSchema>;
-export type Formula = z.infer<typeof formulaSchema>;
-export type IngredientContent = { id: string } & z.infer<typeof ingredientSchema>;
+export type Formula = WithImage<z.infer<typeof formulaSchema>>;
+export type IngredientContent = { id: string } & WithImage<z.infer<typeof ingredientSchema>>;
 export type PairingContent = z.infer<typeof pairingSchema>;
 export type SafetyGuidance = z.infer<typeof safetyGuidanceSchema>;
 /** A Formula's Recipe, named by the Formula it belongs to. */
-export type RecipeContent = { formula: string } & z.infer<typeof recipeSchema>;
+export type RecipeContent = { formula: string } & WithImage<z.infer<typeof recipeSchema>>;
 
 /** Validated content, plain data: what a Kitchen is built from, on the server or in the browser. */
 export type KitchenContent = {

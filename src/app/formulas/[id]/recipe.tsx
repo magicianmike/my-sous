@@ -1,6 +1,8 @@
+import { BANNER_SIZES, ContentImage } from "@/components/ContentImage";
 import { IngredientMark } from "@/components/IngredientMark";
 import { Tooltip } from "@/components/Tooltip";
-import type { Citation, Recipe, Suggestion } from "@/kitchen/kitchen";
+import { inSentence, joinWithAnd, type Citation, type Recipe, type Suggestion } from "@/kitchen/kitchen";
+import { useKitchen } from "../../combination";
 import { IngredientLink } from "../../ingredient-link";
 
 /** A source, linked when it's online. */
@@ -13,36 +15,52 @@ function Source({ citation: { title, url }, label }: { citation: Citation; label
   );
 }
 
-/** The finished dish's frame, and how long it takes and how many it serves. */
-export function RecipeHeader({ recipe, suggestion }: { recipe: Recipe; suggestion: Suggestion }) {
+/**
+ * The dish's image: its Recipe's, captioned as the dish as written, since what fills it now may differ;
+ * or its Formula's, a typical one. Without either, a dish with a Recipe keeps its frame, with the
+ * drawings of what's in it now, and one without has none.
+ */
+export function DishImage({ suggestion, recipe }: { suggestion: Suggestion; recipe?: Recipe }) {
+  const { kitchen } = useKitchen();
+  const dish = kitchen.dishImage(suggestion);
+  if (dish) {
+    const caption = dish.asWritten
+      ? `As written: ${joinWithAnd(dish.asWritten.map(inSentence))}.`
+      : `A typical ${suggestion.formula.name.toLowerCase()}.`;
+    return <ContentImage image={dish.image} sizes={BANNER_SIZES} priority caption={caption} className="dish-image" />;
+  }
+  if (!recipe) return null;
+  return (
+    <div className="recipe-image" aria-hidden="true">
+      {suggestion.slots.flatMap(({ fills }) =>
+        fills.map(({ ingredient }) => <IngredientMark key={ingredient.id} ingredient={ingredient} />),
+      )}
+    </div>
+  );
+}
+
+/** How long a Recipe takes and how many it serves. */
+export function RecipeHeader({ recipe }: { recipe: Recipe }) {
   const { serves, time } = recipe;
   return (
-    <>
-      {/* Where the image of the finished dish goes (#32); until then, the drawings of what's in it. */}
-      <div className="recipe-image" aria-hidden="true">
-        {suggestion.slots.flatMap(({ fills }) =>
-          fills.map(({ ingredient }) => <IngredientMark key={ingredient.id} ingredient={ingredient} />),
-        )}
+    <dl className="recipe-facts">
+      <div>
+        <dt>Serves</dt>
+        <dd>{serves}</dd>
       </div>
-      <dl className="recipe-facts">
-        <div>
-          <dt>Serves</dt>
-          <dd>{serves}</dd>
-        </div>
-        <div>
-          <dt>Prep</dt>
-          <dd>{time.prep} minutes</dd>
-        </div>
-        <div>
-          <dt>Cook</dt>
-          <dd>{time.cook} minutes</dd>
-        </div>
-        <div>
-          <dt>Total</dt>
-          <dd>{time.total} minutes</dd>
-        </div>
-      </dl>
-    </>
+      <div>
+        <dt>Prep</dt>
+        <dd>{time.prep} minutes</dd>
+      </div>
+      <div>
+        <dt>Cook</dt>
+        <dd>{time.cook} minutes</dd>
+      </div>
+      <div>
+        <dt>Total</dt>
+        <dd>{time.total} minutes</dd>
+      </div>
+    </dl>
   );
 }
 

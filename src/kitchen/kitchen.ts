@@ -10,6 +10,7 @@ import type {
   Citation,
   Cuisine,
   Formula,
+  Image,
   IngredientContent,
   KitchenContent,
   PairingReason,
@@ -17,7 +18,7 @@ import type {
   Slot,
 } from "./schema";
 
-export type { Citation, Cuisine, Formula, KitchenContent, PairingReason, SafetyGuidance, Slot };
+export type { Citation, Cuisine, Formula, Image, KitchenContent, PairingReason, SafetyGuidance, Slot };
 
 export type Ingredient = Omit<IngredientContent, "cuisines"> & { cuisines: Cuisine[] };
 
@@ -133,12 +134,19 @@ export type RecipeStep = { text: string; safety: { ingredient: Ingredient; guida
 
 /** A Formula's Recipe, for whatever fills its Slots: quantities, timings and the full method. */
 export type Recipe = {
+  /** Its own Ingredients, which fill any part the Combination and its Pairings leave empty. */
+  asWritten: Ingredient[];
+  /** The finished dish as written, which may not be the dish as it's filled now. */
+  image?: Image;
   serves: number;
   /** In minutes. */
   time: { prep: number; cook: number; total: number };
   ingredients: RecipeIngredient[];
   steps: RecipeStep[];
 };
+
+/** A dish's image, and, for a Recipe's, the Ingredients it shows: the recipe as written. */
+export type DishImage = { image: Image; asWritten?: Ingredient[] };
 
 export type Kitchen = {
   /** The validated content this Kitchen was built from, to rebuild it in the browser. */
@@ -169,6 +177,11 @@ export type Kitchen = {
   formula(id: string): Formula | undefined;
   /** The Recipe for a Suggestion's Formula, if it has one, written out for the Suggestion's fills. */
   recipe(suggestion: Suggestion): Recipe | undefined;
+  /**
+   * A Suggestion's dish image: its Recipe's, which shows the dish as written (so with what it's made
+   * with as written, since the fills may differ), or else its Formula's, a typical one.
+   */
+  dishImage(suggestion: Suggestion): DishImage | undefined;
   /**
    * Suggestions for a Combination, one per Formula. Slots fill from the Combination first (each
    * Ingredient filling at most one Slot), then the Ingredient that pairs with most of the fill; a
@@ -420,7 +433,7 @@ export function createKitchen(content: KitchenContent): Kitchen {
   const formula = (id: string) => content.formulas.find((formula) => formula.id === id);
   const recipes = new Map(content.recipes.map((recipe) => [recipe.formula, recipe]));
 
-  return {
+  const kitchen: Kitchen = {
     content,
     ingredients: () => [...ingredients.values()],
     ingredient: (id) => ingredients.get(id),
@@ -497,6 +510,8 @@ export function createKitchen(content: KitchenContent): Kitchen {
       if (!recipe) return undefined;
       const filled = (slotId: string) => slots.find(({ slot }) => slot.id === slotId)!;
       return {
+        asWritten: slots.flatMap(({ slot }) => recipe.fills[slot.id] ?? []).map((ingredientId) => ingredients.get(ingredientId)!),
+        image: recipe.image,
         serves: recipe.serves,
         time: { ...recipe.time, total: recipe.time.prep + recipe.time.cook },
         ingredients: recipe.ingredients.flatMap(({ slot: slotId, name, amount, note, for: amounts }) => {
@@ -524,6 +539,12 @@ export function createKitchen(content: KitchenContent): Kitchen {
             : [],
         })),
       };
+    },
+
+    dishImage(suggestion) {
+      const recipe = kitchen.recipe(suggestion);
+      if (recipe?.image) return { image: recipe.image, asWritten: recipe.asWritten };
+      return suggestion.formula.image && { image: suggestion.formula.image };
     },
 
     suggest(combination) {
@@ -603,4 +624,5 @@ export function createKitchen(content: KitchenContent): Kitchen {
       };
     },
   };
+  return kitchen;
 }

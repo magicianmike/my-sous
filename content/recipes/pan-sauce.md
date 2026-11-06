@@ -8,6 +8,13 @@
 # a Slot's Ingredient names it in `safety`, and shows that Ingredient's cited guidance.
 serves: 2
 time: { prep: 10, cook: 30 }
+# The dish as written. A placeholder until the reviewed image arrives with the content (#19).
+image:
+  file: pan-sauce.png
+  alt: A placeholder, the drawings of chicken thigh, garlic, lemon and basil in a row.
+  provenance:
+    made: placeholder
+    date: "2026-11-05"
 fills:
   protein: chicken-thigh
   aromatic: garlic

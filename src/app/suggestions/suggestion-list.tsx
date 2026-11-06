@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { buttonClass } from "@/components/Button";
+import { ContentImage } from "@/components/ContentImage";
 import { EmptyMark } from "@/components/EmptyMark";
 import { ListRow } from "@/components/ListRow";
 import { MarkGroup } from "@/components/MarkGroup";
@@ -102,7 +103,10 @@ export const SuggestionList = withSearchParams(
 
 /** One Suggestion: whether it's ready, what fills it and from where, why it ranks here. */
 export function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
+  const { kitchen } = useKitchen();
   const { formula, slots, rankReason, needs } = suggestion;
+  // The card's heading names the dish, so its image is decorative.
+  const image = kitchen.dishImage(suggestion)?.image;
   const fills = slots.flatMap(({ slot, fills }) => fills.map((fill) => ({ ...fill, required: slot.required })));
   const yours = fills.flatMap(({ ingredient, source }) => (isCooksOwn(source) ? [ingredient] : []));
   // Suggested: what a required Slot still needs. Optional: extras, which never block Ready.
@@ -117,6 +121,11 @@ export function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
   const markLink = (ingredient: Ingredient) => <IngredientMarkLink ingredient={ingredient} named alone />;
   return (
     <ListRow
+      media={
+        image && (
+          <ContentImage image={image} sizes="(min-width: 50rem) 40rem, 100vw" decorative noteOnImage className="card-image" />
+        )
+      }
       title={
         <h3>
           <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>

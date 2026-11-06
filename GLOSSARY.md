@@ -62,6 +62,10 @@ _Avoid_: Result, match, recommendation
 A Formula's quantities, timings and full method, shown on the dish's page. It's written for its own Ingredients (the recipe as written), which fill any part the Combination and its Pairings leave empty, and it follows every fill and change: each part's amount is given for particular Ingredients, with a general amount for the rest. A step whose safety depends on a part (poultry temperatures, say) shows the cited safety guidance of the Ingredient that fills it. The Cook sees it called a **recipe**.
 _Avoid_: Showcase Recipe (its earlier name, in the original spec), worked example
 
+**Image**:
+A picture of an Ingredient, a Formula's typical result, or a Recipe's dish as written, shown where there's room; the line drawings stay the mark everywhere else. Each is made while writing content (AI-generated and reviewed by the author, or a placeholder rendered from the drawings) and carries alt text and its provenance (ADR 0005). The Cook sees it labelled by how it was made: an **AI-generated image** or a **placeholder image**.
+_Avoid_: Photo, photograph (they aren't), picture, illustration (that's the drawing)
+
 ### Later
 
 **Rescue**:

@@ -1,15 +1,18 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { basename, join } from "node:path";
 import matter from "gray-matter";
+import sharp from "sharp";
 import { parse } from "yaml";
 import { z } from "zod";
 import { createKitchen, SLOT_REFERENCE, type Kitchen } from "./kitchen";
 import {
   cuisineSchema,
   formulaSchema,
+  imageSchema,
   ingredientSchema,
   pairingSchema,
   recipeSchema,
+  type Image,
   type IngredientContent,
   type KitchenContent,
   type RecipeContent,
@@ -26,6 +29,12 @@ type RawContent = Omit<KitchenContent, "ingredients" | "recipes"> & {
   ingredients: (IngredientContent & { file: string })[];
   recipes: (RecipeContent & { file: string })[];
 };
+
+/**
+ * What an image must be to ship: big enough for the widest place it shows at twice the pixel density,
+ * and light enough to process. The build makes the smaller files the Cook downloads.
+ */
+export const IMAGE_BUDGET = { minShortSide: 1024, maxMegabytes: 5 };
 
 const SHAPE =
   /^<(path|circle|ellipse|line|polyline|rect)(\s+(d|cx|cy|r|rx|ry|x|y|x1|y1|x2|y2|width|height|points)="[-0-9.,\sa-zA-Z]*")*\s*\/>$/;
@@ -105,6 +114,41 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
     }
     return drawing;
   }
+  /**
+   * An image checked against its file: reviewed if it should be, there, and within the budget; measured
+   * for the page. Undefined, with errors, when it isn't.
+   */
+  async function readImage(owner: string, image: z.infer<typeof imageSchema> | undefined, file: string) {
+    if (!image) return undefined;
+    const report = (problem: string) => errors.push({ file, message: `${owner}'s image ${problem}` });
+    const { made, review } = image.provenance;
+    if (made === "placeholder" && review) {
+      report("is a placeholder, so it can't be reviewed; replace it with a reviewed image.");
+    } else if (made === "ai-generated" && !review) {
+      report("hasn't been reviewed; check it matches what it shows, then record the review.");
+    } else if (review && !review.matches) {
+      report("doesn't match what it shows, by its review; regenerate it.");
+    }
+
+    const path = join(contentDir, "images", image.file);
+    let size: number;
+    try {
+      size = (await stat(path)).size;
+    } catch {
+      report(`"images/${image.file}" doesn't exist.`);
+      return undefined;
+    }
+    const { width = 0, height = 0 } = await sharp(path).metadata();
+    const megabytes = size / 1_000_000;
+    if (megabytes > IMAGE_BUDGET.maxMegabytes) {
+      report(`is ${megabytes.toFixed(1)} MB; keep image files under ${IMAGE_BUDGET.maxMegabytes} MB.`);
+    }
+    if (Math.min(width, height) < IMAGE_BUDGET.minShortSide) {
+      report(`is ${width}×${height}; it needs at least ${IMAGE_BUDGET.minShortSide} pixels on its shorter side.`);
+    }
+    return { file: image.file, alt: image.alt, width, height, made } satisfies Image;
+  }
+
   for (const name of (await readdir(ingredientsDir)).filter((f) => f.endsWith(".md")).sort()) {
     const file = join(ingredientsDir, name);
     const id = basename(name, ".md");
@@ -112,8 +156,18 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
     if (drawing === undefined) continue;
     const { data, content: essay } = matter(await readFile(file, "utf8"));
     const ingredient = check(ingredientSchema, { ...data, essay: essay.trim(), drawing }, file);
-    if (ingredient) ingredients.push({ id, file, ...ingredient });
+    if (ingredient) {
+      ingredients.push({ id, file, ...ingredient, image: await readImage(`Ingredient ${id}`, ingredient.image, file) });
+    }
   }
+
+  const formulasFile = join(contentDir, "formulas.yaml");
+  const formulas = await Promise.all(
+    (await readYamlList("formulas.yaml", formulaSchema)).map(async (formula) => ({
+      ...formula,
+      image: await readImage(`Formula ${formula.id}`, formula.image, formulasFile),
+    })),
+  );
 
   const recipes: RawContent["recipes"] = [];
   const recipesDir = join(contentDir, "recipes");
@@ -125,14 +179,15 @@ async function readContent(contentDir: string, errors: ContentError[]): Promise<
   for (const name of recipeFiles.filter((f) => f.endsWith(".md")).sort()) {
     const file = join(recipesDir, name);
     const recipe = check(recipeSchema, matter(await readFile(file, "utf8")).data, file);
-    if (recipe) recipes.push({ formula: basename(name, ".md"), file, ...recipe });
+    const formula = basename(name, ".md");
+    if (recipe) recipes.push({ formula, file, ...recipe, image: await readImage(`Recipe ${formula}`, recipe.image, file) });
   }
 
   return {
     cuisines: await readYamlList("cuisines.yaml", cuisineSchema),
     ingredients,
     pairings: await readYamlList("pairings.yaml", pairingSchema),
-    formulas: await readYamlList("formulas.yaml", formulaSchema),
+    formulas,
     recipes,
   };
 }

@@ -16,6 +16,7 @@ const screens = [
   "/",
   "/ingredients/chicken-thigh?with=chicken-thigh,garlic,lemon,basil",
   "/ingredients/gremolata",
+  "/ingredients/lemon",
   "/suggestions?with=chicken-thigh,basil",
   "/formulas/pan-sauce?with=chicken-thigh,garlic",
   "/suggestions?with=chicken-thigh,basil,ginger",

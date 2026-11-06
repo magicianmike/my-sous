@@ -40,9 +40,9 @@ test("a Suggestion that needs more says how many, what, and what pairs best", as
   await expect(panSauce).toContainText("Needs 1 more");
   await expect(panSauce).toContainText("Also needs an acid (lemon pairs best).");
   expect(await markNames(page, "Pan sauce", "Yours")).toEqual(["Chicken thigh", "Garlic"]);
-  // Only the acid is needed; the basil and chile that pair are optional extras, kept apart.
+  // Only the acid is needed; the parsley and chile that pair are optional extras, kept apart.
   expect(await markNames(page, "Pan sauce", "Suggested")).toEqual(["Lemon"]);
-  expect(await markNames(page, "Pan sauce", "Optional")).toEqual(["Basil", "Fresh chile"]);
+  expect(await markNames(page, "Pan sauce", "Optional")).toEqual(["Parsley", "Chile"]);
   await expect(panSauce.getByRole("link", { name: "lemon", exact: true })).toBeVisible();
 });
 
@@ -56,7 +56,7 @@ test("makeable Suggestions come first, each saying so, and Ready is explained by
 });
 
 test("a required Slot nothing pairs with shows as open, with the choice still there", async ({ page }) => {
-  await page.goto("/formulas/sheet-pan-roast?with=ginger");
+  await page.goto("/formulas/sheet-pan-roast?with=yogurt");
   const vegetable = slotItem(page, "a vegetable");
   await expect(vegetable.locator(".slot-fill")).toHaveText("Needs a vegetable");
   await expect(vegetable.locator(".tag")).toHaveCount(0);
@@ -65,7 +65,7 @@ test("a required Slot nothing pairs with shows as open, with the choice still th
   await vegetable.getByRole("button", { name: /^Options/ }).click();
   await vegetable.getByRole("checkbox").first().check();
   await expect(vegetable.locator(".tag")).toHaveText(["Added"]);
-  await expect(page.getByRole("status")).toHaveText("Tomato is now a vegetable. Undo takes it out.");
+  await expect(page.getByRole("status")).toHaveText("Cauliflower is now a vegetable. Undo takes it out.");
 });
 
 test("with no Combination, What to make shows four open Slots and one way forward", async ({ page }) => {

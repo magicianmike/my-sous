@@ -17,6 +17,7 @@ import {
   type KitchenContent,
   type RecipeContent,
 } from "./schema";
+import { BANNED_WORDS, BANNED_WORDS_RULE } from "./voice";
 
 export * from "./kitchen";
 
@@ -43,6 +44,12 @@ const SHAPE =
 const CONTINENTAL =
   /\b(Asian|African|European|American|Latin American|Oceanian|Middle Eastern|Mediterranean|Oriental)\b/i;
 
+/** Fields that hold ids, sources or settings rather than words the Cook reads. */
+const NOT_COPY = new Set([
+  ...["id", "file", "formula", "category", "cuisines", "slotTypes", "accepts", "fills", "slot", "about"],
+  ...["citations", "provenance", "colour", "drawing"],
+]);
+
 /**
  * Whether a drawing is only self-closing shapes with geometry attributes. Drawings are rendered
  * as markup, so nothing else (scripts, event handlers, links, images) may get in.
@@ -62,7 +69,10 @@ function isSimpleDrawing(drawing: string): boolean {
 export async function loadKitchen(contentDir: string): Promise<LoadResult> {
   const errors: ContentError[] = [];
   const content = await readContent(contentDir, errors);
-  if (errors.length === 0) checkReferences(contentDir, content, errors);
+  if (errors.length === 0) {
+    checkReferences(contentDir, content, errors);
+    checkVoice(contentDir, content, errors);
+  }
   if (errors.length > 0) return { ok: false, errors };
   const ingredients = content.ingredients.map(({ file: _file, ...ingredient }) => ingredient);
   const recipes = content.recipes.map(({ file: _file, ...recipe }) => recipe);
@@ -214,7 +224,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
 
   const pairingsFile = join(contentDir, "pairings.yaml");
   const seen = new Set<string>();
-  for (const { ingredients: [a, b], reasons, cuisines } of content.pairings) {
+  for (const { ingredients: [a, b], reasons, cuisines, citations } of content.pairings) {
     const pairing = `Pairing ${a} + ${b}`;
     const report = (problem: string) =>
       errors.push({ file: pairingsFile, message: `${pairing} ${problem}` });
@@ -230,6 +240,10 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
     }
     if (a === b) report("pairs an Ingredient with itself.");
     if (reasons.length === 0) report("has no Pairing Reason.");
+    if (citations.length === 0) report("cites no source; cite at least one, with a link.");
+    for (const { title } of citations.filter(({ url }) => !url)) {
+      report(`cites "${title}" without a link; cite a source the reader can open.`);
+    }
   }
 
   const formulasFile = join(contentDir, "formulas.yaml");
@@ -325,4 +339,29 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
       }
     });
   }
+}
+
+/** Every word the Cook reads in the content, checked against the voice guide's banned words. */
+function checkVoice(contentDir: string, content: RawContent, errors: ContentError[]) {
+  function check(file: string, owner: string, value: unknown, path: string[] = []) {
+    if (typeof value === "string") {
+      const word = value.match(BANNED_WORDS)?.[0];
+      if (word) errors.push({ file, message: `${owner}'s ${path.join(".")} says "${word}"; ${BANNED_WORDS_RULE}` });
+    } else if (value && typeof value === "object") {
+      for (const [key, child] of Object.entries(value)) {
+        if (!NOT_COPY.has(key)) check(file, owner, child, [...path, key]);
+      }
+    }
+  }
+
+  const cuisinesFile = join(contentDir, "cuisines.yaml");
+  for (const cuisine of content.cuisines) check(cuisinesFile, `Cuisine ${cuisine.id}`, cuisine);
+  for (const ingredient of content.ingredients) check(ingredient.file, `Ingredient ${ingredient.id}`, ingredient);
+  const pairingsFile = join(contentDir, "pairings.yaml");
+  for (const { ingredients: [a, b], reasons } of content.pairings) {
+    check(pairingsFile, `Pairing ${a} + ${b}`, { reasons });
+  }
+  const formulasFile = join(contentDir, "formulas.yaml");
+  for (const formula of content.formulas) check(formulasFile, `Formula ${formula.id}`, formula);
+  for (const recipe of content.recipes) check(recipe.file, `Recipe ${recipe.formula}`, recipe);
 }

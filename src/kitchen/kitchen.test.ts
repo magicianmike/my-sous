@@ -1323,6 +1323,84 @@ describe("loadKitchen", () => {
       ]);
     });
 
+    it("when a Pairing cites no source, or a source without a link", async () => {
+      const errors = await expectErrors(
+        writeContent({
+          ingredients: { lemon, garlic, thyme },
+          pairings: [
+            { ingredients: ["lemon", "garlic"], reasons: [reason("A note.")], citations: [] },
+            { ingredients: ["lemon", "thyme"], reasons: [reason("A note.")], citations: [{ title: "A book" }] },
+          ],
+        }),
+      );
+
+      expect(errors).toEqual([
+        "Pairing lemon + garlic cites no source; cite at least one, with a link.",
+        'Pairing lemon + thyme cites "A book" without a link; cite a source the reader can open.',
+      ]);
+    });
+
+    it.each(["easy", "Easily", "simply", "Just", "authentic"])(
+      "when copy the Cook reads says %j, naming where",
+      async (word) => {
+        const errors = await expectErrors(
+          writeContent({
+            ingredients: { lemon: { ...lemon, tip: `${word} zest it first.` }, garlic },
+            pairings: [{ ingredients: ["lemon", "garlic"], reasons: [reason(`It's ${word} good.`)] }],
+          }),
+        );
+
+        const rule = `MySous doesn't say "easy", "simply", "just" or "authentic" (docs/voice-guide.md).`;
+        expect(errors).toEqual([
+          `Ingredient lemon's tip says "${word}"; ${rule}`,
+          `Pairing lemon + garlic's reasons.0.note says "${word}"; ${rule}`,
+        ]);
+      },
+    );
+
+    it("when a Cuisine, a Formula or a Recipe says a banned word", async () => {
+      const errors = await expectErrors(
+        writeContent({
+          ingredients: { lemon: { ...lemon, slotTypes: ["acid"] } },
+          cuisines: [{ ...levantine, description: "Simply the eastern Mediterranean." }],
+          pairings: [],
+          formulas: [
+            {
+              id: "dressing",
+              name: "Dressing",
+              description: "A sharp dressing.",
+              slots: [{ id: "acid", role: "an acid", accepts: "acid" }],
+              method: ["Whisk {acid} with oil.", "It's easy to over-salt."],
+            },
+          ],
+          recipes: {
+            dressing: {
+              serves: 2,
+              time: { prep: 5, cook: 0 },
+              fills: { acid: "lemon" },
+              ingredients: [{ slot: "acid", amount: "1 tbsp", note: "just squeezed" }],
+              steps: [{ text: "Whisk {acid} with oil." }],
+            },
+          },
+        }),
+      );
+
+      expect(errors.map((error) => error.split(";")[0])).toEqual([
+        'Cuisine levantine\'s description says "Simply"',
+        'Formula dressing\'s method.1 says "easy"',
+        'Recipe dressing\'s ingredients.0.note says "just"',
+      ]);
+    });
+
+    it("lets words that only contain a banned one through, such as adjust and justice", async () => {
+      await expectKitchen(
+        writeContent({
+          ingredients: { lemon: { ...lemon, tip: "Adjust the salt; do justice to the zest." } },
+          pairings: [],
+        }),
+      );
+    });
+
     it("when content doesn't match the content format, naming the file and field", async () => {
       const result = await loadKitchen(
         writeContent({

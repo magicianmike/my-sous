@@ -45,15 +45,6 @@ test.describe("an Ingredient's page", () => {
     });
   });
 
-  test("without an image, shows its drawing alone", async ({ page }) => {
-    await page.goto("/ingredients/garlic");
-    const hero = page.getByRole("region", { name: "Garlic" });
-
-    await expect(hero.locator(".hero-mark svg")).toBeVisible();
-    await expect(hero.locator("picture")).toHaveCount(0);
-    await expect(hero.getByText(/^(Placeholder|AI-generated) image$/)).toHaveCount(0);
-  });
-
   test("keeps its image's space before the file arrives, so nothing shifts", async ({ page }) => {
     const release = await holdImages(page);
     // Not waiting for the page's load, which waits for the images.

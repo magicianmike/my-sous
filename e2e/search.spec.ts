@@ -18,12 +18,12 @@ test("a Cook finds an Ingredient by typing, opens it and expands a Pairing", asy
   await expect(page).toHaveURL(/\/ingredients\/lemon$/);
   await expect(page.getByRole("heading", { level: 1, name: "Lemon" })).toBeVisible();
   const cuisines = page.getByRole("list", { name: "Common in" });
-  await expect(cuisines.getByRole("link")).toHaveText(["Southern Italian"]);
+  await expect(cuisines.getByRole("link")).toHaveText(["Southern Italian", "Levantine", "Punjabi"]);
   await expect(page.getByText("Zest before you juice")).toBeVisible();
 
   const contrast = page.getByRole("region", { name: "Contrast" });
-  const more = contrast.getByText("More about lemon and garlic, contrast");
-  const detail = contrast.getByText(/Add the lemon off the heat/);
+  const more = contrast.getByText("More about lemon and parsley, contrast");
+  const detail = contrast.getByText(/Dress it close to serving/);
   await expect(detail).toBeHidden();
   await more.click();
   await expect(detail).toBeVisible();
@@ -32,7 +32,8 @@ test("a Cook finds an Ingredient by typing, opens it and expands a Pairing", asy
 test("arrow keys move through matches, and Escape closes then clears", async ({ page }) => {
   await page.goto("/");
   await search(page).fill("li");
-  await expect(page.getByRole("option")).toHaveText(["Lime", "Garlic", "Scallion"]);
+  await expect(page.getByRole("option")).toHaveText(["Lime", "Cauliflower", "Garlic", "Scallion"]);
+  await search(page).press("ArrowDown");
   await search(page).press("ArrowDown");
   await search(page).press("ArrowDown");
   const garlic = page.getByRole("option", { name: "Garlic" });
@@ -41,6 +42,8 @@ test("arrow keys move through matches, and Escape closes then clears", async ({ 
     "aria-activedescendant",
     (await garlic.getAttribute("id"))!,
   );
+  await search(page).press("ArrowUp");
+  await expect(page.getByRole("option", { name: "Cauliflower" })).toHaveAttribute("aria-selected", "true");
   await search(page).press("ArrowUp");
   await expect(page.getByRole("option", { name: "Lime" })).toHaveAttribute("aria-selected", "true");
   // Up from the first match wraps to the last.
@@ -70,9 +73,9 @@ test("a name not in MySous says so, with a next step", async ({ page }) => {
 
 test("a Blend lists what it typically includes, linking Ingredients in MySous", async ({ page }) => {
   await page.goto("/ingredients/gremolata");
-  const components = page.getByRole("list").filter({ hasText: "parsley" });
-  await expect(components.getByRole("listitem")).toHaveText(["Lemon", "Garlic", "parsley"]);
-  await expect(components.getByRole("link")).toHaveText(["Lemon", "Garlic"]);
+  const components = page.getByRole("list").filter({ hasText: "Parsley" });
+  await expect(components.getByRole("listitem")).toHaveText(["Lemon", "Garlic", "Parsley"]);
+  await expect(components.getByRole("link")).toHaveText(["Lemon", "Garlic", "Parsley"]);
   await expect(page.getByText(/osso buco/)).toBeVisible();
 });
 

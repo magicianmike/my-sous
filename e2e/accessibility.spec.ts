@@ -64,7 +64,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       await expectNoViolations(page);
 
       await page.goto("/ingredients/lemon");
-      await page.getByText("More about lemon and garlic, contrast").click();
+      await page.getByText("More about lemon and parsley, contrast").click();
       await expectNoViolations(page);
     });
 
@@ -79,7 +79,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     test("a Formula with an empty Slot, an open Options list and a change made has no axe violations", async ({
       page,
     }) => {
-      await page.goto("/formulas/sheet-pan-roast?with=ginger");
+      await page.goto("/formulas/sheet-pan-roast?with=yogurt");
       await expect(page.getByText("No Pairing here points to a vegetable yet.")).toBeVisible();
       const acid = page.getByRole("main").getByRole("listitem").filter({ hasText: /^an acid/ });
       await acid.getByRole("button", { name: /^Options/ }).click();

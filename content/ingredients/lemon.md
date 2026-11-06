@@ -1,9 +1,10 @@
 ---
 name: Lemon
 category: citrus
-cuisines: [southern-italian]
+cuisines: [southern-italian, levantine, punjabi]
 slotTypes: [acid]
 tip: Zest before you juice; the zest carries much of the aroma.
+culturalContext: Lemons have grown on the terraces of the Amalfi coast for centuries, and they're used there with fish, pasta and meat as well as in limoncello. Lemon juice also seasons Levantine tahini sauces and Punjabi marinades.
 colour:
   wash: "#f6ecb8"
   washDark: "#36311a"

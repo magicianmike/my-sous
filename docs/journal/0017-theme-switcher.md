@@ -1,6 +1,6 @@
 # 0017 · Theme switcher
 
-Milestone: #42 (part of #2). MySous has always followed the device's light or dark setting. Now a sun and a moon in the header's top right let the Cook choose, and the choice is remembered.
+Milestone: #42 (part of #2). MySous has always followed the device's light or dark setting. Now a sun and a moon in the window's top-right corner let the Cook choose, and the choice is remembered.
 
 ## Before and after
 
@@ -21,6 +21,8 @@ The author chose each of these from options.
 
 **Its own ticket.** It's on its own branch and PR, separate from imagery (#32), so each can be reviewed and reverted alone.
 
+**In the window's corner, not the page's.** The author asked for it at the far right of the window, not the right of the centred layout. Wider than a phone, it's placed against the window, in the body's 16px gutter, level with the header's first row. On a phone, the window's corner is where the nav is, so it keeps a row of its own at the right.
+
 ## How it works
 
 - **No flash.** A one-line script in the page's head reads the stored choice and sets `data-theme` on the page before it paints, before the app's scripts load. If storage is unavailable (a private window, say), it does nothing and the device's setting applies.
@@ -30,7 +32,7 @@ The author chose each of these from options.
 ## Noticed
 
 - **On a phone, the switch wraps to its own row.** The wordmark, the nav and the switch don't fit across 390 pixels. The switch sits at the right of a second header row, which costs about 50 pixels at the top of every page. Add to basket still clears the docked basket on an Ingredient's page (checked by #32's tests, once merged).
-- **Imagery (#32) styles one thing for dark directly:** it dims images under the device's dark setting. Whichever merges second makes that follow a chosen theme too.
+- **Imagery (#32) merged first.** It dimmed images under the device's dark setting only. The dim is now a theme variable, `--image-filter`, set wherever the dark palette applies, so a chosen Dark dims images too (tested).
 
 ## Tests
 
@@ -39,7 +41,9 @@ The author chose each of these from options.
   - choosing Dark switches the page and an Ingredient's colours, and holds across a link and a reload;
   - choosing Light wins over a dark device, across a reload;
   - with the app's scripts blocked, a stored choice still applies on load, so there's no flash;
-  - arrow keys move the choice.
+  - arrow keys move the choice;
+  - a chosen Dark dims images;
+  - wider than a phone, the switch sits 16px from the window's right edge, level with the header.
 - **axe** runs on every screen with Dark chosen on a light device and Light chosen on a dark one, as well as in both device themes. So does the **focus-ring check**. The tap-target check covers the header's new control.
 - **Vitest:** `themeCss()` gives the dark palette, Ingredient colours included, under the device's dark setting unless Light is chosen, and whenever Dark is.
 

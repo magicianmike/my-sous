@@ -84,3 +84,17 @@ test.describe("with the device set to dark", () => {
     expect(await background(page)).toBe(LIGHT);
   });
 });
+
+test("wider than a phone, the switch sits in the window's top-right corner, level with the header", async ({ page, isMobile }) => {
+  test.skip(isMobile, "on a phone it has a row of its own");
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto("/");
+  const [control, nav] = await Promise.all([
+    theme(page).boundingBox(),
+    page.getByRole("banner").getByRole("navigation").boundingBox(),
+  ]);
+
+  // In the body's 16px gutter from the window's edge, not the page's.
+  expect(Math.round(1600 - (control!.x + control!.width))).toBe(16);
+  expect(Math.abs(control!.y + control!.height / 2 - (nav!.y + nav!.height / 2))).toBeLessThan(4);
+});

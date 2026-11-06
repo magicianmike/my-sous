@@ -42,7 +42,7 @@ test("a Suggestion that needs more says how many, what, and what pairs best", as
   expect(await markNames(page, "Pan sauce", "Yours")).toEqual(["Chicken thigh", "Garlic"]);
   // Only the acid is needed; the parsley and chile that pair are optional extras, kept apart.
   expect(await markNames(page, "Pan sauce", "Suggested")).toEqual(["Lemon"]);
-  expect(await markNames(page, "Pan sauce", "Optional")).toEqual(["Parsley", "Chile"]);
+  expect(await markNames(page, "Pan sauce", "Optional")).toEqual(["Parsley", "Fresh chile"]);
   await expect(panSauce.getByRole("link", { name: "lemon", exact: true })).toBeVisible();
 });
 

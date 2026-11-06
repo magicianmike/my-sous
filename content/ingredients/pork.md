@@ -1,10 +1,10 @@
 ---
 name: Pork
 category: meat
-cuisines: [sichuan, japanese, cantonese, oaxacan]
+cuisines: [sichuan, japanese, cantonese, oaxacan, southern-italian]
 slotTypes: [protein]
 tip: For thin slices, nick the connective tissue between the meat and the fat in a few places so the slices stay flat in the pan.
-culturalContext: Pork is everyday meat in all three of these kitchens. Twice-cooked pork is a dish of home for many Sichuanese cooks, ginger pork (shogayaki) is a common Japanese home dinner, and char siu and sweet and sour pork are usually thought of as Cantonese classics.
+culturalContext: Pork is everyday meat in many of the kitchens MySous covers. Twice-cooked pork is a dish of home for many Sichuanese cooks, ginger pork (shogayaki) is a common Japanese home dinner, and char siu and sweet and sour pork are common in Cantonese cooking. In Oaxaca, cecina is pork marinated in chile, and Neapolitan ragù often includes pork ribs alongside the beef.
 safety:
   handling:
     note: Keep raw pork covered and apart from food that's ready to eat, and refrigerate it within 2 hours. Don't rinse it; washing doesn't remove bacteria and can spread them. Wash your hands for at least 20 seconds after handling it.

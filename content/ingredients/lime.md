@@ -1,10 +1,10 @@
 ---
 name: Lime
 category: citrus
-cuisines: [oaxacan]
+cuisines: [oaxacan, punjabi]
 slotTypes: [acid]
 tip: Add lime juice at the end, or squeeze it on at the table; that's where its fresh sharpness stands out most.
-culturalContext: In Mexico, the small green limón is what English calls a lime, so Mexican recipes that say limón usually mean lime. It's essential for ceviche, and mixed with salt and chile powder it goes over fruit and vegetables.
+culturalContext: In Mexico, the small green limón is what English calls a lime, so Mexican recipes that say limón usually mean lime. It's essential for ceviche, and mixed with salt and chile powder it goes over fruit and vegetables. In Punjabi cooking, lime and lemon are often used interchangeably, as nimbu, and wedges are served with tandoori chicken.
 colour:
   wash: "#dcebc4"
   washDark: "#26361a"

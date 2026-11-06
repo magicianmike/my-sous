@@ -32,11 +32,67 @@ it("loads the real content with no errors: references, sources, voice and region
   expect(result.ok ? [] : result.errors.map(({ message }) => message)).toEqual([]);
 });
 
-it("has Ingredients common in every Cuisine in the real content", async () => {
+/** The Kitchen built from the real content. */
+async function realKitchen() {
   const result = await loadKitchen(join(process.cwd(), "content"));
   if (!result.ok) throw new Error("the real content doesn't load");
-  const { kitchen } = result;
+  return result.kitchen;
+}
+
+it("has Ingredients common in every Cuisine in the real content", async () => {
+  const kitchen = await realKitchen();
 
   const empty = kitchen.cuisines().filter(({ id }) => kitchen.cuisine(id)!.ingredients.length === 0);
   expect(empty.map(({ name }) => name)).toEqual([]);
+});
+
+it("launches with six Cuisines", async () => {
+  const kitchen = await realKitchen();
+
+  expect(kitchen.cuisines().filter(({ launch }) => launch).map(({ name }) => name)).toEqual([
+    "Southern Italian",
+    "Oaxacan",
+    "Levantine",
+    "Sichuan",
+    "Punjabi",
+    "Japanese home cooking",
+  ]);
+});
+
+it("can fill every Formula Slot three ways in each launch Cuisine, or says why it can't", async () => {
+  const kitchen = await realKitchen();
+  const accepted = [...new Set(kitchen.formulas().flatMap(({ slots }) => slots.map(({ accepts }) => accepts)))];
+
+  const problems = kitchen
+    .cuisines()
+    .filter(({ launch }) => launch)
+    .flatMap(({ id, name, slotExceptions }) => {
+      const common = kitchen.cuisine(id)!.ingredients;
+      return accepted.flatMap((slotType) => {
+        const count = common.filter(({ slotTypes }) => slotTypes.includes(slotType)).length;
+        const excepted = slotExceptions.some((exception) => exception.slotType === slotType);
+        if (count < 3 && !excepted) return [`${name}: ${count} for "${slotType}"`];
+        if (count >= 3 && excepted) return [`${name}: ${count} for "${slotType}", so its exception can go`];
+        return [];
+      });
+    });
+
+  expect(problems).toEqual([]);
+});
+
+it("links every Blend component that's an Ingredient in MySous", async () => {
+  const kitchen = await realKitchen();
+  const names = new Map(kitchen.ingredients().map(({ id, name }) => [name.toLowerCase(), id]));
+
+  const unlinked = kitchen
+    .ingredients()
+    .filter(({ category }) => category === "blend")
+    .flatMap(({ id }) =>
+      kitchen
+        .blendComponents(id)
+        .filter(({ name, ingredient }) => !ingredient && names.has(name.toLowerCase()))
+        .map(({ name }) => `${id}: "${name}" should be written as ${names.get(name.toLowerCase())}`),
+    );
+
+  expect(unlinked).toEqual([]);
 });

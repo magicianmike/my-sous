@@ -1,10 +1,10 @@
 ---
 name: Zucchini
 category: produce
-cuisines: [southern-italian, levantine]
+cuisines: [southern-italian, levantine, oaxacan]
 slotTypes: [vegetable]
 tip: To fry zucchini, slice them thin, dry the slices well and fry a few at a time, so they brown rather than turn greasy.
-culturalContext: In Naples, fried zucchini are marinated with vinegar and mint as zucchine alla scapece, and on the Sorrento peninsula they're the base of spaghetti alla Nerano. In Lebanon, small zucchini are stuffed with rice and meat and simmered in garlicky yogurt.
+culturalContext: In Naples, fried zucchini are marinated with vinegar and mint as zucchine alla scapece, and on the Sorrento peninsula they're the base of spaghetti alla Nerano. In Lebanon, small zucchini are stuffed with rice and meat and simmered in garlicky yogurt. In Oaxaca, young squash, calabacitas, often a rounder local type, cook in sopa de guías and in moles such as chichilo.
 colour:
   wash: "#d5eacd"
   washDark: "#1f331c"

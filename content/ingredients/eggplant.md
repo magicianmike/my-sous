@@ -1,10 +1,10 @@
 ---
 name: Eggplant
 category: produce
-cuisines: [levantine, punjabi, sichuan, japanese]
+cuisines: [levantine, punjabi, sichuan, japanese, southern-italian]
 slotTypes: [vegetable]
 tip: To char one whole, prick it a few times so steam can escape, roast it over a flame until it collapses, then cover it as it cools so the skin peels away.
-culturalContext: Charred and mashed, eggplant is the base of Levantine mutabbal and Punjabi baingan bharta; fried, it's layered into maqluba and simmered in Sichuan fish-fragrant sauce; grilled and peeled, it's yaki nasu in Japanese home cooking.
+culturalContext: Charred and mashed, eggplant is the base of Levantine mutabbal and Punjabi baingan bharta; fried, it's layered into maqluba and simmered in Sichuan fish-fragrant sauce; grilled and peeled, it's yaki nasu in Japanese home cooking. In Sicily, fried eggplant tops the tomato sauce of pasta alla Norma.
 colour:
   wash: "#e8daf0"
   washDark: "#2f2338"

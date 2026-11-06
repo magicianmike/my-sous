@@ -40,6 +40,9 @@ _Avoid_: Spice mix, seasoning
 A regional cooking tradition in which a Pairing is attested, named at regional rather than continental granularity (for example "Sichuan" or "Levantine", never "Asian").
 _Avoid_: Culture, ethnic food, authentic
 
+**Launch Cuisine**:
+One of the six Cuisines MySous launches with: Southern Italian, Oaxacan, Levantine, Sichuan, Punjabi and Japanese home cooking. Each has at least three Ingredients for every Slot type a Formula accepts, except where a **Slot exception** records, with sources, that the Cuisine seldom uses that type.
+
 ### Dishes
 
 **Combination**:

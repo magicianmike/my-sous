@@ -18,7 +18,7 @@ test("a Cook finds an Ingredient by typing, opens it and expands a Pairing", asy
   await expect(page).toHaveURL(/\/ingredients\/lemon$/);
   await expect(page.getByRole("heading", { level: 1, name: "Lemon" })).toBeVisible();
   const cuisines = page.getByRole("list", { name: "Common in" });
-  await expect(cuisines.getByRole("link")).toHaveText(["Southern Italian", "Levantine", "Punjabi"]);
+  await expect(cuisines.getByRole("link")).toHaveText(["Southern Italian", "Levantine", "Punjabi", "Japanese home cooking"]);
   await expect(page.getByText("Zest before you juice")).toBeVisible();
 
   const contrast = page.getByRole("region", { name: "Contrast" });
@@ -73,7 +73,8 @@ test("a name not in MySous says so, with a next step", async ({ page }) => {
 
 test("a Blend lists what it typically includes, linking Ingredients in MySous", async ({ page }) => {
   await page.goto("/ingredients/gremolata");
-  const components = page.getByRole("list").filter({ hasText: "Parsley" });
+  // The components list, not the Pairings below it, which have Add buttons.
+  const components = page.getByRole("list").filter({ hasText: "Parsley", hasNot: page.getByRole("button") });
   await expect(components.getByRole("listitem")).toHaveText(["Lemon", "Garlic", "Parsley"]);
   await expect(components.getByRole("link")).toHaveText(["Lemon", "Garlic", "Parsley"]);
   await expect(page.getByText(/osso buco/)).toBeVisible();

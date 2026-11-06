@@ -174,27 +174,23 @@
   reasons:
     - category: contrast
       note: Lime's acid sharpens and balances the heat of fresh chile.
-      detail: "In Oaxaca, strips of chile de agua are often cured in lime juice and served over moles; across Mexico, lime, salt and chile powder go over fruit and vegetables."
+      detail: "In Oaxaca, strips of fresh chile de agua are often cured in lime juice and served over moles."
   citations:
-    - title: Chile de agua, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
+    - title: "Chile de agua, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
       url: https://laroussecocina.mx/palabra/chile-de-agua/
-    - title: Limón, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
-      url: https://laroussecocina.mx/palabra/limon/
 
 - ingredients: [chile, garlic]
-  cuisines: [southern-italian, sichuan, punjabi]
+  cuisines: [southern-italian, punjabi]
   reasons:
     - category: tradition
-      note: Warmed together in oil, they're the base of aglio, olio e peperoncino, and of many Sichuan and Punjabi dishes.
-      detail: "Warm sliced garlic and chile in olive oil over very low heat; the garlic should colour lightly, never burn, and the oil carries both flavours through the pasta."
+      note: "Warmed together in oil, fresh chile and garlic start Neapolitan aglio e olio and many Punjabi dishes."
+      detail: "Warm sliced garlic and chile in olive oil over very low heat; the garlic should colour lightly, never burn. Many Neapolitan cooks prefer fresh chile here, and others use dried."
   citations:
-    - title: Spaghetti aglio, olio e peperoncino, Turismo Roma
+    - title: "Spaghetti aglio, olio e peperoncino, Turismo Roma"
       url: https://www.turismoroma.it/it/page/spaghetti-aglio-olio-e-peperoncino-0
-    - title: Spaghetti aglio, olio e peperoncino, Portanapoli
-      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_aglio_e_olio.html
-    - title: Gong Bao Chicken with Peanuts (Fuchsia Dunlop), The Splendid Table
-      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
-    - title: Dhaba Style Baingan Ka Bharta, Kunal Kapur
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Baingan Bharta, Kunal Kapur"
       url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
 
 - ingredients: [chile, cilantro]
@@ -211,7 +207,7 @@
 
 # Sichuan, Japanese home cooking and Cantonese (#17; research in docs/research/0017-sichuan-japanese-cantonese.md)
 
-- ingredients: [sichuan-pepper, chile]
+- ingredients: [sichuan-pepper, dried-chile]
   cuisines: [sichuan]
   reasons:
     - category: tradition
@@ -222,6 +218,8 @@
       url: https://thewoksoflife.com/sichuan-peppercorns/
     - title: "'The Food of Sichuan': how a British writer brought the flavours of provincial China to the world, The National"
       url: https://www.thenationalnews.com/lifestyle/food/the-food-of-sichuan-how-a-british-writer-brought-the-flavours-of-provincial-china-to-the-world-1.1028035
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
 
 - ingredients: [sichuan-pepper, chicken-thigh]
   cuisines: [sichuan]
@@ -331,7 +329,7 @@
     - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
       url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
 
-- ingredients: [black-vinegar, chile]
+- ingredients: [black-vinegar, dried-chile]
   cuisines: [sichuan]
   reasons:
     - category: contrast
@@ -795,15 +793,17 @@
       url: https://palestineinadish.com/recipes/eggplant-fateh-fatet-batenjan-%D9%81%D8%AA%D8%A9-%D8%A8%D8%A7%D8%B0%D9%86%D8%AC%D8%A7%D9%86/
 
 - ingredients: [lamb, onion]
-  cuisines: [levantine, punjabi]
+  cuisines: [levantine, punjabi, southern-italian]
   reasons:
     - category: tradition
-      note: "Onion is chopped into Levantine kafta and cooked down with the meat in Punjabi gobi gosht."
+      note: "Onion is chopped into Levantine kafta, cooked down with the meat in Punjabi gobi gosht, and softened first for Neapolitan lamb with peas."
   citations:
     - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
       url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
     - title: "Gobi Gosht (Goat/Lamb and Cauliflower Curry), Izzah Cheema, Tea for Turmeric"
       url: https://www.teaforturmeric.com/gobi-gosht/
+    - title: "Daniela Persico, Agnello a Pasqua: la ricetta migliore è con i piselli alla pasqualina, Scatti di Gusto (2012, updated 2026)"
+      url: https://www.scattidigusto.it/agnello-a-pasqua-la-ricetta-migliore-e-con-i-piselli-alla-pasqualina
 
 - ingredients: [lamb, cauliflower]
   cuisines: [punjabi]
@@ -979,7 +979,7 @@
     - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
       url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
 
-- ingredients: [cumin, chile]
+- ingredients: [cumin, dried-chile]
   cuisines: [punjabi]
   reasons:
     - category: aromatic bridge
@@ -1003,7 +1003,7 @@
       url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
 
 - ingredients: [onion, tomato]
-  cuisines: [punjabi, oaxacan]
+  cuisines: [punjabi, oaxacan, southern-italian]
   reasons:
     - category: tradition
       note: "Onion and tomato cooked down together are the base of many Punjabi curries and of Oaxacan mole coloradito."
@@ -1016,6 +1016,10 @@
       url: https://laroussecocina.mx/palabra/mole-coloradito/
     - title: "Mole Coloradito with Runner Beans, Rick Bayless"
       url: https://www.rickbayless.com/recipe/mole-coloradito-with-runner-beans/
+    - title: "Portanapoli, La ricetta del ragù napoletano"
+      url: https://www.portanapoli.com/Ita/Cucina/ricetta_ragu.html
+    - title: "Raffaele Bracale, Il vero ragù napoletano secondo la tradizione, Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/il-vero-ragu-napoletano-secondo-la-tradizione/5668/
 
 - ingredients: [onion, chicken-thigh]
   cuisines: [levantine, punjabi]
@@ -1043,11 +1047,11 @@
   cuisines: [punjabi]
   reasons:
     - category: contrast
-      note: "Green chiles and chile powder bring heat to mild, sweet cauliflower in aloo gobi."
+      note: "Green chiles bring fresh heat to mild, sweet cauliflower in aloo gobi."
   citations:
     - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
       url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
-    - title: "Punjabi Aloo Gobi, Maunika Gowardhan"
+    - title: "Punjabi Aloo Gobi, Maunika Gowardhan (visible part of ingredient list only)"
       url: https://maunikagowardhan.co.uk/cook-in-a-curry/punjabi-aloo-gobi/
 
 - ingredients: [cauliflower, garlic]
@@ -1142,9 +1146,9 @@
   cuisines: [levantine, punjabi, oaxacan]
   reasons:
     - category: contrast
-      note: "Green chile's heat sharpens sweet, ripe tomato in Palestinian bread salads and Punjabi karahi."
+      note: "Fresh chile's heat sharpens sweet, ripe tomato, in Palestinian bread salads, Punjabi karahi and Oaxacan chile de agua in tomato broth."
   citations:
-    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+    - title: "Palestinian Table recipes (pomegranate chicken, tomato and za'atar bread salad), Reem Kassis, East Fork"
       url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
     - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
       url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
@@ -1325,7 +1329,7 @@
     - title: "Kousa Bil Laban (Lebanese Stuffed Zucchini in Yogurt), Hadia Zebib, Hadia's Lebanese Cuisine"
       url: https://hadiaslebanesecuisine.com/blog/kousa-bil-laban/
 
-- ingredients: [pork, chile]
+- ingredients: [pork, dried-chile]
   cuisines: [oaxacan]
   reasons:
     - category: tradition
@@ -1339,7 +1343,7 @@
       url: https://www.rickbayless.com/recipe/oaxacan-pork-picadillo/
 
 - ingredients: [pork, tomato]
-  cuisines: [oaxacan]
+  cuisines: [oaxacan, southern-italian]
   reasons:
     - category: tradition
       note: "Oaxacan picadillo and mole coloradito both cook pork in a tomato-based sauce."
@@ -1348,6 +1352,10 @@
       url: https://www.rickbayless.com/recipe/oaxacan-pork-picadillo/
     - title: "Mole coloradito, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
       url: https://laroussecocina.mx/palabra/mole-coloradito/
+    - title: "Portanapoli, La ricetta del ragù napoletano"
+      url: https://www.portanapoli.com/Ita/Cucina/ricetta_ragu.html
+    - title: "Raffaele Bracale, Il vero ragù napoletano secondo la tradizione, Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/il-vero-ragu-napoletano-secondo-la-tradizione/5668/
 
 - ingredients: [pork, lime]
   cuisines: [oaxacan]
@@ -1412,3 +1420,1412 @@
       url: https://www.turismoroma.it/it/page/spaghetti-aglio-olio-e-peperoncino-0
     - title: "Spaghetti con le vongole, Portanapoli"
       url: https://www.portanapoli.com/Ita/Cucina/spaghetti-vongole.html
+
+# Batch 2: Sichuan and Japanese home cooking (#18; research in docs/research/0018-sichuan-japanese.md)
+
+- ingredients: [shichimi, cod]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Shichimi is a usual table condiment for Japanese cod hot pot, alongside ponzu and grated daikon."
+  citations:
+    - title: "鱈の寄せ鍋 (cod hot pot), Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/seisan/kakou/mezamasi/recipe/recipe124.html
+
+- ingredients: [shichimi, pork]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: "A sprinkle of shichimi gives a citrusy heat to rich pork-and-miso tonjiru."
+  citations:
+    - title: "Tonjiru, Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/tonjiru/
+
+- ingredients: [shichimi, miso]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: "Shichimi's citrusy heat lifts the rounded saltiness of a miso soup."
+  citations:
+    - title: "Tonjiru, Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/tonjiru/
+
+- ingredients: [shichimi, scallion]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Sliced scallion and shichimi often finish bowls of miso soup together."
+  citations:
+    - title: "Tonjiru, Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/tonjiru/
+
+- ingredients: [shichimi, chicken-thigh]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: "Fried thigh karaage is often served with a sprinkle of shichimi, its heat against the rich, crisp chicken."
+  citations:
+    - title: "Karaage, Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/karaage/
+    - title: "京七味 (Kyoto shichimi), Traditional Foods of Japan, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/traditional-foods/menu/kyo_sitimi.html
+
+- ingredients: [ponzu, cod]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: "Citrusy ponzu sharpens mild, lean cod from the hot pot."
+  citations:
+    - title: "鱈の寄せ鍋 (cod hot pot), Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/seisan/kakou/mezamasi/recipe/recipe124.html
+    - title: "柚子ポン酢 (yuzu ponzu), Traditional Foods of Japan, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/traditional-foods/menu/yuzuponzu.html
+
+- ingredients: [ponzu, beef]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: "Ponzu's sour citrus balances the richness of thinly sliced beef in shabu-shabu."
+      detail: "The beef is swished briefly through simmering water, then dipped; cooked only until it turns pale, it stays tender."
+  citations:
+    - title: "冷しゃぶ (cold shabu-shabu), Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/seisan/kakou/mezamasi/recipe/recipe233.html
+    - title: "Ponzu Sauce, Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/ponzu/
+    - title: "Ponzu Sauce, Kikkoman glossary"
+      url: https://www.kikkoman.com/en/cookbook/glossary/ponzu.html
+
+- ingredients: [ponzu, scallion]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Chopped scallion is a usual condiment stirred into ponzu for hot pots."
+  citations:
+    - title: "若鶏の水炊き (Fukuoka mizutaki), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/wakadori_no_mizutaki_fukuoka.html
+
+- ingredients: [ponzu, ginger]
+  cuisines: [japanese]
+  reasons:
+    - category: aromatic bridge
+      note: "Grated ginger in ponzu adds a fresh bite alongside the citrus."
+  citations:
+    - title: "若鶏の水炊き (Fukuoka mizutaki), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/wakadori_no_mizutaki_fukuoka.html
+
+- ingredients: [beef, doubanjiang]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Beef is cooked in chile bean paste fried until the oil turns red, as in mapo tofu and water-boiled beef."
+  citations:
+    - title: "Fuchsia Dunlop's mapo tofu, SBS Food"
+      url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+    - title: "Sichuan Boiled Beef (Shuizhu Niurou), Judy Leung, The Woks of Life"
+      url: https://thewoksoflife.com/sichuan-boiled-beef/
+    - title: "Fuchsia Dunlop's Sichuanese Chopped Celery with Beef (adapted from Every Grain of Rice), Luisa Weiss, Goodreads blog"
+      url: https://www.goodreads.com/author_blog_posts/5739656-fuchsia-dunlop-s-sichuanese-chopped-celery-with-beef
+
+- ingredients: [beef, sichuan-pepper]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Ground or whole Sichuan pepper gives Sichuan beef dishes their numbing finish."
+  citations:
+    - title: "Fuchsia Dunlop's mapo tofu, SBS Food"
+      url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+    - title: "Sichuan Boiled Beef (Shuizhu Niurou), Judy Leung, The Woks of Life"
+      url: https://thewoksoflife.com/sichuan-boiled-beef/
+
+- ingredients: [beef, potato]
+  cuisines: [japanese, levantine]
+  reasons:
+    - category: tradition
+      note: "Beef and potato simmer together in Japanese nikujaga, and Palestinian kafta is baked between thin rounds of potato."
+      detail: "Western Japan usually makes it with beef and the east with pork; a waxy potato holds its shape in the broth."
+  citations:
+    - title: "肉じゃが (nikujaga), Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/seisan/kakou/mezamasi/recipe/recipe112.html
+    - title: "呉の肉じゃが (Kure nikujaga), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/42_20_hiroshima.html
+    - title: "Nikujaga (Japanese Meat and Potato Stew), Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/nikujaga/
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [beef, onion]
+  cuisines: [japanese, levantine, southern-italian]
+  reasons:
+    - category: tradition
+      note: "Onion sweetens beef: simmered in nikujaga and gyudon, mixed into Levantine kafta and kibbeh, and cooked for hours with it in Neapolitan genovese."
+      detail: "Slice the onion thinly, so it turns tender and sweet in the time the beef takes."
+  citations:
+    - title: "Gyudon (Japanese Beef Rice Bowl), Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/gyudon/
+    - title: "呉の肉じゃが (Kure nikujaga), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/42_20_hiroshima.html
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+    - title: "Kibbeh Mishwieh (Grilled Kibbeh), Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/blog/kibbeh-mishwieh-grilled-kibbeh/
+    - title: "Portanapoli, La genovese (napoletana) – Storia e ricetta"
+      url: https://www.portanapoli.com/Ita/Cucina/la_genovese.html
+    - title: "Rossella Neri, Pasta alla genovese, la ricetta originale napoletana, Dissapore (2024)"
+      url: https://www.dissapore.com/ricette/pasta-alla-genovese-ricetta-originale/
+    - title: "Raffaele Bracale, Il vero ragù napoletano secondo la tradizione, Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/il-vero-ragu-napoletano-secondo-la-tradizione/5668/
+
+- ingredients: [beef, scallion]
+  cuisines: [sichuan, japanese]
+  reasons:
+    - category: tradition
+      note: "Scallion simmers with beef in mapo tofu and is scattered over gyudon."
+  citations:
+    - title: "Fuchsia Dunlop's mapo tofu, SBS Food"
+      url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+    - title: "Gyudon (Japanese Beef Rice Bowl), Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/gyudon/
+    - title: "Sichuan Boiled Beef (Shuizhu Niurou), Judy Leung, The Woks of Life"
+      url: https://thewoksoflife.com/sichuan-boiled-beef/
+
+- ingredients: [beef, ginger]
+  cuisines: [sichuan, japanese]
+  reasons:
+    - category: aromatic bridge
+      note: "Ginger is fried with chile bean paste and minced beef in Sichuan dishes, and pickled red ginger tops Japanese gyudon."
+  citations:
+    - title: "Fuchsia Dunlop's Sichuanese Chopped Celery with Beef (adapted from Every Grain of Rice), Luisa Weiss, Goodreads blog"
+      url: https://www.goodreads.com/author_blog_posts/5739656-fuchsia-dunlop-s-sichuanese-chopped-celery-with-beef
+    - title: "Fuchsia Dunlop's mapo tofu, SBS Food"
+      url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+    - title: "Gyudon (Japanese Beef Rice Bowl), Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/gyudon/
+
+- ingredients: [cod, miso]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Cod is simmered in a miso broth in Akita's tarajiru, or marinated in sweet white miso and grilled."
+      detail: "For grilling, marinate the fillets for a day or more, then wipe the miso off before they go under the heat."
+  citations:
+    - title: "鱈汁 (Akita cod soup), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/29_17_akita.html
+    - title: "Saikyo Yaki Fish (Saikyo Miso Marinated Grilled Fish), Yumiko, RecipeTin Japan"
+      url: https://japan.recipetineats.com/saikyo-yaki-fish-saikyo-miso-marinated-grilled-fish/
+    - title: "Miso Cod (Black Cod with Miso), Namiko Hirasawa Chen, Just One Cookbook (fetched in batch 1)"
+      url: https://www.justonecookbook.com/black-cod-with-miso/
+
+- ingredients: [cod, scallion]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Leeks and scallions simmer with cod in Japanese winter hot pots."
+  citations:
+    - title: "鱈汁 (Akita cod soup), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/29_17_akita.html
+    - title: "鱈の寄せ鍋 (cod hot pot), Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/seisan/kakou/mezamasi/recipe/recipe124.html
+
+- ingredients: [potato, onion]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Onion melts into the broth around simmered potatoes in nikujaga."
+  citations:
+    - title: "肉じゃが (nikujaga), Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/seisan/kakou/mezamasi/recipe/recipe112.html
+    - title: "鯨じゃが (Nagasaki kujira-jaga), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/46_19_nagasaki.html
+
+- ingredients: [potato, black-vinegar]
+  cuisines: [sichuan]
+  reasons:
+    - category: contrast
+      note: "A splash of black vinegar at the end gives Sichuan shredded potato its sour edge."
+      detail: "Add it last, off the heat or nearly so; its aroma fades if it cooks."
+  citations:
+    - title: "Sichuan Hot and Sour Shredded Potato (Suanla Tudou Si), Kathy Yuan, The Mala Market"
+      url: https://blog.themalamarket.com/sichuan-hot-and-sour-shredded-potato-suanla-tudou-si/
+    - title: "Spicy and Sour Shredded Potato, Elaine, China Sichuan Food"
+      url: https://www.chinasichuanfood.com/spicy-and-sour-potato/
+
+- ingredients: [potato, dried-chile]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Dried chiles fried in the oil season Sichuan hot-and-sour shredded potato."
+  citations:
+    - title: "Sichuan Hot and Sour Shredded Potato (Suanla Tudou Si), Kathy Yuan, The Mala Market"
+      url: https://blog.themalamarket.com/sichuan-hot-and-sour-shredded-potato-suanla-tudou-si/
+    - title: "Spicy and Sour Shredded Potato, Elaine, China Sichuan Food"
+      url: https://www.chinasichuanfood.com/spicy-and-sour-potato/
+
+- ingredients: [potato, sichuan-pepper]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Whole Sichuan pepper bloomed in the oil perfumes stir-fried potato slivers."
+  citations:
+    - title: "Sichuan Hot and Sour Shredded Potato (Suanla Tudou Si), Kathy Yuan, The Mala Market"
+      url: https://blog.themalamarket.com/sichuan-hot-and-sour-shredded-potato-suanla-tudou-si/
+    - title: "Spicy and Sour Shredded Potato, Elaine, China Sichuan Food"
+      url: https://www.chinasichuanfood.com/spicy-and-sour-potato/
+
+- ingredients: [potato, green-beans]
+  cuisines: [japanese, southern-italian]
+  reasons:
+    - category: tradition
+      note: "Green beans are a common last-minute green in nikujaga, and boiled with potatoes for a Pugliese summer salad."
+      detail: "Blanch them briefly and add them right at the end, so they stay bright."
+  citations:
+    - title: "Nikujaga (Japanese Meat and Potato Stew), Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/nikujaga/
+    - title: "鯨じゃが (Nagasaki kujira-jaga), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/46_19_nagasaki.html
+    - title: "Clementina Urbano, Insalata di fagiolini e patate – ricetta pugliese, Sedicipuglia (2016)"
+      url: https://www.sedicipuglia.it/2016/07/insalata-di-ortaggi-fagiolini-e-patate.html
+    - title: "Graziella Giannuzzi, Insalata di fagiolini e patate alla pugliese, Cucina con me Graziella"
+      url: https://www.cucinaconmegraziellaeraffaele.it/insalata-di-fagiolini-e-patate-alla-pugliese/
+
+- ingredients: [green-beans, pork]
+  cuisines: [sichuan, oaxacan]
+  reasons:
+    - category: tradition
+      note: "Minced pork fried crisp is the usual partner for Sichuan dry-fried green beans, and green beans cook with pork in Oaxacan mole verde."
+      detail: "Many cooks leave the pork out and use more preserved vegetable instead."
+  citations:
+    - title: "Sichuan Dry Fried Green Beans, The Woks of Life"
+      url: https://thewoksoflife.com/sichuan-dry-fried-green-beans/
+    - title: "Szechuan Dry Fried Green Beans (Simplified version), Elaine, China Sichuan Food"
+      url: https://www.chinasichuanfood.com/szechuan-green-beans/
+    - title: "Secretaría de Agricultura y Desarrollo Rural, Mole verde estilo Oaxaca (from INPI's Mulli)"
+      url: https://www.gob.mx/agricultura/articulos/mole-verde-estilo-oaxaca
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+
+- ingredients: [green-beans, dried-chile]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Dried chiles fried with the blistered beans give dry-fried green beans their heat."
+  citations:
+    - title: "Sichuan Dry Fried Green Beans, The Woks of Life"
+      url: https://thewoksoflife.com/sichuan-dry-fried-green-beans/
+    - title: "Szechuan Dry Fried Green Beans (Simplified version), Elaine, China Sichuan Food"
+      url: https://www.chinasichuanfood.com/szechuan-green-beans/
+
+- ingredients: [green-beans, garlic]
+  cuisines: [sichuan, southern-italian]
+  reasons:
+    - category: tradition
+      note: "Garlic seasons green beans in Sichuan dry-fried beans and in Sicilian green beans with tomato."
+  citations:
+    - title: "Sichuan Dry Fried Green Beans, The Woks of Life"
+      url: https://thewoksoflife.com/sichuan-dry-fried-green-beans/
+    - title: "Szechuan Dry Fried Green Beans (Simplified version), Elaine, China Sichuan Food"
+      url: https://www.chinasichuanfood.com/szechuan-green-beans/
+    - title: "Maria Bonaccorso, Fagiolini al pomodoro, Il Cuore in Pentola (Ricette siciliane)"
+      url: https://www.ilcuoreinpentola.it/ricette/ricette-siciliane/contorni-siciliani/fagiolini-al-pomodoro/
+
+- ingredients: [green-beans, sichuan-pepper]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Some cooks fry Sichuan peppercorns with the aromatics for dry-fried green beans."
+  citations:
+    - title: "Szechuan Dry Fried Green Beans (Simplified version), Elaine, China Sichuan Food"
+      url: https://www.chinasichuanfood.com/szechuan-green-beans/
+
+- ingredients: [green-beans, miso]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Blanched green beans are dressed in sesame and miso in Nara's seven-colour aemono, an Obon offering dish."
+  citations:
+    - title: "七色お和え (Nara seven-colour aemono), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/nana_iro_oae_nara.html
+
+- ingredients: [cauliflower, sichuan-pepper]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Sichuan pepper and dried chile season dry-pot cauliflower."
+  citations:
+    - title: "How to make traditional Sichuan dish Dry Pot Cauliflower (干锅花菜), Yi, Yi's Sichuan Kitchen"
+      url: https://sichuankitchenrecipes.com/2020/07/11/how-to-make-traditional-sichuan-dish-dry-pot-cauliflower-recipe%E5%B9%B2%E9%94%85%E8%8A%B1%E8%8F%9C%EF%BC%89gan-guo-hua-cai/
+
+# Batch 2: Levantine and Punjabi (#18; research in docs/research/0018-levantine-punjabi.md)
+
+- ingredients: [zaatar, sumac]
+  cuisines: [levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Sumac is one of za'atar's own components, so a little more deepens its sourness."
+  citations:
+    - title: "Za'atar and sumac recipes from The Arabesque Table, Reem Kassis, Refinery29"
+      url: https://www.refinery29.com/en-gb/reem-kassis-the-arabesque-table-zaatar-recipes
+    - title: "For This Palestinian Cook, The Kitchen Is A 'Powerful Place', Reem Kassis with Terry Gross, NPR Fresh Air"
+      url: https://www.apr.org/arts-life/2021-04-07/for-this-palestinian-cook-the-kitchen-is-a-powerful-place-not-a-life-sentence
+
+- ingredients: [zaatar, tomato]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Za'atar's dry, herbal sourness seasons ripe tomatoes in Palestinian bread salads."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+    - title: "Za'atar and sumac recipes from The Arabesque Table, Reem Kassis, Refinery29"
+      url: https://www.refinery29.com/en-gb/reem-kassis-the-arabesque-table-zaatar-recipes
+
+- ingredients: [zaatar, potato]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Za'atar is sprinkled over a Palestinian potato, onion and chile shakshuka."
+  citations:
+    - title: "Za'atar and sumac recipes from The Arabesque Table, Reem Kassis, Refinery29"
+      url: https://www.refinery29.com/en-gb/reem-kassis-the-arabesque-table-zaatar-recipes
+
+- ingredients: [zaatar, yogurt]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Za'atar is mixed into labneh, strained yogurt, whose creaminess carries the herb."
+  citations:
+    - title: "Za'atar and sumac recipes from The Arabesque Table, Reem Kassis, Refinery29"
+      url: https://www.refinery29.com/en-gb/reem-kassis-the-arabesque-table-zaatar-recipes
+
+- ingredients: [zaatar, mint]
+  cuisines: [levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Fresh mint and za'atar season the same Palestinian bread salad."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [zaatar, chicken-thigh]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Za'atar goes into Palestinian marinades for roast chicken."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [garam-masala, chicken-thigh]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Garam masala seasons the yogurt marinade for tandoori chicken."
+  citations:
+    - title: "Tandoori Chicken, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+
+- ingredients: [garam-masala, cauliflower]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Garam masala goes into Punjabi aloo gobi with the cauliflower."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+
+- ingredients: [garam-masala, potato]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Garam masala seasons the potatoes in aloo gobi."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+
+- ingredients: [garam-masala, cumin]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Cumin is one of the essential spices in Punjabi garam masala, so the two share a warm, earthy base."
+  citations:
+    - title: "Garam Masala Recipe, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/garam-masala-recipe/
+
+- ingredients: [garam-masala, cilantro]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Garam masala and fresh cilantro are often added together at the end of a curry, warm spice against a green, fresh herb."
+  citations:
+    - title: "Garam Masala Recipe, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/garam-masala-recipe/
+    - title: "50+ Traditional Punjabi Recipes, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/punjabi-recipes/
+
+- ingredients: [garam-masala, lemon]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Lemon's sharpness lifts warm garam masala when both finish a dish."
+  citations:
+    - title: "Garam Masala Recipe, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/garam-masala-recipe/
+
+- ingredients: [aleppo-pepper, sumac]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Aleppo pepper's mild, fruity heat and sumac's sourness season the same Palestinian chicken marinade."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [aleppo-pepper, zaatar]
+  cuisines: [levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Aleppo pepper and za'atar are rubbed onto roast chicken together."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [aleppo-pepper, garlic]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Garlic and Aleppo pepper season Palestinian marinades for roast chicken."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [aleppo-pepper, chicken-thigh]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Aleppo pepper seasons Palestinian roast chicken, with sumac and za'atar."
+      detail: "Its heat is mild, so recipes use it by the teaspoon rather than the pinch."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+    - title: "The Long Journey of the Aleppo Pepper, Tom Verde, *The New York Times* (republished by WRAL)"
+      url: https://www.wral.com/the-long-journey-of-the-aleppo-pepper/17904371/
+
+- ingredients: [black-pepper, lamb]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Freshly ground black pepper finishes mutton karahi, with butter and lemon."
+      detail: "Grind whole peppercorns for the finish rather than using pre-ground pepper."
+  citations:
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+
+- ingredients: [black-pepper, beef]
+  cuisines: [levantine, southern-italian]
+  reasons:
+    - category: tradition
+      note: "Black pepper seasons the beef in Lebanese kibbeh and in Neapolitan braciole and genovese."
+  citations:
+    - title: "Kibbeh Mishwieh (Grilled Kibbeh), Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/blog/kibbeh-mishwieh-grilled-kibbeh/
+    - title: "Raffaele Bracale, Il vero ragù napoletano secondo la tradizione, Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/il-vero-ragu-napoletano-secondo-la-tradizione/5668/
+    - title: "Portanapoli, La genovese (napoletana) – Storia e ricetta"
+      url: https://www.portanapoli.com/Ita/Cucina/la_genovese.html
+
+- ingredients: [black-pepper, chicken-thigh]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Ground black pepper goes into the yogurt marinade for tandoori chicken."
+  citations:
+    - title: "Tandoori Chicken, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+
+- ingredients: [black-pepper, cod]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Black pepper seasons Punjabi fish curry made with cod."
+  citations:
+    - title: "Fish Curry (Fish Masala), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/fish-curry-fish-masala/
+
+- ingredients: [black-pepper, potato]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: tradition
+      note: "Black pepper seasons Lebanese batata harra and Punjabi aloo tikki."
+  citations:
+    - title: "Batata Harra (Lebanese Fried Potato Chunks), Mariam Nabbout, The Matbakh"
+      url: https://thematbakh.com/batata-harra-lebanese-spicy-potatoes-with-cilantro/
+    - title: "Crispy Aloo Tikki, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/aloo-tikki/
+
+- ingredients: [black-pepper, garam-masala]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Black pepper is one of garam masala's essentials and gives the blend its sharpness."
+  citations:
+    - title: "Garam Masala Recipe, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/garam-masala-recipe/
+
+- ingredients: [tamarind, potato]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Sweet-sour tamarind chutney is a usual topping for potato chaat such as aloo tikki."
+  citations:
+    - title: "Crispy Aloo Tikki, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/aloo-tikki/
+
+- ingredients: [tamarind, chicken-thigh]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Tamarind chutney is served beside tandoori chicken, its sweet sourness against the smoky meat."
+  citations:
+    - title: "Tandoori Chicken, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+
+- ingredients: [tamarind, yogurt]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Tamarind chutney is spooned over yogurt in dahi bhalla, sweet-sour against cool and creamy."
+  citations:
+    - title: "Dahi Bhalla (Dahi Bara), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/dahi-bhalla/
+
+- ingredients: [tamarind, dried-chile]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "A little red chile powder sharpens sweet-sour tamarind chutney."
+  citations:
+    - title: "Dahi Bhalla (Dahi Bara), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/dahi-bhalla/
+
+- ingredients: [beef, parsley]
+  cuisines: [levantine, southern-italian]
+  reasons:
+    - category: contrast
+      note: "Chopped parsley freshens beef, mixed into Palestinian kafta or rolled inside Neapolitan braciole."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+    - title: "Raffaele Bracale, Il vero ragù napoletano secondo la tradizione, Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/il-vero-ragu-napoletano-secondo-la-tradizione/5668/
+
+- ingredients: [beef, green-beans]
+  cuisines: [levantine, oaxacan]
+  reasons:
+    - category: tradition
+      note: "Beef and green beans stew together in Palestinian fasolia and in Oaxacan chichilo."
+  citations:
+    - title: "Fasolia (green bean stew), Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/fasolia-green-bean-stew/
+    - title: "Fasolia (Syrian Green Beans with Beef and Tomato), Omayah Cooks (supporting only)"
+      url: https://www.omayahcooks.com/blog/2019/1/30/fosolia-syrian-braised-green-beans-with-lamb
+    - title: "Chichilo, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/chichilo/
+
+- ingredients: [beef, garlic]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Garlic seasons beef kafta, and the tahini sauce poured over it."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [potato, cauliflower]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Potato and cauliflower cook together, dry, in Punjabi aloo gobi."
+      detail: "Some cooks boil the potatoes first so they soak up the spices; others cook them raw in the pan."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Punjabi Aloo Gobi, Maunika Gowardhan"
+      url: https://maunikagowardhan.co.uk/cook-in-a-curry/punjabi-aloo-gobi/
+
+- ingredients: [potato, cilantro]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: contrast
+      note: "Fresh cilantro is tossed through Lebanese batata harra and mixed into Punjabi aloo tikki."
+  citations:
+    - title: "Batata Harra (Lebanese Fried Potato Chunks), Mariam Nabbout, The Matbakh"
+      url: https://thematbakh.com/batata-harra-lebanese-spicy-potatoes-with-cilantro/
+    - title: "Crispy Aloo Tikki, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/aloo-tikki/
+
+- ingredients: [potato, garlic]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Fried potatoes are tossed with garlic and olive oil for Lebanese batata harra."
+  citations:
+    - title: "Batata Harra (Lebanese Fried Potato Chunks), Mariam Nabbout, The Matbakh"
+      url: https://thematbakh.com/batata-harra-lebanese-spicy-potatoes-with-cilantro/
+
+- ingredients: [potato, cumin]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Cumin seeds sizzled in oil start many Punjabi potato dishes."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Crispy Aloo Tikki, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/aloo-tikki/
+
+- ingredients: [potato, mint]
+  cuisines: [punjabi, southern-italian]
+  reasons:
+    - category: contrast
+      note: "Mint lifts mild potato, mixed into Punjabi aloo tikki or dressing a Pugliese potato and green-bean salad."
+  citations:
+    - title: "Crispy Aloo Tikki, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/aloo-tikki/
+    - title: "Clementina Urbano, Insalata di fagiolini e patate – ricetta pugliese, Sedicipuglia (2016)"
+      url: https://www.sedicipuglia.it/2016/07/insalata-di-ortaggi-fagiolini-e-patate.html
+    - title: "Graziella Giannuzzi, Insalata di fagiolini e patate alla pugliese, Cucina con me Graziella"
+      url: https://www.cucinaconmegraziellaeraffaele.it/insalata-di-fagiolini-e-patate-alla-pugliese/
+
+- ingredients: [potato, lamb]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Potatoes cook into lamb curry as aloo gosht."
+  citations:
+    - title: "50+ Traditional Punjabi Recipes, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/punjabi-recipes/
+
+- ingredients: [green-beans, tomato]
+  cuisines: [levantine, southern-italian]
+  reasons:
+    - category: tradition
+      note: "Green beans cook in tomato for Levantine fasolia and loubieh and for a Sicilian side dish."
+      detail: "They're cooked until fully tender and soaked in the tomato, not crisp."
+  citations:
+    - title: "Fasolia (green bean stew), Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/fasolia-green-bean-stew/
+    - title: "Loubye Bzeit, Iman, Simply Lebanese (supporting only)"
+      url: https://www.simplyleb.com/recipe/loubye-bzeit/
+    - title: "Maria Bonaccorso, Fagiolini al pomodoro, Il Cuore in Pentola (Ricette siciliane)"
+      url: https://www.ilcuoreinpentola.it/ricette/ricette-siciliane/contorni-siciliani/fagiolini-al-pomodoro/
+
+- ingredients: [green-beans, onion]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Onion softened in oil is the base of Levantine green-bean stews."
+  citations:
+    - title: "Fasolia (green bean stew), Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/fasolia-green-bean-stew/
+    - title: "Loubye Bzeit, Iman, Simply Lebanese (supporting only)"
+      url: https://www.simplyleb.com/recipe/loubye-bzeit/
+
+- ingredients: [green-beans, lamb]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Palestinian fasolia is often made with lamb as well as beef."
+  citations:
+    - title: "Fasolia (green bean stew), Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/fasolia-green-bean-stew/
+    - title: "Fasolia (Syrian Green Beans with Beef and Tomato), Omayah Cooks (supporting only)"
+      url: https://www.omayahcooks.com/blog/2019/1/30/fosolia-syrian-braised-green-beans-with-lamb
+
+- ingredients: [cod, lemon]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Lemon sharpens fried white fish such as cod in Punjabi fish curry, and in Amritsari fish, which is traditionally made with river fish."
+      detail: "In Amritsari fish, lemon goes into the marinade and is squeezed over at the table; outside Punjab, cod is a common stand-in."
+  citations:
+    - title: "Amritsari Fish Fry, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/amritsari-fish-fry/
+    - title: "Amritsari Fish, Sanjeev Kapoor"
+      url: https://www.sanjeevkapoor.com/Recipe/Amritsari-Fish-Khazana-of-Indian-Recipes.html
+    - title: "Fish Curry (Fish Masala), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/fish-curry-fish-masala/
+
+- ingredients: [cod, ginger]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Ginger-garlic paste seasons Amritsari fish, and ginger cooks into Punjabi fish curry."
+  citations:
+    - title: "Amritsari Fish Fry, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/amritsari-fish-fry/
+    - title: "Fish Curry (Fish Masala), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/fish-curry-fish-masala/
+
+- ingredients: [cod, tomato]
+  cuisines: [punjabi, southern-italian]
+  reasons:
+    - category: tradition
+      note: "Fried cod finishes in tomato, in a Punjabi fish curry masala or in Neapolitan baccalà with olives and capers."
+      detail: "Fry the fish first so it holds together, then add it to the sauce at the end."
+  citations:
+    - title: "Fish Curry (Fish Masala), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/fish-curry-fish-masala/
+    - title: "Giuliana Manca, Baccalà alla napoletana, La Cucina Imperfetta"
+      url: https://www.lacucinaimperfetta.com/baccala-alla-napoletana/
+    - title: "Rita Caputo, Baccalà al forno con patate alla salentina, La Cucina Pugliese"
+      url: https://www.lacucinapugliese.org/baccala-al-forno-con-patate-alla-salentina/
+
+- ingredients: [cod, cilantro]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Fresh cilantro finishes Punjabi fish curry."
+  citations:
+    - title: "Fish Curry (Fish Masala), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/fish-curry-fish-masala/
+
+- ingredients: [cod, onion]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Onion is the base of Punjabi fish curry."
+  citations:
+    - title: "Fish Curry (Fish Masala), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/fish-curry-fish-masala/
+
+- ingredients: [cod, cumin]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Cumin seasons Punjabi fish curry."
+  citations:
+    - title: "Fish Curry (Fish Masala), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/fish-curry-fish-masala/
+
+# Batch 2: Oaxacan and Southern Italian (#18; research in docs/research/0018-oaxacan-italian.md)
+
+- ingredients: [anchovy, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Anchovies are melted into garlicky oil for Pugliese orecchiette with greens and for puttanesca."
+      detail: "Warm them gently and stir until they dissolve; they shouldn't fry."
+  citations:
+    - title: "Sonia Peronaci, Orecchiette con cime di rapa: la ricetta imparata a Bari vecchia"
+      url: https://www.soniaperonaci.it/orecchiette-con-cime-di-rapa/
+    - title: "Dissapore, Spaghetti alla puttanesca (2022)"
+      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
+
+- ingredients: [anchovy, dried-chile]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Dried chile and melted anchovy season the oil for Neapolitan puttanesca."
+  citations:
+    - title: "Dissapore, Spaghetti alla puttanesca (2022)"
+      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
+
+- ingredients: [anchovy, tomato]
+  cuisines: [southern-italian]
+  reasons:
+    - category: contrast
+      note: "Salty anchovy deepens a quick tomato sauce such as puttanesca."
+      detail: "Not every Neapolitan cook puts anchovy in puttanesca; it's strong, and some leave it out."
+  citations:
+    - title: "Dissapore, Spaghetti alla puttanesca (2022)"
+      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
+    - title: "Portanapoli, Spaghetti alla puttanesca: storia e leggenda della ricetta"
+      url: https://www.portanapoli.com/Ita/Cucina/ga_puttanesca.html
+
+- ingredients: [anchovy, parsley]
+  cuisines: [southern-italian]
+  reasons:
+    - category: contrast
+      note: "Fresh parsley lifts the deep saltiness of anchovy at the end of a Neapolitan puttanesca."
+  citations:
+    - title: "Portanapoli, Spaghetti alla puttanesca: storia e leggenda della ricetta"
+      url: https://www.portanapoli.com/Ita/Cucina/ga_puttanesca.html
+    - title: "Dissapore, Spaghetti alla puttanesca (2022)"
+      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
+
+- ingredients: [anchovy, cauliflower]
+  cuisines: [southern-italian]
+  reasons:
+    - category: contrast
+      note: "Salted anchovies season the mild boiled cauliflower of Neapolitan insalata di rinforzo."
+  citations:
+    - title: "Portanapoli, Insalata di rinforzo – Ricetta e significato"
+      url: https://www.portanapoli.com/Ita/Cucina/insalata_di_rinforzo.html
+
+- ingredients: [anchovy, gremolata]
+  reasons:
+    - category: tradition
+      note: "Some Milanese cooks chop a salted anchovy into gremolata."
+  citations:
+    - title: "Massimo D'Alma, Ossobuco alla milanese: la ricetta scientifica spiegata in 5 punti, Scatti di Gusto"
+      url: https://www.scattidigusto.it/ossobuco-milanese-ricetta-scientifica
+
+- ingredients: [white-wine-vinegar, zucchini]
+  cuisines: [southern-italian]
+  reasons:
+    - category: contrast
+      note: "Fried zucchini are left in white wine vinegar for Neapolitan zucchine alla scapece, which cuts their oil."
+  citations:
+    - title: "Fine Dining Lovers (editorial), Zucchine alla scapece: la ricetta napoletana"
+      url: https://www.finedininglovers.it/esplora/ricette/zucchine-alla-scapece
+    - title: "La cuoca galante, Zucchine alla scapece (Neapolitan food blog)"
+      url: https://lacuocagalante.com/recipe-items/zucchine-alla-scapece/
+    - title: "Edward Behr, Zucchine alla Scapece: Summer Squash…, The Art of Eating (Substack; free preview only)"
+      url: https://artofeating.substack.com/p/zucchine-alla-scapece-summer-squash
+
+- ingredients: [white-wine-vinegar, mint]
+  cuisines: [southern-italian]
+  reasons:
+    - category: aromatic bridge
+      note: "Mint goes into the vinegar for scapece, cool and sharp together."
+  citations:
+    - title: "Fine Dining Lovers (editorial), Zucchine alla scapece: la ricetta napoletana"
+      url: https://www.finedininglovers.it/esplora/ricette/zucchine-alla-scapece
+    - title: "La cuoca galante, Zucchine alla scapece (Neapolitan food blog)"
+      url: https://lacuocagalante.com/recipe-items/zucchine-alla-scapece/
+    - title: "Edward Behr, Zucchine alla Scapece: Summer Squash…, The Art of Eating (Substack; free preview only)"
+      url: https://artofeating.substack.com/p/zucchine-alla-scapece-summer-squash
+
+- ingredients: [white-wine-vinegar, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Sliced garlic steeps in the white wine vinegar for scapece."
+  citations:
+    - title: "Fine Dining Lovers (editorial), Zucchine alla scapece: la ricetta napoletana"
+      url: https://www.finedininglovers.it/esplora/ricette/zucchine-alla-scapece
+    - title: "La cuoca galante, Zucchine alla scapece (Neapolitan food blog)"
+      url: https://lacuocagalante.com/recipe-items/zucchine-alla-scapece/
+
+- ingredients: [epazote, tomatillo]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Epazote is ground with tomatillo for Oaxacan mole verde."
+  citations:
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+    - title: "Secretaría de Agricultura y Desarrollo Rural, Mole verde estilo Oaxaca (from INPI's Mulli)"
+      url: https://www.gob.mx/agricultura/articulos/mole-verde-estilo-oaxaca
+
+- ingredients: [epazote, pork]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "In Oaxaca's central valleys, mole verde with epazote is often made with pork."
+  citations:
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+    - title: "Secretaría de Agricultura y Desarrollo Rural, Mole verde estilo Oaxaca (from INPI's Mulli)"
+      url: https://www.gob.mx/agricultura/articulos/mole-verde-estilo-oaxaca
+
+- ingredients: [epazote, parsley]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Parsley and epazote are two of the herbs that turn Oaxacan mole verde green."
+  citations:
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+    - title: "Secretaría de Agricultura y Desarrollo Rural, Mole verde estilo Oaxaca (from INPI's Mulli)"
+      url: https://www.gob.mx/agricultura/articulos/mole-verde-estilo-oaxaca
+
+- ingredients: [epazote, green-beans]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Green beans cook in the epazote-scented Oaxacan mole verde."
+  citations:
+    - title: "Secretaría de Agricultura y Desarrollo Rural, Mole verde estilo Oaxaca (from INPI's Mulli)"
+      url: https://www.gob.mx/agricultura/articulos/mole-verde-estilo-oaxaca
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+
+- ingredients: [epazote, chicken-thigh]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "The Mixteca's mole verde, usually made with chicken, includes epazote."
+  citations:
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+
+- ingredients: [epazote, chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Epazote and green chile de agua season the central valleys' mole verde."
+  citations:
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+
+- ingredients: [beef, tomato]
+  cuisines: [southern-italian, oaxacan]
+  reasons:
+    - category: tradition
+      note: "A large piece of beef simmers for hours in Neapolitan ragù, and beef cooks with tomato in Oaxacan chichilo."
+  citations:
+    - title: "Raffaele Bracale, Il vero ragù napoletano secondo la tradizione, Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/il-vero-ragu-napoletano-secondo-la-tradizione/5668/
+    - title: "Chichilo, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/chichilo/
+
+- ingredients: [beef, dried-chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Oaxacan chichilo is beef in a sauce of dark dried chiles, and grilled tasajo is eaten on tlayudas with chile salsa."
+  citations:
+    - title: "Chichilo, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/chichilo/
+    - title: "Rick Bayless, Tlayuda Oaxaqueña"
+      url: https://www.rickbayless.com/recipe/tlayuda-oaxaquena/
+
+- ingredients: [beef, gremolata]
+  reasons:
+    - category: contrast
+      note: "A fresh, sharp gremolata of parsley, lemon zest and garlic cuts through rich braised beef."
+  citations:
+    - title: "America's Test Kitchen, Adobo-Inspired Short Ribs with Black Pepper Gremolata"
+      url: https://www.americastestkitchen.com/recipes/15356-adobo-inspired-short-ribs-with-black-pepper-gremolata
+
+- ingredients: [lamb, gremolata]
+  reasons:
+    - category: contrast
+      note: "Gremolata scattered over braised lamb shanks brightens the slow-cooked meat."
+  citations:
+    - title: "Anne Burrell, Braised Lamb Shanks, Food Network"
+      url: https://www.foodnetwork.com/recipes/anne-burrell/braised-lamb-shanks-recipe-3381367
+
+- ingredients: [black-pepper, pork]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Black pepper is ground with guajillo chile into the marinade for Oaxacan cecina."
+  citations:
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+    - title: "Rick Bayless, Chile-Marinated Pork, Oaxacan-Style"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+
+- ingredients: [black-pepper, dried-chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Black pepper and dried chiles are ground together for Oaxacan adobos."
+  citations:
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+    - title: "Rick Bayless, Chile-Marinated Pork, Oaxacan-Style"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+
+- ingredients: [black-pepper, garlic]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Garlic and black pepper go into the Oaxacan cecina marinade."
+  citations:
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+    - title: "Rick Bayless, Chile-Marinated Pork, Oaxacan-Style"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+
+- ingredients: [cod, potato]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Salt cod is baked on sliced potatoes across southern Italy."
+      detail: "Soak salt cod in cold water for about two days, changing the water often, before it's cooked."
+  citations:
+    - title: "Rita Caputo, Baccalà al forno con patate alla salentina, La Cucina Pugliese"
+      url: https://www.lacucinapugliese.org/baccala-al-forno-con-patate-alla-salentina/
+    - title: "Giuliana Manca, Baccalà alla napoletana, La Cucina Imperfetta"
+      url: https://www.lacucinaimperfetta.com/baccala-alla-napoletana/
+
+- ingredients: [cod, parsley]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "A coarse mix of parsley, garlic and onion tops Pugliese baked salt cod."
+  citations:
+    - title: "Rita Caputo, Baccalà al forno con patate alla salentina, La Cucina Pugliese"
+      url: https://www.lacucinapugliese.org/baccala-al-forno-con-patate-alla-salentina/
+
+- ingredients: [cod, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Garlic seasons both Neapolitan and Pugliese salt cod."
+  citations:
+    - title: "Giuliana Manca, Baccalà alla napoletana, La Cucina Imperfetta"
+      url: https://www.lacucinaimperfetta.com/baccala-alla-napoletana/
+    - title: "Rita Caputo, Baccalà al forno con patate alla salentina, La Cucina Pugliese"
+      url: https://www.lacucinapugliese.org/baccala-al-forno-con-patate-alla-salentina/
+
+- ingredients: [potato, tomato]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Potato gnocchi are baked with tomato and mozzarella alla sorrentina, and Neapolitan pasta e patate cooks potatoes with tomato."
+  citations:
+    - title: "Portanapoli, Ricetta gnocchi di patate"
+      url: https://www.portanapoli.com/Ita/Cucina/ricetta_gnocchi_patate.html
+    - title: "Chiara Cajelli, Pasta e patate, Dissapore (2019)"
+      url: https://www.dissapore.com/ricette/pasta-e-patate/
+
+- ingredients: [potato, basil]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Basil finishes gnocchi alla sorrentina."
+  citations:
+    - title: "Portanapoli, Ricetta gnocchi di patate"
+      url: https://www.portanapoli.com/Ita/Cucina/ricetta_gnocchi_patate.html
+
+- ingredients: [potato, chicken-thigh]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Oaxacan mole coloradito is often served with chicken and boiled potatoes."
+  citations:
+    - title: "Mole coloradito, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-coloradito/
+
+- ingredients: [potato, pork]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Potatoes cook with pork in Oaxacan mole amarillo and are served with it in coloradito."
+  citations:
+    - title: "Mole amarillo, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-amarillo/
+    - title: "Mole coloradito, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-coloradito/
+
+- ingredients: [green-beans, basil]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Basil finishes Sicilian green beans in tomato."
+  citations:
+    - title: "Maria Bonaccorso, Fagiolini al pomodoro, Il Cuore in Pentola (Ricette siciliane)"
+      url: https://www.ilcuoreinpentola.it/ricette/ricette-siciliane/contorni-siciliani/fagiolini-al-pomodoro/
+
+- ingredients: [green-beans, mint]
+  cuisines: [southern-italian]
+  reasons:
+    - category: aromatic bridge
+      note: "Mint dresses Pugliese green-bean salad."
+  citations:
+    - title: "Clementina Urbano, Insalata di fagiolini e patate – ricetta pugliese, Sedicipuglia (2016)"
+      url: https://www.sedicipuglia.it/2016/07/insalata-di-ortaggi-fagiolini-e-patate.html
+    - title: "Graziella Giannuzzi, Insalata di fagiolini e patate alla pugliese, Cucina con me Graziella"
+      url: https://www.cucinaconmegraziellaeraffaele.it/insalata-di-fagiolini-e-patate-alla-pugliese/
+
+- ingredients: [parsley, chile]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Chopped parsley and a little chile go into the oil together for Neapolitan spaghetti alle vongole."
+  citations:
+    - title: "Portanapoli, Spaghetti con le vongole"
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti-vongole.html
+
+- ingredients: [mint, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Mint and sliced garlic go into the vinegar for Neapolitan scapece."
+  citations:
+    - title: "Fine Dining Lovers (editorial), Zucchine alla scapece: la ricetta napoletana"
+      url: https://www.finedininglovers.it/esplora/ricette/zucchine-alla-scapece
+    - title: "La cuoca galante, Zucchine alla scapece (Neapolitan food blog)"
+      url: https://lacuocagalante.com/recipe-items/zucchine-alla-scapece/
+    - title: "Edward Behr, Zucchine alla Scapece: Summer Squash…, The Art of Eating (Substack; free preview only)"
+      url: https://artofeating.substack.com/p/zucchine-alla-scapece-summer-squash
+
+- ingredients: [tomato, chicken-thigh]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Oaxacan mole coloradito, made with tomato, is often served with chicken."
+  citations:
+    - title: "Mole coloradito, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-coloradito/
+
+- ingredients: [parsley, chicken-thigh]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Parsley is one of the herbs in the Mixteca's chicken mole verde."
+  citations:
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+
+# Dried chile, split from fresh (#18; research in docs/research/0018-gap-closers.md)
+
+- ingredients: [dried-chile, lime]
+  cuisines: [oaxacan]
+  reasons:
+    - category: contrast
+      note: "Lime squeezed over chile-marinated Oaxacan cecina, or mixed with salt and chile powder over fruit, cuts the dried chile's heat."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Limón, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/limon/
+
+- ingredients: [dried-chile, garlic]
+  cuisines: [southern-italian, sichuan, punjabi]
+  reasons:
+    - category: tradition
+      note: "Warmed together in oil, dried chile and garlic season Neapolitan aglio e olio and puttanesca, Sichuan gong bao and Punjabi tadkas."
+      detail: "Fry dried chiles only until they darken; if they burn, start again."
+  citations:
+    - title: "Spaghetti aglio, olio e peperoncino, Portanapoli"
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_aglio_e_olio.html
+    - title: "Spaghetti alla puttanesca, Dissapore"
+      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Baingan Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+
+- ingredients: [dried-chile, cauliflower]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Red chile powder brings heat and colour to mild cauliflower in aloo gobi."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+
+- ingredients: [dried-chile, tomato]
+  cuisines: [southern-italian, punjabi]
+  reasons:
+    - category: contrast
+      note: "Dried chile's heat sharpens tomato in Neapolitan puttanesca and Punjabi karahi."
+  citations:
+    - title: "Spaghetti alla puttanesca, Dissapore"
+      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+
+# Batch 2: closing catalogue gaps (#18; research in docs/research/0018-gap-closers.md)
+
+- ingredients: [pomegranate-molasses, sumac]
+  cuisines: [levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Two fruity sours, they dress fattoush together, the molasses adding a sweeter note to sumac's dry sharpness."
+  citations:
+    - title: "Fattoush, Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fattoush/
+    - title: "Fattoush Salad, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/fattoush-salad-a-fantastic-meal-on-its-own/
+
+- ingredients: [pomegranate-molasses, chicken-thigh]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "A spoonful in the marinade gives Palestinian roast chicken a tart edge, and its sugars help the skin brown."
+  citations:
+    - title: "Palestinian Table recipes (pomegranate chicken, tomato and za'atar bread salad), Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [pomegranate-molasses, lamb]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Some cooks add a little to Palestinian kafta, where it sharpens the rich minced meat."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [pomegranate-molasses, eggplant]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Sour pomegranate seasons eggplant and lentils in rummaniyeh, a stew from coastal Palestine and Gaza."
+  citations:
+    - title: "Rummaniyeh (Lentil and Eggplant Stew), Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/rumaniyeh-lentil-eggplant-stew/
+
+- ingredients: [pomegranate-molasses, parsley]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "In Palestinian kafta, the molasses goes into the chopped parsley and onion before the meat."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [pomegranate-molasses, aleppo-pepper]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Pomegranate molasses and Aleppo pepper season the same Palestinian roast chicken marinade."
+  citations:
+    - title: "Palestinian Table recipes (pomegranate chicken, tomato and za'atar bread salad), Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [cider-vinegar, pork]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Cider vinegar sours the chile adobo for Oaxacan cecina and the slow-cooked pork picadillo."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Oaxacan Pork Picadillo, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-pork-picadillo/
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+
+- ingredients: [cider-vinegar, dried-chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: contrast
+      note: "Mild cider vinegar sours the dried-chile paste of Oaxacan adobos."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Oaxacan-Style Lamb Pit Barbeque (Barbacoa de Borrego, Estilo Oaxaqueño), Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-style-lamb-pit-barbeque/
+
+- ingredients: [cider-vinegar, garlic]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Garlic is blended with the vinegar into Oaxacan adobos, or simmered in the pickling liquid for piedrazo."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Oaxacan Piedrazo Bar Snack or Salad, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-piedrazo-bar-snack-or-salad/
+
+- ingredients: [cider-vinegar, onion]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Sliced onion pickled in sweetened cider vinegar is part of Oaxaca's street snack piedrazo."
+  citations:
+    - title: "Oaxacan Piedrazo Bar Snack or Salad, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-piedrazo-bar-snack-or-salad/
+
+- ingredients: [cider-vinegar, black-pepper]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Black pepper is ground with the vinegar and dried chiles in Oaxacan adobos."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Oaxacan-Style Lamb Pit Barbeque (Barbacoa de Borrego, Estilo Oaxaqueño), Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-style-lamb-pit-barbeque/
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+
+- ingredients: [chicken-breast, dried-chile]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "In gong bao, dried chiles are fried until they darken, then the chicken cubes go into the scorched-chile oil."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+
+- ingredients: [chicken-breast, sichuan-pepper]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Sichuan pepper's tingle runs through both gong bao chicken and kou shui ji."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+
+- ingredients: [chicken-breast, black-vinegar]
+  cuisines: [sichuan]
+  reasons:
+    - category: contrast
+      note: "Black vinegar's gentle sourness gives mild white meat the sweet-sour edge of gong bao sauce and kou shui ji dressing."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+
+- ingredients: [chicken-breast, scallion]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Scallion whites go into gong bao, and sliced greens finish cold Sichuan chicken."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+    - title: "Fuchsia Dunlop's Cold-dressed Chicken, Sous Chef"
+      url: https://www.souschef.co.uk/blogs/the-bureau-of-taste/cold-dressed-chicken
+
+- ingredients: [chicken-breast, ginger]
+  cuisines: [sichuan]
+  reasons:
+    - category: aromatic bridge
+      note: "Ginger goes into the wok for gong bao, and into the poaching water when kou shui ji is poached."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+
+- ingredients: [chicken-breast, garlic]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Garlic goes into the wok with ginger and scallion for gong bao chicken."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+
+- ingredients: [five-spice, pork]
+  cuisines: [cantonese]
+  reasons:
+    - category: tradition
+      note: "Five-spice goes into the marinade for char siu and the rub for siu yuk, two common Cantonese roast meats."
+  citations:
+    - title: "Chinese BBQ Pork (Char Siu), Bill Leung, The Woks of Life"
+      url: https://thewoksoflife.com/chinese-bbq-pork-cha-siu/
+    - title: "Dad's Char Siu Pork, Made With Lau"
+      url: https://www.madewithlau.com/recipes/char-siu-chinese-bbq-pork
+    - title: "Cantonese Roast Pork Belly (Siu Yuk), The Woks of Life"
+      url: https://thewoksoflife.com/cantonese-roast-pork-belly/
+
+- ingredients: [five-spice, garlic]
+  cuisines: [cantonese]
+  reasons:
+    - category: aromatic bridge
+      note: "Minced garlic sits alongside five-spice in the char siu marinade."
+  citations:
+    - title: "Chinese BBQ Pork (Char Siu), Bill Leung, The Woks of Life"
+      url: https://thewoksoflife.com/chinese-bbq-pork-cha-siu/
+
+- ingredients: [five-spice, chicken-thigh]
+  cuisines: [cantonese]
+  reasons:
+    - category: tradition
+      note: "A five-spice salt seasons Cantonese crispy-skin chicken, and the same salt is served for dipping."
+  citations:
+    - title: "Dad's Crispy Skin Chicken, Made With Lau"
+      url: https://www.madewithlau.com/recipes/crispy-skin-chicken

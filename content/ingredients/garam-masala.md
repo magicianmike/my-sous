@@ -14,7 +14,7 @@ colour:
 # A placeholder until the reviewed image arrives.
 image:
   file: garam-masala.png
-  alt: A placeholder, the drawing of a star anise on its pale amber.
+  alt: A placeholder, the drawing of a cinnamon quill, a cardamom pod and peppercorns on their pale amber.
   provenance:
     made: placeholder
     date: "2026-11-07"

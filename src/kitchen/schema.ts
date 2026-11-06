@@ -5,10 +5,12 @@ import { INGREDIENT_CATEGORIES, PAIRING_REASON_CATEGORIES } from "./categories";
 
 const hex = z.string().regex(/^#[0-9a-f]{6}$/i, "use a six-digit hex colour, such as #2f5714");
 
+// A web page the reader can open; the page renders it as a link.
+const webPage = z.url({ protocol: /^https?$/, error: "cite a web page, with a link starting https:// or http://" });
+
 const citationSchema = z.object({
   title: z.string().min(1),
-  // A web page the reader can open; the page renders it as a link.
-  url: z.url({ protocol: /^https?$/, error: "cite a web page, with a link starting https:// or http://" }).optional(),
+  url: webPage.optional(),
 });
 
 /**
@@ -18,7 +20,7 @@ const citationSchema = z.object({
 const slotExceptionSchema = z.object({
   slotType: z.string().min(1),
   reason: z.string().min(1),
-  citations: z.array(citationSchema).min(1, "cite at least one source for an exception"),
+  citations: z.array(citationSchema.extend({ url: webPage })).min(1, "cite at least one source for an exception"),
 });
 
 export const cuisineSchema = z.object({

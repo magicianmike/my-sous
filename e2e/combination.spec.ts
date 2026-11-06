@@ -121,6 +121,7 @@ test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees 
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (lemon pairs best).");
 
   await acid.getByRole("button", { name: /^Options/ }).click();
+  const choices = await acid.getByRole("checkbox").count();
   await acid.getByRole("checkbox", { name: "Lime" }).check();
   await expect(page.getByRole("status")).toHaveText("Lime is now also an acid. Undo takes it out.");
   await expect(acid.getByRole("checkbox", { name: "Lime" })).toBeFocused();
@@ -132,7 +133,7 @@ test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees 
   await expect(page.getByText(/then lime juice a little at a time/)).toBeVisible();
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (you chose lime).");
   // The list stays open, in the same order, for the next change.
-  await expect(acid.getByRole("checkbox")).toHaveCount(9);
+  await expect(acid.getByRole("checkbox")).toHaveCount(choices);
   await expect(acid.getByRole("checkbox", { name: "Lemon" })).toBeFocused();
 
   const undo = acid.getByRole("button", { name: "Undo change to an acid" });

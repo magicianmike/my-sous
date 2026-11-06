@@ -61,14 +61,14 @@ it("launches with six Cuisines", async () => {
 
 it("can fill every Formula Slot three ways in each launch Cuisine, or says why it can't", async () => {
   const kitchen = await realKitchen();
-  const slotTypes = [...new Set(kitchen.formulas().flatMap(({ slots }) => slots.map(({ accepts }) => accepts)))];
+  const accepted = [...new Set(kitchen.formulas().flatMap(({ slots }) => slots.map(({ accepts }) => accepts)))];
 
   const problems = kitchen
     .cuisines()
     .filter(({ launch }) => launch)
     .flatMap(({ id, name, slotExceptions }) => {
       const common = kitchen.cuisine(id)!.ingredients;
-      return slotTypes.flatMap((slotType) => {
+      return accepted.flatMap((slotType) => {
         const count = common.filter(({ slotTypes }) => slotTypes.includes(slotType)).length;
         const excepted = slotExceptions.some((exception) => exception.slotType === slotType);
         if (count < 3 && !excepted) return [`${name}: ${count} for "${slotType}"`];

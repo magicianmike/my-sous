@@ -16,6 +16,8 @@ const levantine = {
   name: "Levantine",
   description: "The cooking of the eastern Mediterranean coast.",
 };
+/** Levantine as the Kitchen gives it back, with the defaults a Cuisine gets. */
+const levantineAsLoaded = { ...levantine, launch: false, slotExceptions: [] };
 
 describe("loadKitchen", () => {
   it("shows a Pairing from both of its Ingredients", async () => {
@@ -66,7 +68,7 @@ describe("loadKitchen", () => {
       name: "Za'atar",
       category: "blend",
       typicallyIncludes: ["dried thyme", "sumac", "sesame"],
-      cuisines: [{ ...levantine, launch: false, slotExceptions: [] }],
+      cuisines: [levantineAsLoaded],
       slotTypes: ["seasoning"],
       tip: "Bloom it in olive oil.",
       culturalContext: "Often eaten with bread and olive oil.",
@@ -97,7 +99,7 @@ describe("loadKitchen", () => {
     expect(pairing.reasons).toEqual([
       { category: "contrast", note: "A note.", detail: "A longer explanation." },
     ]);
-    expect(pairing.cuisines).toEqual([{ ...levantine, launch: false, slotExceptions: [] }]);
+    expect(pairing.cuisines).toEqual([levantineAsLoaded]);
     expect(pairing.citations).toEqual([citation]);
   });
 
@@ -295,15 +297,17 @@ describe("loadKitchen", () => {
       citations: [{ title: "A source", url: "https://example.com/sichuan" }],
     };
 
+    /** Content with a launch Cuisine, Sichuan, that has the given Slot exception. */
+    const withException = (exception: Record<string, unknown>) =>
+      writeContent({
+        ...fixture,
+        ingredients: { ...fixture.ingredients, basil: { name: "Basil", slotTypes: ["soft herb", "heat"] } },
+        cuisines: [levantine, { ...sichuan, launch: true, slotExceptions: [exception] }],
+        formulas: [pan],
+      });
+
     it("says which Cuisines are launch Cuisines, and the Slot types each uses fewer of", async () => {
-      const kitchen = await expectKitchen(
-        writeContent({
-          ...fixture,
-          ingredients: { ...fixture.ingredients, basil: { name: "Basil", slotTypes: ["soft herb", "heat"] } },
-          cuisines: [levantine, { ...sichuan, launch: true, slotExceptions: [fewHerbs] }],
-          formulas: [pan],
-        }),
-      );
+      const kitchen = await expectKitchen(withException(fewHerbs));
 
       const [plain, launch] = kitchen.cuisines();
       expect([plain.launch, plain.slotExceptions]).toEqual([false, []]);
@@ -311,19 +315,17 @@ describe("loadKitchen", () => {
     });
 
     describe("rejects one", () => {
-      const errorsFor = (exception: Record<string, unknown>) =>
-        expectErrors(
-          writeContent({
-            ...fixture,
-            ingredients: { ...fixture.ingredients, basil: { name: "Basil", slotTypes: ["soft herb", "heat"] } },
-            cuisines: [levantine, { ...sichuan, launch: true, slotExceptions: [exception] }],
-            formulas: [pan],
-          }),
-        );
+      const errorsFor = (exception: Record<string, unknown>) => expectErrors(withException(exception));
 
       it("whose exception is for a Slot type no Formula has", async () => {
         expect(await errorsFor({ ...fewHerbs, slotType: "garnish" })).toEqual([
           'Cuisine sichuan has an exception for "garnish", but no Formula has a Slot that accepts it.',
+        ]);
+      });
+
+      it("whose exception cites a source without a link", async () => {
+        expect(await errorsFor({ ...fewHerbs, citations: [{ title: "A book" }] })).toEqual([
+          "1.slotExceptions.0.citations.0.url: cite a web page, with a link starting https:// or http://",
         ]);
       });
 

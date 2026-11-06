@@ -73,7 +73,8 @@ test("a name not in MySous says so, with a next step", async ({ page }) => {
 
 test("a Blend lists what it typically includes, linking Ingredients in MySous", async ({ page }) => {
   await page.goto("/ingredients/gremolata");
-  const components = page.getByRole("list").filter({ hasText: "Parsley", hasNotText: "basket" });
+  // The components list, not the Pairings below it, which have Add buttons.
+  const components = page.getByRole("list").filter({ hasText: "Parsley", hasNot: page.getByRole("button") });
   await expect(components.getByRole("listitem")).toHaveText(["Lemon", "Garlic", "Parsley"]);
   await expect(components.getByRole("link")).toHaveText(["Lemon", "Garlic", "Parsley"]);
   await expect(page.getByText(/osso buco/)).toBeVisible();

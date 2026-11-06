@@ -174,27 +174,23 @@
   reasons:
     - category: contrast
       note: Lime's acid sharpens and balances the heat of fresh chile.
-      detail: "In Oaxaca, strips of chile de agua are often cured in lime juice and served over moles; across Mexico, lime, salt and chile powder go over fruit and vegetables."
+      detail: "In Oaxaca, strips of fresh chile de agua are often cured in lime juice and served over moles."
   citations:
-    - title: Chile de agua, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
+    - title: "Chile de agua, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
       url: https://laroussecocina.mx/palabra/chile-de-agua/
-    - title: Limón, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
-      url: https://laroussecocina.mx/palabra/limon/
 
 - ingredients: [chile, garlic]
-  cuisines: [southern-italian, sichuan, punjabi]
+  cuisines: [southern-italian, punjabi]
   reasons:
     - category: tradition
-      note: Warmed together in oil, they're the base of aglio, olio e peperoncino, and of many Sichuan and Punjabi dishes.
-      detail: "Warm sliced garlic and chile in olive oil over very low heat; the garlic should colour lightly, never burn, and the oil carries both flavours through the pasta."
+      note: "Warmed together in oil, fresh chile and garlic start Neapolitan aglio e olio and many Punjabi dishes."
+      detail: "Warm sliced garlic and chile in olive oil over very low heat; the garlic should colour lightly, never burn. Many Neapolitan cooks prefer fresh chile here, and others use dried."
   citations:
-    - title: Spaghetti aglio, olio e peperoncino, Turismo Roma
+    - title: "Spaghetti aglio, olio e peperoncino, Turismo Roma"
       url: https://www.turismoroma.it/it/page/spaghetti-aglio-olio-e-peperoncino-0
-    - title: Spaghetti aglio, olio e peperoncino, Portanapoli
-      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_aglio_e_olio.html
-    - title: Gong Bao Chicken with Peanuts (Fuchsia Dunlop), The Splendid Table
-      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
-    - title: Dhaba Style Baingan Ka Bharta, Kunal Kapur
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Baingan Bharta, Kunal Kapur"
       url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
 
 - ingredients: [chile, cilantro]
@@ -211,7 +207,7 @@
 
 # Sichuan, Japanese home cooking and Cantonese (#17; research in docs/research/0017-sichuan-japanese-cantonese.md)
 
-- ingredients: [sichuan-pepper, chile]
+- ingredients: [sichuan-pepper, dried-chile]
   cuisines: [sichuan]
   reasons:
     - category: tradition
@@ -222,6 +218,8 @@
       url: https://thewoksoflife.com/sichuan-peppercorns/
     - title: "'The Food of Sichuan': how a British writer brought the flavours of provincial China to the world, The National"
       url: https://www.thenationalnews.com/lifestyle/food/the-food-of-sichuan-how-a-british-writer-brought-the-flavours-of-provincial-china-to-the-world-1.1028035
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
 
 - ingredients: [sichuan-pepper, chicken-thigh]
   cuisines: [sichuan]
@@ -331,7 +329,7 @@
     - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
       url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
 
-- ingredients: [black-vinegar, chile]
+- ingredients: [black-vinegar, dried-chile]
   cuisines: [sichuan]
   reasons:
     - category: contrast
@@ -981,7 +979,7 @@
     - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
       url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
 
-- ingredients: [cumin, chile]
+- ingredients: [cumin, dried-chile]
   cuisines: [punjabi]
   reasons:
     - category: aromatic bridge
@@ -1049,11 +1047,11 @@
   cuisines: [punjabi]
   reasons:
     - category: contrast
-      note: "Green chiles and chile powder bring heat to mild, sweet cauliflower in aloo gobi."
+      note: "Green chiles bring fresh heat to mild, sweet cauliflower in aloo gobi."
   citations:
     - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
       url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
-    - title: "Punjabi Aloo Gobi, Maunika Gowardhan"
+    - title: "Punjabi Aloo Gobi, Maunika Gowardhan (visible part of ingredient list only)"
       url: https://maunikagowardhan.co.uk/cook-in-a-curry/punjabi-aloo-gobi/
 
 - ingredients: [cauliflower, garlic]
@@ -1145,21 +1143,17 @@
       url: https://www.teaforturmeric.com/tandoori-chicken/
 
 - ingredients: [tomato, chile]
-  cuisines: [levantine, punjabi, oaxacan, southern-italian]
+  cuisines: [levantine, punjabi, oaxacan]
   reasons:
     - category: contrast
-      note: "Chile's heat sharpens sweet, ripe tomato, in Palestinian bread salads, Punjabi karahi, Oaxacan chile de agua in tomato broth and Neapolitan puttanesca."
+      note: "Fresh chile's heat sharpens sweet, ripe tomato, in Palestinian bread salads, Punjabi karahi and Oaxacan chile de agua in tomato broth."
   citations:
-    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+    - title: "Palestinian Table recipes (pomegranate chicken, tomato and za'atar bread salad), Reem Kassis, East Fork"
       url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
     - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
       url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
     - title: "Chile de agua, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
       url: https://laroussecocina.mx/palabra/chile-de-agua/
-    - title: "Portanapoli, Spaghetti alla puttanesca: storia e leggenda della ricetta"
-      url: https://www.portanapoli.com/Ita/Cucina/ga_puttanesca.html
-    - title: "Dissapore, Spaghetti alla puttanesca (2022)"
-      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
 
 - ingredients: [ginger, tomato]
   cuisines: [punjabi]
@@ -1335,7 +1329,7 @@
     - title: "Kousa Bil Laban (Lebanese Stuffed Zucchini in Yogurt), Hadia Zebib, Hadia's Lebanese Cuisine"
       url: https://hadiaslebanesecuisine.com/blog/kousa-bil-laban/
 
-- ingredients: [pork, chile]
+- ingredients: [pork, dried-chile]
   cuisines: [oaxacan]
   reasons:
     - category: tradition
@@ -1655,7 +1649,7 @@
     - title: "Spicy and Sour Shredded Potato, Elaine, China Sichuan Food"
       url: https://www.chinasichuanfood.com/spicy-and-sour-potato/
 
-- ingredients: [potato, chile]
+- ingredients: [potato, dried-chile]
   cuisines: [sichuan]
   reasons:
     - category: tradition
@@ -1709,7 +1703,7 @@
     - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
       url: https://laroussecocina.mx/palabra/mole-verde/
 
-- ingredients: [green-beans, chile]
+- ingredients: [green-beans, dried-chile]
   cuisines: [sichuan]
   reasons:
     - category: tradition
@@ -2003,11 +1997,11 @@
     - title: "Dahi Bhalla (Dahi Bara), Izzah Cheema, Tea for Turmeric"
       url: https://www.teaforturmeric.com/dahi-bhalla/
 
-- ingredients: [tamarind, chile]
+- ingredients: [tamarind, dried-chile]
   cuisines: [punjabi]
   reasons:
     - category: contrast
-      note: "A little red chile sharpens sweet-sour tamarind chutney."
+      note: "A little red chile powder sharpens sweet-sour tamarind chutney."
   citations:
     - title: "Dahi Bhalla (Dahi Bara), Izzah Cheema, Tea for Turmeric"
       url: https://www.teaforturmeric.com/dahi-bhalla/
@@ -2150,7 +2144,8 @@
   cuisines: [punjabi]
   reasons:
     - category: contrast
-      note: "Lemon goes into the marinade for Amritsari fish and is squeezed over it at the table."
+      note: "Lemon sharpens fried white fish such as cod in Punjabi fish curry, and in Amritsari fish, which is traditionally made with river fish."
+      detail: "In Amritsari fish, lemon goes into the marinade and is squeezed over at the table; outside Punjab, cod is a common stand-in."
   citations:
     - title: "Amritsari Fish Fry, Kunal Kapur"
       url: https://www.chefkunalkapur.com/recipe/amritsari-fish-fry/
@@ -2225,16 +2220,14 @@
     - title: "Dissapore, Spaghetti alla puttanesca (2022)"
       url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
 
-- ingredients: [anchovy, chile]
+- ingredients: [anchovy, dried-chile]
   cuisines: [southern-italian]
   reasons:
     - category: tradition
-      note: "Dried chile and melted anchovy season the oil for puttanesca and, in some versions, orecchiette."
+      note: "Dried chile and melted anchovy season the oil for Neapolitan puttanesca."
   citations:
     - title: "Dissapore, Spaghetti alla puttanesca (2022)"
       url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
-    - title: "Sonia Peronaci, Orecchiette con cime di rapa: la ricetta imparata a Bari vecchia"
-      url: https://www.soniaperonaci.it/orecchiette-con-cime-di-rapa/
 
 - ingredients: [anchovy, tomato]
   cuisines: [southern-italian]
@@ -2386,7 +2379,7 @@
     - title: "Chichilo, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
       url: https://laroussecocina.mx/palabra/chichilo/
 
-- ingredients: [beef, chile]
+- ingredients: [beef, dried-chile]
   cuisines: [oaxacan]
   reasons:
     - category: tradition
@@ -2424,7 +2417,7 @@
     - title: "Rick Bayless, Chile-Marinated Pork, Oaxacan-Style"
       url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
 
-- ingredients: [black-pepper, chile]
+- ingredients: [black-pepper, dried-chile]
   cuisines: [oaxacan]
   reasons:
     - category: aromatic bridge
@@ -2577,3 +2570,262 @@
   citations:
     - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
       url: https://laroussecocina.mx/palabra/mole-verde/
+
+# Dried chile, split from fresh (#18; research in docs/research/0018-gap-closers.md)
+
+- ingredients: [dried-chile, lime]
+  cuisines: [oaxacan]
+  reasons:
+    - category: contrast
+      note: "Lime squeezed over chile-marinated Oaxacan cecina, or mixed with salt and chile powder over fruit, cuts the dried chile's heat."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Limón, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/limon/
+
+- ingredients: [dried-chile, garlic]
+  cuisines: [southern-italian, sichuan, punjabi]
+  reasons:
+    - category: tradition
+      note: "Warmed together in oil, dried chile and garlic season Neapolitan aglio e olio and puttanesca, Sichuan gong bao and Punjabi tadkas."
+      detail: "Fry dried chiles only until they darken; if they burn, start again."
+  citations:
+    - title: "Spaghetti aglio, olio e peperoncino, Portanapoli"
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_aglio_e_olio.html
+    - title: "Spaghetti alla puttanesca, Dissapore"
+      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Baingan Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+
+- ingredients: [dried-chile, cauliflower]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Red chile powder brings heat and colour to mild cauliflower in aloo gobi."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+
+- ingredients: [dried-chile, tomato]
+  cuisines: [southern-italian, punjabi]
+  reasons:
+    - category: contrast
+      note: "Dried chile's heat sharpens tomato in Neapolitan puttanesca and Punjabi karahi."
+  citations:
+    - title: "Spaghetti alla puttanesca, Dissapore"
+      url: https://www.dissapore.com/ricette/spaghetti-puttanescae-perche-si-chiamano-cosi/
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+
+# Batch 2: closing catalogue gaps (#18; research in docs/research/0018-gap-closers.md)
+
+- ingredients: [pomegranate-molasses, sumac]
+  cuisines: [levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Two fruity sours, they dress fattoush together, the molasses adding a sweeter note to sumac's dry sharpness."
+  citations:
+    - title: "Fattoush, Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fattoush/
+    - title: "Fattoush Salad, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/fattoush-salad-a-fantastic-meal-on-its-own/
+
+- ingredients: [pomegranate-molasses, chicken-thigh]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "A spoonful in the marinade gives Palestinian roast chicken a tart edge, and its sugars help the skin brown."
+  citations:
+    - title: "Palestinian Table recipes (pomegranate chicken, tomato and za'atar bread salad), Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [pomegranate-molasses, lamb]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Some cooks add a little to Palestinian kafta, where it sharpens the rich minced meat."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [pomegranate-molasses, eggplant]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Sour pomegranate seasons eggplant and lentils in rummaniyeh, a stew from coastal Palestine and Gaza."
+  citations:
+    - title: "Rummaniyeh (Lentil and Eggplant Stew), Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/rumaniyeh-lentil-eggplant-stew/
+
+- ingredients: [pomegranate-molasses, parsley]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "In Palestinian kafta, the molasses goes into the chopped parsley and onion before the meat."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [pomegranate-molasses, aleppo-pepper]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Pomegranate molasses and Aleppo pepper season the same Palestinian roast chicken marinade."
+  citations:
+    - title: "Palestinian Table recipes (pomegranate chicken, tomato and za'atar bread salad), Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [cider-vinegar, pork]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Cider vinegar sours the chile adobo for Oaxacan cecina and the slow-cooked pork picadillo."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Oaxacan Pork Picadillo, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-pork-picadillo/
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+
+- ingredients: [cider-vinegar, dried-chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: contrast
+      note: "Mild cider vinegar sours the dried-chile paste of Oaxacan adobos."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Oaxacan-Style Lamb Pit Barbeque (Barbacoa de Borrego, Estilo Oaxaqueño), Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-style-lamb-pit-barbeque/
+
+- ingredients: [cider-vinegar, garlic]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Garlic is blended with the vinegar into Oaxacan adobos, or simmered in the pickling liquid for piedrazo."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Oaxacan Piedrazo Bar Snack or Salad, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-piedrazo-bar-snack-or-salad/
+
+- ingredients: [cider-vinegar, onion]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Sliced onion pickled in sweetened cider vinegar is part of Oaxaca's street snack piedrazo."
+  citations:
+    - title: "Oaxacan Piedrazo Bar Snack or Salad, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-piedrazo-bar-snack-or-salad/
+
+- ingredients: [cider-vinegar, black-pepper]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Black pepper is ground with the vinegar and dried chiles in Oaxacan adobos."
+  citations:
+    - title: "Chile-Marinated Pork, Oaxacan-Style, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
+    - title: "Oaxacan-Style Lamb Pit Barbeque (Barbacoa de Borrego, Estilo Oaxaqueño), Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-style-lamb-pit-barbeque/
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+
+- ingredients: [chicken-breast, dried-chile]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "In gong bao, dried chiles are fried until they darken, then the chicken cubes go into the scorched-chile oil."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+
+- ingredients: [chicken-breast, sichuan-pepper]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Sichuan pepper's tingle runs through both gong bao chicken and kou shui ji."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+
+- ingredients: [chicken-breast, black-vinegar]
+  cuisines: [sichuan]
+  reasons:
+    - category: contrast
+      note: "Black vinegar's gentle sourness gives mild white meat the sweet-sour edge of gong bao sauce and kou shui ji dressing."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+
+- ingredients: [chicken-breast, scallion]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Scallion whites go into gong bao, and sliced greens finish cold Sichuan chicken."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+    - title: "Fuchsia Dunlop's Cold-dressed Chicken, Sous Chef"
+      url: https://www.souschef.co.uk/blogs/the-bureau-of-taste/cold-dressed-chicken
+
+- ingredients: [chicken-breast, ginger]
+  cuisines: [sichuan]
+  reasons:
+    - category: aromatic bridge
+      note: "Ginger goes into the wok for gong bao, and into the poaching water when kou shui ji is poached."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+
+- ingredients: [chicken-breast, garlic]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: "Garlic goes into the wok with ginger and scallion for gong bao chicken."
+  citations:
+    - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+
+- ingredients: [five-spice, pork]
+  cuisines: [cantonese]
+  reasons:
+    - category: tradition
+      note: "Five-spice goes into the marinade for char siu and the rub for siu yuk, two common Cantonese roast meats."
+  citations:
+    - title: "Chinese BBQ Pork (Char Siu), Bill Leung, The Woks of Life"
+      url: https://thewoksoflife.com/chinese-bbq-pork-cha-siu/
+    - title: "Dad's Char Siu Pork, Made With Lau"
+      url: https://www.madewithlau.com/recipes/char-siu-chinese-bbq-pork
+    - title: "Cantonese Roast Pork Belly (Siu Yuk), The Woks of Life"
+      url: https://thewoksoflife.com/cantonese-roast-pork-belly/
+
+- ingredients: [five-spice, garlic]
+  cuisines: [cantonese]
+  reasons:
+    - category: aromatic bridge
+      note: "Minced garlic sits alongside five-spice in the char siu marinade."
+  citations:
+    - title: "Chinese BBQ Pork (Char Siu), Bill Leung, The Woks of Life"
+      url: https://thewoksoflife.com/chinese-bbq-pork-cha-siu/
+
+- ingredients: [five-spice, chicken-thigh]
+  cuisines: [cantonese]
+  reasons:
+    - category: tradition
+      note: "A five-spice salt seasons Cantonese crispy-skin chicken, and the same salt is served for dipping."
+  citations:
+    - title: "Dad's Crispy Skin Chicken, Made With Lau"
+      url: https://www.madewithlau.com/recipes/crispy-skin-chicken

@@ -13,13 +13,8 @@
   border-radius: var(--radius-lg);
   background: var(--sunk);
   object-fit: cover;
-}
-
-/* In the dark theme, a little less bright, so a light image doesn't glare from a dark page. */
-@media (prefers-color-scheme: dark) {
-  .image {
-    filter: brightness(0.85);
-  }
+  /* Dimmed a little in the dark theme, chosen or the device's (see themeCss). */
+  filter: var(--image-filter);
 }
 
 .caption {

@@ -25,7 +25,7 @@ test.describe("with the device set to light", () => {
     expect(await background(page)).toBe(DARK);
     // An Ingredient's own colours follow, as they do under the device's setting.
     const hero = page.getByRole("region", { name: "Lemon" });
-    await expect(hero.locator("[class*=mark]").first()).toHaveCSS("background-color", "rgb(54, 49, 26)");
+    await expect(hero.locator(".hero-mark > *")).toHaveCSS("background-color", "rgb(54, 49, 26)");
 
     await page.getByRole("banner").getByRole("link", { name: "Cuisines" }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Cuisines" })).toBeVisible();
@@ -34,6 +34,16 @@ test.describe("with the device set to light", () => {
     await page.reload();
     expect(await background(page)).toBe(DARK);
     await expect(theme(page).getByRole("radio", { name: "Dark" })).toBeChecked();
+  });
+
+  test("a chosen Dark dims images, as the device's dark setting does", async ({ page }) => {
+    await page.goto("/ingredients/lemon");
+    const image = page.getByRole("region", { name: "Lemon" }).locator("picture img");
+    await expect(image).toHaveCSS("filter", "none");
+
+    await theme(page).getByRole("radio", { name: "Dark" }).check();
+
+    await expect(image).toHaveCSS("filter", "brightness(0.85)");
   });
 
   test("a chosen theme is there before the page is live, so it never flashes the other", async ({ page }) => {

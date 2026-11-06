@@ -223,11 +223,12 @@ const declarations = (tokens: Record<string, string>) =>
  * device's dark setting unless the Cook chose Light, and whenever they chose Dark (`data-theme`).
  */
 export function themeCss(): string {
-  // The dark theme for whatever `root` selects, its Ingredient colours included.
+  // The dark theme for whatever `root` selects, its Ingredient colours included. Content images are
+  // a little less bright in it, so a light one doesn't glare from a dark page.
   const dark = (root: string) =>
-    `${root} { color-scheme: dark; ${declarations(palettes.dark)} } ${root} .hue { --wash: var(--wash-dark); --stroke: var(--stroke-dark); }`;
+    `${root} { color-scheme: dark; ${declarations(palettes.dark)} --image-filter: brightness(0.85); } ${root} .hue { --wash: var(--wash-dark); --stroke: var(--stroke-dark); }`;
   return [
-    `:root { color-scheme: light; ${declarations(palettes.light)} ${declarations(scales)} ${declarations(motion)} }`,
+    `:root { color-scheme: light; ${declarations(palettes.light)} ${declarations(scales)} ${declarations(motion)} --image-filter: none; }`,
     // An Ingredient's colours arrive as --wash-light, --wash-dark and so on (see hueStyle);
     // .hue picks the pair for the theme, so dark stays a token swap.
     `.hue { --wash: var(--wash-light); --stroke: var(--stroke-light); }`,

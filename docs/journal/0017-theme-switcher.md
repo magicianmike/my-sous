@@ -25,7 +25,7 @@ The author chose each of these from options.
 
 - **No flash.** A one-line script in the page's head reads the stored choice and sets `data-theme` on the page before it paints, before the app's scripts load. If storage is unavailable (a private window, say), it does nothing and the device's setting applies.
 - **Still one source of tokens.** `themeCss()` writes the dark palette, Ingredient colours included, twice: under the device's dark setting unless Light is chosen, and whenever Dark is chosen. Each sets `color-scheme` to match, so form controls and scrollbars follow.
-- **The control.** `SegmentedControl` gains icons and an icons-only mode, with each label still there for screen readers. The theme is a radio group named "Theme" with "Light" and "Dark", so arrow keys move the choice, and screen readers say which is on. Each segment is a full 44 px target. `ThemeSwitch` (in `src/app`) keeps the state: it reads the page's theme once it's live, follows the device while nothing's chosen, and stores a choice.
+- **The control.** The issue said two buttons with `aria-pressed`; a radio group fits a choice of one better and brings arrow keys. `SegmentedControl` gains icons and an icons-only mode, shown on `/design`, with each label still there for screen readers. The theme is a radio group named "Theme" with "Light" and "Dark", so arrow keys move the choice, and screen readers say which is on. Each segment is a full 44 px target. `ThemeSwitch` (in `src/app`) keeps the state: it reads the page's theme once it's live, follows the device while nothing's chosen, and stores a choice.
 
 ## Noticed
 
@@ -40,8 +40,19 @@ The author chose each of these from options.
   - choosing Light wins over a dark device, across a reload;
   - with the app's scripts blocked, a stored choice still applies on load, so there's no flash;
   - arrow keys move the choice.
-- **axe** runs on every screen with Dark chosen on a light device and Light chosen on a dark one, as well as in both device themes. The tap-target and focus-ring checks cover the header's new control.
-- **Not in Vitest.** The issue planned a Vitest check of `themeCss()`. The Playwright checks test the same rules through what the browser paints, so a test of the CSS text would only restate the code.
+- **axe** runs on every screen with Dark chosen on a light device and Light chosen on a dark one, as well as in both device themes. So does the **focus-ring check**. The tap-target check covers the header's new control.
+- **Vitest:** `themeCss()` gives the dark palette, Ingredient colours included, under the device's dark setting unless Light is chosen, and whenever Dark is.
+
+## Review
+
+The Standards and Spec reviews led to:
+- the theme's key, type and head script moving out of the tokens into `src/design/theme.ts`, with one list of themes for the script and the switch;
+- `themeCss()` getting back the doc comment the new code had pushed off it;
+- the icons-only control on `/design`;
+- the focus-ring check and a Vitest check with a chosen theme;
+- a README line.
+
+Before the page is live, neither option shows as chosen, since the static page can't know the device or the choice. That's a moment at load, and the page itself is already in the right theme.
 
 ## VoiceOver pass (for the author)
 

@@ -12,6 +12,7 @@ import { MarkGroup } from "@/components/MarkGroup";
 import { Panel } from "@/components/Panel";
 import { Readiness } from "@/components/Readiness";
 import { SegmentedControl } from "@/components/SegmentedControl";
+import { MoonIcon, SunIcon } from "@/components/ThemeIcons";
 import { Tooltip } from "@/components/Tooltip";
 import { Toast } from "@/components/Toast";
 import { TrayBar } from "@/components/TrayBar";
@@ -23,6 +24,8 @@ export type SpecimenIngredient = IngredientLook;
 
 /** The design system's specimen. Components get fixture props here, never the URL or the Kitchen. */
 export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] }) {
+  // Only shown here; choosing a theme for the page is the header's job.
+  const [look, setLook] = useState<"light" | "dark">("light");
   const [tray, setTray] = useState(ingredients.slice(0, 2));
   const [status, setStatus] = useState("");
   const [chosen, setChosen] = useState("");
@@ -175,6 +178,17 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
         ]}
         value={segment}
         onChange={setSegment}
+      />
+      <p>With icons alone, as the header's theme switch; each label still names its segment.</p>
+      <SegmentedControl
+        label="Theme, as a specimen"
+        iconsOnly
+        options={[
+          { value: "light", label: "Light", icon: <SunIcon /> },
+          { value: "dark", label: "Dark", icon: <MoonIcon /> },
+        ]}
+        value={look}
+        onChange={setLook}
       />
 
       <h2>Combobox</h2>

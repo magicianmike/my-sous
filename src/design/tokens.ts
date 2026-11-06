@@ -1,7 +1,7 @@
 /**
  * MySous's design tokens: the one source of every colour, type, spacing, radius, elevation,
  * motion and focus value. `themeCss()` turns them into CSS custom properties; dark is a swap of
- * the colour tokens, chosen by the device's setting unless the Cook picks a theme (see THEME_SCRIPT).
+ * the colour tokens, chosen by the device's setting unless the Cook picks a theme (see ./theme).
  */
 
 export type Palette = {
@@ -218,16 +218,10 @@ const declarations = (tokens: Record<string, string>) =>
     .map(([key, value]) => `--${kebab(key)}: ${value};`)
     .join(" ");
 
-/** The tokens as CSS custom properties, for the document head. */
-/** Where the Cook's chosen theme is kept: the one thing MySous stores in the browser (ADR 0004). */
-export const THEME_KEY = "theme";
-
 /**
- * Applies a chosen theme before the page paints, so it never shows the other first. Inline in the
- * page's head, it runs before the app's scripts load; storage can be unavailable, so it may do nothing.
+ * The tokens as CSS custom properties, for the document head. The dark palette applies under the
+ * device's dark setting unless the Cook chose Light, and whenever they chose Dark (`data-theme`).
  */
-export const THEME_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
-
 export function themeCss(): string {
   // The dark theme for whatever `root` selects, its Ingredient colours included.
   const dark = (root: string) =>

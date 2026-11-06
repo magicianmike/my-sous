@@ -26,7 +26,7 @@ The build fails on any malformed file, unknown Ingredient or Cuisine reference, 
 
 ## Design system
 
-Tokens (colour, type, spacing, radius, elevation, motion, focus) live in `src/design/tokens.ts`, which generates the CSS; dark is a token swap. Core components are in `src/components/` and take props only. `/design` shows each one from fixture props.
+Tokens (colour, type, spacing, radius, elevation, motion, focus) live in `src/design/tokens.ts`, which generates the CSS; dark is a token swap. It follows the device's setting unless the Cook picks Light or Dark in the header, which is remembered in the browser (`src/design/theme.ts`, ADR 0004). Core components are in `src/components/` and take props only. `/design` shows each one from fixture props.
 
 Every Ingredient needs a `colour` in its frontmatter (`wash`, `washDark`, `stroke`, `strokeDark`) and a single-line drawing in `content/ingredients/<id>.svg` (shapes only, on a 48-unit grid). Tests check every colour's contrast in both themes.
 

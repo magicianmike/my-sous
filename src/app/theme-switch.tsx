@@ -3,16 +3,14 @@
 import { useEffect, useState } from "react";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { MoonIcon, SunIcon } from "@/components/ThemeIcons";
-import { THEME_KEY } from "@/design/tokens";
-
-type Theme = "light" | "dark";
+import { isTheme, THEME_KEY, type Theme } from "@/design/theme";
 
 const DARK_DEVICE = "(prefers-color-scheme: dark)";
 
 /** The theme in force: the Cook's choice, applied to the page, or else the device's setting. */
 function currentTheme(): Theme {
   const chosen = document.documentElement.dataset.theme;
-  if (chosen === "light" || chosen === "dark") return chosen;
+  if (isTheme(chosen)) return chosen;
   return matchMedia(DARK_DEVICE).matches ? "dark" : "light";
 }
 

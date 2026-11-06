@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Nunito } from "next/font/google";
-import { THEME_SCRIPT, themeCss } from "@/design/tokens";
+import { THEME_SCRIPT } from "@/design/theme";
+import { themeCss } from "@/design/tokens";
 import { CombinationLink, KitchenProvider } from "./combination";
 import { CombinationTray } from "./combination-tray";
 import "./globals.css";

@@ -6,7 +6,7 @@ test("a Cook opens an Ingredient and follows a Pairing to another Ingredient", a
 
   await expect(page.getByRole("heading", { level: 1, name: "Lemon" })).toBeVisible();
   const garlic = page.getByRole("listitem").filter({ hasText: "Garlic" });
-  await expect(garlic).toContainText("Lemon's sharpness cuts through the richness of garlic");
+  await expect(garlic).toContainText("Garlic and lemon juice season the tahini sauces");
 
   await garlic.getByRole("link", { name: "Garlic" }).click();
 
@@ -19,8 +19,8 @@ test("a Cook narrows the Pairings to one Pairing Reason", async ({ page }) => {
   await page.goto("/ingredients/chicken-thigh");
   const filter = page.getByRole("radiogroup", { name: "Show Pairings by reason" });
   const radios = filter.getByRole("radio");
-  await expect(radios).toHaveCount(3);
-  for (const [i, name] of ["All", "Contrast", "Tradition"].entries()) {
+  await expect(radios).toHaveCount(4);
+  for (const [i, name] of ["All", "Contrast", "Aromatic bridge", "Tradition"].entries()) {
     await expect(radios.nth(i)).toHaveAccessibleName(name);
   }
   await expect(filter.getByRole("radio", { name: "All" })).toBeChecked();
@@ -34,9 +34,9 @@ test("a Cook narrows the Pairings to one Pairing Reason", async ({ page }) => {
 });
 
 test("an Ingredient with one Pairing Reason has nothing to filter", async ({ page }) => {
-  await page.goto("/ingredients/lemon");
-  await expect(page.getByRole("heading", { level: 3, name: "Contrast" })).toBeVisible();
-  await expect(page.getByRole("main").getByRole("radiogroup")).toHaveCount(0);
+  await page.goto("/ingredients/basil");
+  await expect(page.getByRole("heading", { level: 3, name: "Tradition" })).toBeVisible();
+  await expect(page.getByRole("radiogroup", { name: "Show Pairings by reason" })).toHaveCount(0);
 });
 
 test.describe("on desktop", () => {

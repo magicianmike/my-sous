@@ -18,10 +18,11 @@ type FixtureIngredient = { name: string; body?: string; drawing?: string | null 
 
 export const defaultColour = { wash: "#dcebc4", washDark: "#26361a", stroke: "#2f5714", strokeDark: "#c3e39a" };
 export const defaultDrawing = '<circle cx="24" cy="24" r="17"/>';
+export const defaultCitation = { title: "A source", url: "https://example.com/a-source" };
 
 export function writeContent(fixture: {
   ingredients: Record<string, FixtureIngredient>;
-  pairings: unknown[];
+  pairings: Record<string, unknown>[];
   cuisines?: unknown[];
   formulas?: unknown[];
   /** Recipes by Formula id: each file's frontmatter. */
@@ -40,7 +41,9 @@ export function writeContent(fixture: {
     );
     if (drawing !== null) writeFileSync(join(dir, "ingredients", `${id}.svg`), drawing);
   }
-  writeFileSync(join(dir, "pairings.yaml"), stringify(fixture.pairings));
+  // Every Pairing needs a cited source; fixtures get one unless they say otherwise.
+  const pairings = fixture.pairings.map((pairing) => ({ citations: [defaultCitation], ...pairing }));
+  writeFileSync(join(dir, "pairings.yaml"), stringify(pairings));
   writeFileSync(join(dir, "cuisines.yaml"), stringify(fixture.cuisines ?? []));
   writeFileSync(join(dir, "formulas.yaml"), stringify(fixture.formulas ?? []));
   if (fixture.recipes) {

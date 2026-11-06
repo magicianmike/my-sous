@@ -13,7 +13,8 @@ const hex = z.string().regex(/^#[0-9a-f]{6}$/i, "use a six-digit hex colour, suc
 
 const citationSchema = z.object({
   title: z.string().min(1),
-  url: z.url().optional(),
+  // A web page the reader can open; the page renders it as a link.
+  url: z.url({ protocol: /^https?$/, error: "cite a web page, with a link starting https:// or http://" }).optional(),
 });
 
 /** What safety-sensitive steps need to know about an Ingredient, and where that comes from. */

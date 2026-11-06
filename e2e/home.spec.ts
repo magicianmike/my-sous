@@ -35,7 +35,7 @@ test("the Ingredients page lists every Ingredient by kind", async ({ page }) => 
   const main = page.getByRole("main");
   await expect(main.getByRole("heading", { level: 2 }).first()).toHaveText("Herbs");
   const herbs = main.getByRole("region", { name: "Herbs" });
-  await expect(herbs.getByRole("link")).toHaveText(["Basil", "Cilantro"]);
+  await expect(herbs.getByRole("link")).toHaveText(["Basil", "Cilantro", "Mint", "Parsley", "Shiso"]);
 });
 
 test("the top nav reaches Ingredients and Cuisines on app screens, marks the current one, keeps the basket", async ({

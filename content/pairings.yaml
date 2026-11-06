@@ -1,111 +1,1414 @@
 # Every Pairing is stored once, in either order. The Kitchen shows it from both Ingredients.
 # Reason categories: contrast, aromatic bridge, texture, tradition. A reason can add a longer `detail`.
-# Optional: `cuisines` (ids from cuisines.yaml) and `citations` (each a `title` and optional `url`).
+# Every Pairing cites at least one source (`citations`, each a `title` and a `url`), and can list the
+# `cuisines` (ids from cuisines.yaml) it's attested in. Research notes are in docs/research/.
 
 - ingredients: [tomato, basil]
   cuisines: [southern-italian]
   reasons:
     - category: tradition
       note: Basil's sweet, peppery aroma often finishes ripe tomatoes in Southern Italian cooking.
-      detail: "Tear the basil over warm or raw tomatoes right before serving; its aroma fades with long cooking, while the tomato's acidity and sweetness carry it."
+      detail: "Many Neapolitan cooks put half the basil into the sauce and tear the rest over by hand at the end, so its fresh aroma comes through."
+  citations:
+    - title: Spaghetti al pomodoro fresco e basilico, Portanapoli
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_pomodoro_fresco.html
+    - title: Pasta alla Norma, la ricetta originale catanese, Rossella Neri, Dissapore
+      url: https://www.dissapore.com/ricette/pasta-alla-norma/
 
 - ingredients: [tomato, garlic]
-  cuisines: [southern-italian]
+  cuisines: [southern-italian, punjabi]
   reasons:
     - category: tradition
-      note: Garlic softened in oil is a common base for a quick tomato sauce.
-      detail: "Cook the garlic gently in oil until fragrant, then add the tomatoes; garlic that goes past golden can turn bitter, and that bitterness can run through the whole sauce."
+      note: Garlic softened in oil is a common base for a quick tomato sauce, and garlic cooks with tomato in many Punjabi curries.
+      detail: "Cook the garlic gently in oil until it's pale gold, then add the tomatoes; garlic browned at high heat turns bitter, and that bitterness can run through the whole sauce."
+  citations:
+    - title: Spaghetti al pomodoro fresco e basilico, Portanapoli
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_pomodoro_fresco.html
+    - title: How to Cook with Garlic, Cook's Illustrated
+      url: https://www.americastestkitchen.com/articles/2007-our-essential-guide-to-garlic
+    - title: Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+    - title: Dhaba Style Baingan Ka Bharta, Kunal Kapur
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
 
 - ingredients: [basil, garlic]
   cuisines: [ligurian]
   reasons:
     - category: tradition
       note: Pounded together with oil, they form the base of Ligurian pesto.
-      detail: "Raw garlic is sharp, so a small amount usually goes a long way against a large handful of basil. Many cooks pound the two in a mortar, and some find it gives a sweeter result than a blender."
+      detail: "Raw garlic is sharp, so a little goes a long way: the pesto consortium's recipe uses about one clove for every thirty basil leaves, pounded in a marble mortar."
+  citations:
+    - title: "Pesto genovese: ricetta ufficiale, Consorzio del Pesto Genovese, MangiareinLiguria"
+      url: https://www.mangiareinliguria.it/pesto-genovese/ricetta-pesto-genovese
 
 - ingredients: [garlic, lemon]
-  reasons:
-    - category: contrast
-      note: Lemon's sharpness cuts through the richness of garlic cooked in oil or butter.
-      detail: "Add the lemon off the heat or at the very end: its fresh sharpness fades with cooking, and it's what balances the rounder, sweeter taste of cooked garlic."
-
-- ingredients: [lemon, chicken-thigh]
-  reasons:
-    - category: contrast
-      note: Lemon's acid balances the rich fat of chicken thigh.
-      detail: "Squeeze lemon over the chicken once it's cooked, or deglaze the pan with it; zest added at the end brings aroma without more sourness."
-
-- ingredients: [garlic, chicken-thigh]
+  cuisines: [levantine]
   reasons:
     - category: tradition
-      note: Whole garlic cloves roast alongside chicken thighs in the same pan, turning soft and mellow.
-      detail: "Unpeeled cloves can go in for the whole roast and turn soft and sweet; chopped garlic burns faster, so add it in the last few minutes."
+      note: Garlic and lemon juice season the tahini sauces served with Levantine kafta, fried cauliflower and mutabbal.
+  citations:
+    - title: Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+    - title: Fried Cauliflower with Tahini Sauce, Hadia Zebib, Hadia's Lebanese Cuisine
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fried-cauliflower-tahini-sauce/
+    - title: Mutabbal Beitinjan (Eggplant Mutabal), Dima Sharif
+      url: https://www.dimasharif.com/recipes/eggplant-mutabal/
+
+- ingredients: [lemon, chicken-thigh]
+  cuisines: [punjabi, japanese]
+  reasons:
+    - category: tradition
+      note: Lemon juice goes into the tandoori marinade for chicken thighs, and lemon wedges are served with Japanese karaage.
+      detail: "In a marinade, lemon is mixed with thick yogurt and spices; at the table, a squeeze over fried chicken freshens it."
+  citations:
+    - title: Tandoori Chicken, Izzah Cheema, Tea for Turmeric
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+    - title: Karaage, Just One Cookbook
+      url: https://www.justonecookbook.com/karaage/
+
+- ingredients: [garlic, chicken-thigh]
+  cuisines: [punjabi, japanese]
+  reasons:
+    - category: tradition
+      note: Garlic seasons chicken thigh in Punjabi tandoori marinades and Japanese karaage, and whole cloves roast soft beside it.
+      detail: "Unpeeled cloves can roast with the chicken for the whole time and turn soft and sweet; chopped garlic burns faster, so add it in the last few minutes."
+  citations:
+    - title: Chicken Vesuvio, America's Test Kitchen
+      url: https://www.americastestkitchen.com/recipes/11170-chicken-vesuvio
+    - title: Tandoori Chicken, Izzah Cheema, Tea for Turmeric
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+    - title: Karaage, Just One Cookbook
+      url: https://www.justonecookbook.com/karaage/
 
 - ingredients: [lime, cilantro]
   reasons:
     - category: tradition
-      note: Usually added together at the end, as in many salsas, to brighten a dish.
-      detail: "Both are usually added raw, off the heat, since cooking dulls cilantro's aroma and the fresh sharpness of lime juice."
+      note: Usually added together at the end, as in many Mexican salsas and ceviches, to brighten a dish.
+      detail: "Both are usually added raw, off the heat. Many Mexican salsas take a squeeze of lime only sometimes, so taste first."
+  citations:
+    - title: Salsa mexicana, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
+      url: https://laroussecocina.mx/palabra/salsa-mexicana/
+    - title: Cilantro, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
+      url: https://laroussecocina.mx/palabra/cilantro/
 
 - ingredients: [lime, chicken-thigh]
+  cuisines: [punjabi]
   reasons:
     - category: contrast
       note: Lime's acid sharpens rich, browned chicken thigh.
-      detail: "Lime can go into a marinade or over the cooked chicken; added at the end, its sharpness stands out more against the rich, browned skin."
+      detail: "Lime wedges are often served with tandoori chicken and with braised Mexican chicken, to squeeze on at the table."
+  citations:
+    - title: Tandoori Chicken, Izzah Cheema, Tea for Turmeric
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+    - title: Braised Oregano Chicken, Rick Bayless
+      url: https://www.rickbayless.com/recipe/oregano-chicken/
 
 - ingredients: [cilantro, chicken-thigh]
+  cuisines: [oaxacan, punjabi]
   reasons:
-    - category: contrast
-      note: Fresh, green cilantro lifts the deep savoury flavour of cooked chicken thigh.
-      detail: "Scatter the leaves and tender stems over the chicken after cooking; heat dulls cilantro's bright aroma quickly."
+    - category: tradition
+      note: Cilantro goes into Oaxacan mole verde with chicken, and it's scattered over tandoori chicken.
+      detail: "As a garnish, scatter the leaves and tender stems over the chicken after cooking."
+  citations:
+    - title: Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
+      url: https://laroussecocina.mx/palabra/mole-verde/
+    - title: Tandoori Chicken, Izzah Cheema, Tea for Turmeric
+      url: https://www.teaforturmeric.com/tandoori-chicken/
 
 - ingredients: [ginger, scallion]
   cuisines: [cantonese]
   reasons:
     - category: tradition
-      note: Sizzled with hot oil, they make a ginger-scallion sauce often served with poached chicken in Cantonese cooking.
-      detail: "Pour very hot oil over finely chopped ginger and scallion with a pinch of salt; the heat takes the raw edge off both and releases their aroma into the oil."
+      note: Minced together with oil and salt, they make the ginger-scallion sauce served with poached chicken in Cantonese cooking.
+      detail: "Many cooks mix the raw ginger and scallion with oil, which is the older way; others pour sizzling oil over them, which softens their raw edge."
+  citations:
+    - title: Cantonese Raw Ginger Scallion Oil, The Woks of Life
+      url: https://thewoksoflife.com/raw-ginger-scallion-oil/
+    - title: Ginger Scallion Oil with Chilies, The Woks of Life
+      url: https://thewoksoflife.com/ginger-scallion-oil-with-chilies/
+    - title: Cantonese Poached Chicken (Bai Qie Ji), The Woks of Life
+      url: https://thewoksoflife.com/cantonese-poached-chicken-w-ginger-scallion-oil-bai-qie-ji/
 
 - ingredients: [ginger, garlic]
+  cuisines: [cantonese, punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: Often cooked together at the start of a stir-fry or a curry to season the oil.
+      detail: "Add them to the oil over moderate heat and stir for a few seconds until fragrant; they burn quickly, and burnt, they turn bitter."
+  citations:
+    - title: Choy Sum with Garlic, Made With Lau
+      url: https://www.madewithlau.com/recipes/choy-sum-with-garlic
+    - title: Bok Choy Stir-fry, The Woks of Life
+      url: https://thewoksoflife.com/stir-fried-bok-choy-recipe/
+    - title: Dhaba Style Baingan Ka Bharta, Kunal Kapur
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+    - title: Stovetop Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+
+- ingredients: [scallion, chicken-thigh]
   cuisines: [cantonese]
   reasons:
     - category: tradition
-      note: Often cooked together at the start of a stir-fry to season the oil.
-      detail: "Chop them finely and add them to hot oil for a few seconds before the other ingredients; they burn quickly, so keep them moving."
-
-- ingredients: [scallion, chicken-thigh]
-  reasons:
-    - category: contrast
-      note: Raw scallion's sharp bite contrasts with tender, rich chicken thigh.
-      detail: "Use thinly sliced green tops raw over the finished chicken; the white parts can cook alongside it for a gentler onion flavour."
+      note: Scallions go into the poaching water for Cantonese poached chicken, and into the ginger-scallion sauce served with it.
+      detail: "Use the thinly sliced green tops raw over the finished chicken; the white parts can cook alongside it for a gentler onion flavour."
+  citations:
+    - title: Cantonese Poached Chicken (Bai Qie Ji), The Woks of Life
+      url: https://thewoksoflife.com/cantonese-poached-chicken-w-ginger-scallion-oil-bai-qie-ji/
 
 - ingredients: [ginger, chicken-thigh]
+  cuisines: [cantonese, punjabi, japanese]
   reasons:
-    - category: contrast
-      note: Ginger's clean heat cuts the richness of chicken thigh in braises and soups.
-      detail: "Sliced ginger can simmer with the chicken and be lifted out; grated ginger added near the end gives a sharper, fresher heat."
+    - category: tradition
+      note: Ginger seasons chicken in Cantonese poached chicken, Punjabi tandoori marinades and Japanese karaage.
+      detail: "Sliced ginger can simmer with the chicken and be lifted out; grated ginger in a marinade gives a sharper, fresher heat."
+  citations:
+    - title: Cantonese Poached Chicken (Bai Qie Ji), The Woks of Life
+      url: https://thewoksoflife.com/cantonese-poached-chicken-w-ginger-scallion-oil-bai-qie-ji/
+    - title: Tandoori Chicken, Izzah Cheema, Tea for Turmeric
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+    - title: Karaage, Just One Cookbook
+      url: https://www.justonecookbook.com/karaage/
 
 - ingredients: [chile, lime]
+  cuisines: [oaxacan]
   reasons:
     - category: contrast
       note: Lime's acid sharpens and balances the heat of fresh chile.
-      detail: "Taste as you go: many cooks find a squeeze of lime helps balance a dish that's turned out hotter than they meant."
+      detail: "In Oaxaca, strips of chile de agua are often cured in lime juice and served over moles; across Mexico, lime, salt and chile powder go over fruit and vegetables."
+  citations:
+    - title: Chile de agua, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
+      url: https://laroussecocina.mx/palabra/chile-de-agua/
+    - title: Limón, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
+      url: https://laroussecocina.mx/palabra/limon/
 
 - ingredients: [chile, garlic]
+  cuisines: [southern-italian, sichuan, punjabi]
+  reasons:
+    - category: tradition
+      note: Warmed together in oil, they're the base of aglio, olio e peperoncino, and of many Sichuan and Punjabi dishes.
+      detail: "Warm sliced garlic and chile in olive oil over very low heat; the garlic should colour lightly, never burn, and the oil carries both flavours through the pasta."
+  citations:
+    - title: Spaghetti aglio, olio e peperoncino, Turismo Roma
+      url: https://www.turismoroma.it/it/page/spaghetti-aglio-olio-e-peperoncino-0
+    - title: Spaghetti aglio, olio e peperoncino, Portanapoli
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_aglio_e_olio.html
+    - title: Gong Bao Chicken with Peanuts (Fuchsia Dunlop), The Splendid Table
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: Dhaba Style Baingan Ka Bharta, Kunal Kapur
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+
+- ingredients: [chile, cilantro]
+  cuisines: [oaxacan, punjabi]
+  reasons:
+    - category: tradition
+      note: Chopped fresh, they're often paired in salsas and chutneys.
+      detail: "In Oaxacan salsa verde, they're mixed with chopped onion; in Punjabi green raita, they're blended into yogurt with mint."
+  citations:
+    - title: Salsa verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina
+      url: https://laroussecocina.mx/palabra/salsa-verde/
+    - title: Mint Raita, Izzah Cheema, Tea for Turmeric
+      url: https://www.teaforturmeric.com/cilantro-mint-raita-dahi-pudina-chutney/
+
+# Sichuan, Japanese home cooking and Cantonese (#17; research in docs/research/0017-sichuan-japanese-cantonese.md)
+
+- ingredients: [sichuan-pepper, chile]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: Together they make mala, the numbing-and-hot taste of much Sichuan cooking.
+      detail: "The pepper's tingle softens the chile's burn and makes it last, so the heat reads as layered rather than harsh. Many cooks fry both in oil at the start, taking care not to scorch them."
+  citations:
+    - title: Sichuan Peppercorns, The Woks of Life
+      url: https://thewoksoflife.com/sichuan-peppercorns/
+    - title: "'The Food of Sichuan': how a British writer brought the flavours of provincial China to the world, The National"
+      url: https://www.thenationalnews.com/lifestyle/food/the-food-of-sichuan-how-a-british-writer-brought-the-flavours-of-provincial-china-to-the-world-1.1028035
+
+- ingredients: [sichuan-pepper, chicken-thigh]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: In Chongqing chicken, crisp-fried pieces of chicken are tossed with whole Sichuan pepper and a heap of dried chiles.
+      detail: "Thigh stays juicy through the double cooking. The pepper goes into the oil with the chiles near the end, only long enough to turn fragrant."
+  citations:
+    - title: Chongqing Chicken (La Zi Ji), The Woks of Life
+      url: https://thewoksoflife.com/chongqing-chicken/
+
+- ingredients: [sichuan-pepper, doubanjiang]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: Mapo tofu is built on chile bean paste and finished with ground Sichuan pepper.
+      detail: "The paste goes in early, fried until the oil turns red; the pepper goes on at the end, freshly ground, so its aroma is the first thing you notice."
+  citations:
+    - title: Fuchsia Dunlop's mapo tofu, SBS Food
+      url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+
+- ingredients: [sichuan-pepper, black-vinegar]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: Sichuan cold dressings often combine black vinegar's malty sourness with ground roasted Sichuan pepper.
+      detail: "There's no single recipe for these dressings, and every cook balances them differently; start with a little pepper and add more to taste."
+  citations:
+    - title: Fuchsia Dunlop's Cold-dressed Chicken, Sous Chef
+      url: https://www.souschef.co.uk/blogs/the-bureau-of-taste/cold-dressed-chicken
+    - title: "Fuchsia Dunlop: Sichuan food is all about balance, not battering your palate with heat, The Irish News"
+      url: https://www.irishnews.com/lifestyle/2019/11/09/news/fuchsia-dunlop-sichuan-food-is-all-about-balance-not-battering-your-palate-with-heat-1758271/
+
+- ingredients: [doubanjiang, pork]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: In twice-cooked pork, boiled, sliced pork is stir-fried with chile bean paste until its fat turns the paste red and glossy.
+      detail: "Fry the pork first so some fat renders, then push it aside and fry the paste in that fat before tossing them together."
+  citations:
+    - title: Twice-Cooked Pork (Fuchsia Dunlop), NPR via VPM
+      url: https://www.vpm.org/npr-news/2008-05-02/twice-cooked-pork
+
+- ingredients: [doubanjiang, eggplant]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: In fish-fragrant eggplant, the soft fried eggplant soaks up a sauce of chile bean paste fried in oil.
+      detail: "Eggplant drinks oil and sauce like a sponge, so it carries the paste's salty heat right through. Fry the eggplant until soft before it meets the sauce."
+  citations:
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+
+- ingredients: [doubanjiang, garlic]
+  cuisines: [sichuan]
+  reasons:
+    - category: aromatic bridge
+      note: Garlic usually goes into the oil straight after the chile bean paste, deepening the base of the sauce.
+      detail: "Add the garlic once the oil has turned red, and keep the heat moderate; both burn if the pan is too hot."
+  citations:
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+    - title: Fuchsia Dunlop's mapo tofu, SBS Food
+      url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+
+- ingredients: [doubanjiang, ginger]
+  cuisines: [sichuan]
+  reasons:
+    - category: aromatic bridge
+      note: Ginger fried in the reddened bean-paste oil adds a warm, fresh edge to its salty depth.
+      detail: "Use it finely chopped, alongside garlic, and fry only until fragrant before the liquid goes in."
+  citations:
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+    - title: Fuchsia Dunlop's mapo tofu, SBS Food
+      url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+
+- ingredients: [doubanjiang, scallion]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: Scallions simmer in the chile bean sauce of mapo tofu, and their green tops finish fish-fragrant dishes.
+      detail: "Their mild, sweet onion flavour softens the paste's saltiness; added at the end, the greens stay bright and fresh."
+  citations:
+    - title: Fuchsia Dunlop's mapo tofu, SBS Food
+      url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+
+- ingredients: [doubanjiang, black-vinegar]
+  cuisines: [sichuan]
+  reasons:
+    - category: contrast
+      note: Black vinegar's soft sourness balances the salty chile bean paste in fish-fragrant sauce.
+      detail: "Fish-fragrant sauce is a classic Sichuan balance of salty, hot, sweet and sour; the vinegar goes in last, so it stays sharp."
+  citations:
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+
+- ingredients: [black-vinegar, eggplant]
+  cuisines: [sichuan]
+  reasons:
+    - category: contrast
+      note: A splash of black vinegar at the end sharpens rich, oil-soft eggplant.
+      detail: "Stir it in briefly and take the pan off the heat; cooked longer, the vinegar's edge fades."
+  citations:
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+
+- ingredients: [black-vinegar, chile]
+  cuisines: [sichuan]
+  reasons:
+    - category: contrast
+      note: In Sichuan dressings and gong bao sauce, black vinegar's sourness rounds out chile heat.
+      detail: "Sour and hot sharpen each other; in a dressing, chile oil and vinegar are often used in about equal measure, adjusted to taste."
+  citations:
+    - title: Gong Bao Chicken with Peanuts (Fuchsia Dunlop), The Splendid Table
+      url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+    - title: "Fuchsia Dunlop: Sichuan food is all about balance, not battering your palate with heat, The Irish News"
+      url: https://www.irishnews.com/lifestyle/2019/11/09/news/fuchsia-dunlop-sichuan-food-is-all-about-balance-not-battering-your-palate-with-heat-1758271/
+
+- ingredients: [black-vinegar, garlic]
+  cuisines: [sichuan]
+  reasons:
+    - category: tradition
+      note: Both go into fish-fragrant sauce, the garlic fried at the start and the vinegar stirred in at the end.
+  citations:
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+
+- ingredients: [eggplant, garlic]
+  cuisines: [sichuan, levantine, punjabi]
+  reasons:
+    - category: tradition
+      note: Garlic seasons eggplant in Sichuan fish-fragrant eggplant, Levantine mutabbal and Punjabi baingan bharta.
+      detail: "\"Fish-fragrant\" names the seasonings once used for fish (pickled chiles, ginger, garlic and scallions), not fish itself."
+  citations:
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+    - title: "Mutabbal Beitinjan (Eggplant Mutabal), Dima Sharif"
+      url: https://www.dimasharif.com/recipes/eggplant-mutabal/
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+
+- ingredients: [eggplant, ginger]
+  cuisines: [japanese, sichuan, punjabi]
+  reasons:
+    - category: tradition
+      note: Grilled, peeled eggplant (yaki nasu) is usually eaten with grated ginger, bonito flakes and soy sauce.
+      detail: "Ginger's fresh heat lifts the soft, smoky flesh. Peel the eggplant while it's hot, and add the ginger raw at the table."
+  citations:
+    - title: Grilled Japanese Eggplant (Yaki Nasu), RecipeTin Japan
+      url: https://japan.recipetineats.com/grilled-japanese-eggplant-yaki-nasu/
+    - title: Fish-fragrant aubergines, by Fuchsia Dunlop, The Caterer
+      url: https://www.thecaterer.com/news/fish-fragrant-aubergines-by-fuschia-dunlop
+    - title: "Baingan Bharta, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/baingan-bharta/
+
+- ingredients: [miso, eggplant]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: Nasu dengaku is eggplant grilled under a sweet miso glaze.
+      detail: "Eggplant's mild, soft flesh takes the salty-sweet glaze well; spread it thinly, or the dish turns salty."
+  citations:
+    - title: Miso Glazed Eggplant, Just One Cookbook
+      url: https://www.justonecookbook.com/miso-glazed-eggplant/
+    - title: 白味噌 (white miso), にっぽん伝統食図鑑, Ministry of Agriculture, Forestry and Fisheries of Japan
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/traditional-foods/menu/siromiso.html
+
+- ingredients: [miso, salmon]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: Salmon is simmered in miso hot pot (Ishikari nabe) or marinated in miso and grilled.
+      detail: "Miso's salty depth suits the fish's richness. For grilling, a few hours in the marinade is enough; overnight makes it too salty."
+  citations:
+    - title: Ishikarinabe (Ishikari hot pot), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan
+      url: https://www.maff.go.jp/e/policies/market/k_ryouri/search_menu/565/index.html
+    - title: Miso Salmon, Just One Cookbook
+      url: https://www.justonecookbook.com/miso-salmon/
+
+- ingredients: [miso, pork]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: Tonjiru is pork and vegetables simmered in miso soup.
+      detail: "Fatty pork belly enriches the broth, and the miso goes in at the end, off the boil, so its aroma stays."
+  citations:
+    - title: Tonjiru, Just One Cookbook
+      url: https://www.justonecookbook.com/tonjiru/
+
+- ingredients: [miso, scallion]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: Fresh sliced scallion is the usual finish for a miso soup, a sharp green note over its savoury depth.
+  citations:
+    - title: Tonjiru, Just One Cookbook
+      url: https://www.justonecookbook.com/tonjiru/
+
+- ingredients: [miso, ginger]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: Ginger added at the end of a miso soup brings a fresh, peppery bite to its mellow savouriness.
+  citations:
+    - title: Tonjiru, Just One Cookbook
+      url: https://www.justonecookbook.com/tonjiru/
+
+- ingredients: [miso, rice-vinegar]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: Mixed with a little sugar, they make sumiso, a sweet-sour dressing for vegetables and seafood.
+      detail: "The vinegar lightens the miso's weight, and the miso gives the vinegar body; whisk until smooth and adjust the sugar to taste."
+  citations:
+    - title: Asparagus with Miso Dressing, Just One Cookbook
+      url: https://www.justonecookbook.com/asparagus-with-miso-dressing/
+
+- ingredients: [pork, ginger]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: In shogayaki, a common Japanese home dish, thin slices of pork are pan-fried in a ginger and soy sauce.
+      detail: "Ginger's warmth cuts through the pork's fat. Grate it fresh, and add the sauce once the pork has browned."
+  citations:
+    - title: Ginger Pork (Shogayaki), Just One Cookbook
+      url: https://www.justonecookbook.com/ginger-pork-shogayaki/
+
+- ingredients: [pork, shiso]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: Thin pork is often rolled around shiso leaves, whose freshness lifts the rich meat.
+  citations:
+    - title: Ginger Pork Rolls with Eggplant, Just One Cookbook
+      url: https://www.justonecookbook.com/ginger-pork-rolls-with-eggplant/
+
+- ingredients: [pork, eggplant]
+  cuisines: [japanese]
+  reasons:
+    - category: texture
+      note: Thin pork wrapped around eggplant gives a crisp, browned outside to the soft, silky inside.
+      detail: "In Japanese home cooking the rolls are usually glazed with a sweet ginger and soy sauce, often with a shiso leaf inside."
+  citations:
+    - title: Ginger Pork Rolls with Eggplant, Just One Cookbook
+      url: https://www.justonecookbook.com/ginger-pork-rolls-with-eggplant/
+
+- ingredients: [shiso, eggplant]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: Fresh shiso lifts soft, rich eggplant, rolled in with it or shredded over miso-glazed eggplant.
+  citations:
+    - title: Ginger Pork Rolls with Eggplant, Just One Cookbook
+      url: https://www.justonecookbook.com/ginger-pork-rolls-with-eggplant/
+    - title: Miso Glazed Eggplant, Just One Cookbook
+      url: https://www.justonecookbook.com/miso-glazed-eggplant/
+
+- ingredients: [shiso, salmon]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: Shiso's bright, herbal edge cuts the richness of fatty salmon.
+      detail: "Shred it over grilled salmon or tuck it into salmon onigiri; it's best raw, added at the end."
+  citations:
+    - title: What Is Shiso And How Is It Used?, Just One Cookbook
+      url: https://www.justonecookbook.com/shiso-perilla/
+
+- ingredients: [shiso, garlic]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: Shiso leaves and sliced garlic steeped in soy sauce make a popular Japanese home condiment.
+      detail: "Dry the leaves well, use clean utensils, and keep it in the fridge; it lasts up to two months."
+  citations:
+    - title: Shiso Garlic Soy Sauce, Just One Cookbook
+      url: https://www.justonecookbook.com/shiso-garlic-soy-sauce/
+
+- ingredients: [salmon, rice-vinegar]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: In nanbanzuke, fried salmon goes into a rice-vinegar marinade, which cuts its richness.
+      detail: "Put the salmon into the marinade as soon as it's out of the oil, so it soaks the marinade up; it's usually served chilled."
+  citations:
+    - title: Salmon Nanbanzuke, Just One Cookbook
+      url: https://www.justonecookbook.com/salmon-nanbanzuke/
+
+- ingredients: [salmon, onion]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: Onion goes into Ishikari nabe and is laid over salmon nanbanzuke.
+  citations:
+    - title: Ishikarinabe (Ishikari hot pot), Our Regional Cuisines, Ministry of Agriculture, Forestry and Fisheries of Japan
+      url: https://www.maff.go.jp/e/policies/market/k_ryouri/search_menu/565/index.html
+    - title: Salmon Nanbanzuke, Just One Cookbook
+      url: https://www.justonecookbook.com/salmon-nanbanzuke/
+
+- ingredients: [rice-vinegar, onion]
+  cuisines: [japanese]
+  reasons:
+    - category: contrast
+      note: Thinly sliced onion softens in a rice-vinegar marinade, which tames its bite.
+  citations:
+    - title: Salmon Nanbanzuke, Just One Cookbook
+      url: https://www.justonecookbook.com/salmon-nanbanzuke/
+
+- ingredients: [rice-vinegar, ginger]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: Gari, the pickled ginger served with sushi, is young ginger pickled in sweetened rice vinegar.
+      detail: "Young ginger is thin-skinned and mild enough to slice paper-thin; the pickle is eaten between bites to refresh the palate."
+  citations:
+    - title: Pickled Ginger (Gari), Just One Cookbook
+      url: https://www.justonecookbook.com/pickled-ginger/
+
+- ingredients: [pork, rice-vinegar]
+  cuisines: [cantonese]
+  reasons:
+    - category: contrast
+      note: Cantonese sweet and sour pork balances crisp fried pork with a rice-vinegar sauce.
+      detail: "Some Cantonese chefs use only white rice vinegar here, for its low acidity, so the sauce stays bright rather than harsh."
+  citations:
+    - title: Sweet and sour pork, Tony Tan, Gourmet Traveller
+      url: https://www.gourmettraveller.com.au/recipe/mains/sweet-and-sour-pork-14234/
+
+- ingredients: [pork, garlic]
+  cuisines: [cantonese, oaxacan]
+  reasons:
+    - category: tradition
+      note: "Garlic seasons pork in the marinade for Cantonese char siu and in the chile paste for Oaxacan cecina."
+  citations:
+    - title: Chinese BBQ Pork (Char Siu), The Woks of Life
+      url: https://thewoksoflife.com/chinese-bbq-pork-cha-siu/
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+    - title: "Oaxacan Pork Picadillo, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-pork-picadillo/
+
+- ingredients: [pork, scallion]
+  cuisines: [sichuan, japanese, oaxacan]
+  reasons:
+    - category: contrast
+      note: "Scallion's sharp, green freshness lifts rich pork: stir-fried with it, scattered over tonjiru, or grilled beside Oaxacan cecina."
+  citations:
+    - title: Twice-Cooked Pork (Fuchsia Dunlop), NPR via VPM
+      url: https://www.vpm.org/npr-news/2008-05-02/twice-cooked-pork
+    - title: Tonjiru, Just One Cookbook
+      url: https://www.justonecookbook.com/tonjiru/
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+
+# Levantine and Punjabi (#17; research in docs/research/0017-levantine-punjabi.md)
+
+- ingredients: [parsley, mint]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Finely cut parsley and mint together make up most of Lebanese tabbouleh, with only a little bulgur."
+      detail: "Cut both gently with a sharp knife rather than chopping them to a pulp; bruised herbs darken as soon as the dressing goes on."
+  citations:
+    - title: "Tabbouleh, Anissa Helou, Pilot Guides"
+      url: https://www.pilotguides.com/recipes/lebanon-recipes-tabbouleh/
+    - title: "Chopping parsley for tabbuleh, Anissa Helou"
+      url: https://anissahelou.substack.com/p/chopping-parsley-for-tabbuleh
+
+- ingredients: [parsley, tomato]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Diced firm tomatoes and parsley form the body of tabbouleh."
+      detail: "Dice the tomatoes into small cubes without crushing them, so they stay firm and don't flood the salad."
+  citations:
+    - title: "Tabbouleh, Anissa Helou, Pilot Guides"
+      url: https://www.pilotguides.com/recipes/lebanon-recipes-tabbouleh/
+    - title: "Chopping parsley for tabbuleh, Anissa Helou"
+      url: https://anissahelou.substack.com/p/chopping-parsley-for-tabbuleh
+
+- ingredients: [parsley, lemon]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Lemon juice dresses tabbouleh and sharpens the green, peppery parsley."
+      detail: "Dress it close to serving, with good olive oil; the lemon softens the herbs as it sits."
+  citations:
+    - title: "Chopping parsley for tabbuleh, Anissa Helou"
+      url: https://anissahelou.substack.com/p/chopping-parsley-for-tabbuleh
+    - title: "Tabbouleh, Anissa Helou, Pilot Guides"
+      url: https://www.pilotguides.com/recipes/lebanon-recipes-tabbouleh/
+
+- ingredients: [parsley, scallion]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Thinly sliced scallions go into tabbouleh with the parsley, keeping it crisp."
+  citations:
+    - title: "Chopping parsley for tabbuleh, Anissa Helou"
+      url: https://anissahelou.substack.com/p/chopping-parsley-for-tabbuleh
+    - title: "Tabbouleh, Anissa Helou, Pilot Guides"
+      url: https://www.pilotguides.com/recipes/lebanon-recipes-tabbouleh/
+
+- ingredients: [parsley, lamb]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Chopped parsley freshens rich ground lamb in Palestinian kafta."
+      detail: "Many cooks use beef, lamb or a mix; the parsley is chopped finely and worked into the meat with onion and spices."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [parsley, onion]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Chopped onion and parsley season Palestinian kafta together."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [parsley, sumac]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Parsley and a last sprinkle of sumac finish musakhan."
+  citations:
+    - title: "Sami Tamimi's 'Falastin' Is an Ode to the Complex Food and History of Palestine, Mother Jones"
+      url: https://www.motherjones.com/food/2020/08/sami-tamimis-falastin-is-an-ode-to-the-complex-food-and-history-of-palestine/
+
+- ingredients: [mint, tomato]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Fresh mint lifts ripe tomatoes in Palestinian bread salads and in tabbouleh."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+    - title: "Tabbouleh, Anissa Helou, Pilot Guides"
+      url: https://www.pilotguides.com/recipes/lebanon-recipes-tabbouleh/
+
+- ingredients: [mint, yogurt]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: contrast
+      note: "Cool, sharp mint and tangy yogurt are a common pair, from Levantine yogurt sauces to Punjabi raita."
+      detail: "In Levantine cooking, mint oil is often spooned over a warm yogurt sauce; in raita, mint is blended in raw with cilantro and green chile."
+  citations:
+    - title: "Shish Barak: Lamb Dumplings in Yogurt Sauce with Mint Oil, Reem Assil, TASTE"
+      url: https://tastecooking.com/recipes/shish-barak-lamb-dumplings-in-yogurt-sauce-with-mint-oil/
+    - title: "Cauliflower and cumin fritters with mint yoghurt, Sami Tamimi and Tara Wigley, ckbk"
+      url: https://app.ckbk.com/recipe/fala57758c02s001r007/cauliflower-and-cumin-fritters-with-mint-yoghurt
+    - title: "Mint Raita, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/cilantro-mint-raita-dahi-pudina-chutney/
+
+- ingredients: [mint, cilantro]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Mint and cilantro are blended together into the green raita served with kebabs and biryani."
+  citations:
+    - title: "Mint Raita, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/cilantro-mint-raita-dahi-pudina-chutney/
+
+- ingredients: [mint, lamb]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Mint's cool sharpness cuts the richness of lamb, as in mint oil over lamb dumplings in yogurt."
+  citations:
+    - title: "Shish Barak: Lamb Dumplings in Yogurt Sauce with Mint Oil, Reem Assil, TASTE"
+      url: https://tastecooking.com/recipes/shish-barak-lamb-dumplings-in-yogurt-sauce-with-mint-oil/
+
+- ingredients: [mint, eggplant]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Fresh mint brightens fried eggplant, as when it's scattered over eggplant and meatballs on hummus."
+  citations:
+    - title: "Sami Tamimi's 'Falastin' Is an Ode to the Complex Food and History of Palestine, Mother Jones"
+      url: https://www.motherjones.com/food/2020/08/sami-tamimis-falastin-is-an-ode-to-the-complex-food-and-history-of-palestine/
+
+- ingredients: [mint, chile]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Green chile and mint season raita together, the mint cooling the chile's heat."
+  citations:
+    - title: "Mint Raita, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/cilantro-mint-raita-dahi-pudina-chutney/
+
+- ingredients: [sumac, onion]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Onions cooked slowly in olive oil with plenty of sumac are the heart of musakhan."
+      detail: "Cook the onions soft but pale rather than browned, then stir in the sumac so it colours them deep red."
+  citations:
+    - title: "Ramadan's nightly meals bring together friends, family, and nostalgia, Reem Kassis, The Philadelphia Inquirer"
+      url: https://www.inquirer.com/food/ramadan-recipes-reem-kassis-20220407.html
+    - title: "Palestinian cookbook celebrates a culture without a country, PBS NewsHour"
+      url: https://www.pbs.org/newshour/show/palestinian-cookbook-celebrates-a-culture-without-a-country
+    - title: "Sami Tamimi's 'Falastin' Is an Ode to the Complex Food and History of Palestine, Mother Jones"
+      url: https://www.motherjones.com/food/2020/08/sami-tamimis-falastin-is-an-ode-to-the-complex-food-and-history-of-palestine/
+
+- ingredients: [sumac, chicken-thigh]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Sumac's tart, fruity sourness cuts the richness of roast chicken in musakhan."
+      detail: "Rub the chicken with sumac before roasting, and sprinkle more over it to serve."
+  citations:
+    - title: "Ramadan's nightly meals bring together friends, family, and nostalgia, Reem Kassis, The Philadelphia Inquirer"
+      url: https://www.inquirer.com/food/ramadan-recipes-reem-kassis-20220407.html
+    - title: "Palestinian cookbook celebrates a culture without a country, PBS NewsHour"
+      url: https://www.pbs.org/newshour/show/palestinian-cookbook-celebrates-a-culture-without-a-country
+
+- ingredients: [sumac, cumin]
+  cuisines: [levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Sumac and cumin are cooked into musakhan's onions and sprinkled together over mutabbal."
+  citations:
+    - title: "Ramadan's nightly meals bring together friends, family, and nostalgia, Reem Kassis, The Philadelphia Inquirer"
+      url: https://www.inquirer.com/food/ramadan-recipes-reem-kassis-20220407.html
+    - title: "Mutabbal Beitinjan (Eggplant Mutabal), Dima Sharif"
+      url: https://www.dimasharif.com/recipes/eggplant-mutabal/
+
+- ingredients: [sumac, lemon]
+  cuisines: [levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Sumac and lemon juice, two kinds of sourness, dress fattoush together."
+  citations:
+    - title: "Fattoush, Eat Palestine"
+      url: https://eatpalestine.com/recipes/fattoush/
+    - title: "Mutabbal Beitinjan (Eggplant Mutabal), Dima Sharif"
+      url: https://www.dimasharif.com/recipes/eggplant-mutabal/
+
+- ingredients: [sumac, eggplant]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "A sprinkle of tart sumac brightens smoky, creamy mutabbal."
+  citations:
+    - title: "Mutabbal Beitinjan (Eggplant Mutabal), Dima Sharif"
+      url: https://www.dimasharif.com/recipes/eggplant-mutabal/
+
+- ingredients: [lamb, yogurt]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Tangy yogurt balances rich spiced lamb, as in lamb dumplings simmered in garlic-yogurt sauce."
+      detail: "Stabilise the yogurt with a little cornstarch before you heat it, and keep it at a gentle simmer."
+  citations:
+    - title: "Shish Barak: Lamb Dumplings in Yogurt Sauce with Mint Oil, Reem Assil, TASTE"
+      url: https://tastecooking.com/recipes/shish-barak-lamb-dumplings-in-yogurt-sauce-with-mint-oil/
+    - title: "Eggplant Fatteh, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/eggplant-fateh-fatet-batenjan-%D9%81%D8%AA%D8%A9-%D8%A8%D8%A7%D8%B0%D9%86%D8%AC%D8%A7%D9%86/
+
+- ingredients: [lamb, eggplant]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Spiced lamb and fried eggplant are layered under yogurt sauce in Palestinian fatteh."
+  citations:
+    - title: "Eggplant Fatteh, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/eggplant-fateh-fatet-batenjan-%D9%81%D8%AA%D8%A9-%D8%A8%D8%A7%D8%B0%D9%86%D8%AC%D8%A7%D9%86/
+
+- ingredients: [lamb, onion]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: tradition
+      note: "Onion is chopped into Levantine kafta and cooked down with the meat in Punjabi gobi gosht."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+    - title: "Gobi Gosht (Goat/Lamb and Cauliflower Curry), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/gobi-gosht/
+
+- ingredients: [lamb, cauliflower]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Gobi gosht slow-cooks goat or lamb with cauliflower, a common dish in Pakistani Punjab."
+      detail: "The cauliflower goes in once the meat is nearly tender, so it holds its shape."
+  citations:
+    - title: "Gobi Gosht (Goat/Lamb and Cauliflower Curry), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/gobi-gosht/
+
+- ingredients: [lamb, ginger]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Ginger's fresh heat cuts the richness of mutton karahi, cooked in and scattered over in fine strips."
+  citations:
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+
+- ingredients: [lamb, tomato]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Karahi cooks goat or lamb down in tomatoes until the sauce clings to the meat."
+  citations:
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+
+- ingredients: [lamb, garlic]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: tradition
+      note: "Garlic seasons lamb in Levantine kafta and in Punjabi karahi."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+
+- ingredients: [eggplant, lemon]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Lemon sharpens the smoky richness of mutabbal."
+  citations:
+    - title: "Mutabbal Beitinjan (Eggplant Mutabal), Dima Sharif"
+      url: https://www.dimasharif.com/recipes/eggplant-mutabal/
+
+- ingredients: [eggplant, yogurt]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: contrast
+      note: "Tangy yogurt balances smoky eggplant, spooned over fatteh or served beside baingan bharta."
+  citations:
+    - title: "Eggplant Fatteh, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/eggplant-fateh-fatet-batenjan-%D9%81%D8%AA%D8%A9-%D8%A8%D8%A7%D8%B0%D9%86%D8%AC%D8%A7%D9%86/
+    - title: "Baingan Bharta, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/baingan-bharta/
+
+- ingredients: [eggplant, onion]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Onion cooked in the tempering is the base of baingan bharta."
+      detail: "Add the spices before the onion browns, while it still has a bite."
+  citations:
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+    - title: "Baingan Bharta, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/baingan-bharta/
+
+- ingredients: [eggplant, tomato]
+  cuisines: [punjabi, southern-italian]
+  reasons:
+    - category: tradition
+      note: "Eggplant cooks down with tomato in Punjabi baingan bharta, and fried eggplant meets tomato sauce in Sicilian pasta alla Norma."
+  citations:
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+    - title: "Baingan Bharta, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/baingan-bharta/
+    - title: "Pasta alla Norma, la ricetta originale catanese, Rossella Neri, Dissapore"
+      url: https://www.dissapore.com/ricette/pasta-alla-norma/
+    - title: "The Essence of Sicily in a Dish: Pasta alla Norma, ITALY Magazine"
+      url: https://www.italymagazine.com/dual-language/essence-sicily-dish-pasta-alla-norma
+
+- ingredients: [eggplant, cumin]
+  cuisines: [punjabi, levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Cumin's toasty warmth suits smoky eggplant, sizzled for baingan bharta or sprinkled over mutabbal."
+  citations:
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+    - title: "Baingan Bharta, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/baingan-bharta/
+    - title: "Mutabbal Beitinjan (Eggplant Mutabal), Dima Sharif"
+      url: https://www.dimasharif.com/recipes/eggplant-mutabal/
+
+- ingredients: [eggplant, cilantro]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Fresh cilantro finishes baingan bharta, a bright note over the smoky eggplant."
+  citations:
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+    - title: "Baingan Bharta, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/baingan-bharta/
+
+- ingredients: [eggplant, cauliflower]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Fried cauliflower and eggplant are the most common vegetables layered into maqluba."
+  citations:
+    - title: "Maqluba (Palestinian one pot layered rice and vegetable torte), Sawsan Abu Farha, Chef in Disguise"
+      url: https://chefindisguise.com/2016/09/22/maqluba-palestinian-one-pot-layered-rice-and-vegetable-torte/
+    - title: "Maqluba, Eat Palestine"
+      url: https://eatpalestine.com/recipes/maqluba/
+
+- ingredients: [cumin, cauliflower]
+  cuisines: [punjabi, levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Cumin is the first flavour in Punjabi aloo gobi, and it seasons Palestinian cauliflower fritters."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Punjabi Aloo Gobi, Maunika Gowardhan"
+      url: https://maunikagowardhan.co.uk/cook-in-a-curry/punjabi-aloo-gobi/
+    - title: "Cauliflower and cumin fritters with mint yoghurt, Sami Tamimi and Tara Wigley, ckbk"
+      url: https://app.ckbk.com/recipe/fala57758c02s001r007/cauliflower-and-cumin-fritters-with-mint-yoghurt
+
+- ingredients: [cumin, yogurt]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Ground cumin seasons raita, its warmth rounding out the yogurt's tang."
+  citations:
+    - title: "Mint Raita, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/cilantro-mint-raita-dahi-pudina-chutney/
+
+- ingredients: [cumin, onion]
+  cuisines: [punjabi, levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Cumin and onion cook together at the start of many Punjabi dishes, and in musakhan's onions."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Ramadan's nightly meals bring together friends, family, and nostalgia, Reem Kassis, The Philadelphia Inquirer"
+      url: https://www.inquirer.com/food/ramadan-recipes-reem-kassis-20220407.html
+
+- ingredients: [cumin, chicken-thigh]
+  cuisines: [punjabi, levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Cumin gives earthiness to tandoori chicken and to musakhan's chicken."
+  citations:
+    - title: "Tandoori Chicken, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+    - title: "Ramadan's nightly meals bring together friends, family, and nostalgia, Reem Kassis, The Philadelphia Inquirer"
+      url: https://www.inquirer.com/food/ramadan-recipes-reem-kassis-20220407.html
+
+- ingredients: [cumin, garlic]
+  cuisines: [levantine]
+  reasons:
+    - category: aromatic bridge
+      note: "Garlic and cumin season Palestinian falafel together."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+
+- ingredients: [cumin, chile]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Cumin seeds and dried red chiles are often sizzled together in a tadka."
+      detail: "Let the cumin splutter and darken a shade, then add the next ingredient before the chiles scorch."
+  citations:
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+    - title: "Traditional Punjabi Recipes, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/punjabi-recipes/
+
+- ingredients: [onion, ginger]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Onion and ginger, usually with garlic, are a common base for Punjabi dishes."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+
+- ingredients: [onion, tomato]
+  cuisines: [punjabi, oaxacan]
+  reasons:
+    - category: tradition
+      note: "Onion and tomato cooked down together are the base of many Punjabi curries and of Oaxacan mole coloradito."
+  citations:
+    - title: "Traditional Punjabi Recipes, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/punjabi-recipes/
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+    - title: "Mole coloradito, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-coloradito/
+    - title: "Mole Coloradito with Runner Beans, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/mole-coloradito-with-runner-beans/
+
+- ingredients: [onion, chicken-thigh]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: tradition
+      note: "Musakhan's chicken roasts over sumac onions, and raw red onion is served with tandoori chicken."
+  citations:
+    - title: "Ramadan's nightly meals bring together friends, family, and nostalgia, Reem Kassis, The Philadelphia Inquirer"
+      url: https://www.inquirer.com/food/ramadan-recipes-reem-kassis-20220407.html
+    - title: "Tandoori Chicken, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+
+- ingredients: [cauliflower, ginger]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Ginger fried before the cauliflower goes in gives aloo gobi its warmth."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Punjabi Aloo Gobi, Maunika Gowardhan"
+      url: https://maunikagowardhan.co.uk/cook-in-a-curry/punjabi-aloo-gobi/
+
+- ingredients: [cauliflower, chile]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Green chiles and chile powder bring heat to mild, sweet cauliflower in aloo gobi."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Punjabi Aloo Gobi, Maunika Gowardhan"
+      url: https://maunikagowardhan.co.uk/cook-in-a-curry/punjabi-aloo-gobi/
+
+- ingredients: [cauliflower, garlic]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: tradition
+      note: "Garlic goes into the tahini sauce for Lebanese fried cauliflower and cooks into Punjabi aloo gobi."
+  citations:
+    - title: "Fried Cauliflower with Tahini Sauce, Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fried-cauliflower-tahini-sauce/
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Rice with Yoghurt, Roasted Cauliflower and Fried Garlic (Labaniet Alzahar), Sami Tamimi and Tara Wigley, The Happy Foodie"
+      url: https://thehappyfoodie.co.uk/recipes/rice-with-yoghurt-roasted-cauliflower-and-fried-garlic-labaniet-alzahar/
+
+- ingredients: [cauliflower, lemon]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: contrast
+      note: "Lemon sharpens fried cauliflower's tahini sauce and finishes aloo gobi."
+  citations:
+    - title: "Fried Cauliflower with Tahini Sauce, Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fried-cauliflower-tahini-sauce/
+    - title: "Punjabi Aloo Gobi, Maunika Gowardhan"
+      url: https://maunikagowardhan.co.uk/cook-in-a-curry/punjabi-aloo-gobi/
+
+- ingredients: [cauliflower, yogurt]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Tangy yogurt cools roasted cauliflower in Palestinian rice dishes, and it's served beside maqluba."
+  citations:
+    - title: "Rice with Yoghurt, Roasted Cauliflower and Fried Garlic (Labaniet Alzahar), Sami Tamimi and Tara Wigley, The Happy Foodie"
+      url: https://thehappyfoodie.co.uk/recipes/rice-with-yoghurt-roasted-cauliflower-and-fried-garlic-labaniet-alzahar/
+    - title: "Maqluba (Palestinian one pot layered rice and vegetable torte), Sawsan Abu Farha, Chef in Disguise"
+      url: https://chefindisguise.com/2016/09/22/maqluba-palestinian-one-pot-layered-rice-and-vegetable-torte/
+
+- ingredients: [yogurt, garlic]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: tradition
+      note: "Garlic is stirred into yogurt for Levantine sauces and Punjabi raita."
+      detail: "Raw garlic is sharp in yogurt, so start with a little; grated or crushed, it spreads evenly."
+  citations:
+    - title: "Shish Barak: Lamb Dumplings in Yogurt Sauce with Mint Oil, Reem Assil, TASTE"
+      url: https://tastecooking.com/recipes/shish-barak-lamb-dumplings-in-yogurt-sauce-with-mint-oil/
+    - title: "Eggplant Fatteh, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/eggplant-fateh-fatet-batenjan-%D9%81%D8%AA%D8%A9-%D8%A8%D8%A7%D8%B0%D9%86%D8%AC%D8%A7%D9%86/
+    - title: "Mint Raita, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/cilantro-mint-raita-dahi-pudina-chutney/
+
+- ingredients: [yogurt, chicken-thigh]
+  cuisines: [punjabi]
+  reasons:
+    - category: tradition
+      note: "Thick yogurt is the base of the tandoori marinade for chicken thighs and legs."
+      detail: "Thick yogurt coats the meat better. Marinate in the fridge, and don't reuse the marinade."
+  citations:
+    - title: "Tandoori Chicken, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+
+- ingredients: [yogurt, cilantro]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Cilantro is blended into yogurt for green raita."
+  citations:
+    - title: "Mint Raita, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/cilantro-mint-raita-dahi-pudina-chutney/
+
+- ingredients: [yogurt, lemon]
+  cuisines: [levantine, punjabi]
+  reasons:
+    - category: contrast
+      note: "Lemon juice sharpens yogurt in fatteh sauce and in tandoori marinade."
+  citations:
+    - title: "Eggplant Fatteh, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/eggplant-fateh-fatet-batenjan-%D9%81%D8%AA%D8%A9-%D8%A8%D8%A7%D8%B0%D9%86%D8%AC%D8%A7%D9%86/
+    - title: "Tandoori Chicken, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+
+- ingredients: [yogurt, ginger]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Ginger and garlic season the yogurt marinade for tandoori chicken."
+  citations:
+    - title: "Tandoori Chicken, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/tandoori-chicken/
+
+- ingredients: [tomato, chile]
+  cuisines: [levantine, punjabi, oaxacan]
+  reasons:
+    - category: contrast
+      note: "Green chile's heat sharpens sweet, ripe tomato in Palestinian bread salads and Punjabi karahi."
+  citations:
+    - title: "Recipes from The Palestinian Table, Reem Kassis, East Fork"
+      url: https://eastfork.com/pages/palestinian-table-recipes-reem-kassis
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+    - title: "Chile de agua, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/chile-de-agua/
+
+- ingredients: [ginger, tomato]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Ginger cooks down with tomato in karahi and baingan bharta."
+  citations:
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+    - title: "Dhaba Style Baingan Ka Bharta, Kunal Kapur"
+      url: https://www.chefkunalkapur.com/recipe/baingan-bharta/
+
+- ingredients: [ginger, cilantro]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Fine strips of ginger and fresh cilantro are a common finish for Punjabi and Pakistani curries."
+  citations:
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+    - title: "Punjabi Aloo Gobi, Maunika Gowardhan"
+      url: https://maunikagowardhan.co.uk/cook-in-a-curry/punjabi-aloo-gobi/
+
+- ingredients: [chile, ginger]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Fresh chiles and ginger go into the pan together in aloo gobi and karahi."
+  citations:
+    - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+      url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+
+- ingredients: [chile, lemon]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Palestinian shatta is sliced chiles preserved with lemon juice, served to cut through rich food."
+  citations:
+    - title: "Sami Tamimi's 'Falastin' Is an Ode to the Complex Food and History of Palestine, Mother Jones"
+      url: https://www.motherjones.com/food/2020/08/sami-tamimis-falastin-is-an-ode-to-the-complex-food-and-history-of-palestine/
+
+# Oaxacan and Southern Italian (#17; research in docs/research/0017-oaxacan-italian-safety.md)
+
+- ingredients: [tomatillo, garlic]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Garlic is ground with tomatillo and green chile for Oaxacan salsa verde."
+      detail: "Roasting the tomatillos and unpeeled garlic first softens the garlic's bite and adds sweetness to the tomatillos' sharp acidity."
+  citations:
+    - title: "Salsa verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-verde/
+    - title: "Roasted Tomatillo Salsa, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/roasted-tomatillo-salsa-2/
+
+- ingredients: [tomatillo, chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: contrast
+      note: "Tomatillo's tart acidity tames the heat of green chile in salsa verde."
+  citations:
+    - title: "Salsa verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-verde/
+    - title: "Qué nos aportan los tomates verdes, CONABIO"
+      url: https://www.biodiversidad.gob.mx/diversidad/alimentos/que-nos-aportan/N_tomates
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+
+- ingredients: [tomatillo, cilantro]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Chopped cilantro is stirred into Oaxacan tomatillo salsa."
+  citations:
+    - title: "Salsa verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-verde/
+    - title: "Roasted Tomatillo Salsa, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/roasted-tomatillo-salsa-2/
+
+- ingredients: [tomatillo, onion]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Raw chopped onion finishes Oaxacan salsa verde."
+      detail: "Rinse chopped raw onion under cold water before adding it, to take off its harshest edge."
+  citations:
+    - title: "Salsa verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-verde/
+    - title: "Roasted Tomatillo Salsa, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/roasted-tomatillo-salsa-2/
+
+- ingredients: [tomatillo, pork]
+  cuisines: [oaxacan]
+  reasons:
+    - category: contrast
+      note: "In Oaxaca's central valleys, tart tomatillo mole verde is usually cooked with rich pork."
+  citations:
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+    - title: "Filete de cerdo en mole verde de Oaxaca, Larousse Cocina"
+      url: https://laroussecocina.mx/receta/filete-de-cerdo-en-mole-verde-de-oaxaca/
+    - title: "Mole verde estilo Oaxaca, Secretaría de Agricultura y Desarrollo Rural"
+      url: https://www.gob.mx/agricultura/articulos/mole-verde-estilo-oaxaca
+
+- ingredients: [tomatillo, parsley]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Parsley is one of the herbs that turns Oaxacan tomatillo mole verde green."
+      detail: "The herbs are often blended in raw shortly before serving, so the sauce stays bright green."
+  citations:
+    - title: "Mole verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-verde/
+    - title: "Filete de cerdo en mole verde de Oaxaca, Larousse Cocina"
+      url: https://laroussecocina.mx/receta/filete-de-cerdo-en-mole-verde-de-oaxaca/
+    - title: "Mole verde estilo Oaxaca, Secretaría de Agricultura y Desarrollo Rural"
+      url: https://www.gob.mx/agricultura/articulos/mole-verde-estilo-oaxaca
+
+- ingredients: [zucchini, basil]
   cuisines: [southern-italian]
   reasons:
     - category: tradition
-      note: Warmed together in olive oil, they're usually the base of aglio, olio e peperoncino, a Southern Italian pasta.
-      detail: "Warm sliced garlic and chile in olive oil over low heat until the garlic is pale gold; the oil carries both flavours through the pasta."
+      note: "Fried zucchini, basil and cheese make spaghetti alla Nerano, from the Sorrento peninsula."
+      detail: "The zucchini are fried first; cheese and pasta water make the sauce creamy without any cream."
+  citations:
+    - title: "La vera storia degli spaghetti alla Nerano, Imma Galluccio, Storie di Napoli"
+      url: https://storienapoli.it/2022/10/01/spaghetti-alla-nerano-maria-grazia/
+    - title: "Spaghetti alla Nerano, storia, ricetta e falsi miti, Andrea Navarro, Napolike"
+      url: https://www.napolike.it/spaghetti-alla-nerano-storia-ricetta-falsi-miti
 
-- ingredients: [chile, cilantro]
-  reasons:
-    - category: tradition
-      note: Chopped fresh, they're often paired in salsas.
-      detail: "Chop them together with a little salt; the salt draws out juice and helps the two blend into a fresh, punchy mix."
-
-- ingredients: [chicken-thigh, gremolata]
+- ingredients: [zucchini, mint]
+  cuisines: [southern-italian]
   reasons:
     - category: contrast
-      note: Gremolata's fresh, sharp lift cuts through rich, slow-cooked chicken thigh.
-      detail: "Scatter it over the chicken right before serving; the lemon zest and raw garlic lose their edge if they sit in the heat for long."
+      note: "Fried zucchini are marinated with fresh mint and vinegar in Neapolitan zucchine alla scapece."
+      detail: "Slice them thin, dry them well and fry a few at a time, so they don't turn greasy."
+  citations:
+    - title: "Zucchine alla Scapece, Edward Behr, The Art of Eating"
+      url: https://artofeating.substack.com/p/zucchine-alla-scapece-summer-squash
+    - title: "Zucchine alla scapece: la ricetta napoletana, Fine Dining Lovers"
+      url: https://www.finedininglovers.it/esplora/ricette/zucchine-alla-scapece
+
+- ingredients: [zucchini, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Sliced garlic goes into the vinegar marinade for zucchine alla scapece."
+  citations:
+    - title: "Zucchine alla Scapece, Edward Behr, The Art of Eating"
+      url: https://artofeating.substack.com/p/zucchine-alla-scapece-summer-squash
+    - title: "Zucchine alla scapece: la ricetta napoletana, Fine Dining Lovers"
+      url: https://www.finedininglovers.it/esplora/ricette/zucchine-alla-scapece
+    - title: "Spaghetti alla Nerano, storia, ricetta e falsi miti, Andrea Navarro, Napolike"
+      url: https://www.napolike.it/spaghetti-alla-nerano-storia-ricetta-falsi-miti
+
+- ingredients: [zucchini, yogurt]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Stuffed zucchini are simmered in garlicky yogurt in Lebanese kousa bil laban."
+  citations:
+    - title: "Kousa Bil Laban (Lebanese Stuffed Zucchini in Yogurt), Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/blog/kousa-bil-laban/
+
+- ingredients: [zucchini, lamb]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Lebanese cooks stuff zucchini with rice and ground lamb or beef."
+  citations:
+    - title: "Kousa Bil Laban (Lebanese Stuffed Zucchini in Yogurt), Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/blog/kousa-bil-laban/
+
+- ingredients: [pork, chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Oaxacan cecina is thin-sliced pork coated in a dried-chile paste and grilled."
+  citations:
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+    - title: "Chileajo, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/chileajo/
+    - title: "Oaxacan Pork Picadillo, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-pork-picadillo/
+
+- ingredients: [pork, tomato]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Oaxacan picadillo and mole coloradito both cook pork in a tomato-based sauce."
+  citations:
+    - title: "Oaxacan Pork Picadillo, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-pork-picadillo/
+    - title: "Mole coloradito, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-coloradito/
+
+- ingredients: [pork, lime]
+  cuisines: [oaxacan]
+  reasons:
+    - category: contrast
+      note: "Lime is squeezed over grilled Oaxacan cecina at the table, cutting its richness."
+  citations:
+    - title: "Cecina oaxaqueña, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+
+- ingredients: [pork, cilantro]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "The pork version of Oaxacan mole amarillo usually includes cilantro."
+  citations:
+    - title: "Mole amarillo, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/mole-amarillo/
+
+- ingredients: [pork, onion]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Pork for Oaxacan moles is often simmered first with onion and garlic, and the broth goes into the sauce."
+  citations:
+    - title: "Mole Coloradito with Runner Beans, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/mole-coloradito-with-runner-beans/
+    - title: "Oaxacan Pork Picadillo, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-pork-picadillo/
+
+- ingredients: [onion, cilantro]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Chopped onion and cilantro are stirred together into Oaxacan salsa verde."
+  citations:
+    - title: "Salsa verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-verde/
+    - title: "Salsa mexicana, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-mexicana/
+
+- ingredients: [eggplant, basil]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Basil is never left out of pasta alla Norma, with its fried eggplant and tomato."
+  citations:
+    - title: "The Essence of Sicily in a Dish: Pasta alla Norma, ITALY Magazine"
+      url: https://www.italymagazine.com/dual-language/essence-sicily-dish-pasta-alla-norma
+    - title: "Pasta alla Norma, la ricetta originale catanese, Rossella Neri, Dissapore"
+      url: https://www.dissapore.com/ricette/pasta-alla-norma/
+
+- ingredients: [parsley, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "In Naples, pasta with garlic and oil is often finished with chopped parsley."
+  citations:
+    - title: "Spaghetti aglio, olio e peperoncino, Portanapoli"
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_aglio_e_olio.html
+    - title: "Spaghetti aglio, olio e peperoncino, Turismo Roma"
+      url: https://www.turismoroma.it/it/page/spaghetti-aglio-olio-e-peperoncino-0
+    - title: "Spaghetti con le vongole, Portanapoli"
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti-vongole.html

@@ -24,7 +24,7 @@
       accepts: heat
       required: false
   method:
-    - Season {protein} with salt and sear it in a little oil over medium-high heat until well browned and cooked through (poultry to 165°F / 74°C at the thickest point). Set it aside to rest.
+    - Season {protein} with salt and sear it in a little oil over medium-high heat until well browned and cooked through (at the thickest point, poultry to 165°F / 74°C; pork, lamb chops and fish to 145°F / 63°C). Set it aside to rest.
     - Pour off most of the fat, lower the heat and cook {aromatic} for about a minute, until fragrant.
     - Add a splash of water or stock and scrape up the browned bits as it bubbles and reduces a little.
     - Off the heat, stir in a knob of butter, then add {acid} a little at a time, tasting as you go.
@@ -54,5 +54,5 @@
   method:
     - Heat the oven to 425°F / 220°C.
     - Toss {protein} and {vegetable} with oil and salt, then spread them out on a sheet pan in a single layer.
-    - Tuck in {aromatic} and roast until {protein} is cooked through (poultry to 165°F / 74°C at the thickest point) and the edges are browned, usually 25 to 40 minutes.
+    - Tuck in {aromatic} and roast until {protein} is cooked through (at the thickest point, poultry to 165°F / 74°C; pork, lamb chops and fish to 145°F / 63°C) and the edges are browned, usually 25 to 40 minutes.
     - Finish with {acid} and scatter over {herb}.

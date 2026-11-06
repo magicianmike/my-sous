@@ -15,3 +15,19 @@
 - id: oaxacan
   name: Oaxacan
   description: The cooking of Oaxaca in southern Mexico, known for its moles.
+
+- id: levantine
+  name: Levantine
+  description: The cooking of the eastern Mediterranean coast and its hinterland, including Lebanon, Syria, Palestine and Jordan.
+
+- id: sichuan
+  name: Sichuan
+  description: The cooking of Sichuan province and Chongqing in south-western China, known for layered, numbing heat.
+
+- id: punjabi
+  name: Punjabi
+  description: The cooking of the Punjab region, divided between north-western India and north-eastern Pakistan.
+
+- id: japanese
+  name: Japanese home cooking
+  description: Everyday cooking in Japanese homes, usually rice with soup and a few small dishes.

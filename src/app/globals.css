@@ -129,6 +129,23 @@ ul {
   padding-block: var(--space-3);
 }
 
+/* The theme's sun and moon, at the end of the header; on a phone, on a row of their own. */
+.site-theme {
+  margin-inline-start: auto;
+}
+
+/*
+ * Wider than a phone, in the window's top-right corner rather than the page's: placed against the
+ * window, in the body's gutter, centred on the header's first row.
+ */
+@media (min-width: 32rem) {
+  .site-theme {
+    position: absolute;
+    top: calc(var(--space-3) - var(--space-1));
+    right: var(--space-4);
+  }
+}
+
 /* Ingredients and Cuisines, beside the wordmark; the current one underlined as well as marked. */
 .site-nav ul {
   display: flex;

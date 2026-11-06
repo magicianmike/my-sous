@@ -54,13 +54,20 @@ test.describe("touch targets on a phone", () => {
   }
 });
 
-for (const colorScheme of ["light", "dark"] as const) {
-  test.describe(`focus in the ${colorScheme} theme`, () => {
+// Each theme as the device sets it, and each as the Cook chooses it over the device's.
+for (const [colorScheme, chosen] of [
+  ["light", undefined],
+  ["dark", undefined],
+  ["light", "dark"],
+  ["dark", "light"],
+] as const) {
+  test.describe(`focus in the ${chosen ? `${chosen} theme, chosen on a ${colorScheme} device` : `${colorScheme} theme`}`, () => {
     test.skip(({ isMobile }) => isMobile, "keyboard focus is checked at desktop width");
     test.use({ colorScheme });
 
     for (const path of screens) {
       test(`${path}: every focused control shows the same ring, in the focus colour`, async ({ page }) => {
+        if (chosen) await page.addInitScript((theme) => localStorage.setItem("theme", theme), chosen);
         await open(page, path);
         const focusColour = await page.evaluate(() => {
           // Resolve the --focus token to the browser's rgb() form, as outlines report it.

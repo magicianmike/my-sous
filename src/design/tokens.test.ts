@@ -1,9 +1,20 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadKitchen } from "@/kitchen";
-import { contrastRatio, nonTextPairings, palettes, textPairings } from "./tokens";
+import { contrastRatio, nonTextPairings, palettes, textPairings, themeCss } from "./tokens";
 
 describe("design tokens", () => {
+  it("give the dark palette under the device's dark setting unless Light is chosen, and whenever Dark is", () => {
+    const css = themeCss();
+    const darkUnder = (selector: string) => css.includes(`${selector} { color-scheme: dark; --bg: ${palettes.dark.bg};`);
+
+    expect(css).toMatch(/@media \(prefers-color-scheme: dark\) \{ :root:not\(\[data-theme="light"\]\) \{ color-scheme: dark;/);
+    expect(darkUnder(':root:not([data-theme="light"])')).toBe(true);
+    expect(darkUnder(':root[data-theme="dark"]')).toBe(true);
+    expect(css).toContain(`:root[data-theme="dark"] .hue { --wash: var(--wash-dark)`);
+    expect(css.startsWith(`:root { color-scheme: light; --bg: ${palettes.light.bg};`)).toBe(true);
+  });
+
   it("are worked out the way WCAG does", () => {
     // Known values: black on white is 21:1, and #767676 on white is the classic 4.54:1.
     expect(contrastRatio("#000000", "#ffffff")).toBeCloseTo(21, 1);

@@ -1,7 +1,7 @@
 /**
  * MySous's design tokens: the one source of every colour, type, spacing, radius, elevation,
  * motion and focus value. `themeCss()` turns them into CSS custom properties; dark is a swap of
- * the colour tokens, chosen by the system setting.
+ * the colour tokens, chosen by the device's setting unless the Cook picks a theme (see ./theme).
  */
 
 export type Palette = {
@@ -218,14 +218,23 @@ const declarations = (tokens: Record<string, string>) =>
     .map(([key, value]) => `--${kebab(key)}: ${value};`)
     .join(" ");
 
-/** The tokens as CSS custom properties, for the document head. */
+/**
+ * The tokens as CSS custom properties, for the document head. The dark palette applies under the
+ * device's dark setting unless the Cook chose Light, and whenever they chose Dark (`data-theme`).
+ */
 export function themeCss(): string {
+  // The dark theme for whatever `root` selects, its Ingredient colours included. Content images are
+  // a little less bright in it, so a light one doesn't glare from a dark page.
+  const dark = (root: string) =>
+    `${root} { color-scheme: dark; ${declarations(palettes.dark)} --image-filter: brightness(0.85); } ${root} .hue { --wash: var(--wash-dark); --stroke: var(--stroke-dark); }`;
   return [
-    `:root { color-scheme: light dark; ${declarations(palettes.light)} ${declarations(scales)} ${declarations(motion)} }`,
+    `:root { color-scheme: light; ${declarations(palettes.light)} ${declarations(scales)} ${declarations(motion)} --image-filter: none; }`,
     // An Ingredient's colours arrive as --wash-light, --wash-dark and so on (see hueStyle);
     // .hue picks the pair for the theme, so dark stays a token swap.
     `.hue { --wash: var(--wash-light); --stroke: var(--stroke-light); }`,
-    `@media (prefers-color-scheme: dark) { :root { ${declarations(palettes.dark)} } .hue { --wash: var(--wash-dark); --stroke: var(--stroke-dark); } }`,
+    // Dark when the device is, unless the Cook chose Light; and whenever they chose Dark.
+    `@media (prefers-color-scheme: dark) { ${dark(':root:not([data-theme="light"])')} }`,
+    dark(':root[data-theme="dark"]'),
     `@media (prefers-reduced-motion: reduce) { :root { ${declarations(
       Object.fromEntries(Object.keys(motion).map((key) => [key, "0ms"])),
     )} } }`,

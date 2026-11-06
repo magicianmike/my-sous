@@ -1,10 +1,10 @@
 ---
 name: Chicken thigh
 category: meat
-cuisines: [punjabi, japanese, levantine]
+cuisines: [punjabi, japanese, levantine, oaxacan]
 slotTypes: [protein]
 tip: Start it skin-side down in a cold pan and leave it alone, so the fat renders slowly and the skin crisps.
-culturalContext: Thighs are a common choice for Punjabi tandoori chicken and for Japanese karaage, where the skin turns crisp while the meat stays juicy. Palestinian musakhan usually uses whole chicken legs, thigh and drumstick together.
+culturalContext: Thighs are a common choice for Punjabi tandoori chicken and for Japanese karaage, where the skin turns crisp while the meat stays juicy. Palestinian musakhan usually uses whole chicken legs, thigh and drumstick together. In Oaxaca, chicken, usually the whole bird, is one of the usual meats for mole verde, coloradito and amarillo.
 safety:
   handling:
     note: Don't rinse raw chicken; it spreads bacteria around the sink. After handling it, wash your hands with soap and warm water for 20 seconds, and wash anything it touched.

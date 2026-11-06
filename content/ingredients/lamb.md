@@ -1,10 +1,10 @@
 ---
 name: Lamb
 category: meat
-cuisines: [levantine, punjabi]
+cuisines: [levantine, punjabi, southern-italian]
 slotTypes: [protein]
 tip: Ground lamb carries a lot of fat, so it browns well without much oil; for a karahi, finish the pan with green chiles, fine strips of ginger and cilantro.
-culturalContext: In Levantine cooking, lamb goes into kafta, eggplant fatteh and dumplings in yogurt, though many cooks use beef or a mix. In Punjabi and Pakistani cooking, "mutton" usually means goat or lamb, slow-cooked in karahi or with cauliflower in gobi gosht.
+culturalContext: In Levantine cooking, lamb goes into kafta, eggplant fatteh and dumplings in yogurt, though many cooks use beef or a mix. In Punjabi and Pakistani cooking, "mutton" usually means goat or lamb, slow-cooked in karahi or with cauliflower in gobi gosht. In Naples, lamb with peas is a traditional Easter dish.
 safety:
   handling:
     note: Keep raw lamb apart from food that's ready to eat. Marinate it in the fridge, not on the counter, and don't reuse a marinade that held raw meat unless you boil it first.

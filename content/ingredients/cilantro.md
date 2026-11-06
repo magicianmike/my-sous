@@ -1,10 +1,10 @@
 ---
 name: Cilantro
 category: herb
-cuisines: [oaxacan, cantonese, punjabi]
+cuisines: [oaxacan, cantonese, punjabi, levantine, sichuan]
 slotTypes: [soft herb]
 tip: Use the tender stems too; they carry as much flavour as the leaves.
-culturalContext: Cilantro arrived in Mexico with the Spanish and is now chopped into countless salsas there. It's also scattered over Cantonese steamed fish and blended into Punjabi green raita.
+culturalContext: Cilantro arrived in Mexico with the Spanish and is now chopped into countless salsas there. It's also scattered over Cantonese steamed fish, blended into Punjabi green raita, tossed through Lebanese batata harra, and sometimes used to finish Sichuan water-boiled beef.
 colour:
   wash: "#d3ebd5"
   washDark: "#1d3524"

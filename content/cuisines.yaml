@@ -1,8 +1,26 @@
 # Cuisines are named at regional granularity: "Sichuan" or "Levantine", never "Asian".
+# A launch Cuisine has at least three Ingredients for every Slot type a Formula accepts, unless it lists
+# a `slotExceptions` entry for that type: the `slotType`, a `reason`, and `citations` that show it.
 
 - id: southern-italian
   name: Southern Italian
   description: The cooking of Italy's south, including Campania, Calabria, Apulia and Sicily.
+  launch: true
+  slotExceptions:
+    - slotType: heat
+      reason: "Chile is the heat of much Southern Italian cooking, used in Calabria in place of costly black pepper; MySous keeps chiles as one Ingredient."
+      citations:
+        - title: "Giovanni Sole, Peperoncino e Calabria, storia di un grande amore (nato male), iCalabresi (2021)"
+          url: https://www.icalabresi.it/cultura/peperoncino-e-calabria-storia-di-un-grande-amore-nato-male/
+        - title: "Fine Dining Lovers (editorial), Taralli napoletani (2022)"
+          url: https://www.finedininglovers.it/esplora/ricette/taralli-napoletani
+    - slotType: acid
+      reason: "Southern Italian sourness mostly comes from lemon and from vinegar, usually white wine vinegar for vegetables and scapece."
+      citations:
+        - title: "Fine Dining Lovers (editorial), Zucchine alla scapece: la ricetta napoletana"
+          url: https://www.finedininglovers.it/esplora/ricette/zucchine-alla-scapece
+        - title: "La cuoca galante, Zucchine alla scapece (Neapolitan food blog)"
+          url: https://lacuocagalante.com/recipe-items/zucchine-alla-scapece/
 
 - id: ligurian
   name: Ligurian
@@ -15,19 +33,107 @@
 - id: oaxacan
   name: Oaxacan
   description: The cooking of Oaxaca in southern Mexico, known for its moles.
+  launch: true
+  slotExceptions:
+    - slotType: heat
+      reason: "Oaxacan heat comes from many regional chiles, such as chilhuacle, chile de agua and pasilla oaxaqueño, which MySous keeps as one Chile Ingredient; black pepper is the other."
+      citations:
+        - title: "Oaxaca, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+          url: https://laroussecocina.mx/palabra/oaxaca/
+        - title: "Larousse Cocina, Diccionario enciclopédico de la Gastronomía Mexicana, Cecina oaxaqueña"
+          url: https://laroussecocina.mx/palabra/cecina-oaxaquena/
+    - slotType: acid
+      reason: "Besides lime and tomatillo, Mexican cooks sour with mild fruit and cider vinegars, which MySous doesn't keep as Ingredients yet; wine vinegar isn't among them."
+      citations:
+        - title: "Vinagre, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+          url: https://laroussecocina.mx/palabra/vinagre/
+        - title: "Rick Bayless, Chile-Marinated Pork, Oaxacan-Style"
+          url: https://www.rickbayless.com/recipe/chile-marinated-pork-oaxacan-style/
 
 - id: levantine
   name: Levantine
   description: The cooking of the eastern Mediterranean coast and its hinterland, including Lebanon, Syria, Palestine and Jordan.
+  launch: true
+  slotExceptions:
+    - slotType: acid
+      reason: "Levantine sourness comes from lemon, sumac and pomegranate molasses, and pomegranate molasses isn't in MySous yet."
+      citations:
+        - title: "Za'atar and sumac recipes from *The Arabesque Table*, Reem Kassis, Refinery29"
+          url: https://www.refinery29.com/en-gb/reem-kassis-the-arabesque-table-zaatar-recipes
+        - title: "Shining a light on the forgotten food of Gaza, Mariam Digges, SBS Food"
+          url: https://www.sbs.com.au/food/article/shining-a-light-on-the-forgotten-food-of-gaza/ttjljs5o5
 
 - id: sichuan
   name: Sichuan
   description: The cooking of Sichuan province and Chongqing in south-western China, known for layered, numbing heat.
+  launch: true
+  slotExceptions:
+    - slotType: soft herb
+      reason: "Sichuan cooking uses few soft herbs; cilantro sometimes finishes a dish, but scallion greens and ground Sichuan pepper do that job more often."
+      citations:
+        - title: "Fuchsia Dunlop's mapo tofu, SBS Food"
+          url: https://www.sbs.com.au/food/recipe/fuchsia-dunlops-mapo-tofu/fwvcw6ya9
+        - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+          url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+        - title: "Sichuan Boiled Beef (Shuizhu Niurou), Judy Leung, The Woks of Life"
+          url: https://thewoksoflife.com/sichuan-boiled-beef/
+    - slotType: acid
+      reason: "Sour notes in Sichuan cooking usually come from black vinegar or from pickles, which MySous doesn't keep as Ingredients."
+      citations:
+        - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+          url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+        - title: "Sichuan Lacto-Fermented Pickles (Paocai), Taylor Holliday, The Mala Market"
+          url: https://blog.themalamarket.com/sichuans-naturally-fermented-pickles-pao-cai/
+    - slotType: protein
+      reason: "Sichuan chicken dishes usually use breast or a whole bird rather than thighs, and MySous keeps chicken only as thigh for now."
+      citations:
+        - title: "Gong Bao Chicken with Peanuts (Fuchsia Dunlop, Every Grain of Rice), The Splendid Table"
+          url: https://www.splendidtable.org/story/2015/02/13/gong-bao-chicken-with-peanuts
+        - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+          url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
 
 - id: punjabi
   name: Punjabi
   description: The cooking of the Punjab region, divided between north-western India and north-eastern Pakistan.
+  launch: true
+  slotExceptions:
+    - slotType: soft herb
+      reason: "Cilantro and mint are the fresh finishing herbs of Punjabi cooking; fenugreek leaves are mostly used dried, as a seasoning."
+      citations:
+        - title: "Crispy Aloo Tikki, Izzah Cheema, Tea for Turmeric"
+          url: https://www.teaforturmeric.com/aloo-tikki/
+        - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+          url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+        - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+          url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
+    - slotType: heat
+      reason: "Punjabi heat comes from chile in many forms, fresh, powdered and flaked, plus black pepper, and MySous keeps chiles as one Ingredient."
+      citations:
+        - title: "Mutton Karahi (Goat/Lamb Karahi), Izzah Cheema, Tea for Turmeric"
+          url: https://www.teaforturmeric.com/mutton-karahi-goat-lamb-karahi/
+        - title: "Stovetop: Punjabi Aloo Gobi, Anupy Singla, Indian As Apple Pie"
+          url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
 
 - id: japanese
   name: Japanese home cooking
   description: Everyday cooking in Japanese homes, usually rice with soup and a few small dishes.
+  launch: true
+  slotExceptions:
+    - slotType: soft herb
+      reason: "Japanese home cooking uses aromatics as yakumi, small condiments such as scallion, myoga, ginger and shiso, rather than handfuls of leafy herbs."
+      citations:
+        - title: "食卓を彩る 香辛野菜&つまものの魅力, aff (Aug 2021), MAFF"
+          url: https://www.maff.go.jp/j/pr/aff/2108/spe1_03.html
+        - title: "じゅうねん冷やだれ 福島県, うちの郷土料理, MAFF"
+          url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/30_28_fukushima.html
+        - title: "Unique Japanese Herbs and Spices, Namiko Hirasawa Chen, Just One Cookbook"
+          url: https://www.justonecookbook.com/japanese-herbs-and-spices/
+    - slotType: heat
+      reason: "Japanese home cooking is seldom chile-hot; heat usually comes from a table condiment such as shichimi, wasabi or mustard, added to taste."
+      citations:
+        - title: "Seven-Spice Chili Pepper, Kikkoman glossary"
+          url: https://www.kikkoman.com/en/cookbook/glossary/shichimitougarashi.html
+        - title: "食卓を彩る 香辛野菜&つまものの魅力, aff (Aug 2021), MAFF"
+          url: https://www.maff.go.jp/j/pr/aff/2108/spe1_03.html
+        - title: "京七味（きょうしちみ）, にっぽん伝統食図鑑, MAFF"
+          url: https://www.maff.go.jp/j/keikaku/syokubunka/traditional-foods/menu/kyo_sitimi.html

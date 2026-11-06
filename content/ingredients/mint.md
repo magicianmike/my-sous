@@ -1,10 +1,10 @@
 ---
 name: Mint
 category: herb
-cuisines: [levantine, punjabi]
+cuisines: [levantine, punjabi, southern-italian]
 slotTypes: [soft herb]
 tip: Pick the leaves off the stalks and chop them gently, close to serving, so they don't bruise and darken.
-culturalContext: In Levantine cooking, fresh mint goes into tabbouleh and bread salads, and it's often spooned over yogurt sauces as mint oil. In Punjabi and Pakistani cooking, it's blended with cilantro into the green raita that often comes with kebabs and biryani.
+culturalContext: In Levantine cooking, fresh mint goes into tabbouleh and bread salads, and it's often spooned over yogurt sauces as mint oil. In Punjabi and Pakistani cooking, it's blended with cilantro into the green raita that often comes with kebabs and biryani. In Naples, fresh mint goes into the vinegar for zucchine alla scapece.
 colour:
   wash: "#cfeee0"
   washDark: "#173528"

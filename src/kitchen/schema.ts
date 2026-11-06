@@ -3,18 +3,31 @@ import { INGREDIENT_CATEGORIES, PAIRING_REASON_CATEGORIES } from "./categories";
 
 /** The content format, as checked at build time. */
 
-export const cuisineSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  description: z.string().min(1),
-});
-
 const hex = z.string().regex(/^#[0-9a-f]{6}$/i, "use a six-digit hex colour, such as #2f5714");
 
 const citationSchema = z.object({
   title: z.string().min(1),
   // A web page the reader can open; the page renders it as a link.
   url: z.url({ protocol: /^https?$/, error: "cite a web page, with a link starting https:// or http://" }).optional(),
+});
+
+/**
+ * A Slot type a Cuisine has fewer than three Ingredients for, because its cooking seldom uses one,
+ * with a sourced reason; the content checks hold every launch Cuisine to three otherwise.
+ */
+const slotExceptionSchema = z.object({
+  slotType: z.string().min(1),
+  reason: z.string().min(1),
+  citations: z.array(citationSchema).min(1, "cite at least one source for an exception"),
+});
+
+export const cuisineSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().min(1),
+  /** One of the Cuisines MySous launches with, each covered across every Formula Slot. */
+  launch: z.boolean().default(false),
+  slotExceptions: z.array(slotExceptionSchema).default([]),
 });
 
 /** What safety-sensitive steps need to know about an Ingredient, and where that comes from. */

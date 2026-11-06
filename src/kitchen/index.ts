@@ -228,6 +228,16 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
     });
   }
 
+  const accepted = new Set(content.formulas.flatMap(({ slots }) => slots.map(({ accepts }) => accepts)));
+  for (const { id, slotExceptions } of content.cuisines) {
+    for (const { slotType } of slotExceptions.filter(({ slotType }) => !accepted.has(slotType))) {
+      errors.push({
+        file: cuisinesFile,
+        message: `Cuisine ${id} has an exception for "${slotType}", but no Formula has a Slot that accepts it.`,
+      });
+    }
+  }
+
   for (const { id, file, cuisines } of content.ingredients) {
     for (const cuisine of cuisines.filter((c) => !cuisineIds.has(c))) {
       errors.push({ file, message: `Ingredient ${id} refers to unknown Cuisine "${cuisine}".` });

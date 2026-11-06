@@ -1,10 +1,10 @@
 ---
 name: Scallion
 category: allium
-cuisines: [cantonese, sichuan, japanese, oaxacan]
+cuisines: [cantonese, sichuan, japanese, oaxacan, levantine]
 slotTypes: [aromatic, garnish]
 tip: Cook with the white parts and save the green tops to scatter on at the end.
-culturalContext: Scallions are minced raw with ginger for Cantonese ginger-scallion sauce, simmered into Sichuan mapo tofu, sliced over Japanese miso soup, and grilled whole to serve with Oaxacan cecina.
+culturalContext: Scallions are minced raw with ginger for Cantonese ginger-scallion sauce, simmered into Sichuan mapo tofu, sliced over Japanese miso soup, grilled whole to serve with Oaxacan cecina, and sliced into Levantine tabbouleh and falafel.
 colour:
   wash: "#d4ebe2"
   washDark: "#1c332b"

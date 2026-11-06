@@ -94,7 +94,7 @@ test("Suggestions are ranked by how well their Ingredients pair, with a reason",
 
   const suggestions = suggestionList(page).getByRole("listitem");
   await expect(suggestions.getByRole("heading")).toHaveText(["Sheet-pan roast", "Pan sauce"]);
-  await expect(suggestions.nth(0)).toContainText("Everything here pairs with garlic.");
+  await expect(suggestions.nth(0)).toContainText("Every Ingredient here pairs with every other.");
   await expect(suggestions.nth(1)).toContainText("Chicken thigh and garlic pair well.");
 });
 
@@ -132,7 +132,7 @@ test("a Cook swaps a Slot by ticking one Ingredient and unticking another, sees 
   await expect(page.getByText(/then lime juice a little at a time/)).toBeVisible();
   await expect(page.locator(".formula-readiness")).toContainText("Also needs an acid (you chose lime).");
   // The list stays open, in the same order, for the next change.
-  await expect(acid.getByRole("checkbox")).toHaveCount(6);
+  await expect(acid.getByRole("checkbox")).toHaveCount(9);
   await expect(acid.getByRole("checkbox", { name: "Lemon" })).toBeFocused();
 
   const undo = acid.getByRole("button", { name: "Undo change to an acid" });

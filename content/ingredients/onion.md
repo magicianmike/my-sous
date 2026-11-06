@@ -1,10 +1,10 @@
 ---
 name: Onion
 category: allium
-cuisines: [punjabi, levantine, japanese, oaxacan]
+cuisines: [punjabi, levantine, japanese, oaxacan, southern-italian]
 slotTypes: [aromatic, vegetable]
 tip: For soft, sweet onions, cook them low and slow, and add a splash of water if they start to stick rather than letting them brown.
-culturalContext: Musakhan is built on a large pile of onions cooked slowly in olive oil with sumac, and many Punjabi curries start with onion, often with ginger and garlic, after the cumin. Not every recipe uses it, and cooks differ on how far to take the onions.
+culturalContext: Musakhan is built on a large pile of onions cooked slowly in olive oil with sumac, and many Punjabi curries start with onion, often with ginger and garlic, after the cumin. Not every recipe uses it, and cooks differ on how far to take the onions. Neapolitan genovese turns a great weight of onions into a sauce with beef.
 colour:
   wash: "#f1e2d9"
   washDark: "#372a24"

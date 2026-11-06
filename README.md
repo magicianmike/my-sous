@@ -15,7 +15,7 @@ npm run test:e2e     # Playwright + axe against out/ (run the build first)
 
 ## Content
 
-- `content/cuisines.yaml`: every Cuisine (`id`, `name`, `description`), named at regional granularity.
+- `content/cuisines.yaml`: every Cuisine (`id`, `name`, `description`), named at regional granularity. A launch Cuisine sets `launch: true`, and the tests hold it to at least three Ingredients for every Slot type a Formula accepts, unless it lists a `slotExceptions` entry for that type (`slotType`, `reason`, `citations`).
 - `content/ingredients/<id>.md`: one file per Ingredient. The id is the filename. Frontmatter holds `name`, `category` (one of herb, allium, aromatic, spice, citrus, produce, meat, seafood, dairy, condiment or blend, the groups on the Ingredients page), `tip`, and optionally `cuisines`, `slotTypes`, `typicallyIncludes` (for a Blend: Ingredient ids, which link, or plain words) and `culturalContext`. The Markdown body is the Ingredient's essay and is required.
 - `content/pairings.yaml`: every Pairing, stored once per pair, with at least one Pairing Reason (`category`, a one-line `note`, optional `detail`) and at least one citation (`title` and `url`), plus optional `cuisines`.
 - `content/formulas.yaml`: every Formula, with its Slots (`id`, `role`, the Slot type it `accepts`, `required` unless set to false) and method steps that refer to Slots as `{slotId}`.

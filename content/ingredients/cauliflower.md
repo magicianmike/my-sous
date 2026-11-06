@@ -1,10 +1,10 @@
 ---
 name: Cauliflower
 category: produce
-cuisines: [punjabi, levantine]
+cuisines: [punjabi, levantine, sichuan]
 slotTypes: [vegetable]
 tip: Cut it into even florets so they cook at the same rate, and give them room in the pan or on the tray so they brown rather than steam.
-culturalContext: In Punjabi aloo gobi, cauliflower and potato cook with cumin, turmeric, ginger and chile; whether it takes tomato varies by household. In Lebanon, fried cauliflower is served with tahini sauce, and in Palestine it's one of the most common vegetables layered into maqluba.
+culturalContext: In Punjabi aloo gobi, cauliflower and potato cook with cumin, turmeric, ginger and chile; whether it takes tomato varies by household. In Lebanon, fried cauliflower is served with tahini sauce, and in Palestine it's one of the most common vegetables layered into maqluba. In Sichuan, it's cooked as dry-pot cauliflower with chile and Sichuan pepper.
 colour:
   wash: "#ece9d8"
   washDark: "#2f2d22"

@@ -22,7 +22,7 @@ export const defaultCitation = { title: "A source", url: "https://example.com/a-
 
 export function writeContent(fixture: {
   ingredients: Record<string, FixtureIngredient>;
-  pairings: unknown[];
+  pairings: Record<string, unknown>[];
   cuisines?: unknown[];
   formulas?: unknown[];
   /** Recipes by Formula id: each file's frontmatter. */
@@ -42,9 +42,7 @@ export function writeContent(fixture: {
     if (drawing !== null) writeFileSync(join(dir, "ingredients", `${id}.svg`), drawing);
   }
   // Every Pairing needs a cited source; fixtures get one unless they say otherwise.
-  const pairings = fixture.pairings.map((pairing) =>
-    pairing && typeof pairing === "object" ? { citations: [defaultCitation], ...pairing } : pairing,
-  );
+  const pairings = fixture.pairings.map((pairing) => ({ citations: [defaultCitation], ...pairing }));
   writeFileSync(join(dir, "pairings.yaml"), stringify(pairings));
   writeFileSync(join(dir, "cuisines.yaml"), stringify(fixture.cuisines ?? []));
   writeFileSync(join(dir, "formulas.yaml"), stringify(fixture.formulas ?? []));

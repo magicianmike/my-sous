@@ -35,7 +35,7 @@ Cuisines are named regionally (Sichuan, Levantine, Oaxacan), never at continenta
 - **Essay:** two or three sentences. What it is, what it does in a dish, and the one thing that changes how you cook it.
 - **Tip:** one practical sentence, in the imperative. "Zest before you juice; the zest carries much of the aroma."
 - **Cultural context:** one or two sentences on where it's common and how it's used there, hedged, and sourced.
-- **Safety:** only official guidance (USDA FSIS, FDA, the UK FSA), stated plainly, with temperatures in °F and °C, and cited.
+- **Safety:** only official guidance, from food-safety agencies (USDA FSIS, FDA, CDC, Health Canada, the UK FSA) or a university extension service, stated plainly, with temperatures in °F and °C, and cited. Where agencies differ, give the stricter advice or both.
 
 ## Writing a Pairing
 

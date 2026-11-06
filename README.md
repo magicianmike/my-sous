@@ -23,7 +23,7 @@ npm run test:e2e     # Playwright + axe against out/ (run the build first)
 - `docs/voice-guide.md`: how content is written: tone, banned words, hedging and "common in…" phrasing, and how to write an Ingredient and a Pairing.
 - `content/images/`: image files, each named by an Ingredient's, Formula's or Recipe's `image` with its alt text and provenance. See `docs/image-style-guide.md` for how they look, are made and are reviewed, and how to render a placeholder (`npm run placeholder`).
 
-The build fails on any malformed file, unknown Ingredient or Cuisine reference, Slot that no Ingredient can fill, method step that refers to an unknown Slot, Cuisine named at continental level (such as "Asian" or "Mediterranean"; name them regionally), Pairing without a linked citation, or banned word ("easy", "simply", "just", "authentic") anywhere the Cook reads. It also fails on an image that's missing, has no alt text or provenance, hasn't been reviewed (or is a placeholder marked as reviewed), or falls outside the size budget.
+The build fails on any malformed file, unknown Ingredient or Cuisine reference, Slot that no Ingredient can fill, method step that refers to an unknown Slot, Cuisine named at continental level (such as "Asian" or "Mediterranean"; name them regionally), Pairing without a linked citation, or banned word ("easy", "easily", "simply", "just", "authentic") anywhere the Cook reads. It also fails on an image that's missing, has no alt text or provenance, hasn't been reviewed (or is a placeholder marked as reviewed), or falls outside the size budget.
 
 ## Design system
 

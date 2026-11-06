@@ -132,6 +132,9 @@ test("the Cook can keep adding Ingredients to a part, with no limit", async ({ p
   await expect(page.getByRole("main").getByRole("list", { name: "Method" })).toContainText("garlic, ginger and scallion");
   // Every aromatic can go in.
   const rest = aromatic.getByRole("checkbox", { checked: false });
-  while ((await rest.count()) > 0) await rest.first().check();
+  await expect(rest).toHaveCount(2);
+  await rest.first().check();
+  await rest.first().check();
+  await expect(rest).toHaveCount(0);
   await expect(aromatic.locator(".slot-fill")).toHaveCount(5);
 });

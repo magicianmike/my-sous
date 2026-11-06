@@ -1340,6 +1340,23 @@ describe("loadKitchen", () => {
       ]);
     });
 
+    it("when a citation's link isn't a web page", async () => {
+      const errors = await expectErrors(
+        writeContent({
+          ingredients: { lemon, garlic },
+          pairings: [
+            {
+              ingredients: ["lemon", "garlic"],
+              reasons: [reason("A note.")],
+              citations: [{ title: "A script", url: "javascript:alert(1)" }],
+            },
+          ],
+        }),
+      );
+
+      expect(errors).toEqual(["0.citations.0.url: cite a web page, with a link starting https:// or http://"]);
+    });
+
     it.each(["easy", "Easily", "simply", "Just", "authentic"])(
       "when copy the Cook reads says %j, naming where",
       async (word) => {
@@ -1350,7 +1367,7 @@ describe("loadKitchen", () => {
           }),
         );
 
-        const rule = `MySous doesn't say "easy", "simply", "just" or "authentic" (docs/voice-guide.md).`;
+        const rule = `MySous doesn't say "easy", "easily", "simply", "just" or "authentic" (docs/voice-guide.md).`;
         expect(errors).toEqual([
           `Ingredient lemon's tip says "${word}"; ${rule}`,
           `Pairing lemon + garlic's reasons.0.note says "${word}"; ${rule}`,

@@ -46,8 +46,20 @@ const CONTINENTAL =
 
 /** Fields that hold ids, sources or settings rather than words the Cook reads. */
 const NOT_COPY = new Set([
-  ...["id", "file", "formula", "category", "cuisines", "slotTypes", "accepts", "fills", "slot", "about"],
-  ...["citations", "provenance", "colour", "drawing"],
+  "id",
+  "file",
+  "formula",
+  "category",
+  "cuisines",
+  "slotTypes",
+  "accepts",
+  "fills",
+  "slot",
+  "about",
+  "citations",
+  "provenance",
+  "colour",
+  "drawing",
 ]);
 
 /**

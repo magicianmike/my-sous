@@ -528,6 +528,39 @@ main {
   margin: 0;
 }
 
+/* A Suggestion card's dish: a low strip across its top. */
+.card-image img {
+  aspect-ratio: 3;
+  border-radius: var(--radius-md);
+}
+
+/*
+ * A banner across the top of an Ingredient's hero or a dish's page: low on a phone, so what the Cook
+ * came for (the name and Add, or whether the dish is ready) stays on the first screen.
+ */
+.hero-image {
+  width: 100%;
+}
+
+.hero-image img,
+.dish-image img {
+  max-height: min(var(--hero-image-height), 28svh);
+}
+
+.hero-mark {
+  display: grid;
+}
+
+/* The drawing sits on the image's lower corner, ringed in the page's colour so it stands apart. */
+.hero-image + .hero-mark {
+  position: relative;
+  justify-self: start;
+  margin-top: calc(var(--mark-md) / -2 - var(--space-3));
+  margin-inline-start: var(--space-4);
+  border-radius: 50%;
+  box-shadow: 0 0 0 var(--space-1) var(--bg);
+}
+
 .hero .title {
   flex-direction: column;
 }

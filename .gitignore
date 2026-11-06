@@ -6,3 +6,5 @@ next-env.d.ts
 test-results/
 playwright-report/
 .vercel
+# Made from content/images by `npm run images`.
+public/images/

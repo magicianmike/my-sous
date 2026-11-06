@@ -1,56 +1,12 @@
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { stringify } from "yaml";
 import { loadKitchen, type Kitchen, type Suggestion } from "./index";
-
-/**
- * Frontmatter for one Ingredient file, plus its essay body and drawing (`null` for none).
- * Required fields get defaults.
- */
-type FixtureIngredient = { name: string; body?: string; drawing?: string | null } & Record<
-  string,
-  unknown
->;
+import { defaultColour, defaultDrawing, expectErrors, expectKitchen, reason, writeContent } from "./test-content";
 
 /** The Cook swaps one Ingredient for another as they do on the page: tick the new one, untick the old. */
 const swap = (kitchen: Kitchen, suggestion: Suggestion, slotId: string, out: string, chosen: string) =>
   kitchen.removeFromSlot(kitchen.addToSlot(suggestion, slotId, chosen), slotId, out);
-
-const defaultColour = { wash: "#dcebc4", washDark: "#26361a", stroke: "#2f5714", strokeDark: "#c3e39a" };
-const defaultDrawing = '<circle cx="24" cy="24" r="17"/>';
-
-function writeContent(fixture: {
-  ingredients: Record<string, FixtureIngredient>;
-  pairings: unknown[];
-  cuisines?: unknown[];
-  formulas?: unknown[];
-  /** Recipes by Formula id: each file's frontmatter. */
-  recipes?: Record<string, Record<string, unknown>>;
-}): string {
-  const dir = mkdtempSync(join(tmpdir(), "kitchen-"));
-  mkdirSync(join(dir, "ingredients"));
-  for (const [id, { body = "An essay.", drawing = defaultDrawing, ...frontmatter }] of Object.entries(
-    fixture.ingredients,
-  )) {
-    writeFileSync(
-      join(dir, "ingredients", `${id}.md`),
-      `---\n${stringify({ category: "produce", tip: "A tip.", colour: defaultColour, ...frontmatter })}---\n${body}\n`,
-    );
-    if (drawing !== null) writeFileSync(join(dir, "ingredients", `${id}.svg`), drawing);
-  }
-  writeFileSync(join(dir, "pairings.yaml"), stringify(fixture.pairings));
-  writeFileSync(join(dir, "cuisines.yaml"), stringify(fixture.cuisines ?? []));
-  writeFileSync(join(dir, "formulas.yaml"), stringify(fixture.formulas ?? []));
-  if (fixture.recipes) {
-    mkdirSync(join(dir, "recipes"));
-    for (const [id, frontmatter] of Object.entries(fixture.recipes)) {
-      writeFileSync(join(dir, "recipes", `${id}.md`), `---\n${stringify(frontmatter)}---\n`);
-    }
-  }
-  return dir;
-}
 
 const lemon = { name: "Lemon" };
 const garlic = { name: "Garlic" };
@@ -60,22 +16,6 @@ const levantine = {
   name: "Levantine",
   description: "The cooking of the eastern Mediterranean coast.",
 };
-
-function reason(note: string) {
-  return { category: "contrast", note };
-}
-
-async function expectKitchen(dir: string): Promise<Kitchen> {
-  const result = await loadKitchen(dir);
-  if (!result.ok) throw new Error(result.errors.map((e) => e.message).join("\n"));
-  return result.kitchen;
-}
-
-async function expectErrors(dir: string): Promise<string[]> {
-  const result = await loadKitchen(dir);
-  if (result.ok) throw new Error("expected content errors, got a Kitchen");
-  return result.errors.map((e) => e.message);
-}
 
 describe("loadKitchen", () => {
   it("shows a Pairing from both of its Ingredients", async () => {

@@ -189,6 +189,8 @@ const scales = {
   "mark-md-drawing": "2.875rem",
   "mark-lg": "11rem",
   "mark-lg-drawing": "8rem",
+  // Content images: the most a banner (an Ingredient's, a dish's header) stands.
+  "hero-image-height": "24rem",
   // Focus.
   "focus-width": "3px",
   "focus-offset": "2px",

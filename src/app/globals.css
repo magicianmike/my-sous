@@ -129,6 +129,11 @@ ul {
   padding-block: var(--space-3);
 }
 
+/* The theme's sun and moon, in the header's far corner. */
+.site-theme {
+  margin-inline-start: auto;
+}
+
 /* Ingredients and Cuisines, beside the wordmark; the current one underlined as well as marked. */
 .site-nav ul {
   display: flex;

@@ -91,3 +91,22 @@ for (const colorScheme of ["light", "dark"] as const) {
     });
   });
 }
+
+// A theme the Cook chose, against the device's: each screen, after the choice.
+for (const [colorScheme, chosen] of [
+  ["light", "Dark"],
+  ["dark", "Light"],
+] as const) {
+  test.describe(`with ${chosen} chosen on a ${colorScheme} device`, () => {
+    test.use({ colorScheme });
+
+    for (const [path, ready] of screens) {
+      test(`${path} has no axe violations`, async ({ page }) => {
+        await page.goto(path);
+        await page.getByRole("banner").getByRole("radio", { name: chosen }).check();
+        await expect(ready(page)).toBeVisible();
+        await expectNoViolations(page);
+      });
+    }
+  });
+}

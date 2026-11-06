@@ -1,7 +1,7 @@
 /**
  * MySous's design tokens: the one source of every colour, type, spacing, radius, elevation,
  * motion and focus value. `themeCss()` turns them into CSS custom properties; dark is a swap of
- * the colour tokens, chosen by the system setting.
+ * the colour tokens, chosen by the device's setting unless the Cook picks a theme (see THEME_SCRIPT).
  */
 
 export type Palette = {
@@ -219,13 +219,27 @@ const declarations = (tokens: Record<string, string>) =>
     .join(" ");
 
 /** The tokens as CSS custom properties, for the document head. */
+/** Where the Cook's chosen theme is kept: the one thing MySous stores in the browser (ADR 0004). */
+export const THEME_KEY = "theme";
+
+/**
+ * Applies a chosen theme before the page paints, so it never shows the other first. Inline in the
+ * page's head, it runs before the app's scripts load; storage can be unavailable, so it may do nothing.
+ */
+export const THEME_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
+
 export function themeCss(): string {
+  // The dark theme for whatever `root` selects, its Ingredient colours included.
+  const dark = (root: string) =>
+    `${root} { color-scheme: dark; ${declarations(palettes.dark)} } ${root} .hue { --wash: var(--wash-dark); --stroke: var(--stroke-dark); }`;
   return [
-    `:root { color-scheme: light dark; ${declarations(palettes.light)} ${declarations(scales)} ${declarations(motion)} }`,
+    `:root { color-scheme: light; ${declarations(palettes.light)} ${declarations(scales)} ${declarations(motion)} }`,
     // An Ingredient's colours arrive as --wash-light, --wash-dark and so on (see hueStyle);
     // .hue picks the pair for the theme, so dark stays a token swap.
     `.hue { --wash: var(--wash-light); --stroke: var(--stroke-light); }`,
-    `@media (prefers-color-scheme: dark) { :root { ${declarations(palettes.dark)} } .hue { --wash: var(--wash-dark); --stroke: var(--stroke-dark); } }`,
+    // Dark when the device is, unless the Cook chose Light; and whenever they chose Dark.
+    `@media (prefers-color-scheme: dark) { ${dark(':root:not([data-theme="light"])')} }`,
+    dark(':root[data-theme="dark"]'),
     `@media (prefers-reduced-motion: reduce) { :root { ${declarations(
       Object.fromEntries(Object.keys(motion).map((key) => [key, "0ms"])),
     )} } }`,

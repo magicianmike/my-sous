@@ -36,7 +36,7 @@ test("a Cook narrows the Pairings to one Pairing Reason", async ({ page }) => {
 test("an Ingredient with one Pairing Reason has nothing to filter", async ({ page }) => {
   await page.goto("/ingredients/lemon");
   await expect(page.getByRole("heading", { level: 3, name: "Contrast" })).toBeVisible();
-  await expect(page.getByRole("radiogroup")).toHaveCount(0);
+  await expect(page.getByRole("main").getByRole("radiogroup")).toHaveCount(0);
 });
 
 test.describe("on desktop", () => {

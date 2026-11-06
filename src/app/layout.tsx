@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Fraunces, Nunito } from "next/font/google";
-import { themeCss } from "@/design/tokens";
+import { THEME_SCRIPT, themeCss } from "@/design/tokens";
 import { CombinationLink, KitchenProvider } from "./combination";
 import { CombinationTray } from "./combination-tray";
 import "./globals.css";
 import { getKitchen } from "./kitchen";
 import { SiteFooter, SiteLabel, SiteNav, SkipLinks } from "./site-chrome";
+import { ThemeSwitch } from "./theme-switch";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -30,8 +31,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const kitchen = await getKitchen();
   return (
-    <html lang="en" className={`${display.variable} ${text.variable}`}>
+    // The theme script sets data-theme before React takes over, so the attribute differs by design.
+    <html lang="en" className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <style dangerouslySetInnerHTML={{ __html: themeCss() }} />
       </head>
       <body>
@@ -43,6 +46,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </CombinationLink>
             <SiteNav />
             <SiteLabel />
+            <div className="site-theme">
+              <ThemeSwitch />
+            </div>
           </header>
           <div className="app">
             <main id="main">{children}</main>

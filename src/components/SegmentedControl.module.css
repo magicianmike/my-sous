@@ -20,6 +20,20 @@
   transition: background-color var(--motion-fast) var(--ease-out);
 }
 
+/* A square segment, the target's size, with its icon centred. */
+.iconOnly {
+  justify-content: center;
+  width: var(--target);
+  padding: 0;
+}
+
+/* Icons at the size buttons use. */
+.segment svg {
+  flex: none;
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
 .segment:has(:checked) {
   background: var(--accent);
   color: var(--accent-ink);

@@ -341,6 +341,11 @@ main {
   max-width: var(--measure);
 }
 
+/* The Case Study's text keeps the measure, with its chapter list beside it on wide screens. */
+main:has(.case-study) {
+  max-width: none;
+}
+
 .title {
   display: flex;
   flex-wrap: wrap;
@@ -1053,6 +1058,8 @@ main {
 
 .case-study {
   display: grid;
+  /* minmax(0, …) so a wide diagram scrolls in its frame rather than widening the column. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
 }
 
@@ -1105,6 +1112,19 @@ main {
   margin-top: var(--space-2);
 }
 
+/* Code wraps rather than scrolls, so the page never moves sideways. */
+.case-study-content pre {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--sunk);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.case-study-content pre code {
+  padding: 0;
+}
+
 .case-study-content code {
   padding: 0 var(--space-1);
   border-radius: var(--radius-sm);
@@ -1143,6 +1163,99 @@ main {
 .live-label {
   color: var(--ink);
   font-weight: var(--weight-bold);
+}
+
+/* A screenshot of something cut or rejected: framed like a live embed, captioned under it. */
+.shot {
+  margin: var(--space-5) 0;
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--border-hairline) solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.shot figcaption {
+  margin-top: var(--space-2);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+/* Two screenshots side by side when there's room for both to be read. */
+.shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--shot-min-width), 1fr));
+  gap: var(--space-4);
+}
+
+.shots .shot {
+  margin: 0;
+}
+
+/* A diagram keeps a readable size; on a narrow screen it scrolls sideways inside its frame, not the page. */
+.diagram {
+  margin: var(--space-5) 0;
+  overflow-x: auto;
+}
+
+.diagram svg {
+  display: block;
+  width: 100%;
+  min-width: var(--diagram-min-width);
+  height: auto;
+}
+
+.diagram figcaption {
+  margin-top: var(--space-2);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.diagram-box {
+  fill: var(--surface);
+  stroke: var(--line);
+  stroke-width: var(--border-hairline);
+}
+
+.diagram-box.strong {
+  fill: var(--sunk);
+  stroke: var(--ink-muted);
+  stroke-width: var(--border-control);
+}
+
+.diagram text {
+  fill: var(--ink);
+  font-family: var(--font-text);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.diagram text.start {
+  text-anchor: start;
+}
+
+.diagram-label {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+}
+
+.diagram-note {
+  fill: var(--ink-muted);
+  font-size: var(--text-xs);
+}
+
+.diagram-arrow {
+  fill: none;
+  stroke: var(--ink-muted);
+  stroke-width: var(--border-control);
+  marker-end: var(--arrow);
+}
+
+.diagram-arrowhead {
+  fill: var(--ink-muted);
 }
 
 @media (min-width: 56rem) {

@@ -52,3 +52,16 @@ export function LiveSuggestion({ basket, dish, caption }: {
     </figure>
   );
 }
+
+/**
+ * A screenshot from the build, with its alt text, sized so its space is kept before it loads.
+ * Used for what was cut or rejected, which no longer exists to embed live.
+ */
+export function Screenshot({ src, alt, caption }: { src: string; alt: string; caption: React.ReactNode }) {
+  return (
+    <figure className="shot">
+      <img src={`/case-study/${src}.webp`} alt={alt} width={960} height={600} loading="lazy" decoding="async" />
+      <figcaption>{caption}</figcaption>
+    </figure>
+  );
+}

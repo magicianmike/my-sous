@@ -36,15 +36,17 @@ test.describe("touch targets on a phone", () => {
           return box.width > 0 && box.height > 0 && getComputedStyle(el).visibility !== "hidden";
         };
         const failures: string[] = [];
+        // Layout lands on fractions of a pixel, so a 44px control can measure 43.9998px.
+        const under = (size: number, minimum: number) => size < minimum - 0.01;
         for (const el of document.querySelectorAll("button, summary, input, [role=option]")) {
           const { width, height } = el.getBoundingClientRect();
-          if (visible(el) && (width < 44 || height < 44)) failures.push(`${describe(el)} ${width}×${height}`);
+          if (visible(el) && (under(width, 44) || under(height, 44))) failures.push(`${describe(el)} ${width}×${height}`);
         }
         // Links in running text are exempt (WCAG 2.5.8); standalone links aren't.
         for (const el of document.querySelectorAll("a")) {
           if (el.closest("p, li > p")) continue;
           const { width, height } = el.getBoundingClientRect();
-          if (visible(el) && (width < 24 || height < 44)) failures.push(`${describe(el)} ${width}×${height}`);
+          if (visible(el) && (under(width, 24) || under(height, 44))) failures.push(`${describe(el)} ${width}×${height}`);
         }
         return failures;
       });

@@ -148,6 +148,10 @@ const scales = {
   "tray-width": "20rem",
   // The Case Study's chapter list, beside its text on wide screens.
   "chapter-nav-width": "14rem",
+  // A Case Study diagram draws no narrower than this, so its words stay readable; narrow screens scroll it.
+  "diagram-min-width": "36rem",
+  // Case Study screenshots sit side by side only when each is this wide.
+  "shot-min-width": "18rem",
   "tile-min": "11rem",
   // Home's two browse cards sit side by side only when each has this much room.
   "door-min": "16rem",

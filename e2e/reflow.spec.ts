@@ -44,7 +44,13 @@ for (const viewport of viewports) {
     for (const path of screens) {
       test(`${path} doesn't scroll sideways`, async ({ page }) => {
         await open(page, path);
-        const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+        // On a phone the page scrolls inside .page, so it can move sideways while the document doesn't.
+        const overflow = await page.evaluate(() =>
+          Math.max(
+            document.documentElement.scrollWidth - innerWidth,
+            ...[...document.querySelectorAll(".page")].map((el) => el.scrollWidth - el.clientWidth),
+          ),
+        );
         expect(overflow).toBeLessThanOrEqual(0);
       });
     }

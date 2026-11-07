@@ -92,7 +92,10 @@ Both axes ran. The fixes:
 
 The Design and Architecture chapters aren't Paired Decisions, by the author's choice of chapters.
 
+## VoiceOver pass
+
+**Status: passed.** The author ran this pass on 2026-11-07, and everything behaved as expected. On an iPhone and a Mac: the chapter navigation and the chapter being read, the diagrams' descriptions, the screenshots' alt text, and the corner links.
+
 ## Waiting for the author
 
 - **The copy.** The author edits and approves the final text. It's in the first person, but drafted from the journals. That includes the reasons each visual variant lost, which journal 0002 notes were drafted from the renders and await the author's review.
-- **A VoiceOver pass** of the Case Study, on an iPhone and a Mac: chapter navigation, the diagrams' descriptions, and the screenshots' alt text.

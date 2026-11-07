@@ -39,7 +39,7 @@ Browsing either way leads to the same Ingredients and the same basket, so there'
 
 ## VoiceOver pass
 
-**Status: waiting for the author.** On an iPhone and a Mac:
+**Status: passed.** The author ran this pass on 2026-11-07, and everything behaved as expected. On an iPhone and a Mac:
 
 1. The header's "Main" navigation lists "Ingredients" and "Cuisines", and the current one is read as "current page". On Home, "Or browse" leads to two links, "Browse ingredients…" and "Browse cuisines…".
 2. On Southern Italian, the headings are "Southern Italian", "Common in Southern Italian cooking", "Pairings" and "Other cuisines". The Ingredient list is named "Ingredients common in Southern Italian cooking".

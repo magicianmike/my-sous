@@ -46,7 +46,7 @@ axe, reflow from 320px and at 200% zoom, touch targets and focus rings now inclu
 
 ## VoiceOver pass
 
-**Status: waiting for the author.** On an iPhone and a Mac:
+**Status: passed.** The author ran this pass on 2026-11-07, and everything behaved as expected. On an iPhone and a Mac:
 
 1. From any app screen, find the footer link "How MySous was made" at the end of the page, and open it.
 2. On the Case Study, the first Tab (or the first swipe) reaches "Skip to the Case Study", then "Skip to chapters". Each moves focus to its target.

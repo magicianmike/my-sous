@@ -58,6 +58,8 @@ The Standards and Spec reviews led to:
 
 Before the page is live, neither option shows as chosen, since the static page can't know the device or the choice. That's a moment at load, and the page itself is already in the right theme.
 
-## VoiceOver pass (for the author)
+## VoiceOver pass
+
+**Status: passed.** The author ran this pass on 2026-11-07, and everything behaved as expected.
 
 In Safari, with VoiceOver on: Tab into the header after the nav. It reads "Light, radio button, 1 of 2, Theme" (or Dark, if that's what's on). Press Right Arrow: the page turns dark, and VoiceOver reads "Dark, selected".

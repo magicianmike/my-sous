@@ -13,6 +13,9 @@ const citationSchema = z.object({
   url: webPage.optional(),
 });
 
+/** A citation that must link to its source. */
+const linkedCitationSchema = citationSchema.extend({ url: webPage });
+
 /**
  * A Slot type a Cuisine has fewer than three Ingredients for, because its cooking seldom uses one,
  * with a sourced reason; the content checks hold every launch Cuisine to three otherwise.
@@ -20,7 +23,7 @@ const citationSchema = z.object({
 const slotExceptionSchema = z.object({
   slotType: z.string().min(1),
   reason: z.string().min(1),
-  citations: z.array(citationSchema.extend({ url: webPage })).min(1, "cite at least one source for an exception"),
+  citations: z.array(linkedCitationSchema).min(1, "cite at least one source for an exception"),
 });
 
 export const cuisineSchema = z.object({
@@ -111,14 +114,20 @@ export const pairingSchema = z.object({
   citations: z.array(citationSchema).default([]),
 });
 
-const slotSchema = z.object({
-  id: z.string().min(1),
-  /** What the Slot asks for, in words, such as "an acid". */
-  role: z.string().min(1),
-  /** The Slot type an Ingredient must list to fill this Slot. */
-  accepts: z.string().min(1),
-  required: z.boolean().default(true),
-});
+const slotSchema = z
+  .object({
+    id: z.string().min(1),
+    /** What the Slot asks for, in words, such as "an acid". */
+    role: z.string().min(1),
+    /** The Slot type an Ingredient must list to fill this Slot. */
+    accepts: z.string().min(1).optional(),
+    /** For a staple, such as a frittata's eggs: the Ingredients that can fill it, by id, instead of a Slot type. */
+    ingredients: z.array(z.string().min(1)).min(1).optional(),
+    required: z.boolean().default(true),
+  })
+  .refine(({ accepts, ingredients }) => (accepts === undefined) !== (ingredients === undefined), {
+    message: "give a Slot either the Slot type it accepts or the Ingredients it lists, not both",
+  });
 
 export const formulaSchema = z.object({
   id: z.string().min(1),
@@ -165,6 +174,13 @@ const recipeStepSchema = z.object({
   text: z.string().min(1),
   /** A step whose safety depends on what fills a Slot; it shows that Ingredient's guidance on the topic. */
   safety: z.object({ slot: z.string().min(1), about: z.enum(SAFETY_TOPICS) }).optional(),
+  /** A step's own cited guidance, for a staple such as cooked rice that no Slot's Ingredient gives. */
+  guidance: z
+    .object({
+      note: z.string().min(1),
+      citations: z.array(linkedCitationSchema).min(1, "cite at least one source for safety guidance"),
+    })
+    .optional(),
 });
 
 export const recipeSchema = z.object({
@@ -198,6 +214,11 @@ export type Cuisine = z.infer<typeof cuisineSchema>;
 export type PairingReason = z.infer<typeof pairingReasonSchema>;
 export type Citation = z.infer<typeof citationSchema>;
 export type Slot = z.infer<typeof slotSchema>;
+
+/** Whether an Ingredient can go in a Slot: it's on the Slot's list, or it lists the Slot's type. */
+export function slotTakes(slot: Slot, { id, slotTypes }: { id: string; slotTypes: string[] }): boolean {
+  return slot.ingredients ? slot.ingredients.includes(id) : slotTypes.includes(slot.accepts!);
+}
 export type Formula = WithImage<z.infer<typeof formulaSchema>>;
 export type IngredientContent = { id: string } & WithImage<z.infer<typeof ingredientSchema>>;
 export type PairingContent = z.infer<typeof pairingSchema>;

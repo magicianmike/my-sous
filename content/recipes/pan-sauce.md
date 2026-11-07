@@ -5,7 +5,8 @@
 # are for whatever fills it, and `for` gives particular Ingredients their own amount, note, and the
 # name as it reads after that amount (a plural, such as "limes"). Lines outside
 # the Formula give a `name` instead. Steps refer to Slots as {slotId}; a step whose safety depends on
-# a Slot's Ingredient names it in `safety`, and shows that Ingredient's cited guidance.
+# a Slot's Ingredient names it in `safety`, and shows that Ingredient's cited guidance; a step can also
+# carry its own cited `guidance` (a `note` and `citations`), for a staple such as cooked rice.
 serves: 2
 time: { prep: 10, cook: 30 }
 # The dish as written. A placeholder until the reviewed image arrives with the content (#19).

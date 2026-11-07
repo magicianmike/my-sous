@@ -64,8 +64,7 @@ function TrayDock() {
 
   // A link followed from the sheet leads to a new screen.
   useEffect(close, [pathname]);
-  // The page keeps the docked bar's height clear when it scrolls a focused control into view, and
-  // toasts sit just above the bar, or the open sheet.
+  // Toasts sit just above the docked bar, or the open sheet.
   useEffect(() => {
     const root = document.documentElement;
     const observer = new ResizeObserver((entries) => {

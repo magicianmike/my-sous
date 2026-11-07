@@ -2,7 +2,7 @@
 name: Sumac
 category: spice
 cuisines: [levantine]
-slotTypes: [acid]
+slotTypes: [acid, garnish]
 tip: Use it twice; cook some into the dish for depth, then sprinkle more over the top before serving, where its colour and sourness show most.
 culturalContext: Sumac is the heart of musakhan, the Palestinian dish of flatbread topped with onions cooked slowly with sumac and roast chicken, traditionally made around the autumn olive-oil pressing. It's also common in fattoush dressing and over dips such as mutabbal.
 colour:

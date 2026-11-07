@@ -18,7 +18,7 @@ test("a Cook finds an Ingredient by typing, opens it and expands a Pairing", asy
   await expect(page).toHaveURL(/\/ingredients\/lemon$/);
   await expect(page.getByRole("heading", { level: 1, name: "Lemon" })).toBeVisible();
   const cuisines = page.getByRole("list", { name: "Common in" });
-  await expect(cuisines.getByRole("link")).toHaveText(["Southern Italian", "Levantine", "Punjabi", "Japanese home cooking"]);
+  await expect(cuisines.getByRole("link")).toHaveText(["Southern Italian", "Levantine", "Punjabi", "Japanese"]);
   await expect(page.getByText("Zest before you juice")).toBeVisible();
 
   const contrast = page.getByRole("region", { name: "Contrast" });
@@ -32,16 +32,16 @@ test("a Cook finds an Ingredient by typing, opens it and expands a Pairing", asy
 test("arrow keys move through matches, and Escape closes then clears", async ({ page }) => {
   await page.goto("/");
   await search(page).fill("li");
-  await expect(page.getByRole("option")).toHaveText(["Lime", "Cauliflower", "Garlic", "Scallion"]);
-  await search(page).press("ArrowDown");
-  await search(page).press("ArrowDown");
-  await search(page).press("ArrowDown");
+  await expect(page.getByRole("option")).toHaveText(["Lime", "Cauliflower", "Colatura di alici", "Garlic", "Salmoriglio", "Scallion"]);
+  for (let i = 0; i < 4; i++) await search(page).press("ArrowDown");
   const garlic = page.getByRole("option", { name: "Garlic" });
   await expect(garlic).toHaveAttribute("aria-selected", "true");
   await expect(search(page)).toHaveAttribute(
     "aria-activedescendant",
     (await garlic.getAttribute("id"))!,
   );
+  await search(page).press("ArrowUp");
+  await expect(page.getByRole("option", { name: "Colatura di alici" })).toHaveAttribute("aria-selected", "true");
   await search(page).press("ArrowUp");
   await expect(page.getByRole("option", { name: "Cauliflower" })).toHaveAttribute("aria-selected", "true");
   await search(page).press("ArrowUp");

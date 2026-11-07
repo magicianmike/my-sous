@@ -88,7 +88,7 @@ export function RecipeBody({ recipe }: { recipe: Recipe }) {
           <li key={i}>
             {text}
             {safety.map(({ ingredient, guidance }) => (
-              <p key={ingredient.id} className="safety-note">
+              <p key={ingredient?.id ?? "step"} className="safety-note">
                 {/* Validation gives all safety guidance at least one citation. */}
                 <span className="tag">Food safety</span> {guidance.note}{" "}
                 {guidance.citations.map((citation, j, { length }) => (

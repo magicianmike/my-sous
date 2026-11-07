@@ -14,12 +14,14 @@ safety:
       - title: Why avoiding cross-contamination is important, Food Standards Agency
         url: https://www.gov.uk/government/publications/why-avoiding-cross-contamination-is-important/why-avoiding-cross-contamination-is-important
   cooking:
-    note: Cook chops, roasts and tenderloin until an instant-read thermometer reads 145°F / 63°C, then rest them for 3 minutes; cook ground pork to 160°F / 71°C. The UK advises cooking pork until no pink meat is left; 158°F / 70°C held for 2 minutes in the centre meets both.
+    note: Cook pork until no pink is left and an instant-read thermometer reads 160°F / 71°C, as Health Canada advises for pieces, whole cuts and ground pork. The FDA allows whole cuts at 145°F / 63°C with a 3-minute rest, and the UK advises cooking pork until no pink meat is left.
     citations:
       - title: Meat, Poultry & Seafood (Food Safety for Moms-to-Be), U.S. Food and Drug Administration
         url: https://www.fda.gov/food/people-risk-foodborne-illness/meat-poultry-seafood-food-safety-moms-be
       - title: Cooking your food, Food Standards Agency
         url: https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food
+      - title: Safe internal cooking temperatures, Health Canada
+        url: https://www.canada.ca/en/health-canada/services/general-food-safety-tips/safe-internal-cooking-temperatures.html
 colour:
   wash: "#f8dcd6"
   washDark: "#3d2522"

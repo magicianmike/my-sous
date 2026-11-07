@@ -58,10 +58,7 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
     test("the bar never covers the focused control", async ({ page }) => {
       await open(page, "/ingredients/chicken-thigh?with=chicken-thigh,garlic");
       await expect(page.locator(".tray-bar")).toBeVisible();
-      // The page measures the bar once it's there; scrolling leaves that much room.
-      await expect
-        .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).scrollPaddingBottom))
-        .toMatch(/^[1-9]\d*px$/);
+      // The page scrolls in a row above the bar, so focus should never land under it.
       for (let i = 0; i < 40; i++) {
         await page.keyboard.press("Tab");
         const covered = await page.evaluate(() => {
@@ -81,7 +78,7 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
 
     test("the end of the page can scroll clear of the bar", async ({ page }) => {
       await open(page, "/ingredients/chicken-thigh?with=chicken-thigh,garlic");
-      await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+      await page.evaluate(() => document.querySelector(".page")!.scrollTo(0, document.querySelector(".page")!.scrollHeight));
       const clear = await page.evaluate(() => {
         const last = [...document.querySelectorAll("main li")].at(-1)!.getBoundingClientRect();
         return last.bottom <= document.querySelector(".tray-dock")!.getBoundingClientRect().top;
@@ -101,7 +98,7 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
 
     test("at the end of the page, the bar still meets the foot of the screen", async ({ page }) => {
       await open(page, "/ingredients/chicken-thigh?with=chicken-thigh,garlic");
-      await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+      await page.evaluate(() => document.querySelector(".page")!.scrollTo(0, document.querySelector(".page")!.scrollHeight));
       const gap = await page.evaluate(
         () => innerHeight - document.querySelector(".tray-dock")!.getBoundingClientRect().bottom,
       );

@@ -16,6 +16,7 @@ import {
   type IngredientContent,
   type KitchenContent,
   type RecipeContent,
+  slotTakes,
 } from "./schema";
 import { BANNED_WORDS, BANNED_WORDS_RULE } from "./voice";
 
@@ -228,7 +229,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
     });
   }
 
-  const accepted = new Set(content.formulas.flatMap(({ slots }) => slots.map(({ accepts }) => accepts)));
+  const accepted = new Set(content.formulas.flatMap(({ slots }) => slots.flatMap(({ accepts }) => accepts ?? [])));
   for (const { id, slotExceptions } of content.cuisines) {
     for (const { slotType } of slotExceptions.filter(({ slotType }) => !accepted.has(slotType))) {
       errors.push({
@@ -271,7 +272,15 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
   const formulasFile = join(contentDir, "formulas.yaml");
   const fillable = new Set(content.ingredients.flatMap(({ slotTypes }) => slotTypes));
   for (const formula of content.formulas) {
-    for (const slot of formula.slots.filter(({ accepts }) => !fillable.has(accepts))) {
+    for (const slot of formula.slots.filter(({ ingredients }) => ingredients)) {
+      for (const id of slot.ingredients!.filter((id) => !ingredientIds.has(id))) {
+        errors.push({
+          file: formulasFile,
+          message: `Formula ${formula.id}'s Slot "${slot.id}" lists unknown Ingredient "${id}".`,
+        });
+      }
+    }
+    for (const slot of formula.slots.filter(({ accepts }) => accepts !== undefined && !fillable.has(accepts))) {
       errors.push({
         file: formulasFile,
         message: `Formula ${formula.id} has a Slot "${slot.id}" that no Ingredient can fill (it accepts "${slot.accepts}").`,
@@ -307,7 +316,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
       for (const ingredientId of ingredientIds) {
         const ingredient = ingredientsById.get(ingredientId);
         if (!ingredient) report(`fills "${slotId}" with unknown Ingredient "${ingredientId}".`);
-        else if (!ingredient.slotTypes.includes(slot.accepts)) {
+        else if (!slotTakes(slot, ingredient)) {
           report(`fills "${slotId}" with ${ingredientId}, which isn't ${slot.role}.`);
         }
       }
@@ -329,7 +338,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
       for (const ingredientId of Object.keys(line.for ?? {})) {
         const ingredient = ingredientsById.get(ingredientId);
         if (!ingredient) report(`gives an amount for unknown Ingredient "${ingredientId}".`);
-        else if (!ingredient.slotTypes.includes(slot.accepts)) {
+        else if (!slotTakes(slot, ingredient)) {
           report(`gives an amount of ${ingredientId} for "${slot.id}", which it can't fill.`);
         }
       }
@@ -352,7 +361,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
       }
       // The Cook can put in any Ingredient that fits, so each needs the guidance.
       for (const { id } of content.ingredients.filter(
-        ({ slotTypes, safety: guidance }) => slotTypes.includes(slot.accepts) && !guidance?.[safety.about],
+        (ingredient) => slotTakes(slot, ingredient) && !ingredient.safety?.[safety.about],
       )) {
         report(
           `marks step ${i + 1} safety-sensitive for "${slot.id}", so ${id}, which can fill it, ` +

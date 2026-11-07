@@ -21,7 +21,9 @@ export const INGREDIENT_CATEGORIES = [
   "produce",
   "meat",
   "seafood",
+  "egg",
   "dairy",
+  "grain",
   "condiment",
   "blend",
 ] as const;
@@ -38,7 +40,9 @@ export const INGREDIENT_CATEGORY_HEADINGS: Record<IngredientCategory, string> = 
   produce: "Produce",
   meat: "Meat",
   seafood: "Fish and seafood",
+  egg: "Eggs",
   dairy: "Dairy",
+  grain: "Grains and bread",
   condiment: "Condiments",
   blend: "Blends",
 };

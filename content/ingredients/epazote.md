@@ -2,7 +2,7 @@
 name: Epazote
 category: herb
 cuisines: [oaxacan]
-slotTypes: [soft herb]
+slotTypes: [soft herb, garnish]
 tip: Use a sprig or two, not a bunch; its flavour is strong, and the plant is harmful in large amounts.
 culturalContext: Epazote is essential in Mexican pot beans, and in Oaxaca it's one of the herbs, with parsley and hoja santa, that turn mole verde green. Many Oaxacan cooks season black beans with avocado leaf instead.
 colour:

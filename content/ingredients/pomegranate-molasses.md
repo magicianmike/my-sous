@@ -2,7 +2,7 @@
 name: Pomegranate molasses
 category: condiment
 cuisines: [levantine]
-slotTypes: [acid]
+slotTypes: [acid, sauce]
 tip: Start with a spoonful and taste, because the fruit it's made from varies from sharp to sweet; its sugars brown quickly under high heat.
 culturalContext: Pomegranate molasses is common across the Levant, in Lebanese fattoush dressings and meat dishes, and in Palestinian kitchens in roast chicken, kafta and rummaniyeh, a lentil and eggplant stew from the coast and Gaza. Only some cooks add it to fattoush.
 colour:

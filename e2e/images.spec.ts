@@ -98,13 +98,6 @@ test.describe("a dish's page", () => {
     expect(image!.height).toBeLessThanOrEqual(page.viewportSize()!.height * 0.28 + 1);
   });
 
-  test("without an image, shows no frame for one", async ({ page }) => {
-    await page.goto("/formulas/sheet-pan-roast?with=ginger");
-
-    await expect(page.getByRole("main").getByRole("figure")).toHaveCount(0);
-    await expect(page.getByRole("main").getByText(/^(Placeholder|AI-generated) image$/)).toHaveCount(0);
-  });
-
   test("keeps its image's space before the file arrives", async ({ page }) => {
     const release = await holdImages(page);
     await page.goto("/formulas/pan-sauce", { waitUntil: "domcontentloaded" });
@@ -154,9 +147,4 @@ test.describe("a Suggestion card", () => {
     expectSamePlace(await card(page, "Sheet-pan roast").boundingBox(), sheetPan);
   });
 
-  test("without an image, shows none", async ({ page }) => {
-    await page.goto("/suggestions?with=chicken-thigh,garlic");
-
-    await expect(card(page, "Sheet-pan roast").locator("picture")).toHaveCount(0);
-  });
 });

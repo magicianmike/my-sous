@@ -71,7 +71,7 @@
           url: https://www.indianasapplepie.com/blogs/indian-as-apple-pie/aloo-gobi
 
 - id: japanese
-  name: Japanese home cooking
+  name: Japanese
   description: Everyday cooking in Japanese homes, usually rice with soup and a few small dishes.
   launch: true
   slotExceptions:

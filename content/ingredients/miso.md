@@ -2,6 +2,7 @@
 name: Miso
 category: condiment
 cuisines: [japanese]
+slotTypes: [sauce]
 tip: Stir miso into soup off the boil; a full boil dulls its aroma.
 culturalContext: Miso varies from region to region and from house to house in Japan, from salty Tsugaru miso to sweet Saikyo white miso and dark Hatcho miso. Every household makes its miso soup a little differently, and fermented seasonings like miso and soy sauce are often seen as the key to the taste of Japanese food.
 colour:

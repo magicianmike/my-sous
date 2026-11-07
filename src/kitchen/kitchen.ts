@@ -17,6 +17,7 @@ import type {
   SafetyGuidance,
   Slot,
 } from "./schema";
+import { slotTakes } from "./schema";
 
 export type { Citation, Cuisine, Formula, Image, KitchenContent, PairingReason, SafetyGuidance, Slot };
 
@@ -129,8 +130,11 @@ export type Suggestion = {
 /** A line of a Recipe's ingredient list, its name lower-case like the rest; `ingredient` is set when it fills a Slot. */
 export type RecipeIngredient = { amount: string; name: string; ingredient?: Ingredient; note?: string };
 
-/** A Recipe step; a safety-sensitive one carries the cited guidance of each Ingredient it depends on. */
-export type RecipeStep = { text: string; safety: { ingredient: Ingredient; guidance: SafetyGuidance }[] };
+/**
+ * A Recipe step; a safety-sensitive one carries the cited guidance of each Ingredient it depends on,
+ * then any guidance of its own.
+ */
+export type RecipeStep = { text: string; safety: { ingredient?: Ingredient; guidance: SafetyGuidance }[] };
 
 /** A Formula's Recipe, for whatever fills its Slots: quantities, timings and the full method. */
 export type Recipe = {
@@ -200,7 +204,7 @@ export type Kitchen = {
 type Fill = { ingredient: Ingredient; source: FillSource };
 
 const usedIn = (fills: Fill[][]) => fills.flat().map(({ ingredient }) => ingredient);
-const fits = (slot: Slot) => (ingredient: Ingredient) => ingredient.slotTypes.includes(slot.accepts);
+const fits = (slot: Slot) => (ingredient: Ingredient) => slotTakes(slot, ingredient);
 
 /** Why an Ingredient is in its Slot. */
 function explainFill(source: FillSource, justification: PairingView | undefined): string {
@@ -529,14 +533,17 @@ export function createKitchen(content: KitchenContent): Kitchen {
               : { amount, name: inSentence(ingredient), ingredient, note };
           });
         }),
-        steps: recipe.steps.map(({ text, safety }) => ({
+        steps: recipe.steps.map(({ text, safety, guidance: own }) => ({
           text: fillIn(text, slots),
-          safety: safety
-            ? filled(safety.slot).fills.flatMap(({ ingredient }) => {
-                const guidance = ingredient.safety?.[safety.about];
-                return guidance ? [{ ingredient, guidance }] : [];
-              })
-            : [],
+          safety: [
+            ...(safety
+              ? filled(safety.slot).fills.flatMap(({ ingredient }) => {
+                  const guidance = ingredient.safety?.[safety.about];
+                  return guidance ? [{ ingredient, guidance }] : [];
+                })
+              : []),
+            ...(own ? [{ guidance: own }] : []),
+          ],
         })),
       };
     },

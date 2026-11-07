@@ -2,7 +2,7 @@
 name: Basil
 category: herb
 cuisines: [southern-italian, ligurian]
-slotTypes: [soft herb]
+slotTypes: [soft herb, garnish]
 tip: Keep basil out of the fridge, where cold blackens the leaves, and tear it by hand right before you use it.
 culturalContext: Genovese basil, grown around Genoa since the 19th century, is the base of Ligurian pesto. In Naples, many cooks put half the basil into a tomato sauce and tear the rest over at the end.
 colour:

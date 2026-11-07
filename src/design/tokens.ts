@@ -35,6 +35,8 @@ export type Palette = {
   accentInk: string;
   /** The focus ring. */
   focus: string;
+  /** Where the reader is: the Case Study chapter being read, its text and the bar beside it. The bar's shape says so; this echoes it. */
+  current: string;
 };
 
 export const palettes: Record<"light" | "dark", Palette> = {
@@ -54,6 +56,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
     accent: "#1f2620",
     accentInk: "#ffffff",
     focus: "#1f2620",
+    current: "#2f6a3a",
   },
   dark: {
     bg: "#121412",
@@ -71,6 +74,7 @@ export const palettes: Record<"light" | "dark", Palette> = {
     accent: "#ebefe9",
     accentInk: "#121412",
     focus: "#ebefe9",
+    current: "#9dd4a6",
   },
 };
 
@@ -97,6 +101,7 @@ export const textPairings: [keyof Palette, keyof Palette][] = [
   ["linkHover", "caution"],
   ["cautionInk", "cautionLine"],
   ["accentInk", "accent"],
+  ["current", "bg"],
 ];
 
 /** Pairings that make a control or its state visible; each must meet 3:1 (SC 1.4.11). */
@@ -110,6 +115,7 @@ export const nonTextPairings: [keyof Palette, keyof Palette][] = [
   ["accent", "surface"],
   ["accent", "floating"],
   ["focus", "floating"],
+  ["current", "bg"],
   ["focus", "caution"],
 ];
 
@@ -122,6 +128,8 @@ const scales = {
   "text-xl": "1.5rem",
   "text-2xl": "1.75rem",
   "text-display": "clamp(2.875rem, 2rem + 3vw, 4rem)",
+  // The Case Study's sticky title: smaller than a display heading, since it stays on screen.
+  "text-title": "clamp(1.875rem, 1.5rem + 1.25vw, 2.5rem)",
   "leading-tight": "1.1",
   "leading-body": "1.55",
   "weight-regular": "400",
@@ -150,6 +158,13 @@ const scales = {
   "chapter-nav-width": "14rem",
   // A Case Study diagram draws no narrower than this, so its words stay readable; narrow screens scroll it.
   "diagram-min-width": "36rem",
+  // The bar beside the Case Study chapter being read.
+  "chapter-marker-width": "0.3125rem",
+  // The Case Study's top row, where Back to MySous and the theme switch sit in the window's corners.
+  "case-study-top-row": "3.5rem",
+  // The Case Study's sticky title, so a chapter scrolled to lands below it. The title measures
+  // itself once the page is live; this is its height on a wide screen until then.
+  "case-study-title-height": "6rem",
   // Case Study screenshots sit side by side only when each is this wide.
   "shot-min-width": "18rem",
   "tile-min": "11rem",

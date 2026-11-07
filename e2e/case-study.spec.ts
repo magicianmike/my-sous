@@ -9,19 +9,28 @@ const embed = (page: Page, caption: RegExp) => page.getByRole("figure").filter({
 
 const appScreens = ["/", "/ingredients/lemon?with=garlic", "/suggestions?with=garlic", "/formulas/pan-sauce"];
 
-test("the app links to the Case Study only from its footer, and the Case Study has no tray", async ({
+test("the app links to the Case Study only from beside the theme switch, and the Case Study has no tray", async ({
   page,
 }) => {
   for (const path of appScreens) {
     await page.goto(path);
     const links = page.locator('a[href="/case-study"]');
     await expect(links).toHaveCount(1);
-    const footer = page.getByRole("contentinfo");
-    await expect(footer.getByRole("link", { name: "How MySous was made" })).toBeVisible();
+    const link = (await links.boundingBox())!;
+    const theme = (await page.getByRole("radiogroup", { name: "Theme" }).boundingBox())!;
+    // On the same row, just before the switch.
+    expect(Math.abs(link.y + link.height / 2 - (theme.y + theme.height / 2))).toBeLessThan(4);
+    expect(theme.x - (link.x + link.width)).toBeLessThan(40);
+    expect(theme.x - (link.x + link.width)).toBeGreaterThanOrEqual(0);
+    await expect(page.getByRole("contentinfo")).toHaveCount(0);
   }
   await page.getByRole("link", { name: "How MySous was made" }).click();
   await expect(page).toHaveURL(/\/case-study$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("How MySous was made");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("How MySous was made: a Case Study");
+  // The title is the only header: no wordmark or label above it, though the theme switch stays.
+  await expect(page.getByRole("link", { name: "MySous", exact: true })).toHaveCount(0);
+  await expect(page.getByText("Case Study", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("radiogroup", { name: "Theme" })).toBeVisible();
   await expect(page.getByRole("contentinfo")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: /Your basket/ })).toHaveCount(0);
 });
@@ -161,4 +170,83 @@ test("every link into the app from the prose opens the basket it names", async (
     const names = ids.map((id) => new RegExp(`^${id.replace(/-/g, " ")}`, "i"));
     await expect(page.locator(".suggestions-combination li")).toHaveText(names);
   }
+});
+
+/** The Case Study's chapter list. */
+const chapters = (page: Page) => page.getByRole("navigation", { name: "Chapters" });
+
+test("the title stays at the top while reading, without covering a chapter's heading", async ({ page }) => {
+  await page.goto("/case-study");
+  await chapters(page).getByRole("link", { name: "Architecture" }).click();
+  const heading = page.getByRole("heading", { level: 2, name: "Architecture" });
+  await expect(heading).toBeInViewport();
+
+  const title = page.getByRole("heading", { level: 1, name: "How MySous was made: a Case Study" });
+  await expect(title).toBeInViewport();
+  const bar = (await title.locator("xpath=..").boundingBox())!;
+  const top = (await heading.boundingBox())!;
+  // Stuck at the top, below the row Back to MySous keeps.
+  expect(bar.y).toBeLessThan(80);
+  expect(top.y).toBeGreaterThanOrEqual(bar.y + bar.height);
+});
+
+test("Back to top returns to the top of the page, and the keyboard starts there", async ({ page, isMobile }) => {
+  await page.goto("/case-study");
+  // Only offered once there's a way back up to go.
+  await expect(page.getByRole("link", { name: "Back to top" })).toBeHidden();
+  await chapters(page).getByRole("link", { name: "What I rejected" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "What I rejected" })).toBeInViewport();
+
+  // Pinned to the window's bottom-left corner.
+  const link = (await page.getByRole("link", { name: "Back to top" }).boundingBox())!;
+  const viewport = page.viewportSize()!;
+  expect(viewport.height - (link.y + link.height)).toBeLessThan(40);
+  expect(link.x).toBeLessThan(24);
+
+  await page.getByRole("link", { name: "Back to top" }).click();
+  const theme = page.getByRole("radiogroup", { name: "Theme" });
+  await expect(theme).toBeInViewport();
+  await expect(page.getByRole("link", { name: "Back to top" })).toBeHidden();
+  if (!isMobile) {
+    await page.keyboard.press("Tab");
+    await expect(theme.getByRole("radio", { checked: true })).toBeFocused();
+  }
+});
+
+test("the chapter list marks the chapter being read, and only that one", async ({ page }) => {
+  await page.goto("/case-study");
+  const current = chapters(page).locator('a[aria-current="location"]');
+  await expect(current).toHaveText("In 60 seconds");
+
+  for (const title of ["Architecture", "Honest about culture", "What’s next"]) {
+    await chapters(page).getByRole("link", { name: title, exact: true }).click();
+    await expect(current).toHaveCount(1);
+    await expect(current).toHaveText(title);
+  }
+});
+
+test("Back to MySous stays in the window's top-left corner, clear of the title", async ({ page }) => {
+  await page.goto("/case-study");
+  const back = page.getByRole("link", { name: "Back to MySous" });
+  await chapters(page).getByRole("link", { name: "Architecture" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "Architecture" })).toBeInViewport();
+  const corner = (await back.boundingBox())!;
+  expect(corner.x).toBeLessThan(24);
+  expect(corner.y).toBeLessThan(24);
+  // The sticky title's words never sit under it: below it on a narrow screen, beside it on a wide one.
+  const title = (await page.getByRole("heading", { level: 1 }).boundingBox())!;
+  const apart =
+    title.y >= corner.y + corner.height - 1 || title.x >= corner.x + corner.width - 1;
+  expect(apart).toBe(true);
+
+  await back.click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("link", { name: "MySous", exact: true })).toBeVisible();
+});
+
+test("the theme switch stays on screen while reading", async ({ page }) => {
+  await page.goto("/case-study");
+  await chapters(page).getByRole("link", { name: "What’s next" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "What’s next" })).toBeInViewport();
+  await expect(page.getByRole("radiogroup", { name: "Theme" })).toBeInViewport({ ratio: 1 });
 });

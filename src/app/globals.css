@@ -130,6 +130,9 @@ ul {
 
 /* The theme's sun and moon, at the end of the header; on a phone, on a row of their own. */
 .site-theme {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   margin-inline-start: auto;
 }
 
@@ -142,6 +145,25 @@ ul {
     position: absolute;
     top: calc(var(--space-3) - var(--space-1));
     right: var(--space-4);
+  }
+}
+
+/*
+ * On the Case Study, which has no basket panel to collide with, the switch stays on screen while
+ * reading: in the window's corner, or on a phone at its foot, opposite Back to top, since at the top
+ * it would sit over the title.
+ */
+body:has(.case-study) .site-theme {
+  position: fixed;
+  z-index: 2;
+  right: var(--space-4);
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 32rem) {
+  body:has(.case-study) .site-theme {
+    top: calc(var(--space-3) - var(--space-1));
+    bottom: auto;
   }
 }
 
@@ -198,6 +220,8 @@ ul {
   margin: 0 auto;
   display: grid;
   gap: var(--space-6);
+  /* The page ends with room to breathe, rather than flush against the window or the basket bar. */
+  padding-bottom: var(--space-6);
 }
 
 /*
@@ -1013,24 +1037,14 @@ main:has(.case-study) {
   max-width: var(--tray-width);
 }
 
-/* Page frame: the site label, the footer and the skip links */
+/* Page frame: the skip links */
 
-.site-label {
-  color: var(--ink-muted);
-  font-weight: var(--weight-bold);
-}
-
-.site-footer {
-  padding-block: var(--space-2);
-  border-top: var(--border-hairline) solid var(--line);
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
-}
-
-.site-footer a {
+.case-study-link {
   display: inline-flex;
   align-items: center;
   min-height: var(--target);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
 }
 
 /* Hidden until focused, then the first thing on the page. */
@@ -1063,34 +1077,114 @@ main:has(.case-study) {
   gap: var(--space-6);
 }
 
-.chapter-nav h2 {
-  margin: 0 0 var(--space-2);
-  font-family: var(--font-text);
-  font-size: var(--text-sm);
-  color: var(--ink-muted);
-}
-
 .chapter-nav ol {
   display: grid;
-  gap: var(--space-1);
+  gap: var(--space-3);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* A phone keeps full-size touch targets; wider screens set the chapters closer to their text. */
 .chapter-nav a {
+  position: relative;
   display: flex;
   align-items: center;
   min-height: var(--target);
+  padding-inline-start: calc(var(--chapter-marker-width) + var(--space-3));
   font-weight: var(--weight-bold);
+}
+
+/* The chapter being read has a bar at its edge, which grows in: marked by shape, never by colour alone. */
+.chapter-nav a::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--chapter-marker-width);
+  border-radius: var(--radius-pill);
+  background: var(--current);
+  transform: scaleY(0);
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.chapter-nav a[aria-current="location"] {
+  color: var(--current);
+}
+
+.chapter-nav a[aria-current="location"]::before {
+  transform: scaleY(1);
 }
 
 .case-study-content {
   max-width: var(--measure);
 }
 
-.case-study-content h1 {
-  margin-top: 0;
+/* The title bar stays at the top while reading, over the text, with Back to top at its end. */
+.case-study-title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 var(--space-4);
+  padding-block: var(--space-5);
+  border-bottom: var(--border-hairline) solid var(--line);
+  background: var(--bg);
+}
+
+.case-study-title h1 {
+  margin: 0;
+  font-size: var(--text-title);
+}
+
+/* The Case Study keeps a top row for the corner links, which on a narrow screen sit on the title's band. */
+body:has(.case-study) .site-header {
+  min-height: var(--case-study-top-row);
+}
+
+.case-study-title {
+  padding-top: calc(var(--case-study-top-row) + var(--space-2));
+}
+
+/* Beside the chapters, the corner links sit in the window's margins instead. */
+@media (min-width: 56rem) {
+  .case-study-title {
+    padding-top: var(--space-5);
+  }
+}
+
+/* Back to MySous, in the window's top-left corner, level with the theme switch. */
+.back-to-app {
+  position: fixed;
+  top: calc(var(--space-3) - var(--space-1));
+  left: var(--space-4);
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  font-weight: var(--weight-bold);
+}
+
+/* Back to top, in the window's bottom-left corner. */
+.back-to-top:not([hidden]) {
+  gap: var(--space-2);
+  position: fixed;
+  left: var(--space-4);
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+  padding-inline: var(--space-4);
+  border: var(--border-hairline) solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-weight: var(--weight-bold);
 }
 
 .chapter {
@@ -1260,9 +1354,14 @@ main:has(.case-study) {
     align-items: start;
   }
 
-  .chapter-nav {
+  .case-study-aside {
     position: sticky;
-    top: var(--space-4);
+    top: var(--case-study-top-row);
+  }
+
+  .chapter-nav a {
+    min-height: auto;
+    padding-block: var(--space-1);
   }
 }
 
@@ -1274,6 +1373,12 @@ main:has(.case-study) {
   .page:has(.case-study) {
     scroll-behavior: smooth;
   }
+}
+
+/* A chapter scrolled to lands below the sticky title, wherever the page scrolls. */
+html:has(.case-study),
+.page:has(.case-study) {
+  scroll-padding-top: var(--case-study-title-height);
 }
 
 .settling .pairing-group li {

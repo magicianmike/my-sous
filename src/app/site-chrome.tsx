@@ -24,7 +24,7 @@ export function CaseStudyLink() {
   if (useIsCaseStudy()) return null;
   return (
     <Link href="/case-study" className="case-study-link">
-      How MySous was made
+      <span>How MySous</span> <span>was made</span>
     </Link>
   );
 }

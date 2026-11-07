@@ -123,8 +123,10 @@ ul {
   flex-wrap: wrap;
   align-items: center;
   gap: 0 var(--space-5);
+  /* As wide as the page, so it starts where the content does rather than shrinking to its middle. */
+  width: 100%;
   max-width: var(--page-width);
-  margin: 0 auto;
+  margin: 0 auto var(--space-5);
   padding-block: var(--space-3);
 }
 
@@ -1039,12 +1041,16 @@ main:has(.case-study) {
 
 /* Page frame: the skip links */
 
+/* Set on two lines, so it stays a quiet aside beside the switch. */
 .case-study-link {
   display: inline-flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   min-height: var(--target);
   color: var(--ink-muted);
   font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  text-align: end;
 }
 
 /* Hidden until focused, then the first thing on the page. */
@@ -1143,6 +1149,7 @@ main:has(.case-study) {
 /* The Case Study keeps a top row for the corner links, which on a narrow screen sit on the title's band. */
 body:has(.case-study) .site-header {
   min-height: var(--case-study-top-row);
+  margin-bottom: 0;
 }
 
 .case-study-title {

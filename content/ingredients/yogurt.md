@@ -2,6 +2,7 @@
 name: Yogurt
 category: dairy
 cuisines: [punjabi, levantine]
+slotTypes: [sauce]
 tip: If you heat yogurt for a sauce, whisk in a little cornstarch first and keep it at a gentle simmer, so it doesn't split.
 culturalContext: Punjabi cooking uses a lot of dairy; yogurt goes into raita, lassi and the marinade for tandoori chicken. In Levantine cooking it's served beside rice dishes such as maqluba and simmered into garlicky sauces for dumplings and fatteh.
 colour:

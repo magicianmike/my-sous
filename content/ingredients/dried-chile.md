@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a dried chile on its pale red.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Drying changes a chile, and some are smoked as they dry, like Oaxaca's pasilla. Dried chiles are usually woken with heat, fried in oil, or toasted, soaked and blended, and their heat varies widely: Kashmiri powder is mostly for colour, plain red chile powder for heat.

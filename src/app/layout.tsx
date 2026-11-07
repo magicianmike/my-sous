@@ -41,20 +41,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <KitchenProvider content={kitchen.content}>
           <SkipLinks />
-          <header className="site-header">
-            <CombinationLink href="/" className="wordmark">
-              MySous
-            </CombinationLink>
-            <SiteNav />
-            <SiteLabel />
-            <div className="site-theme">
-              <ThemeSwitch />
+          {/* On a phone, the page scrolls above the basket bar, which keeps a row of its own. */}
+          <div className="shell">
+            <div className="page">
+              <header className="site-header">
+                <CombinationLink href="/" className="wordmark">
+                  MySous
+                </CombinationLink>
+                <SiteNav />
+                <SiteLabel />
+                <div className="site-theme">
+                  <ThemeSwitch />
+                </div>
+              </header>
+              <div className="app">
+                <main id="main">{children}</main>
+                <SiteFooter />
+              </div>
             </div>
-          </header>
-          <div className="app">
-            <main id="main">{children}</main>
-            {/* Before the tray, so on a phone the docked bar still meets the foot of the screen. */}
-            <SiteFooter />
             <CombinationTray />
           </div>
         </KitchenProvider>

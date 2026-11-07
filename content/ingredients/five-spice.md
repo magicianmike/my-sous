@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a star anise and spices on their pale brown.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Five-spice is a blend of ground whole spices built on cassia cinnamon, fennel, star anise and cloves, with a fifth that varies, often Sichuan pepper. A little seasons a lot, and ground spices fade, so keep it sealed, away from heat and light.

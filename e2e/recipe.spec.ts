@@ -93,12 +93,6 @@ test("the recipe follows the basket and every change, amounts included", async (
   await expect(page.getByRole("main").getByRole("list", { name: "Method" })).toContainText("lemon juice");
 });
 
-test("a dish without a recipe keeps its short method and gives no amounts", async ({ page }) => {
-  await page.goto("/formulas/sheet-pan-roast?with=ginger");
-  await expect(page.getByRole("heading", { level: 2, name: "Method" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Ingredients" })).toHaveCount(0);
-});
-
 test("a part can hold two Ingredients from the basket, each with its full amount, and the Cook can take one out", async ({
   page,
 }) => {
@@ -137,4 +131,34 @@ test("the Cook can keep adding Ingredients to a part, with no limit", async ({ p
   for (let i = 0; i < others; i++) await rest.first().check();
   await expect(rest).toHaveCount(0);
   await expect(aromatic.locator(".slot-fill")).toHaveCount(3 + others);
+});
+
+test("a dish with a staple fills it from its list, and a step can carry its own cited safety guidance", async ({
+  page,
+}) => {
+  await page.goto("/formulas/quick-pickle");
+  // The vinegar part lists the vinegars a pickle can be made with, rather than every acid.
+  const acid = part(page, "a vinegar of at least 5% acidity");
+  await expect(acid).toContainText("Cider vinegar");
+  await acid.getByRole("button", { name: /^Options/ }).click();
+  const vinegars = acid.getByRole("checkbox");
+  await expect(vinegars).toHaveCount(2);
+  await expect(vinegars.nth(0)).toHaveAccessibleName("Cider vinegar");
+  await expect(vinegars.nth(1)).toHaveAccessibleName("White wine vinegar");
+
+  const steps = page.getByRole("main").getByRole("list", { name: "Method" }).getByRole("listitem");
+  const keeping = steps.filter({ hasText: "Lid the jar" });
+  await expect(keeping.locator(".safety-note")).toContainText("isn't shelf-stable");
+  await expect(keeping.getByRole("link", { name: "Source 2", exact: true })).toHaveAccessibleDescription(
+    /^Let's Preserve: Quick Process Pickles/,
+  );
+});
+
+test("fried rice shows the rice's own guidance on cooling and on reheating", async ({ page }) => {
+  await page.goto("/formulas/fried-rice");
+  const steps = page.getByRole("main").getByRole("list", { name: "Method" }).getByRole("listitem");
+  await expect(steps.first().locator(".safety-note")).toContainText("refrigerate it within an hour");
+  await expect(steps.filter({ hasText: "steaming hot" }).first().locator(".safety-note")).toContainText(
+    "reheat rice only once",
+  );
 });

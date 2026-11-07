@@ -2,7 +2,7 @@
 name: Parsley
 category: herb
 cuisines: [levantine, southern-italian, oaxacan]
-slotTypes: [soft herb]
+slotTypes: [soft herb, garnish]
 tip: Wash and dry the leaves before you chop them, then slice them thinly with a sharp knife rather than rocking the blade over them; bruised parsley darkens once it's dressed.
 culturalContext: In Lebanese tabbouleh, parsley is the main ingredient, with only a little bulgur, and many cooks take great care over how it's cut. It's also chopped into Palestinian kafta and scattered over musakhan to finish. In Naples, it finishes pasta with garlic and oil and spaghetti alle vongole, and in Oaxaca it's one of the herbs that turn mole verde green.
 colour:

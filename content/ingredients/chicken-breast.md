@@ -31,6 +31,6 @@ image:
   alt: A placeholder, the drawing of a chicken breast on its pale tan.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Chicken breast is lean, with less fat and collagen than thigh, so it dries out if it's cooked much past done. Sichuan cooks usually cut it small and even and coat it before a fast stir-fry, or cook it gently, cool it and dress it.

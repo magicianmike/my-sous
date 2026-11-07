@@ -31,6 +31,6 @@ image:
   alt: A placeholder, the drawing of a beef steak on its pale rose.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Beef is rich and savoury, and how it's cut decides how it's cooked. Thin slices cook in a minute or two and stay tender; mince browns and seasons a whole sauce; tougher cuts need long, gentle braising.

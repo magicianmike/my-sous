@@ -44,6 +44,13 @@ async function expectCombination(page: Page, names: string[]) {
   await expect(shown.getByRole("heading")).toContainText(`${names.length} of 4`);
 }
 
+/** The names of the first few Suggestions, once they're drawn: the best-paired come first. */
+async function topSuggestions(page: Page, count: number) {
+  const headings = suggestionList(page).getByRole("heading");
+  await expect(headings.nth(count - 1)).toBeVisible();
+  return (await headings.allTextContents()).slice(0, count);
+}
+
 test("a Cook builds a Combination, sees Suggestions and opens a Formula", async ({
   page,
   context,
@@ -57,10 +64,7 @@ test("a Cook builds a Combination, sees Suggestions and opens a Formula", async 
 
   await (await tray(page)).getByRole("link", { name: "See what to make" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "What to make" })).toBeVisible();
-  await expect(suggestionList(page).getByRole("heading")).toHaveText([
-    "Pan sauce",
-    "Sheet-pan roast",
-  ]);
+  expect(await topSuggestions(page, 2)).toEqual(["Pan sauce", "Sheet-pan roast"]);
 
   await page.getByRole("link", { name: "Pan sauce" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Pan sauce" })).toBeVisible();
@@ -93,16 +97,17 @@ test("Suggestions are ranked by how well their Ingredients pair, with a reason",
   await page.goto("/suggestions?with=chicken-thigh,garlic,tomato");
 
   const suggestions = suggestionList(page).getByRole("listitem");
-  await expect(suggestions.getByRole("heading")).toHaveText(["Sheet-pan roast", "Pan sauce"]);
+  // The best-paired come first; the rest follow.
+  expect(await topSuggestions(page, 3)).toEqual(["Sheet-pan roast", "Fried rice", "Pan sauce"]);
   await expect(suggestions.nth(0)).toContainText("Every Ingredient here pairs with every other.");
-  await expect(suggestions.nth(1)).toContainText("Chicken thigh and garlic pair well.");
+  await expect(suggestions.nth(2)).toContainText("Chicken thigh and garlic pair well.");
 });
 
 test("a Combination that doesn't pair still gets its closest Suggestions, each saying what doesn't pair", async ({
   page,
 }) => {
   await page.goto("/suggestions?with=chicken-thigh,basil");
-  await expect(suggestionList(page).getByRole("heading")).toHaveText(["Pan sauce", "Sheet-pan roast"]);
+  expect(await topSuggestions(page, 2)).toEqual(["Pan sauce", "Sheet-pan roast"]);
   await expect(suggestionList(page).getByRole("listitem").first()).toContainText("Chicken thigh and basil don't have a Pairing in MySous yet.");
   await expect(page.getByRole("heading", { name: "Not everything pairs yet" })).toHaveCount(0);
 });

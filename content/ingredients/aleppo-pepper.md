@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a dried chile with flakes on its pale red.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Aleppo pepper is a dried red chile, seeded, sun-dried and coarsely ground with salt and a little oil. Its heat is mild and its flavour fruity and slightly salty, so it seasons a dish as much as it heats it.

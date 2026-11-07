@@ -1,5 +1,6 @@
 # Formulas: adaptable dish templates. Each Slot accepts one Slot type that Ingredients list in
-# their `slotTypes`; `required` defaults to true. A Slot holds any number of Ingredients.
+# their `slotTypes`, or, for a staple such as a frittata's eggs, lists its `ingredients` by id instead;
+# `required` defaults to true. A Slot holds any number of Ingredients.
 # Method steps refer to Slots as {slotId}, which names every Ingredient in the Slot.
 
 - id: pan-sauce
@@ -24,7 +25,7 @@
       accepts: heat
       required: false
   method:
-    - Season {protein} with salt and sear it in a little oil over medium-high heat until well browned and cooked through (at the thickest point, poultry to 165°F / 74°C; pork, lamb chops and fish to 145°F / 63°C). Set it aside to rest.
+    - Season {protein} with salt and sear it in a little oil over medium-high heat until well browned and cooked through (at the thickest point, poultry to 165°F / 74°C; pork to 160°F / 71°C; lamb chops and fish to 145°F / 63°C). Set it aside to rest.
     - Pour off most of the fat, lower the heat and cook {aromatic} for about a minute, until fragrant.
     - Add a splash of water or stock and scrape up the browned bits as it bubbles and reduces a little.
     - Off the heat, stir in a knob of butter, then add {acid} a little at a time, tasting as you go.
@@ -54,5 +55,122 @@
   method:
     - Heat the oven to 425°F / 220°C.
     - Toss {protein} and {vegetable} with oil and salt, then spread them out on a sheet pan in a single layer.
-    - Tuck in {aromatic} and roast until {protein} is cooked through (at the thickest point, poultry to 165°F / 74°C; pork, lamb chops and fish to 145°F / 63°C) and the edges are browned, usually 25 to 40 minutes.
+    - Tuck in {aromatic} and roast until {protein} is cooked through (at the thickest point, poultry to 165°F / 74°C; pork to 160°F / 71°C; lamb chops and fish to 145°F / 63°C) and the edges are browned, usually 25 to 40 minutes.
     - Finish with {acid} and scatter over {herb}.
+
+- id: fried-rice
+  name: Fried rice
+  description: Cooked rice stir-fried hot with a little meat, egg and aromatics, so every grain is separate and seasoned.
+  slots:
+    - id: rice
+      role: cooked rice, chilled
+      ingredients: [rice]
+    - id: protein
+      role: something to stir-fry
+      accepts: protein
+    - id: aromatic
+      role: an aromatic
+      accepts: aromatic
+    - id: vegetable
+      role: a vegetable
+      accepts: vegetable
+      required: false
+    - id: sauce
+      role: a seasoning sauce
+      accepts: sauce
+      required: false
+    - id: garnish
+      role: something fresh to finish
+      accepts: garnish
+      required: false
+  method:
+    - Use {rice} cooked earlier, chilled within an hour and kept in the fridge no more than a day, and break up the clumps with damp hands.
+    - Cut {protein} small and stir-fry it in a very hot wok or skillet until cooked through (poultry to 165°F / 74°C; pork to 160°F / 71°C), then set it aside.
+    - Scramble an egg or two until barely set, and set them aside.
+    - Stir-fry {aromatic} and {vegetable} for a minute or two, then add {rice} and keep it moving until every grain is steaming hot, about 5 minutes.
+    - Season with {sauce} and salt, return {protein} and the egg, and toss for 30 seconds.
+    - Finish with {garnish} off the heat, and eat it straight away.
+
+- id: frittata
+  name: Frittata
+  description: Eggs cooked slowly around a cooked vegetable until set, then turned so both sides colour.
+  slots:
+    - id: eggs
+      role: eggs
+      ingredients: [eggs]
+    - id: vegetable
+      role: a vegetable, cooked first
+      accepts: vegetable
+    - id: aromatic
+      role: an aromatic
+      accepts: aromatic
+      required: false
+    - id: herb
+      role: a soft herb
+      accepts: soft herb
+      required: false
+    - id: garnish
+      role: something to finish
+      accepts: garnish
+      required: false
+  method:
+    - Cook {vegetable} with {aromatic} in olive oil over medium heat until tender and lightly golden, then let it cool a little.
+    - Beat {eggs} with salt, grated hard cheese and {herb}, without whisking in a lot of air, then stir in {vegetable}.
+    - Pour it into an oiled skillet over low heat, cover, and cook until the edges and most of the middle have set.
+    - Turn it with a plate and cook the other side until no liquid egg is left in the centre (165°F / 74°C).
+    - Rest it a few minutes, then finish with {garnish}. Serve it warm or at room temperature, and refrigerate what's left within 2 hours.
+
+- id: grain-bowl
+  name: Grain bowl
+  description: Warm grain with something savoury, a roasted vegetable, a cool sauce and fresh herbs, each made separately.
+  slots:
+    - id: grain
+      role: a grain
+      ingredients: [rice, bulgur]
+    - id: protein
+      role: something savoury on top
+      accepts: protein
+    - id: vegetable
+      role: a vegetable to roast
+      accepts: vegetable
+    - id: sauce
+      role: a sauce to spoon over
+      accepts: sauce
+    - id: herb
+      role: a soft herb
+      accepts: soft herb
+      required: false
+    - id: garnish
+      role: something to scatter
+      accepts: garnish
+      required: false
+  method:
+    - Cook {grain} until tender and keep it warm, covered.
+    - Roast {vegetable} in a hot oven, 425°F / 220°C, until browned at the edges.
+    - Cook {protein} until done (poultry to 165°F / 74°C; ground meat and pork to 160°F / 71°C; lamb and beef steaks and chops, and fish, to 145°F / 63°C).
+    - Season {sauce}, and loosen it with a little water if it's thick.
+    - Spoon {grain} into bowls, top with {vegetable} and {protein}, spoon over {sauce}, and finish with {herb} and {garnish}.
+
+- id: quick-pickle
+  name: Quick pickle
+  description: Sliced vegetables in a hot, seasoned vinegar brine, kept in the fridge and ready within a day.
+  slots:
+    - id: vegetable
+      role: a vegetable to pickle
+      accepts: vegetable
+    - id: acid
+      role: a vinegar of at least 5% acidity
+      ingredients: [cider-vinegar, white-wine-vinegar]
+    - id: aromatic
+      role: an aromatic
+      accepts: aromatic
+      required: false
+    - id: heat
+      role: some heat
+      accepts: heat
+      required: false
+  method:
+    - Slice {vegetable} thinly, blanching hard vegetables such as green beans or cauliflower for 2 minutes first, and pack it into a clean jar with {aromatic} and {heat}.
+    - Bring {acid}, a little water (never more water than vinegar), salt and a little sugar to a simmer, stirring until they dissolve.
+    - Pour the hot brine over so it covers everything, and let it cool.
+    - Lid the jar and refrigerate it. It's ready in a few hours and better after a day; keep it in the fridge and eat it within 2 weeks.

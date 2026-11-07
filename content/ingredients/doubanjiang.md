@@ -2,7 +2,7 @@
 name: Doubanjiang
 category: condiment
 cuisines: [sichuan]
-slotTypes: [heat]
+slotTypes: [heat, sauce]
 tip: Fry it gently in oil before any liquid goes in, until the oil turns red and smells fragrant; it's salty, so taste before adding soy sauce or salt.
 culturalContext: The best-known kind comes from Pixian, near Chengdu, and it's the base of many Sichuan classics, including mapo tofu, twice-cooked pork and fish-fragrant eggplant. Labels vary, so look for the spicy kind (marked 辣) rather than a sweet bean paste.
 colour:

@@ -29,6 +29,6 @@ image:
   alt: A placeholder, the drawing of a cod fillet on its pale blue-grey.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Cod is a lean, mild white fish with large, tender flakes. It takes on the flavour of a broth or a marinade, and because it falls apart if it's stirred, it's best cooked gently in thick pieces.

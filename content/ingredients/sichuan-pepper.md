@@ -2,7 +2,7 @@
 name: Sichuan pepper
 category: spice
 cuisines: [sichuan]
-slotTypes: [heat]
+slotTypes: [heat, garnish]
 tip: Pick out the twigs and black seeds, toast the husks lightly in a dry pan, then grind a small batch; ground, it loses its aroma quickly.
 culturalContext: With chiles it makes mala, the numbing-and-hot taste of much Sichuan cooking. Sichuan pepper is native to the province's mountain slopes, while chiles arrived in China only in the 16th century, and in many Sichuan households it's roasted and ground fresh almost every day.
 colour:

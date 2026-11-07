@@ -12,6 +12,8 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   [`/suggestions${combination}`, (page) => page.getByRole("link", { name: "Pan sauce" })],
   [`/formulas/pan-sauce${combination}`, (page) => page.getByRole("heading", { name: "Method" })],
   ["/formulas/pan-sauce", (page) => page.getByRole("heading", { name: "Ingredients" })],
+  ["/formulas/fried-rice", (page) => page.getByRole("heading", { name: "Ingredients" })],
+  ["/formulas/quick-pickle", (page) => page.getByRole("heading", { name: "Ingredients" })],
   ["/ingredients/gremolata", (page) => page.getByRole("heading", { name: "Typically includes" })],
   ["/design", (page) => page.getByRole("heading", { name: "Combination tray" })],
   ["/case-study", (page) => page.getByRole("figure").first()],
@@ -79,13 +81,15 @@ for (const colorScheme of ["light", "dark"] as const) {
     test("a Formula with an empty Slot, an open Options list and a change made has no axe violations", async ({
       page,
     }) => {
-      await page.goto("/formulas/sheet-pan-roast?with=yogurt");
-      await expect(page.getByText("No Pairing here points to a vegetable yet.")).toBeVisible();
-      const acid = page.getByRole("main").getByRole("listitem").filter({ hasText: /^an acid/ });
-      await acid.getByRole("button", { name: /^Options/ }).click();
+      await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
+      const aromatic = page.getByRole("main").getByRole("listitem").filter({ hasText: /^an aromatic/ });
+      await aromatic.getByRole("button", { name: /^Options/ }).click();
+      // Taking out its only Ingredient leaves the part empty.
+      await aromatic.getByRole("checkbox", { name: "Garlic" }).uncheck();
+      await expect(aromatic).toContainText("Empty for now.");
       await expectNoViolations(page);
-      await acid.getByRole("checkbox", { checked: false }).first().check();
-      await expect(acid.getByRole("button", { name: /^Undo change/ })).toBeVisible();
+      await aromatic.getByRole("checkbox", { name: "Ginger" }).check();
+      await expect(aromatic.getByRole("button", { name: /^Undo change/ })).toBeVisible();
       await expect(page.getByRole("status")).not.toBeEmpty();
       await expectNoViolations(page);
     });

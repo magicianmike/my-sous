@@ -2,7 +2,7 @@
 name: Ginger
 category: aromatic
 cuisines: [cantonese, japanese, sichuan, punjabi]
-slotTypes: [aromatic]
+slotTypes: [aromatic, garnish]
 tip: Scrape the skin off with a spoon; it follows the knobbly shape better than a peeler.
 culturalContext: Ginger is sliced into the poaching water for Cantonese poached chicken and minced raw into ginger-scallion sauce. It's grated over Japanese grilled eggplant and into shogayaki, and fried with garlic at the start of many Punjabi dishes.
 colour:

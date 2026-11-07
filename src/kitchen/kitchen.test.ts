@@ -538,6 +538,37 @@ describe("loadKitchen", () => {
       ]);
     });
 
+    it("fills a Slot that lists its Ingredients only from that list, whatever their Slot types", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({
+          ...fixture,
+          ingredients: { ...fixture.ingredients, farro: { name: "Farro" }, rice: { name: "Rice" } },
+          pairings: [...fixture.pairings, pairing("farro", "lamb", "Nutty farro soaks up lamb's juices.")],
+          formulas: [
+            {
+              id: "bowl",
+              name: "Bowl",
+              description: "A grain with something on it.",
+              slots: [
+                { id: "grain", role: "a grain", ingredients: ["farro", "rice"] },
+                { id: "protein", role: "something to sear", accepts: "protein" },
+              ],
+              method: ["Cook {grain} and top it with {protein}."],
+            },
+          ],
+        }),
+      );
+
+      const [bowl] = kitchen.suggest(kitchen.combination(["lamb"]).ingredients);
+
+      expect(fill(bowl)).toEqual([
+        ["grain", "farro", "pairing"],
+        ["protein", "lamb", "combination"],
+      ]);
+      expect(bowl.slots[0].choices.map(({ ingredient }) => ingredient.id)).toEqual(["farro", "rice"]);
+      expect(bowl.method).toEqual(["Cook farro and top it with lamb."]);
+    });
+
     it("picks the Ingredient that pairs with most of the fill", async () => {
       const { suggestion } = await plate(["lamb"]);
 
@@ -1060,6 +1091,25 @@ describe("loadKitchen", () => {
       expect(steps[1].safety).toEqual([]);
     });
 
+    it("gives a step its own cited guidance, for a staple that isn't an Ingredient's to give", async () => {
+      const cooled = {
+        note: "Cool cooked rice quickly and refrigerate it within 1 hour.",
+        citations: [{ title: "Rice guidance", url: "https://example.org/rice" }],
+      };
+      const steps = [
+        { text: "Cook {protein} through.", safety: { slot: "protein", about: "cooking" }, guidance: cooled },
+        ...recipe.steps.slice(1),
+      ];
+      const kitchen = await expectKitchen(writeContent({ ...fixture, recipes: { "pan-sauce": { ...recipe, steps } } }));
+
+      const [first] = kitchen.recipe(panSauce(kitchen, []))!.steps;
+
+      expect(first.safety).toEqual([
+        { ingredient: kitchen.ingredient("chicken"), guidance: cookedThrough },
+        { guidance: cooled },
+      ]);
+    });
+
     it("has none for a dish without one, which fills from the basket and Pairings alone", async () => {
       const kitchen = await expectKitchen(writeContent({ ...fixture, recipes: { "pan-sauce": recipe } }));
 
@@ -1073,6 +1123,14 @@ describe("loadKitchen", () => {
       async function errorsFor(recipes: Record<string, Record<string, unknown>>, ingredients = fixture.ingredients) {
         return expectErrors(writeContent({ ...fixture, ingredients, recipes }));
       }
+
+      it("when a step's own safety guidance cites no source with a link", async () => {
+        const steps = [{ text: "Cool the rice.", guidance: { note: "Cool it fast.", citations: [{ title: "A book" }] } }];
+
+        expect(await errorsFor({ "pan-sauce": { ...recipe, steps } })).toEqual([
+          "steps.0.guidance.citations.0.url: cite a web page, with a link starting https:// or http://",
+        ]);
+      });
 
       it("when it's for a Formula that doesn't exist", async () => {
         expect(await errorsFor({ "pan-sauce": recipe, "fried-rice": recipe })).toEqual([
@@ -1229,6 +1287,53 @@ describe("loadKitchen", () => {
       );
 
       expect(errors).toEqual(['Ingredient lemon refers to unknown Cuisine "asian".']);
+    });
+
+    it("when a Formula's Slot gives both the Slot type it accepts and the Ingredients it lists, or neither", async () => {
+      const errors = await expectErrors(
+        writeContent({
+          ingredients: { lemon: { ...lemon, slotTypes: ["acid"] } },
+          pairings: [],
+          formulas: [
+            {
+              id: "bowl",
+              name: "Bowl",
+              description: "A grain with something on it.",
+              slots: [
+                { id: "grain", role: "a grain", ingredients: ["lemon", "quinoa"] },
+                { id: "acid", role: "an acid", accepts: "acid", ingredients: ["lemon"] },
+                { id: "herb", role: "a herb" },
+              ],
+              method: ["Cook {grain}, add {acid} and {herb}."],
+            },
+          ],
+        }),
+      );
+
+      expect(errors).toEqual([
+        "0.slots.1: give a Slot exactly one of the Slot type it accepts or the Ingredients it lists",
+        "0.slots.2: give a Slot exactly one of the Slot type it accepts or the Ingredients it lists",
+      ]);
+    });
+
+    it("when a Formula's Slot lists an Ingredient that isn't in MySous", async () => {
+      const errors = await expectErrors(
+        writeContent({
+          ingredients: { lemon },
+          pairings: [],
+          formulas: [
+            {
+              id: "bowl",
+              name: "Bowl",
+              description: "A grain.",
+              slots: [{ id: "grain", role: "a grain", ingredients: ["lemon", "quinoa"] }],
+              method: ["Cook {grain}."],
+            },
+          ],
+        }),
+      );
+
+      expect(errors).toEqual(['Formula bowl\'s Slot "grain" lists unknown Ingredient "quinoa".']);
     });
 
     it("when a Formula has a Slot no Ingredient can fill", async () => {

@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of four peppercorns on their pale grey.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Black pepper brings a sharp, woody heat that's gentler than chile and builds as you add it. Freshly cracked, it's pungent and aromatic; cooked for a long time, it mellows into the background.

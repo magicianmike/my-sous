@@ -2,7 +2,7 @@
 name: Shiso
 category: herb
 cuisines: [japanese]
-slotTypes: [soft herb]
+slotTypes: [soft herb, garnish]
 tip: Keep the leaves under a damp paper towel in a closed bag in the fridge, use them within a few days, and add them raw at the end.
 culturalContext: Green shiso (ooba) is used all year in Japanese cooking, often with sashimi and sushi, as tempura, or shredded over a dish. Red shiso mostly colours umeboshi and pickles. Korean perilla leaf (kkaennip) is a different plant with a bolder taste, so many cooks don't swap one for the other.
 colour:

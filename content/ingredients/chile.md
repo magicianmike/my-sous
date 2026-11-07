@@ -2,7 +2,7 @@
 name: Fresh chile
 category: produce
 cuisines: [southern-italian, oaxacan, punjabi, sichuan, levantine]
-slotTypes: [heat]
+slotTypes: [heat, garnish]
 tip: Taste a small piece first; heat varies widely, even between chiles of the same kind.
 culturalContext: Fresh chile is sliced into Palestinian shatta, roasted and cut into strips in Oaxaca, and cooked into many Punjabi dishes. In Naples many cooks prefer it fresh for aglio, olio e peperoncino, though others use dried, and in Sichuan, fresh green chiles are blistered for tiger-skin peppers.
 colour:

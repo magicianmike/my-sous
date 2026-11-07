@@ -2829,3 +2829,535 @@
   citations:
     - title: "Dad's Crispy Skin Chicken, Made With Lau"
       url: https://www.madewithlau.com/recipes/crispy-skin-chicken
+
+# Staples, sauces and garnishes (#19; research in docs/research/0019-staples-garnish-sauce.md)
+
+- ingredients: [eggs, tomato]
+  cuisines: [southern-italian, oaxacan, sichuan]
+  reasons:
+    - category: tradition
+      note: "Eggs are often cooked in tomato sauce, as Neapolitan uova in purgatorio, Oaxacan huevos en salsa and stir-fried tomato and egg."
+      detail: "Many of these dishes keep the yolk soft; for a runny yolk, use pasteurized eggs."
+  citations:
+    - title: "Uova in purgatorio: ricetta napoletana col tuorlo morbido, Sonia Peronaci"
+      url: https://www.soniaperonaci.it/uova-in-purgatorio/
+    - title: "Uova in purgatorio, la ricetta napoletana delle uova al sugo, Dissapore"
+      url: https://www.dissapore.com/ricette/uova-in-purgatorio/
+    - title: "Huevos en salsa, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/huevos-en-salsa/
+    - title: "Tomato Egg Recipe, Yi, Yi's Sichuan Kitchen"
+      url: https://sichuankitchenrecipes.com/2022/07/20/tomato-egg-recipe/
+
+- ingredients: [eggs, epazote]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Epazote scents the chile and tomato sauce poured over Oaxacan omelettes."
+  citations:
+    - title: "Huevos en salsa, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/huevos-en-salsa/
+    - title: "Oaxacan Omelette (Salsa de Huevo), Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-omelette/
+
+- ingredients: [eggs, parsley]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Lebanese cooks fold a whole bunch of parsley into eggs for ejji, an herb omelette."
+  citations:
+    - title: "Fried Parsley Omelets (Parsley Ejji), Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fried-parsley-omelets-parsley-ejji/
+
+- ingredients: [eggs, sumac]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "A drizzle of sumac water gives a sour lift to eggs fried in olive oil and garlic."
+  citations:
+    - title: "Lebanese Fried Eggs, Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/blog/lebanese-fried-eggs/
+
+- ingredients: [eggs, chicken-thigh]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "In oyakodon, egg is poured over chicken thigh simmered in dashi and soy, and binds it as it sets."
+  citations:
+    - title: "Oyakodon (Chicken and Egg Rice Bowl), Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/oyakodon/
+
+- ingredients: [eggs, onion]
+  cuisines: [punjabi, levantine]
+  reasons:
+    - category: tradition
+      note: "Onion is softened before the eggs in Punjabi anda bhurji and grated into Lebanese ejji."
+  citations:
+    - title: "Egg Bhurji (Anda Bhurji), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/egg-bhurji/
+    - title: "Fried Parsley Omelets (Parsley Ejji), Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fried-parsley-omelets-parsley-ejji/
+
+- ingredients: [rice, eggs]
+  cuisines: [cantonese]
+  reasons:
+    - category: texture
+      note: "Soft-scrambled egg is tossed through hot rice for Cantonese egg fried rice."
+  citations:
+    - title: "The Fried Rice My Dad's Made 100,000 Times, Made With Lau"
+      url: https://www.madewithlau.com/recipes/egg-fried-rice
+
+- ingredients: [rice, yogurt]
+  cuisines: [punjabi, levantine]
+  reasons:
+    - category: contrast
+      note: "Plain yogurt or raita cools spiced pulao, and yogurt is spooned over Palestinian mejadra."
+  citations:
+    - title: "Matar Pulao (Peas Pulao), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/matar-pulao/
+    - title: "Bulgur Mejadra (Mjaddarat el Burgul), Sami Tamimi and Tara Wigley (Falastin), The Happy Foodie"
+      url: https://thehappyfoodie.co.uk/recipes/bulgur-mejadra-mjaddarat-el-burgul/
+
+- ingredients: [rice, tomato]
+  reasons:
+    - category: tradition
+      note: "Mexican cooks fry rice, then season and colour it with ground tomato."
+  citations:
+    - title: "Arroz a la mexicana, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/arroz-a-la-mexicana/
+    - title: "Arroz, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/arroz/
+
+- ingredients: [rice, cumin]
+  cuisines: [punjabi]
+  reasons:
+    - category: aromatic bridge
+      note: "Whole cumin seeds bloom in the oil before the rice goes in for pulao."
+  citations:
+    - title: "Matar Pulao (Peas Pulao), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/matar-pulao/
+
+- ingredients: [rice, scallion]
+  cuisines: [cantonese]
+  reasons:
+    - category: aromatic bridge
+      note: "Scallion goes into Cantonese egg fried rice, a fresh, grassy note through the grains."
+  citations:
+    - title: "The Fried Rice My Dad's Made 100,000 Times, Made With Lau"
+      url: https://www.madewithlau.com/recipes/egg-fried-rice
+
+- ingredients: [bulgur, parsley]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "In Lebanese tabbouleh a little fine bulgur is tossed with a great deal of parsley."
+  citations:
+    - title: "Tabbouleh, Anissa Helou, Pilot Guides"
+      url: https://www.pilotguides.com/recipes/lebanon-recipes-tabbouleh/
+
+- ingredients: [bulgur, tomato]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Diced tomato moistens tabbouleh's raw bulgur, and tomato cooks into shulbato."
+  citations:
+    - title: "Tabbouleh, Anissa Helou, Pilot Guides"
+      url: https://www.pilotguides.com/recipes/lebanon-recipes-tabbouleh/
+    - title: "Bulgur, Tomato and Aubergine Pilaf (Shulbato), Sami Tamimi and Tara Wigley (Falastin), The Happy Foodie"
+      url: https://thehappyfoodie.co.uk/recipes/bulgur-tomato-and-aubergine-pilaf-shulbato/
+
+- ingredients: [bulgur, beef]
+  cuisines: [levantine]
+  reasons:
+    - category: texture
+      note: "Fine bulgur kneaded with lean beef or goat makes the shell of Lebanese kibbeh."
+  citations:
+    - title: "Kibbeh Mishwieh (Grilled Kibbeh), Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/blog/kibbeh-mishwieh-grilled-kibbeh/
+
+- ingredients: [bulgur, eggplant]
+  cuisines: [levantine]
+  reasons:
+    - category: texture
+      note: "Cubes of eggplant cook down into coarse bulgur in shulbato."
+  citations:
+    - title: "Bulgur, Tomato and Aubergine Pilaf (Shulbato), Sami Tamimi and Tara Wigley (Falastin), The Happy Foodie"
+      url: https://thehappyfoodie.co.uk/recipes/bulgur-tomato-and-aubergine-pilaf-shulbato/
+
+- ingredients: [bulgur, yogurt]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Cool yogurt is spooned over warm bulgur pilafs."
+  citations:
+    - title: "Bulgur, Tomato and Aubergine Pilaf (Shulbato), Sami Tamimi and Tara Wigley (Falastin), The Happy Foodie"
+      url: https://thehappyfoodie.co.uk/recipes/bulgur-tomato-and-aubergine-pilaf-shulbato/
+    - title: "Bulgur Mejadra (Mjaddarat el Burgul), Sami Tamimi and Tara Wigley (Falastin), The Happy Foodie"
+      url: https://thehappyfoodie.co.uk/recipes/bulgur-mejadra-mjaddarat-el-burgul/
+
+- ingredients: [soy-sauce, ginger]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Ginger and soy make the sauce for shogayaki, a common Japanese home dish of pan-fried pork."
+  citations:
+    - title: "Ginger Pork (Shogayaki), Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/ginger-pork-shogayaki/
+
+- ingredients: [soy-sauce, scallion]
+  cuisines: [cantonese]
+  reasons:
+    - category: tradition
+      note: "Cantonese cooks pour hot oil and seasoned soy over steamed fish topped with scallion and ginger."
+  citations:
+    - title: "Steamed Whole Fish, Chinese Style, The Woks of Life"
+      url: https://thewoksoflife.com/steamed-whole-fish/
+
+- ingredients: [soy-sauce, black-vinegar]
+  cuisines: [sichuan]
+  reasons:
+    - category: contrast
+      note: "Soy's salt and black vinegar's malty sourness together dress Sichuan cold chicken."
+  citations:
+    - title: "Mouthwatering Sichuan Cold Chicken (Kou Shui Ji), Taylor Holliday, The Mala Market"
+      url: https://blog.themalamarket.com/mouthwatering-chicken-kou-shui-ji/
+
+- ingredients: [soy-sauce, eggplant]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Grilled, peeled eggplant is usually eaten with grated ginger, bonito flakes and soy sauce."
+  citations:
+    - title: "Grilled Japanese Eggplant (Yaki Nasu), Yumiko, RecipeTin Japan"
+      url: https://japan.recipetineats.com/grilled-japanese-eggplant-yaki-nasu/
+
+- ingredients: [soy-sauce, eggs]
+  cuisines: [japanese]
+  reasons:
+    - category: tradition
+      note: "Rolled dashi omelette is often served with grated daikon dressed with soy sauce."
+  citations:
+    - title: "Tamagoyaki (Japanese Rolled Omelette), Namiko Hirasawa Chen, Just One Cookbook"
+      url: https://www.justonecookbook.com/tamagoyaki/
+    - title: "玉子焼き 東京都, うちの郷土料理, MAFF"
+      url: https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/34_11_tokyo.html
+
+- ingredients: [tahini, lemon]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Lemon thins tahini and cuts its richness in tarator and Palestinian tahini sauce."
+  citations:
+    - title: "Fried Cauliflower with Tahini Sauce, Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fried-cauliflower-tahini-sauce/
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [tahini, garlic]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "A little raw garlic is usually whisked into tahini sauce."
+  citations:
+    - title: "Fried Cauliflower with Tahini Sauce, Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fried-cauliflower-tahini-sauce/
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [tahini, eggplant]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Charred eggplant is blended with tahini, garlic and lemon for mutabbal."
+  citations:
+    - title: "Mutabbal Beitinjan, Dima Sharif"
+      url: https://www.dimasharif.com/recipes/eggplant-mutabal/
+
+- ingredients: [tahini, cauliflower]
+  cuisines: [levantine]
+  reasons:
+    - category: contrast
+      note: "Crisp fried cauliflower is served with smooth tahini sauce in Lebanon."
+  citations:
+    - title: "Fried Cauliflower with Tahini Sauce, Hadia Zebib, Hadia's Lebanese Cuisine"
+      url: https://hadiaslebanesecuisine.com/newsite/recipe-items/fried-cauliflower-tahini-sauce/
+
+- ingredients: [tahini, beef]
+  cuisines: [levantine]
+  reasons:
+    - category: tradition
+      note: "Palestinian kafta of beef or lamb is baked under tahini sauce."
+  citations:
+    - title: "Palestinian Kafta with Tahini Sauce, Wafa Shami, Palestine in a Dish"
+      url: https://palestineinadish.com/recipes/kiftah-bi-tahini-sauce/
+
+- ingredients: [green-chutney, potato]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Sharp herb chutney lifts crisp potato aloo tikki."
+  citations:
+    - title: "Crispy Aloo Tikki, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/aloo-tikki/
+
+- ingredients: [green-chutney, yogurt]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "On dahi bhalla, green chutney's raw heat meets cool sweetened yogurt."
+  citations:
+    - title: "Dahi Bhalla (Dahi Bara), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/dahi-bhalla/
+
+- ingredients: [green-chutney, tamarind]
+  cuisines: [punjabi]
+  reasons:
+    - category: contrast
+      note: "Fresh herb chutney and sweet-sour tamarind chutney are usually served together on chaat."
+  citations:
+    - title: "Dahi Bhalla (Dahi Bara), Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/dahi-bhalla/
+    - title: "Crispy Aloo Tikki, Izzah Cheema, Tea for Turmeric"
+      url: https://www.teaforturmeric.com/aloo-tikki/
+
+- ingredients: [salsa-verde, cilantro]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Oaxacan cooks stir chopped cilantro into ground green salsa."
+  citations:
+    - title: "Salsa verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-verde/
+
+- ingredients: [salsa-verde, onion]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Chopped raw onion goes into Oaxacan green salsa with the cilantro."
+  citations:
+    - title: "Salsa verde, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-verde/
+    - title: "Roasted Tomatillo Salsa, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/roasted-tomatillo-salsa-2/
+
+- ingredients: [pasilla-salsa, beef]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Smoky pasilla salsa is served with grilled meats such as tasajo on tlayudas."
+  citations:
+    - title: "Salsa de chile pasilla oaxaqueño, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-de-chile-pasilla-oaxaqueno/
+    - title: "Tlayuda Oaxaqueña, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/tlayuda-oaxaquena/
+
+- ingredients: [pasilla-salsa, pork]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Pasilla salsa goes onto tlayudas topped with chorizo."
+  citations:
+    - title: "Tlayuda Oaxaqueña, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/tlayuda-oaxaquena/
+
+- ingredients: [pasilla-salsa, tomato]
+  cuisines: [oaxacan]
+  reasons:
+    - category: contrast
+      note: "Some Oaxacan cooks add boiled or roasted tomato to soften the salsa's smoke and heat."
+  citations:
+    - title: "Salsa de chile pasilla oaxaqueño, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-de-chile-pasilla-oaxaqueno/
+
+- ingredients: [pasilla-salsa, garlic]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Roasted garlic is ground into the basic pasilla salsa."
+  citations:
+    - title: "Salsa de chile pasilla oaxaqueño, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/salsa-de-chile-pasilla-oaxaqueno/
+
+- ingredients: [toasted-breadcrumbs, anchovy]
+  cuisines: [southern-italian]
+  reasons:
+    - category: contrast
+      note: "Crisp crumbs top pasta made with anchovy melted into oil, as in pasta con le sarde."
+  citations:
+    - title: "Come fare la pasta con le sarde: la ricetta originale, Sonia Peronaci"
+      url: https://www.soniaperonaci.it/pasta-con-le-sarde/
+
+- ingredients: [toasted-breadcrumbs, cauliflower]
+  cuisines: [southern-italian]
+  reasons:
+    - category: texture
+      note: "Crunchy crumbs finish soft, creamy cauliflower pasta in Palermo."
+  citations:
+    - title: "Pasta con vruoccoli arriminati, Sonia Peronaci"
+      url: https://www.soniaperonaci.it/pasta-con-vruoccoli-arriminati/
+    - title: "Ricetta cult siciliana: pasta chi vruoccoli arriminati, Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/ricette-cult-siciliana-pasta-chi-vruoccoli-arriminati/36505/
+
+- ingredients: [toasted-breadcrumbs, onion]
+  cuisines: [southern-italian]
+  reasons:
+    - category: contrast
+      note: "Dry, toasty crumbs balance the sweetness of slow-cooked onion and raisins in Palermo's cauliflower pasta."
+  citations:
+    - title: "Pasta con vruoccoli arriminati, Sonia Peronaci"
+      url: https://www.soniaperonaci.it/pasta-con-vruoccoli-arriminati/
+    - title: "Ricetta cult siciliana: pasta chi vruoccoli arriminati, Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/ricette-cult-siciliana-pasta-chi-vruoccoli-arriminati/36505/
+
+- ingredients: [chintextle, eggs]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Chintextle is often eaten at midday with a boiled egg."
+  citations:
+    - title: "Chintextle, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/chintextle/
+
+- ingredients: [chintextle, beef]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "Smoky chile paste goes with tasajo, Oaxaca's thin-cut salted beef."
+  citations:
+    - title: "Chintextle, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/chintextle/
+    - title: "¿Qué es el tasajo, el ingrediente principal de las tlayudas de Oaxaca?, El Universal Oaxaca"
+      url: https://oaxaca.eluniversal.com.mx/mas-de-oaxaca/que-es-el-tasajo-el-ingrediente-principal-de-las-tlayudas-de-oaxaca/
+
+- ingredients: [chintextle, garlic]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "A whole head of garlic is ground into the chile for chintextle."
+  citations:
+    - title: "Oaxaca chile and garlic seasoning paste: Chintestle, Karen Hursh Graber, MexConnect (2014)"
+      url: https://www.mexconnect.com/articles/4104-oaxaca-chile-and-garlic-seasoning-paste-chintestle/
+    - title: "Chintextle, Diccionario enciclopédico de la Gastronomía Mexicana, Larousse Cocina"
+      url: https://laroussecocina.mx/palabra/chintextle/
+
+- ingredients: [chintextle, cumin]
+  cuisines: [oaxacan]
+  reasons:
+    - category: aromatic bridge
+      note: "Some cooks add a little cumin to round out chintextle's smoky chile."
+  citations:
+    - title: "Oaxaca chile and garlic seasoning paste: Chintestle, Karen Hursh Graber, MexConnect (2014)"
+      url: https://www.mexconnect.com/articles/4104-oaxaca-chile-and-garlic-seasoning-paste-chintestle/
+
+- ingredients: [salmoriglio, lemon]
+  cuisines: [southern-italian]
+  reasons:
+    - category: contrast
+      note: "Lemon juice whisked into olive oil makes the sharp salmoriglio of the Strait of Messina."
+  citations:
+    - title: "Il panino col pesce spada più famoso della Calabria si mangia a Scilla, Sonia Ricci, Gambero Rosso (8 May 2026)"
+      url: https://www.gamberorosso.it/notizie/ristoranti/panino-pesce-spada-scilla-civico-5/
+
+- ingredients: [salmoriglio, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: aromatic bridge
+      note: "Raw garlic chopped with parsley gives some versions of salmoriglio their bite."
+  citations:
+    - title: "Grigliata di pesce, Dissapore"
+      url: https://www.dissapore.com/ricette/grigliata-di-pesce/
+
+- ingredients: [colatura, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Cetara cooks dress spaghetti with colatura, raw garlic and olive oil."
+      detail: "Cook the pasta without salt and dress it off the heat; the colatura brings all the salt."
+  citations:
+    - title: "Spaghetti con la colatura di alici di Cetara: la ricetta dei cetaresi, Luciano Pignataro (from La cucina napoletana di mare, Newton Compton), Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/spaghetti-alla-colatura-di-alici-di-cetara/4908/
+    - title: "Spaghetti con colatura di alici: ricetta perfetta, Dissapore"
+      url: https://www.dissapore.com/ricette/spaghetti-colatura-di-alici-ricetta-perfetta/
+
+- ingredients: [colatura, parsley]
+  cuisines: [southern-italian]
+  reasons:
+    - category: contrast
+      note: "Fresh parsley cuts through colatura's deep, salty savour."
+  citations:
+    - title: "Spaghetti con colatura di alici: ricetta perfetta, Dissapore"
+      url: https://www.dissapore.com/ricette/spaghetti-colatura-di-alici-ricetta-perfetta/
+    - title: "Spaghetti con la colatura di alici di Cetara: la ricetta dei cetaresi, Luciano Pignataro (from La cucina napoletana di mare, Newton Compton), Luciano Pignataro Wine Blog"
+      url: https://www.lucianopignataro.it/a/spaghetti-alla-colatura-di-alici-di-cetara/4908/
+
+- ingredients: [tomato-sauce, basil]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Basil cooked into the sauce and torn over at the end is a common Southern Italian finish."
+  citations:
+    - title: "Spaghetti al pomodoro fresco e basilico, Portanapoli"
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_pomodoro_fresco.html
+    - title: "Pasta alla Norma, la ricetta originale catanese, Dissapore"
+      url: https://www.dissapore.com/ricette/pasta-alla-norma/
+
+- ingredients: [tomato-sauce, garlic]
+  cuisines: [southern-italian]
+  reasons:
+    - category: aromatic bridge
+      note: "Garlic softened in oil is the usual base for a Southern Italian tomato sauce."
+  citations:
+    - title: "Spaghetti al pomodoro fresco e basilico, Portanapoli"
+      url: https://www.portanapoli.com/Ita/Cucina/spaghetti_pomodoro_fresco.html
+    - title: "Pasta alla Norma, la ricetta originale catanese, Dissapore"
+      url: https://www.dissapore.com/ricette/pasta-alla-norma/
+
+- ingredients: [tomato-sauce, eggplant]
+  cuisines: [southern-italian]
+  reasons:
+    - category: texture
+      note: "Fried eggplant goes on top of the sauced pasta in pasta alla Norma, so it stays silky rather than soggy."
+  citations:
+    - title: "Pasta alla Norma, la ricetta originale catanese, Dissapore"
+      url: https://www.dissapore.com/ricette/pasta-alla-norma/
+
+# For the Recipes as written (#19; research in docs/research/0019-formulas-recipes-safety.md)
+
+- ingredients: [eggs, zucchini]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Zucchini fried golden are folded into eggs for frittata di zucchine."
+      detail: "Cook the zucchini first, until golden and tender, and let it cool a little before it meets the eggs."
+  citations:
+    - title: "Ricette del Convento: frittata di zucchine napoletane (Don Salvatore, San Martino delle Scale), La Cucina in TV"
+      url: https://lacucinaintv.it/ricette-del-convento-frittata-di-zucchine-napoletane/
+    - title: "Frittata di Zucchine, Stefano Barbato"
+      url: https://www.chefstefanobarbato.com/ita/ricette/frittata-di-zucchine-la-ricetta-originale-italiana/
+
+- ingredients: [eggs, mint]
+  reasons:
+    - category: contrast
+      note: "Fresh mint, one of the herbs beaten into a zucchini frittata, lifts the rich eggs."
+  citations:
+    - title: "Frittata di Zucchine, Stefano Barbato"
+      url: https://www.chefstefanobarbato.com/ita/ricette/frittata-di-zucchine-la-ricetta-originale-italiana/
+
+- ingredients: [pork, rice]
+  reasons:
+    - category: tradition
+      note: "Small pieces of seared pork are tossed through hot rice for fried rice."
+      detail: "Cook the pork through before it goes back in, and fry the rice until it's steaming hot."
+  citations:
+    - title: "How to Make Fried Rice (a formula), Bill Leung, The Woks of Life"
+      url: https://thewoksoflife.com/how-to-make-fried-rice-formula/
+    - title: "Chicken Fried Rice, Bill Leung, The Woks of Life"
+      url: https://thewoksoflife.com/classic-chicken-fried-rice/
+
+- ingredients: [onion, dried-chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "In Oaxaca, some vendors add a sliced pasilla chile to the vinegar for the pickled onion of piedrazo."
+  citations:
+    - title: "Oaxacan Piedrazo Bar Snack or Salad, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-piedrazo-bar-snack-or-salad/

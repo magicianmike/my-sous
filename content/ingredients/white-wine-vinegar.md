@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a bottle of white wine vinegar on its pale cream.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 White wine vinegar is sharp and clean, lighter than red, so it sours a dish without colouring it. Southern Italian cooks often use it to dress fried or boiled vegetables, where it cuts the oil and keeps them bright.

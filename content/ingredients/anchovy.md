@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of an anchovy on its pale blue-grey.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Salted anchovies are strong and salty, and they behave more like a seasoning than a fish: warmed gently in oil, they dissolve completely, leaving a deep savoury base with no fishiness. Taste before you salt anything they're in.

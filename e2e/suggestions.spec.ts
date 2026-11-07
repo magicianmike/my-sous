@@ -135,7 +135,8 @@ test("only a drawing shown without its name rings under the pointer", async ({ p
   ];
   for (const [path, target, rings] of places) {
     await page.goto(path);
-    expect(await ring(target(page))).toBe("none");
+    // Polled: read while the page is still going live, the element can be replaced and read as "".
+    await expect.poll(() => ring(target(page))).toBe("none");
     await target(page).hover();
     if (rings) await expect.poll(() => ring(target(page))).not.toBe("none");
     else {

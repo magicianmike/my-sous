@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 
@@ -119,26 +120,45 @@ test("every architecture diagram is an image with a name and a description in wo
     expect(description.split(" ").length).toBeGreaterThan(15);
     await expect(diagram).toHaveAccessibleDescription(description);
   }
+
+  const results = await new AxeBuilder({ page })
+    .include(".diagram")
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+    .analyze();
+  expect(results.violations).toEqual([]);
 });
 
-test("every link into the app opens the basket or dish it promises", async ({ page }) => {
+test("every live dish card opens the same card in the app", async ({ page }) => {
   await page.goto("/case-study");
-  const hrefs = await page
-    .locator('#case-study-content a[href^="/suggestions"], #case-study-content a[href^="/formulas/"]')
-    .evaluateAll((links) => [...new Set(links.map((link) => link.getAttribute("href")!))]);
-  expect(hrefs.length).toBeGreaterThan(3);
+  const embeds = await page.locator(".live-embed").all();
+  expect(embeds.length).toBeGreaterThan(2);
+
+  for (const embed of embeds) {
+    await page.goto("/case-study");
+    const dish = (await embed.getByRole("heading", { level: 3 }).textContent())!;
+    // The card as the Case Study shows it: status, parts and rank reason.
+    const promised = await embed.locator(":scope > :first-child").innerText();
+    await embed.getByRole("link", { name: "Open this basket in MySous" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "What to make" })).toBeVisible();
+    const inApp = page
+      .locator(".stack > li")
+      .filter({ has: page.getByRole("heading", { level: 3, name: dish, exact: true }) });
+    expect(await inApp.innerText()).toBe(promised);
+  }
+});
+
+test("every link into the app from the prose opens the basket it names", async ({ page }) => {
+  await page.goto("/case-study");
+  const links = page.locator("#case-study-content p > a[href^='/suggestions']");
+  const hrefs = await links.evaluateAll((all) => [...new Set(all.map((link) => link.getAttribute("href")!))]);
+  expect(hrefs.length).toBeGreaterThan(0);
 
   for (const href of hrefs) {
     await page.goto(href);
-    const url = new URL(href, "http://localhost");
-    const basket = url.searchParams.get("with")?.split(",") ?? [];
-    if (url.pathname === "/suggestions") {
-      await expect(page.getByRole("heading", { level: 1, name: "What to make" })).toBeVisible();
-      await expect(page.locator(".suggestions-combination li")).toHaveCount(basket.length);
-    } else {
-      // A dish: its page opens with the basket still in the address.
-      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(page).toHaveURL(href);
-    }
+    const ids = new URL(href, "http://localhost").searchParams.get("with")!.split(",");
+    await expect(page.getByRole("heading", { level: 1, name: "What to make" })).toBeVisible();
+    // The basket lists those Ingredients, in that order, by name.
+    const names = ids.map((id) => new RegExp(`^${id.replace(/-/g, " ")}`, "i"));
+    await expect(page.locator(".suggestions-combination li")).toHaveText(names);
   }
 });

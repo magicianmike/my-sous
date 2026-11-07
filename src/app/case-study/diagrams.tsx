@@ -32,19 +32,20 @@ function Diagram({ title, description, height, children }: {
 }
 
 /** A labelled box, with up to three lines of text centred in it. */
-function Box({ x, y, width, height, lines, strong = false }: {
+function Box({ x, y, width, height, lines, emphasis = false }: {
   x: number;
   y: number;
   width: number;
   height: number;
   lines: string[];
-  strong?: boolean;
+  /** The step the diagram is about, drawn heavier. */
+  emphasis?: boolean;
 }) {
   const lineHeight = 20;
   const top = y + height / 2 - ((lines.length - 1) * lineHeight) / 2;
   return (
     <g>
-      <rect x={x} y={y} width={width} height={height} rx="10" className={strong ? "diagram-box strong" : "diagram-box"} />
+      <rect x={x} y={y} width={width} height={height} rx="10" className={emphasis ? "diagram-box emphasis" : "diagram-box"} />
       {lines.map((line, i) => (
         <text key={i} x={x + width / 2} y={top + i * lineHeight} className={i === 0 ? "diagram-label" : "diagram-note"}>
           {line}
@@ -66,9 +67,9 @@ export function ContentDiagram() {
       height={300}
     >
       <Box x={10} y={20} width={170} height={84} lines={["Content", "Markdown, YAML,", "one SVG per Ingredient"]} />
-      <Box x={235} y={20} width={170} height={84} lines={["loadKitchen", "checks every rule,", "collects every error"]} strong />
+      <Box x={235} y={20} width={170} height={84} lines={["loadKitchen", "checks every rule,", "collects every error"]} emphasis />
       <Box x={460} y={20} width={170} height={84} lines={["Build fails", "listing every problem", "in one pass"]} />
-      <Box x={235} y={170} width={170} height={84} lines={["createKitchen", "one deep module,", "pure and browser-safe"]} strong />
+      <Box x={235} y={170} width={170} height={84} lines={["createKitchen", "one deep module,", "pure and browser-safe"]} emphasis />
       <Box x={10} y={170} width={170} height={84} lines={["Static pages", "rendered at", "build time"]} />
       <Box x={460} y={170} width={170} height={84} lines={["The browser", "rebuilds the same", "Kitchen for any basket"]} />
       <Arrow d="M180 62H231" />
@@ -77,7 +78,7 @@ export function ContentDiagram() {
       <Arrow d="M235 212H184" />
       <Arrow d="M405 212H456" />
       <text x={432} y={48} className="diagram-note">errors</text>
-      <text x={344} y={140} className="diagram-note start">valid</text>
+      <text x={344} y={140} className="diagram-note align-start">valid</text>
     </Diagram>
   );
 }
@@ -89,7 +90,7 @@ export function FillDiagram() {
       description="A dish's parts fill in four steps. First from the basket, one Ingredient per part. Then from Pairings: each empty part takes the Ingredient that pairs with most of what's already in the dish. Then from the Recipe as written, for any part still empty. Then from Pairings again, since the Recipe's Ingredients can give other parts a Pairing. Every fill keeps the one-line reason it's there, and a part nothing justifies stays open and says so."
       height={200}
     >
-      <Box x={10} y={20} width={140} height={100} lines={["1 · Basket", "what the Cook", "chose"]} strong />
+      <Box x={10} y={20} width={140} height={100} lines={["1 · Basket", "what the Cook", "chose"]} emphasis />
       <Box x={170} y={20} width={140} height={100} lines={["2 · Pairings", "pairs with most", "of the dish"]} />
       <Box x={330} y={20} width={140} height={100} lines={["3 · Recipe", "as written, for", "what's still empty"]} />
       <Box x={490} y={20} width={140} height={100} lines={["4 · Pairings", "again, from the", "Recipe's fills"]} />
@@ -108,7 +109,7 @@ export function UrlDiagram() {
       description="The basket lives only in the address, as a with parameter listing Ingredient ids. Every screen reads it, and every link between screens carries it, so Back and Forward step through changes, a shared link reopens the same basket, and the Case Study links straight into any state. Nothing about the basket is stored in the browser; the one thing stored is the chosen theme."
       height={210}
     >
-      <Box x={10} y={20} width={200} height={84} lines={["The address", "?with=chicken-thigh,", "garlic"]} strong />
+      <Box x={10} y={20} width={200} height={84} lines={["The address", "?with=chicken-thigh,", "garlic"]} emphasis />
       <Box x={250} y={20} width={170} height={84} lines={["Every screen", "reads the basket", "from it"]} />
       <Box x={460} y={20} width={170} height={84} lines={["Every link", "carries it to", "the next screen"]} />
       <Arrow d="M210 62H246" />
@@ -126,7 +127,7 @@ export function TestingDiagram() {
       description="Three layers of checks. Vitest tests the Kitchen through loadKitchen with small fixture content folders, and checks the real content: every rule, every Pairing's source, the voice guide's banned words, and every launch Cuisine's coverage. Playwright runs against the exact static export that ships: journeys by mouse and keyboard, axe in light and dark at phone and desktop widths, no sideways scrolling from 320 pixels to wide desktop and at 200 percent zoom, touch targets, focus rings and motion. VoiceOver checks the core journey by hand on an iPhone and a Mac."
       height={260}
     >
-      <Box x={10} y={10} width={620} height={70} lines={["Vitest, through loadKitchen", "fixture content for each rule, and the real content: sources, voice, coverage"]} strong />
+      <Box x={10} y={10} width={620} height={70} lines={["Vitest, through loadKitchen", "fixture content for each rule, and the real content: sources, voice, coverage"]} emphasis />
       <Box x={10} y={95} width={620} height={70} lines={["Playwright, on the static export", "journeys, axe in both themes at two widths, reflow, touch targets, focus, motion"]} />
       <Box x={10} y={180} width={620} height={70} lines={["VoiceOver, by hand", "the core journey, on an iPhone and a Mac"]} />
     </Diagram>

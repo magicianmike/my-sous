@@ -8,4 +8,7 @@ const WORDS = ["easy", "easily", "simply", "just", "authentic"];
 export const BANNED_WORDS = new RegExp(`\\b(${WORDS.join("|").replace("authentic", "authentic\\w*")})\\b`, "i");
 
 const quoted = WORDS.map((word) => `"${word}"`);
+
+/** A banned word quoted on its own, as where the Case Study names the rule: a mention, not a use. */
+export const BANNED_WORD_MENTION = new RegExp(quoted.join("|"), "gi");
 export const BANNED_WORDS_RULE = `MySous doesn't say ${quoted.slice(0, -1).join(", ")} or ${quoted.at(-1)} (docs/voice-guide.md).`;

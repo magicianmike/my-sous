@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { expect, it } from "vitest";
 import { acceptedSlotTypes, loadKitchen } from "./kitchen";
-import { BANNED_WORDS } from "./kitchen/voice";
+import { BANNED_WORD_MENTION, BANNED_WORDS } from "./kitchen/voice";
 
 /** Every file whose words can reach the Cook: the curated content, and the app's own code and copy. */
 function wordsTheCookReads(dir: string): string[] {
@@ -16,16 +16,16 @@ function wordsTheCookReads(dir: string): string[] {
   });
 }
 
-/** A line without banned words quoted on their own, as where the Case Study names the rule; a mention isn't a use. */
-const withoutMentions = (line: string) => line.replace(/"(easy|easily|simply|just|authentic)"/gi, "");
-
 it('never calls a dish or a tradition "authentic"; MySous says "common in…" instead', () => {
   const files = ["content", "src"].flatMap((dir) => wordsTheCookReads(join(process.cwd(), dir)));
+  // Only the Case Study names the rule, so only there is a quoted "authentic" a mention.
+  const caseStudy = join(process.cwd(), "src", "app", "case-study");
   const failures = files.flatMap((file) =>
     readFileSync(file, "utf8")
       .split("\n")
+      .map((line) => (file.startsWith(caseStudy) ? line.replace(BANNED_WORD_MENTION, "") : line))
       .flatMap((line, i) =>
-        /\bauthentic/i.test(withoutMentions(line)) ? [`${relative(process.cwd(), file)}:${i + 1}`] : [],
+        /\bauthentic/i.test(line) ? [`${relative(process.cwd(), file)}:${i + 1}`] : [],
       ),
   );
 
@@ -118,13 +118,15 @@ it("has six Formulas, each with a Recipe", async () => {
 
 it("never says the voice guide's banned words in the Case Study", () => {
   const dir = join(process.cwd(), "src", "app", "case-study");
+  // The prose, and the diagrams' descriptions, which screen readers read as prose.
   const failures = readdirSync(dir)
-    .filter((name) => name.endsWith(".mdx"))
+    .filter((name) => name.endsWith(".mdx") || name === "diagrams.tsx")
     .flatMap((name) =>
       readFileSync(join(dir, name), "utf8")
         .split("\n")
         .flatMap((line, i) => {
-          const word = withoutMentions(line).match(BANNED_WORDS)?.[0];
+          // The Case Study names the rule, so a quoted banned word is a mention, not a use.
+          const word = line.replace(BANNED_WORD_MENTION, "").match(BANNED_WORDS)?.[0];
           return word ? [`${name}:${i + 1} says "${word}"`] : [];
         }),
     );

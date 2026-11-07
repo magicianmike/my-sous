@@ -1178,11 +1178,6 @@ main:has(.case-study) {
   border-radius: var(--radius-lg);
 }
 
-.shot figcaption {
-  margin-top: var(--space-2);
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
-}
 
 /* Two screenshots side by side when there's room for both to be read. */
 .shots {
@@ -1208,6 +1203,7 @@ main:has(.case-study) {
   height: auto;
 }
 
+.shot figcaption,
 .diagram figcaption {
   margin-top: var(--space-2);
   color: var(--ink-muted);
@@ -1220,7 +1216,7 @@ main:has(.case-study) {
   stroke-width: var(--border-hairline);
 }
 
-.diagram-box.strong {
+.diagram-box.emphasis {
   fill: var(--sunk);
   stroke: var(--ink-muted);
   stroke-width: var(--border-control);
@@ -1233,7 +1229,7 @@ main:has(.case-study) {
   dominant-baseline: middle;
 }
 
-.diagram text.start {
+.diagram text.align-start {
   text-anchor: start;
 }
 

@@ -87,8 +87,9 @@ export function RecipeBody({ recipe }: { recipe: Recipe }) {
           // Steps never change order.
           <li key={i}>
             {text}
-            {safety.map(({ ingredient, guidance }) => (
-              <p key={ingredient?.id ?? "step"} className="safety-note">
+            {/* Each Ingredient's guidance, then the step's own; the list never reorders. */}
+            {safety.map(({ guidance }, j) => (
+              <p key={j} className="safety-note">
                 {/* Validation gives all safety guidance at least one citation. */}
                 <span className="tag">Food safety</span> {guidance.note}{" "}
                 {guidance.citations.map((citation, j, { length }) => (

@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a cinnamon quill, a cardamom pod and peppercorns on their pale amber.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Garam masala is a blend of whole warm spices, toasted and ground; the Punjabi version is built on black pepper, cumin, cinnamon, black cardamom and cloves. It's warming rather than hot, with black pepper giving it its sharpness.

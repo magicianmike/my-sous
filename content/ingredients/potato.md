@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a potato on its pale tan.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Potatoes are mild and starchy, so they soak up a broth or carry strong seasoning. Waxy potatoes hold their shape when they're simmered or stir-fried; floury ones break down and turn fluffy.

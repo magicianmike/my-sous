@@ -30,6 +30,6 @@ image:
   alt: A placeholder, the drawing of a bowl of rice on its pale grey.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Rice is mild, so it carries well-seasoned dishes beside it. Washing it changes the texture, and for fried rice, cooks disagree: many home cooks use rice cooked the day before, while many Cantonese chefs fry fresh rice cooked with a little less water.

@@ -149,7 +149,7 @@ test("a dish with a staple fills it from its list, and a step can carry its own 
   const steps = page.getByRole("main").getByRole("list", { name: "Method" }).getByRole("listitem");
   const keeping = steps.filter({ hasText: "Lid the jar" });
   await expect(keeping.locator(".safety-note")).toContainText("isn't shelf-stable");
-  await expect(keeping.getByRole("link", { name: "Source 3", exact: true })).toHaveAccessibleDescription(
+  await expect(keeping.getByRole("link", { name: "Source 2", exact: true })).toHaveAccessibleDescription(
     /^Let's Preserve: Quick Process Pickles/,
   );
 });

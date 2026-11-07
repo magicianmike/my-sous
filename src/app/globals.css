@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-/* No padding at the foot: on a phone the tray bar is the page's last thing and meets the screen's foot. */
+/* The page's gutters are on .page on a phone and on .shell on wider screens. */
 body {
   margin: 0;
   background: var(--bg);
@@ -291,7 +291,6 @@ html:has(.tray-sheet:modal) .page {
 @media (min-width: 56rem) {
   /* The window scrolls; the page and its tray sit side by side under the header. What to make has no tray. */
   .shell {
-    display: grid;
     grid-template-rows: none;
     height: auto;
     max-width: var(--page-width);

@@ -15,6 +15,6 @@ image:
   alt: A placeholder, the drawing of a small dish of bulgur on its pale tan.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Bulgur is cracked wheat, and fine bulgur barely needs cooking. The grind decides how you use it: fine bulgur is soaked for salads and kibbeh, and coarse bulgur is simmered as a pilaf, then left to rest with the lid on.

@@ -1,5 +1,5 @@
 ---
-# The Showcase Recipe for a frittata: zucchini and mint. Frittata di zucchine is common across Italy;
+# The Recipe for a frittata: zucchini and mint. Frittata di zucchine is common across Italy;
 # the mint is a nod to Neapolitan zucchine alla scapece. See pan-sauce.md for the fields.
 serves: 2
 time: { prep: 10, cook: 25 }
@@ -8,7 +8,7 @@ image:
   alt: A placeholder, the drawings of eggs, zucchini, garlic and mint in a row.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 fills:
   eggs: eggs
   vegetable: zucchini

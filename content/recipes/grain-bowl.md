@@ -1,5 +1,5 @@
 ---
-# The Showcase Recipe for a grain bowl: lamb, eggplant, yogurt and mint over bulgur, drawing on the
+# The Recipe for a grain bowl: lamb, eggplant, yogurt and mint over bulgur, drawing on the
 # layers of Palestinian eggplant fatteh. "Grain bowl" names the Formula, not a traditional dish.
 # See pan-sauce.md for the fields.
 serves: 2
@@ -9,7 +9,7 @@ image:
   alt: A placeholder, the drawings of bulgur, lamb, eggplant, yogurt and mint in a row.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 fills:
   grain: bulgur
   protein: lamb
@@ -52,6 +52,11 @@ ingredients:
 steps:
   - text: Heat the oven to 425°F / 220°C. Toss the {vegetable} with 3 tbsp oil and ½ tsp salt, spread it on a sheet pan, and roast until deep golden and soft, 25 to 30 minutes, stirring once halfway.
   - text: Meanwhile, warm 1 tsp oil in a saucepan, stir in the {grain} for a minute, then add its water and ½ tsp salt. Bring it to a boil, cover, and cook over low heat until the liquid is absorbed, about 15 minutes for bulgur, then leave it covered off the heat for 10 minutes.
+    guidance:
+      note: If you cook rice ahead, cool it fast and refrigerate it within an hour, use it within a day, and reheat it only once, until steaming hot.
+      citations:
+        - title: Home food fact checker, Food Standards Agency
+          url: https://www.gov.uk/government/publications/home-food-fact-checker/home-food-fact-checker
   - text: Heat the rest of the oil in a skillet over medium heat and cook the onion until golden, 6 to 8 minutes. Add the {protein}, allspice, cinnamon and ½ tsp salt, and cook, breaking it up, until browned with no pink left, 6 to 8 minutes.
     safety: { slot: protein, about: cooking }
   - text: Stir the garlic, lemon juice and chopped {herb} into the {sauce}, with a spoonful of water if it's very thick, and taste for salt.

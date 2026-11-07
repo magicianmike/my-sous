@@ -51,6 +51,14 @@ for (const viewport of viewports) {
   });
 }
 
+/** Scrolls the page to its end; on a phone the page scrolls in its own region above the bar. */
+function scrollToEnd(page: Page) {
+  return page.evaluate(() => {
+    const region = document.querySelector(".page")!;
+    region.scrollTo(0, region.scrollHeight);
+  });
+}
+
 for (const viewport of viewports.filter(({ width }) => width < 896)) {
   test.describe(`with the tray bar at ${viewport.width}×${viewport.height}`, () => {
     test.use({ viewport });
@@ -78,7 +86,7 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
 
     test("the end of the page can scroll clear of the bar", async ({ page }) => {
       await open(page, "/ingredients/chicken-thigh?with=chicken-thigh,garlic");
-      await page.evaluate(() => document.querySelector(".page")!.scrollTo(0, document.querySelector(".page")!.scrollHeight));
+      await scrollToEnd(page);
       const clear = await page.evaluate(() => {
         const last = [...document.querySelectorAll("main li")].at(-1)!.getBoundingClientRect();
         return last.bottom <= document.querySelector(".tray-dock")!.getBoundingClientRect().top;
@@ -98,7 +106,7 @@ for (const viewport of viewports.filter(({ width }) => width < 896)) {
 
     test("at the end of the page, the bar still meets the foot of the screen", async ({ page }) => {
       await open(page, "/ingredients/chicken-thigh?with=chicken-thigh,garlic");
-      await page.evaluate(() => document.querySelector(".page")!.scrollTo(0, document.querySelector(".page")!.scrollHeight));
+      await scrollToEnd(page);
       const gap = await page.evaluate(
         () => innerHeight - document.querySelector(".tray-dock")!.getBoundingClientRect().bottom,
       );

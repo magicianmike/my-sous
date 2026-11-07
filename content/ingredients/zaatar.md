@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a small dish of za'atar on its pale olive green.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Za'atar is both a herb, closely related to oregano, and the blend made from it: the dried, crushed leaves mixed with sesame seeds, sumac and salt. It tastes herbal, nutty and a little sour, and it seasons bread, eggs, salads and meat as much as it finishes them.

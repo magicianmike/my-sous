@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a bowl of pasilla salsa with a dried chile on its pale red.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Pasilla salsa is roasted pasilla oaxaqueño, a dried, smoked chile, ground with water, roasted garlic and salt, so it tastes smoky before it ever meets a grill. Some cooks add boiled or roasted tomato.

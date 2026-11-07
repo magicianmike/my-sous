@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a bowl of salsa verde on its pale green.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Salsa verde is a family of green sauces, usually tomatillo, garlic, onion, green chile and cilantro, made raw, boiled or roasted. The method sets the flavour: raw is sharp, boiled is mellow, and roasted on the comal is smoky.

@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a jar of tahini on its pale tan.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Tahini is a paste of ground sesame seeds. As a sauce it's loosened with water and lemon juice, usually with a little garlic, and it thickens as it stands or heats, so it often needs a little more water before serving.

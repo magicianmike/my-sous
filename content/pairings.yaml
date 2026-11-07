@@ -3319,3 +3319,45 @@
   citations:
     - title: "Pasta alla Norma, la ricetta originale catanese, Dissapore"
       url: https://www.dissapore.com/ricette/pasta-alla-norma/
+
+# For the Recipes as written (#19; research in docs/research/0019-formulas-recipes-safety.md)
+
+- ingredients: [eggs, zucchini]
+  cuisines: [southern-italian]
+  reasons:
+    - category: tradition
+      note: "Zucchini fried golden are folded into eggs for frittata di zucchine."
+      detail: "Cook the zucchini first, until golden and tender, and let it cool a little before it meets the eggs."
+  citations:
+    - title: "Ricette del Convento: frittata di zucchine napoletane (Don Salvatore, San Martino delle Scale), La Cucina in TV"
+      url: https://lacucinaintv.it/ricette-del-convento-frittata-di-zucchine-napoletane/
+    - title: "Frittata di Zucchine, Stefano Barbato"
+      url: https://www.chefstefanobarbato.com/ita/ricette/frittata-di-zucchine-la-ricetta-originale-italiana/
+
+- ingredients: [eggs, mint]
+  reasons:
+    - category: contrast
+      note: "Fresh mint, one of the herbs beaten into a zucchini frittata, lifts the rich eggs."
+  citations:
+    - title: "Frittata di Zucchine, Stefano Barbato"
+      url: https://www.chefstefanobarbato.com/ita/ricette/frittata-di-zucchine-la-ricetta-originale-italiana/
+
+- ingredients: [pork, rice]
+  reasons:
+    - category: tradition
+      note: "Small pieces of seared pork are tossed through hot rice for fried rice."
+      detail: "Cook the pork through before it goes back in, and fry the rice until it's steaming hot."
+  citations:
+    - title: "How to Make Fried Rice (a formula), Bill Leung, The Woks of Life"
+      url: https://thewoksoflife.com/how-to-make-fried-rice-formula/
+    - title: "Chicken Fried Rice, Bill Leung, The Woks of Life"
+      url: https://thewoksoflife.com/classic-chicken-fried-rice/
+
+- ingredients: [onion, dried-chile]
+  cuisines: [oaxacan]
+  reasons:
+    - category: tradition
+      note: "In Oaxaca, some vendors add a sliced pasilla chile to the vinegar for the pickled onion of piedrazo."
+  citations:
+    - title: "Oaxacan Piedrazo Bar Snack or Salad, Rick Bayless"
+      url: https://www.rickbayless.com/recipe/oaxacan-piedrazo-bar-snack-or-salad/

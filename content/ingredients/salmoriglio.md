@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a bowl of salmoriglio and a lemon on their pale green.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Salmoriglio is an uncooked emulsion of olive oil with lemon and herbs, sharp and fresh. It's spooned over grilled fish after cooking rather than cooked with it, so it stays bright.

@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a bottle of colatura di alici on its pale amber.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Colatura di alici is the clear, deep amber liquid drawn from salted anchovies matured for months in small casks. Its flavour is strong and full, and it isn't cooked: it dresses a dish raw, off the heat, and carries all of its salt.

@@ -1311,8 +1311,8 @@ describe("loadKitchen", () => {
       );
 
       expect(errors).toEqual([
-        "0.slots.1: give a Slot either the Slot type it accepts or the Ingredients it lists, not both",
-        "0.slots.2: give a Slot either the Slot type it accepts or the Ingredients it lists, not both",
+        "0.slots.1: give a Slot exactly one of the Slot type it accepts or the Ingredients it lists",
+        "0.slots.2: give a Slot exactly one of the Slot type it accepts or the Ingredients it lists",
       ]);
     });
 

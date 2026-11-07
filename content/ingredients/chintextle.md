@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a dish of chile paste on its pale red.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Chintextle is a paste, not a pourable salsa: smoked pasilla oaxaqueño ground with garlic and salt. It tastes smoky before it touches a grill, and it works both as a smear at the table and as a spoonful stirred into a pot.

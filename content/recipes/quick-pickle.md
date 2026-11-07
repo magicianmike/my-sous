@@ -1,5 +1,5 @@
 ---
-# The Showcase Recipe for a quick pickle: onion in cider vinegar with dried chile, after the pickled
+# The Recipe for a quick pickle: onion in cider vinegar with dried chile, after the pickled
 # onion of piedrazo, a street snack in Oaxaca. See pan-sauce.md for the fields.
 serves: 6
 time: { prep: 10, cook: 5 }
@@ -8,7 +8,7 @@ image:
   alt: A placeholder, the drawings of onion, cider vinegar, garlic and dried chile in a row.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 fills:
   vegetable: onion
   acid: cider-vinegar
@@ -40,15 +40,20 @@ ingredients:
 steps:
   - text: Wash a 1-pint / 500 ml jar and its lid in hot, soapy water and rinse them. Pack the {vegetable} into it with {heat}.
   - text: In a small saucepan, bring {acid}, the water, sugar, salt, {aromatic}, bay leaf and thyme to a simmer, stirring until the sugar and salt dissolve, about 3 minutes.
+    guidance:
+      note: Use vinegar of at least 5% acidity, check the label, and never more water than vinegar; the acid is what keeps a pickle safe, so don't change the proportions.
+      citations:
+        - title: General Information on Pickling, National Center for Home Food Preservation
+          url: https://nchfp.uga.edu/how/pickle/general-information-pickling/general-information-on-pickling/
+        - title: "Let's Preserve: Quick Process Pickles, Penn State Extension"
+          url: https://extension.psu.edu/lets-preserve-quick-process-pickles
   - text: Pour the hot brine over the {vegetable}, pressing it down so it's covered, and leave it uncovered until it's no longer steaming, about 20 minutes.
   - text: Lid the jar and refrigerate it. It's ready in an hour and better after a day; take it out with a clean fork, and eat it within 2 weeks.
     guidance:
-      note: A quick pickle isn't heat-processed, so it isn't shelf-stable; keep it in the fridge at 40°F / 4°C or below and eat it within 2 weeks. Use vinegar of at least 5% acidity and never more water than vinegar, because the acid is what keeps it safe.
+      note: A quick pickle isn't heat-processed, so it isn't shelf-stable; keep it in the fridge at 40°F / 4°C or below and eat it within 2 weeks.
       citations:
         - title: Refrigerator Pickles, University of Maine Cooperative Extension
           url: https://extension.umaine.edu/food-health/recipes/refrigerator-pickles/
-        - title: General Information on Pickling, National Center for Home Food Preservation
-          url: https://nchfp.uga.edu/how/pickle/general-information-pickling/general-information-on-pickling/
         - title: "Let's Preserve: Quick Process Pickles, Penn State Extension"
           url: https://extension.psu.edu/lets-preserve-quick-process-pickles
 ---

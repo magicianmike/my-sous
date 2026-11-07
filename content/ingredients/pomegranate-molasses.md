@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a pomegranate with a drip of molasses on its pale pink.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Pomegranate molasses is juice from sour pomegranates boiled down to a thick, dark syrup. It's sour but carries sugar, so it sharpens a dish and helps it brown where lemon doesn't, and it often goes in alongside lemon and sumac rather than instead of them.

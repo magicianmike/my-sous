@@ -1,5 +1,5 @@
 ---
-# The Showcase Recipe for fried rice: pork, ginger and scallion, after Cantonese home cooking.
+# The Recipe for fried rice: pork, ginger and scallion, after Cantonese home cooking.
 # See pan-sauce.md for the fields.
 serves: 2
 time: { prep: 15, cook: 15 }
@@ -8,7 +8,7 @@ image:
   alt: A placeholder, the drawings of rice, pork, ginger and scallion in a row.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 fills:
   rice: rice
   protein: pork

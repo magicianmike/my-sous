@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a bowl of tomato sauce with basil on its pale red.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 A quick tomato sauce starts with garlic in olive oil and a few minutes over high heat; a slower one cooks the tomatoes soft and passes them through a food mill. Many cooks add basil twice, cooked into the sauce and torn over at the end, mellow and then bright.

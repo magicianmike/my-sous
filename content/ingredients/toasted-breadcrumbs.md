@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a dish of toasted breadcrumbs with a crust of bread on its pale gold.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Toasted breadcrumbs are stale bread crumbled and toasted in a pan over medium-low heat until evenly golden and crisp, not dark. Their dry, toasty crunch balances soft, sweet dishes, and they go on at the end, where they stay crisp.

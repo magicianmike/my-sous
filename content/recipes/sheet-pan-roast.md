@@ -1,5 +1,5 @@
 ---
-# The Showcase Recipe for a sheet-pan roast: chicken thigh and cauliflower with cumin and lemon,
+# The Recipe for a sheet-pan roast: chicken thigh and cauliflower with cumin and lemon,
 # built from flavours common in Punjabi cooking. See pan-sauce.md for the fields.
 serves: 2
 time: { prep: 15, cook: 30 }
@@ -8,7 +8,7 @@ image:
   alt: A placeholder, the drawings of chicken thigh, cauliflower, cumin and lemon in a row.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 fills:
   protein: chicken-thigh
   vegetable: cauliflower

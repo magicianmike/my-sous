@@ -126,7 +126,7 @@ const slotSchema = z
     required: z.boolean().default(true),
   })
   .refine(({ accepts, ingredients }) => (accepts === undefined) !== (ingredients === undefined), {
-    message: "give a Slot either the Slot type it accepts or the Ingredients it lists, not both",
+    message: "give a Slot exactly one of the Slot type it accepts or the Ingredients it lists",
   });
 
 export const formulaSchema = z.object({
@@ -175,11 +175,8 @@ const recipeStepSchema = z.object({
   /** A step whose safety depends on what fills a Slot; it shows that Ingredient's guidance on the topic. */
   safety: z.object({ slot: z.string().min(1), about: z.enum(SAFETY_TOPICS) }).optional(),
   /** A step's own cited guidance, for a staple such as cooked rice that no Slot's Ingredient gives. */
-  guidance: z
-    .object({
-      note: z.string().min(1),
-      citations: z.array(linkedCitationSchema).min(1, "cite at least one source for safety guidance"),
-    })
+  guidance: safetyGuidanceSchema
+    .extend({ citations: z.array(linkedCitationSchema).min(1, "cite at least one source for safety guidance") })
     .optional(),
 });
 
@@ -216,9 +213,15 @@ export type Citation = z.infer<typeof citationSchema>;
 export type Slot = z.infer<typeof slotSchema>;
 
 /** Whether an Ingredient can go in a Slot: it's on the Slot's list, or it lists the Slot's type. */
-export function slotTakes(slot: Slot, { id, slotTypes }: { id: string; slotTypes: string[] }): boolean {
+export function fitsSlot(slot: Slot, { id, slotTypes }: { id: string; slotTypes: string[] }): boolean {
   return slot.ingredients ? slot.ingredients.includes(id) : slotTypes.includes(slot.accepts!);
 }
+
+/** The Slot types the Formulas accept; a Slot that lists its Ingredients adds none. */
+export function acceptedSlotTypes(formulas: { slots: Slot[] }[]): Set<string> {
+  return new Set(formulas.flatMap(({ slots }) => slots.flatMap(({ accepts }) => accepts ?? [])));
+}
+
 export type Formula = WithImage<z.infer<typeof formulaSchema>>;
 export type IngredientContent = { id: string } & WithImage<z.infer<typeof ingredientSchema>>;
 export type PairingContent = z.infer<typeof pairingSchema>;

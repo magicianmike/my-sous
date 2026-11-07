@@ -30,6 +30,6 @@ image:
   alt: A placeholder, the drawing of two eggs on their pale cream.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Eggs set as they heat, which is why they bind whatever cooks with them, from a frittata's vegetables to the chicken and onion of oyakodon. Gentle heat keeps them tender, and the pan keeps cooking them after it leaves the flame.

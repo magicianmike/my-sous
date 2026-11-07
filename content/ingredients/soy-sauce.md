@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a bottle of soy sauce on its pale brown.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Soy sauce is made by fermenting soybeans and wheat with koji and salt water, which gives it its savoury depth. Styles differ, from Japanese koikuchi and lighter usukuchi to Chinese light and dark soy, and it works both ways: a splash cooks in, a drizzle finishes.

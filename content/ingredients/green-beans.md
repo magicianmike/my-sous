@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of two green beans on their pale green.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Green beans are crisp and grassy, and they change with how they're cooked: blanched briefly, they stay bright and snappy; fried hard, they blister and wrinkle, with scorched spots.

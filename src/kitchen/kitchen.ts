@@ -17,7 +17,7 @@ import type {
   SafetyGuidance,
   Slot,
 } from "./schema";
-import { slotTakes } from "./schema";
+import { fitsSlot } from "./schema";
 
 export type { Citation, Cuisine, Formula, Image, KitchenContent, PairingReason, SafetyGuidance, Slot };
 
@@ -204,7 +204,7 @@ export type Kitchen = {
 type Fill = { ingredient: Ingredient; source: FillSource };
 
 const usedIn = (fills: Fill[][]) => fills.flat().map(({ ingredient }) => ingredient);
-const fits = (slot: Slot) => (ingredient: Ingredient) => slotTakes(slot, ingredient);
+const fits = (slot: Slot) => (ingredient: Ingredient) => fitsSlot(slot, ingredient);
 
 /** Why an Ingredient is in its Slot. */
 function explainFill(source: FillSource, justification: PairingView | undefined): string {

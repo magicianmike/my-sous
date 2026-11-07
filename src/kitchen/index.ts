@@ -16,11 +16,13 @@ import {
   type IngredientContent,
   type KitchenContent,
   type RecipeContent,
-  slotTakes,
+  acceptedSlotTypes,
+  fitsSlot,
 } from "./schema";
 import { BANNED_WORDS, BANNED_WORDS_RULE } from "./voice";
 
 export * from "./kitchen";
+export { acceptedSlotTypes } from "./schema";
 
 export type ContentError = { file: string; message: string };
 
@@ -229,7 +231,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
     });
   }
 
-  const accepted = new Set(content.formulas.flatMap(({ slots }) => slots.flatMap(({ accepts }) => accepts ?? [])));
+  const accepted = acceptedSlotTypes(content.formulas);
   for (const { id, slotExceptions } of content.cuisines) {
     for (const { slotType } of slotExceptions.filter(({ slotType }) => !accepted.has(slotType))) {
       errors.push({
@@ -316,7 +318,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
       for (const ingredientId of ingredientIds) {
         const ingredient = ingredientsById.get(ingredientId);
         if (!ingredient) report(`fills "${slotId}" with unknown Ingredient "${ingredientId}".`);
-        else if (!slotTakes(slot, ingredient)) {
+        else if (!fitsSlot(slot, ingredient)) {
           report(`fills "${slotId}" with ${ingredientId}, which isn't ${slot.role}.`);
         }
       }
@@ -338,7 +340,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
       for (const ingredientId of Object.keys(line.for ?? {})) {
         const ingredient = ingredientsById.get(ingredientId);
         if (!ingredient) report(`gives an amount for unknown Ingredient "${ingredientId}".`);
-        else if (!slotTakes(slot, ingredient)) {
+        else if (!fitsSlot(slot, ingredient)) {
           report(`gives an amount of ${ingredientId} for "${slot.id}", which it can't fill.`);
         }
       }
@@ -361,7 +363,7 @@ function checkReferences(contentDir: string, content: RawContent, errors: Conten
       }
       // The Cook can put in any Ingredient that fits, so each needs the guidance.
       for (const { id } of content.ingredients.filter(
-        (ingredient) => slotTakes(slot, ingredient) && !ingredient.safety?.[safety.about],
+        (ingredient) => fitsSlot(slot, ingredient) && !ingredient.safety?.[safety.about],
       )) {
         report(
           `marks step ${i + 1} safety-sensitive for "${slot.id}", so ${id}, which can fill it, ` +

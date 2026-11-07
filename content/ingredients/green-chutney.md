@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a bowl of green chutney on its pale green.
   provenance:
     made: placeholder
-    date: "2026-11-08"
+    date: "2026-11-06"
 ---
 Green chutney, hari chutney, is raw cilantro and mint blended with a little green chile, garlic, lemon juice, salt and water. It's like a mint raita without the yogurt: sharper and lighter, a fresh partner to rich or fried food.

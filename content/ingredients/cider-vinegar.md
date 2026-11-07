@@ -16,6 +16,6 @@ image:
   alt: A placeholder, the drawing of a bottle of cider vinegar with an apple on its pale amber.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Cider vinegar is made from fermented apples, and like most vinegars used in Mexico it's mild. It sours a marinade or a pickle without much sharpness, so it's usually blended with dried chiles, garlic and spices rather than used on its own.

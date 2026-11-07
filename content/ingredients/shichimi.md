@@ -17,6 +17,6 @@ image:
   alt: A placeholder, the drawing of a jar of shichimi togarashi on its pale coral.
   provenance:
     made: placeholder
-    date: "2026-11-07"
+    date: "2026-11-06"
 ---
 Shichimi is a blend of seven ingredients built around ground red chile, usually with sansho, sesame, citrus peel and seaweed. It's milder and more aromatic than chile on its own, and it's a finishing condiment, often shaken over hot pots, noodles, grilled chicken and miso soup.

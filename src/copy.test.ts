@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { expect, it } from "vitest";
-import { loadKitchen } from "./kitchen";
+import { acceptedSlotTypes, loadKitchen } from "./kitchen";
 
 /** Every file whose words can reach the Cook: the curated content, and the app's own code and copy. */
 function wordsTheCookReads(dir: string): string[] {
@@ -62,7 +62,7 @@ it("launches with six Cuisines", async () => {
 it("can fill every Formula Slot three ways in each launch Cuisine, or says why it can't", async () => {
   const kitchen = await realKitchen();
   // A Slot that lists its Ingredients, such as a staple, isn't held to the rule.
-  const accepted = [...new Set(kitchen.formulas().flatMap(({ slots }) => slots.flatMap(({ accepts }) => accepts ?? [])))];
+  const accepted = [...acceptedSlotTypes(kitchen.formulas())];
 
   const problems = kitchen
     .cuisines()
@@ -98,7 +98,7 @@ it("links every Blend component that's an Ingredient in MySous", async () => {
   expect(unlinked).toEqual([]);
 });
 
-it("has six Formulas, each with a Showcase Recipe", async () => {
+it("has six Formulas, each with a Recipe", async () => {
   const kitchen = await realKitchen();
 
   // With an empty basket, every Formula is suggested, and its Recipe fills it.

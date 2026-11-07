@@ -9,18 +9,23 @@ export function useIsCaseStudy(): boolean {
   return usePathname().startsWith("/case-study");
 }
 
-/** Beside the wordmark on the Case Study, so a reader knows where they are. */
-export function SiteLabel() {
-  return useIsCaseStudy() ? <span className="site-label">Case Study</span> : null;
-}
-
-/** The app's one quiet way to the Case Study; it never gets in the way of cooking. */
-export function SiteFooter() {
+/** The wordmark, home to the app. The Case Study's own title is its only header, so it has none. */
+export function Wordmark() {
   if (useIsCaseStudy()) return null;
   return (
-    <footer className="site-footer">
-      <Link href="/case-study">How MySous was made</Link>
-    </footer>
+    <CombinationLink href="/" className="wordmark">
+      MySous
+    </CombinationLink>
+  );
+}
+
+/** The app's one quiet way to the Case Study, beside the theme switch; it never gets in the way of cooking. */
+export function CaseStudyLink() {
+  if (useIsCaseStudy()) return null;
+  return (
+    <Link href="/case-study" className="case-study-link">
+      <span>How MySous</span> <span>was made</span>
+    </Link>
   );
 }
 

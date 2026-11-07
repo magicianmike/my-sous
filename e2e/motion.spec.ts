@@ -18,6 +18,18 @@ for (const reduced of [false, true]) {
   test.describe(reduced ? "with reduced motion" : "by default", () => {
     test.use({ reducedMotion: reduced ? "reduce" : "no-preference" });
 
+    test("the Case Study's chapter links scroll smoothly to their chapter", async ({ page }) => {
+      await page.goto("/case-study");
+      // The document scrolls on desktop, .page on a phone; both glide unless the Cook asks for less motion.
+      const behaviours = await page.evaluate(() =>
+        [document.documentElement, document.querySelector(".page")!].map((el) => getComputedStyle(el).scrollBehavior),
+      );
+      expect(behaviours).toEqual(reduced ? ["auto", "auto"] : ["smooth", "smooth"]);
+
+      await page.getByRole("navigation", { name: "Chapters" }).getByRole("link", { name: "Architecture" }).click();
+      await expect(page.getByRole("heading", { level: 2, name: "Architecture" })).toBeInViewport();
+    });
+
     test("the Ingredient's drawing draws itself in", async ({ page }) => {
       await page.goto("/ingredients/lemon");
       const stroke = page.locator(".hero svg > *").first();

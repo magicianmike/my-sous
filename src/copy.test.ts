@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { expect, it } from "vitest";
 import { acceptedSlotTypes, loadKitchen } from "./kitchen";
+import { BANNED_WORD_MENTION, BANNED_WORDS } from "./kitchen/voice";
 
 /** Every file whose words can reach the Cook: the curated content, and the app's own code and copy. */
 function wordsTheCookReads(dir: string): string[] {
@@ -17,10 +18,15 @@ function wordsTheCookReads(dir: string): string[] {
 
 it('never calls a dish or a tradition "authentic"; MySous says "common in…" instead', () => {
   const files = ["content", "src"].flatMap((dir) => wordsTheCookReads(join(process.cwd(), dir)));
+  // Only the Case Study names the rule, so only there is a quoted "authentic" a mention.
+  const caseStudy = join(process.cwd(), "src", "app", "case-study");
   const failures = files.flatMap((file) =>
     readFileSync(file, "utf8")
       .split("\n")
-      .flatMap((line, i) => (/\bauthentic/i.test(line) ? [`${relative(process.cwd(), file)}:${i + 1}`] : [])),
+      .map((line) => (file.startsWith(caseStudy) ? line.replace(BANNED_WORD_MENTION, "") : line))
+      .flatMap((line, i) =>
+        /\bauthentic/i.test(line) ? [`${relative(process.cwd(), file)}:${i + 1}`] : [],
+      ),
   );
 
   expect(failures).toEqual([]);
@@ -108,4 +114,22 @@ it("has six Formulas, each with a Recipe", async () => {
     .map(({ formula }) => formula.name);
   expect(kitchen.formulas()).toHaveLength(6);
   expect(withoutRecipe).toEqual([]);
+});
+
+it("never says the voice guide's banned words in the Case Study", () => {
+  const dir = join(process.cwd(), "src", "app", "case-study");
+  // The prose, and the diagrams' descriptions, which screen readers read as prose.
+  const failures = readdirSync(dir)
+    .filter((name) => name.endsWith(".mdx") || name === "diagrams.tsx")
+    .flatMap((name) =>
+      readFileSync(join(dir, name), "utf8")
+        .split("\n")
+        .flatMap((line, i) => {
+          // The Case Study names the rule, so a quoted banned word is a mention, not a use.
+          const word = line.replace(BANNED_WORD_MENTION, "").match(BANNED_WORDS)?.[0];
+          return word ? [`${name}:${i + 1} says "${word}"`] : [];
+        }),
+    );
+
+  expect(failures).toEqual([]);
 });

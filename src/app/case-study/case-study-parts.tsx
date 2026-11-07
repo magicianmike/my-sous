@@ -52,3 +52,17 @@ export function LiveSuggestion({ basket, dish, caption }: {
     </figure>
   );
 }
+
+/**
+ * A prototype's render, from public/case-study/<name>.webp, for what no longer exists to embed live:
+ * a cut feature, a rejected variant, a direction as it was chosen. Each is cropped to 960×600, so
+ * its space is kept before it loads.
+ */
+export function Screenshot({ name, alt, caption }: { name: string; alt: string; caption: React.ReactNode }) {
+  return (
+    <figure className="shot">
+      <img src={`/case-study/${name}.webp`} alt={alt} width={960} height={600} loading="lazy" decoding="async" />
+      <figcaption>{caption}</figcaption>
+    </figure>
+  );
+}

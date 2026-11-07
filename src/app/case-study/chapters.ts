@@ -4,7 +4,12 @@ export const CHAPTERS = [
   { id: "one-room", title: "One room: cutting the Pantry" },
   { id: "state-you-can-link-to", title: "State you can link to" },
   { id: "defaults-not-forms", title: "Defaults, not forms" },
+  { id: "honest-about-culture", title: "Honest about culture" },
+  { id: "visual-direction", title: "Visual direction" },
+  { id: "interaction-design", title: "Interaction design" },
   { id: "accessible-by-construction", title: "Accessible by construction" },
+  { id: "architecture", title: "Architecture" },
+  { id: "rejected", title: "What I rejected" },
   { id: "whats-next", title: "What’s next" },
 ] as const;
 

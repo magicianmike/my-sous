@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Fraunces, Nunito } from "next/font/google";
 import { THEME_SCRIPT } from "@/design/theme";
 import { themeCss } from "@/design/tokens";
-import { CombinationLink, KitchenProvider } from "./combination";
+import { KitchenProvider } from "./combination";
 import { CombinationTray } from "./combination-tray";
 import "./globals.css";
 import { getKitchen } from "./kitchen";
-import { SiteFooter, SiteLabel, SiteNav, SkipLinks } from "./site-chrome";
+import { CaseStudyLink, SiteNav, SkipLinks, Wordmark } from "./site-chrome";
 import { ThemeSwitch } from "./theme-switch";
 
 const display = Fraunces({
@@ -44,19 +44,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {/* On a phone, the page scrolls above the basket bar, which keeps a row of its own. */}
           <div className="shell">
             <div className="page">
-              <header className="site-header">
-                <CombinationLink href="/" className="wordmark">
-                  MySous
-                </CombinationLink>
+              <header id="top" className="site-header">
+                <Wordmark />
                 <SiteNav />
-                <SiteLabel />
                 <div className="site-theme">
+                  <CaseStudyLink />
                   <ThemeSwitch />
                 </div>
               </header>
               <div className="app">
                 <main id="main">{children}</main>
-                <SiteFooter />
               </div>
             </div>
             <CombinationTray />

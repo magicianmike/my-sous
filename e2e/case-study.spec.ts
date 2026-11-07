@@ -15,7 +15,8 @@ test("the app links to the Case Study only from beside the theme switch, and the
   for (const path of appScreens) {
     await page.goto(path);
     const links = page.locator('a[href="/case-study"]');
-    await expect(links).toHaveCount(1);
+    await expect(links).toBeVisible();
+    await expect(page.getByRole("radiogroup", { name: "Theme" })).toBeVisible();
     const link = (await links.boundingBox())!;
     const theme = (await page.getByRole("radiogroup", { name: "Theme" }).boundingBox())!;
     // On the same row, just before the switch.
@@ -197,7 +198,8 @@ test("Back to top returns to the top of the page, and the keyboard starts there"
   await chapters(page).getByRole("link", { name: "What I rejected" }).click();
   await expect(page.getByRole("heading", { level: 2, name: "What I rejected" })).toBeInViewport();
 
-  // Pinned to the window's bottom-left corner.
+  // Pinned to the window's bottom-left corner; it shows a frame after the scroll, so wait for it.
+  await expect(page.getByRole("link", { name: "Back to top" })).toBeVisible();
   const link = (await page.getByRole("link", { name: "Back to top" }).boundingBox())!;
   const viewport = page.viewportSize()!;
   expect(viewport.height - (link.y + link.height)).toBeLessThan(40);
@@ -230,6 +232,7 @@ test("Back to MySous stays in the window's top-left corner, clear of the title",
   const back = page.getByRole("link", { name: "Back to MySous" });
   await chapters(page).getByRole("link", { name: "Architecture" }).click();
   await expect(page.getByRole("heading", { level: 2, name: "Architecture" })).toBeInViewport();
+  await expect(back).toBeVisible();
   const corner = (await back.boundingBox())!;
   expect(corner.x).toBeLessThan(24);
   expect(corner.y).toBeLessThan(24);

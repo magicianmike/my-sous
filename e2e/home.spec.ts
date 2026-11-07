@@ -62,8 +62,13 @@ test("the top nav reaches Ingredients and Cuisines on app screens, marks the cur
 test("the header starts where the page's content does, with room before it", async ({ page }) => {
   for (const path of ["/", "/suggestions?with=garlic", "/ingredients/lemon?with=garlic", "/formulas/pan-sauce"]) {
     await page.goto(path);
-    const wordmark = (await page.getByRole("link", { name: "MySous", exact: true }).boundingBox())!;
-    const heading = (await page.getByRole("main").getByRole("heading", { level: 1 }).boundingBox())!;
+    // Measured only once each is on screen: a bounding box doesn't wait for the page as expect does.
+    const wordmarkLink = page.getByRole("link", { name: "MySous", exact: true });
+    const title = page.getByRole("main").getByRole("heading", { level: 1 });
+    await expect(wordmarkLink).toBeVisible();
+    await expect(title).toBeVisible();
+    const wordmark = (await wordmarkLink.boundingBox())!;
+    const heading = (await title.boundingBox())!;
     const content = (await page.getByRole("main").boundingBox())!;
     // The ingredient page's first column holds its drawing; elsewhere the title leads the content.
     expect(Math.abs(wordmark.x - content.x)).toBeLessThan(2);

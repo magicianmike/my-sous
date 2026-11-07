@@ -92,6 +92,6 @@ The Standards and Spec reviews led to:
 
 ## Still to do
 
-- **The VoiceOver pass (for the author).** On `/ingredients/lemon`, the banner reads its alt text ("A placeholder, the drawing of a lemon on its pale yellow.") and the note "Placeholder image". On `/suggestions?with=chicken-thigh,garlic`, the Pan sauce card's image isn't announced, but its note is.
+- **The VoiceOver pass: passed.** The author ran it on 2026-11-07, and everything behaved as expected. On `/ingredients/lemon`, the banner reads its alt text ("A placeholder, the drawing of a lemon on its pale yellow.") and the note "Placeholder image". On `/suggestions?with=chicken-thigh,garlic`, the Pan sauce card's image isn't announced, but its note is.
 - **The author review gate.** The style guide (`docs/image-style-guide.md`), the placeholders, and the three layouts.
 - **No voice guide exists yet**, so the style guide sits in `docs/` on its own rather than beside one.

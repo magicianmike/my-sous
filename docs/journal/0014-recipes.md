@@ -174,7 +174,9 @@ Then the author asked for three changes. These are their choices except where no
   - Options sits at the end of the top row and opens above what's in the part.
 - **axe** covers the dish page with a recipe (both themes, phone and desktop), and so does the **reflow** check. The **phone tap-target** check passes.
 
-## VoiceOver pass (for the author)
+## VoiceOver pass
+
+**Status: passed.** The author ran this pass on 2026-11-07, and everything behaved as expected.
 
 On `/formulas/pan-sauce?with=chicken-thigh,lime` in Safari, with VoiceOver on:
 

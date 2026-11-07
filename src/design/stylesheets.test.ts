@@ -24,8 +24,8 @@ it("stylesheets take colour, type and spacing from tokens, not raw values", () =
     readFileSync(file, "utf8")
       .split("\n")
       .flatMap((line, i) =>
-        // Media queries can't read custom properties, so breakpoints are written out.
-        !line.trim().startsWith("@media") && raw.some((pattern) => pattern.test(line))
+        // Media and container queries can't read custom properties, so breakpoints are written out.
+        !/^@(media|container)\b/.test(line.trim()) && raw.some((pattern) => pattern.test(line))
           ? [`${relative(root, file)}:${i + 1}: ${line.trim()}`]
           : [],
       ),

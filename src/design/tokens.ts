@@ -156,8 +156,6 @@ const scales = {
   "tray-width": "20rem",
   // The Case Study's chapter list, beside its text on wide screens.
   "chapter-nav-width": "14rem",
-  // A Case Study diagram draws no narrower than this, so its words stay readable; narrow screens scroll it.
-  "diagram-min-width": "36rem",
   // The bar beside the Case Study chapter being read.
   "chapter-marker-width": "0.3125rem",
   // The Case Study's top row, where Back to MySous and the theme switch sit in the window's corners.

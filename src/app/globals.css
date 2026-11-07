@@ -1078,7 +1078,7 @@ main:has(.case-study) {
 
 .case-study {
   display: grid;
-  /* minmax(0, …) so a wide diagram scrolls in its frame rather than widening the column. */
+  /* minmax(0, …) so nothing wide, such as a screenshot or code, can widen the column. */
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
 }
@@ -1291,17 +1291,33 @@ body:has(.case-study) .site-header {
   margin: 0;
 }
 
-/* A diagram keeps a readable size; on a narrow screen it scrolls sideways inside its frame, not the page. */
+/*
+ * A diagram is drawn wide and stacked; its column's width picks one, so its words stay readable and
+ * nothing scrolls sideways. The breakpoint is where the wide drawing's words would get too small.
+ */
 .diagram {
   margin: var(--space-5) 0;
-  overflow-x: auto;
+  container-type: inline-size;
 }
 
 .diagram svg {
   display: block;
   width: 100%;
-  min-width: var(--diagram-min-width);
   height: auto;
+}
+
+.diagram svg.diagram-wide {
+  display: none;
+}
+
+@container (min-width: 36rem) {
+  .diagram svg.diagram-wide {
+    display: block;
+  }
+
+  .diagram svg.diagram-stacked {
+    display: none;
+  }
 }
 
 .shot figcaption,

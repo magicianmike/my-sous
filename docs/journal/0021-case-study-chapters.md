@@ -43,7 +43,7 @@ The author chose each of these from options.
   - state you can link to;
   - what runs on every change.
 
-  Each is an image named by its title and described in words by its `desc`. It draws in the theme's tokens, so dark mode needs nothing of its own. A diagram keeps a readable size (`--diagram-min-width`, 36rem). On a narrower screen it scrolls sideways inside its frame, which takes focus and is named by its caption.
+  Each is an image named by its title and described in words by its `desc`. It draws in the theme's tokens, so dark mode needs nothing of its own. Each is drawn twice, wide and stacked, and its column's width picks one with a container query, so nothing scrolls sideways. The other drawing is `display: none`, so a screen reader meets only one. (At first a diagram kept a 36rem minimum and scrolled sideways on a phone; after merging, the author chose stacking.)
 - **Stacked on #19.** The branch is based on #19's, since the Case Study's counts and dishes are #19's. It will be rebased onto `main` once #19 merges.
 
 ## Also in this change
@@ -96,4 +96,3 @@ The Design and Architecture chapters aren't Paired Decisions, by the author's ch
 
 - **The copy.** The author edits and approves the final text. It's in the first person, but drafted from the journals. That includes the reasons each visual variant lost, which journal 0002 notes were drafted from the renders and await the author's review.
 - **A VoiceOver pass** of the Case Study, on an iPhone and a Mac: chapter navigation, the diagrams' descriptions, and the screenshots' alt text.
-- **Diagrams on a phone.** They scroll sideways inside their frames, and the right-hand boxes start out of view. Stacking them vertically on a phone is the alternative, if that reads better.

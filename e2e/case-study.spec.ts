@@ -120,7 +120,8 @@ test("the chapter navigation lists every chapter, in the order they're written",
 
 test("every architecture diagram is an image with a name and a description in words", async ({ page }) => {
   await page.goto("/case-study");
-  const diagrams = page.locator(".diagram svg");
+  // Each diagram has a wide and a stacked layout; only the one that fits is shown.
+  const diagrams = page.locator(".diagram svg").filter({ visible: true });
   await expect(diagrams).toHaveCount(4);
   for (const diagram of await diagrams.all()) {
     await expect(diagram).toHaveAttribute("role", "img");
@@ -252,4 +253,20 @@ test("the theme switch stays on screen while reading", async ({ page }) => {
   await chapters(page).getByRole("link", { name: "What’s next" }).click();
   await expect(page.getByRole("heading", { level: 2, name: "What’s next" })).toBeInViewport();
   await expect(page.getByRole("radiogroup", { name: "Theme" })).toBeInViewport({ ratio: 1 });
+});
+
+test("each diagram fits its column, stacked on a phone, so none scrolls sideways", async ({ page, isMobile }) => {
+  await page.goto("/case-study");
+  const shown = page.locator(".diagram svg").filter({ visible: true });
+  await expect(shown).toHaveCount(4);
+  for (const svg of await shown.all()) {
+    const frame = svg.locator("xpath=..");
+    const fits = await frame.evaluate((el) => el.scrollWidth <= el.clientWidth);
+    expect(fits).toBe(true);
+    // Nothing to scroll, so the frame is no stop for the keyboard.
+    await expect(frame).not.toHaveAttribute("tabindex");
+    // Stacked on a phone: taller than wide. Wide elsewhere.
+    const { width, height } = (await svg.boundingBox())!;
+    expect(height > width).toBe(!!isMobile);
+  }
 });

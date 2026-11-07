@@ -1268,6 +1268,14 @@ main:has(.case-study) {
 
 /* Motion: only on first paint, or on the thing that changed. Durations are 0ms under reduced motion. */
 
+/* The Case Study's chapter links glide to their chapter, wherever the page scrolls; under reduced motion they jump. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.case-study),
+  .page:has(.case-study) {
+    scroll-behavior: smooth;
+  }
+}
+
 .settling .pairing-group li {
   animation: settle var(--motion-slow) var(--ease-out) backwards;
   /* Past the first screen of rows, the rest arrive together rather than keep the Cook waiting. */

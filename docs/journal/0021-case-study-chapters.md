@@ -50,6 +50,7 @@ The author chose each of these from options.
 
 - **Screenshots for what no longer exists.** The cut Pantry and the rejected visual variants can't be embedded live, so `Screenshot` shows a prototype's render. The renders are cropped from journals 0002 and 0011 to 960×600 WebP files in `public/case-study/`, 21 to 52 KB each. The dish cards stay live components in fixed states (ADR 0002).
 - **The preview image's font** (left from #20). It now uses Fraunces at its softest and Nunito, as the site does. The image renderer can't read the site's woff2 files, so static TTF instances from Google Fonts are committed in `src/app/case-study/fonts/`, beside their SIL Open Font Licences.
+- **Chapter links scroll smoothly** to their chapter, at the author's request. Under reduced motion they jump, as before. Only the Case Study glides: the rule applies to the document and to `.page`, whichever scrolls, and only while the Case Study is on screen.
 - **Two shared tests got stricter or fairer, for problems the new content exposed.**
   - **Reflow.** On a phone the page scrolls inside `.page` (since #19), so the check measured the document and missed sideways scrolling inside it. It now measures both. It caught the Case Study's column widening to fit a diagram on a phone; the column is now `minmax(0, 1fr)`.
   - **Touch targets.** The check allows 0.01px, since layout can land a 44px control at 43.9998px.

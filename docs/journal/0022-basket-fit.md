@@ -89,7 +89,7 @@ Kept as they are:
 
 ## Waiting for the author
 
-- **The copy** of the nothing-fits state and the Case Study's changed sentences.
+- **The copy** of the Case Study's changed sentences. The nothing-fits state's copy was approved on 2026-11-08.
 
 ## Later
 

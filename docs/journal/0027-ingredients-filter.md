@@ -59,3 +59,7 @@ Kept as they are:
 ## Waiting for the author
 
 - The no-match hint: "Try another spelling, or clear the search to see every ingredient."
+
+## Also on this branch
+
+- **The Case Study, brought up to date** after #50 to #55, with the author's approval. In Interaction design, "Never a dead end" now says MySous suggests only the dishes a basket fits, names the closest when none does, and offers what pairs with the basket. "A phone gets its own shape" became "The basket stays at hand": a bar at the foot of the screen at every width. Everything else was checked and still holds.

@@ -59,7 +59,7 @@ Kept as they are:
 
 ## VoiceOver pass
 
-**Status: to do.** On desktop, check the bar's name ("Your basket 2 of 6: Chicken thigh, Lemon"), that opening it moves to the sheet's heading, and that Escape returns to the bar. Check also the filters' selected state.
+**Status: passed.** The author ran this pass on 2026-11-08, and everything sounded correct. It covered, on desktop, the bar's name ("Your basket 2 of 6: Chicken thigh, Lemon"), that opening it moves to the sheet's heading, that Escape returns to the bar, and the filters' selected state.
 
 ## Waiting for the author
 

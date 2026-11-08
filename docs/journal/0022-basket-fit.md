@@ -85,7 +85,7 @@ Kept as they are:
 
 ## VoiceOver pass
 
-**Status: to do.** The new part is What to make when nothing fits: the heading, the closest dishes, and each Add button's name ("Add Garlic to your basket"). Check that adding one announces the change and moves on to the dishes that now fit.
+**Status: passed.** The author ran this pass on 2026-11-08, and everything sounded correct. It covered What to make when nothing fits: the closest dishes, each Add button's name ("Add Garlic to your basket"), and that adding one announces the change and moves on to the dishes that now fit.
 
 ## Waiting for the author
 

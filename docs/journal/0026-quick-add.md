@@ -54,7 +54,7 @@ Kept as they are:
 
 ## VoiceOver pass
 
-**Status: to do.** Check that each pill reads as a link then a button ("Add Basil to your basket"), the announcement after a press, and that focus stays on the button as it becomes Remove.
+**Status: passed.** The author ran this pass on 2026-11-08, and everything sounded correct. It covered that each pill reads as a link then a button ("Add Basil to your basket"), the announcement after a press, and that focus stays on the button as it becomes Remove.
 
 ## Waiting for the author
 

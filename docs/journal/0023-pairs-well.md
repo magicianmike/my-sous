@@ -62,7 +62,7 @@ Kept as they are:
 
 ## VoiceOver pass
 
-**Status: to do.** Check each chip's name ("Add Potato to your basket"), the announcement after a tap, and that focus lands on the basket's heading.
+**Status: passed.** The author ran this pass on 2026-11-08, and everything sounded correct. It covered each chip's name ("Add Potato to your basket"), the announcement after a tap, and that focus lands on the basket's heading.
 
 ## Waiting for the author
 

@@ -439,10 +439,17 @@ button:hover .plus-icon {
   min-height: var(--target);
   /* Room at the end for the add button, so a long name never runs under it. */
   padding: var(--space-2) var(--target) var(--space-2) var(--space-2);
+  /* Every pill keeps the border's room, so nothing moves when one is added to the basket. */
+  border: var(--border-control) solid transparent;
   border-radius: var(--radius-lg);
   background: var(--surface);
   font-weight: var(--weight-bold);
   text-decoration: none;
+}
+
+/* In the basket: a solid edge in ink. Its button says Remove, for those who don't see the edge. */
+.ingredient-links .in-basket a {
+  border-color: var(--ink);
 }
 
 /* Add, or the bin once it's in the basket, at the pill's end, over the link's padding. */

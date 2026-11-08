@@ -59,3 +59,7 @@ Kept as they are:
 ## Waiting for the author
 
 - The lede's new sentence.
+
+## Later
+
+- **An Ingredient in the basket has a solid border in ink on the list** (light ink in dark), asked for by the author. Every pill keeps a clear border of the same width, so nothing moves when one is added. Its button, now Remove, says the same to a screen reader. Tested red first.

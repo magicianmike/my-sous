@@ -93,3 +93,15 @@ test("Enter opens the one Ingredient that matches", async ({ page }) => {
   await expect(page).toHaveURL(/\/ingredients\/basil\?with=garlic$/);
   await expect(page.getByRole("heading", { level: 1, name: "Basil" })).toBeVisible();
 });
+
+test("an Ingredient in the basket has a solid border on the list", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/ingredients?with=basil");
+  const link = (name: string) => pill(page, name).getByRole("link");
+  // The ink colour, in the light theme.
+  await expect(link("Basil")).toHaveCSS("border-color", "rgb(31, 38, 32)");
+  await expect(link("Mint")).toHaveCSS("border-color", "rgba(0, 0, 0, 0)");
+  // Every pill keeps the border's room, so nothing moves when one is added.
+  const [basil, mint] = await Promise.all([link("Basil").boundingBox(), link("Mint").boundingBox()]);
+  expect(basil!.height).toBe(mint!.height);
+});

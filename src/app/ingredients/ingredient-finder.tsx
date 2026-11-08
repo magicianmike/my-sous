@@ -17,7 +17,7 @@ import { QuickAdd } from "./quick-add";
 export const IngredientFinder = withSearchParams(
   function IngredientFinder() {
     const { kitchen } = useKitchen();
-    const { href } = useCombination();
+    const { href, combination } = useCombination();
     const router = useRouter();
     const [query, setQuery] = useState("");
     const typed = query.trim();
@@ -38,7 +38,7 @@ export const IngredientFinder = withSearchParams(
           }
           hint={matches?.length === 0 && "Try another spelling, or clear the search to see every ingredient."}
         />
-        <IngredientGroups matching={matches} />
+        <IngredientGroups matching={matches} inBasket={combination.ingredients} />
       </>
     );
   },
@@ -53,8 +53,11 @@ export const IngredientFinder = withSearchParams(
   },
 );
 
-/** The Ingredients by kind, or only those `matching` when given, leaving out kinds with none of them. */
-function IngredientGroups({ matching }: { matching?: Ingredient[] }) {
+/**
+ * The Ingredients by kind, or only those `matching` when given, leaving out kinds with none of them. Those
+ * `inBasket` are marked as chosen.
+ */
+function IngredientGroups({ matching, inBasket = [] }: { matching?: Ingredient[]; inBasket?: Ingredient[] }) {
   const { kitchen } = useKitchen();
   return kitchen
     .ingredientsByCategory()
@@ -65,7 +68,7 @@ function IngredientGroups({ matching }: { matching?: Ingredient[] }) {
         <h2 id={`category-${category}`}>{heading}</h2>
         <ul className="ingredient-links">
           {ingredients.map((ingredient) => (
-            <li key={ingredient.id}>
+            <li key={ingredient.id} className={inBasket.includes(ingredient) ? "in-basket" : undefined}>
               <IngredientLink ingredient={ingredient}>
                 <IngredientMark ingredient={ingredient} size="sm" />
                 {ingredient.name}

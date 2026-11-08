@@ -54,7 +54,7 @@ Kept as they are:
 
 ## VoiceOver pass
 
-**Status: to do.** Check the field's name, the count as it changes, the no-match message and hint, and Enter opening a single match.
+**Status: passed.** The author ran this pass on 2026-11-08, and everything sounded correct. It covered the field's name, the count as it changes, the no-match message and hint, and Enter opening a single match.
 
 ## Waiting for the author
 

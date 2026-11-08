@@ -295,7 +295,7 @@ html:has(.tray-sheet:modal) .toast-spot:not(.toast-spot-sheet) {
 }
 
 /*
- * Close, then See what to make, on one row where both fit, each at least 12rem. Where they don't, See what
+ * Close, then See what to make, on one row where both fit at their least width. Where they don't, See what
  * to make wraps above Close, nearer the basket it acts on.
  */
 .tray-sheet-actions {
@@ -306,7 +306,7 @@ html:has(.tray-sheet:modal) .toast-spot:not(.toast-spot-sheet) {
 }
 
 .tray-sheet-actions > * {
-  flex: 1 1 12rem;
+  flex: 1 1 var(--sheet-action-min);
 }
 
 html:has(.tray-sheet:modal) .page {

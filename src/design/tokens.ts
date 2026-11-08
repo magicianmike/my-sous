@@ -168,6 +168,8 @@ const scales = {
   "tile-min": "11rem",
   // Home's two browse cards sit side by side only when each has this much room.
   "door-min": "16rem",
+  // The open tray sheet's Close and See what to make share a row only when each is this wide.
+  "sheet-action-min": "12rem",
   // Borders: hairlines for decoration, a heavier line for controls.
   "border-hairline": "1px",
   "border-control": "2px",

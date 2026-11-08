@@ -74,3 +74,4 @@ Kept as they are:
 - A Playwright test covers the tooltip on hover, Escape and focus. It was written after the button.
 - The author replaced the "brings in" lines under the chips with one: "Add more Ingredients to see more dishes." The Kitchen still ranks the chips by the dishes each brings in.
 - The Pairs well chips have the same tooltip as Add: "Add Yogurt to your basket".
+- A 2px dashed rule, with room either side, sets the chips apart from the basket's own Ingredients.

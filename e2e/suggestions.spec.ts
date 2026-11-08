@@ -111,7 +111,7 @@ test("the basket on What to make offers what pairs with it, one tap to add, and 
     "Add Yogurt to your basket",
     "Add Aleppo pepper to your basket",
   ]);
-  await expect(pairsWell).toContainText("Yogurt brings in Grain bowl.");
+  await expect(pairsWell).toContainText("Add more Ingredients to see more dishes.");
   await expect(page.getByRole("list", { name: "Suggestions" }).getByRole("heading", { name: "Grain bowl" })).toHaveCount(0);
 
   await pairsWell.getByRole("button", { name: "Add Yogurt to your basket" }).click();

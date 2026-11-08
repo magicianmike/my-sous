@@ -39,7 +39,7 @@ Defaults, not asked:
   - at most four;
   - none for a full basket.
 - **Playwright:**
-  - the chips on What to make, in order, with what each brings in;
+  - the chips on What to make, in order, with the line under them;
   - one tap adds yogurt, announces it, moves focus to the basket, and brings in the grain bowl;
   - the chips show when no dish fits;
   - no chips with a full basket.
@@ -66,9 +66,10 @@ Kept as they are:
 
 ## Waiting for the author
 
-- **The copy:** the "brings in" line.
+- **The copy:** "Add more Ingredients to see more dishes."
 
 ## Later
 
 - **Add buttons.** Every Add to the basket (on an Ingredient's page, the closest dishes, and a dish's parts) is now a basket and a plus. Its words stay in its name, and a tooltip shows them on hover or keyboard focus: "Add Garlic to your basket". The plus turns a quarter on hover, like the chips', from a shared `PlusIcon`. `AddToBasketButton` keeps one button between Add and Remove, so focus stays on it; `Tooltip` takes no label for Remove, which has its own words.
 - A Playwright test covers the tooltip on hover, Escape and focus. It was written after the button.
+- The author replaced the "brings in" lines under the chips with one: "Add more Ingredients to see more dishes." The Kitchen still ranks the chips by the dishes each brings in.

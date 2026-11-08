@@ -313,14 +313,46 @@ function explainRank(
   const hub = used.find((a) => used.every((b) => a === b || arePaired(a, b)));
   if (hub && used.length > 2) return `Everything here pairs with ${name(hub)}.`;
 
-  const [[a, b], ...more] = pairs;
   const alone = used.filter((x) => used.every((y) => x === y || !arePaired(x, y)));
   return capitalise(
-    `${name(a)} and ${name(b)} pair well` +
-      more.map(([c, d]) => `, and so do ${name(c)} and ${name(d)}`).join("") +
+    describePairs(used, pairs) +
       (alone.length === 0
         ? "."
         : `, but ${joinWithAnd(alone.map(name))} ${alone.length === 1 ? "doesn't" : "don't"} pair with the rest.`),
+  );
+}
+
+/**
+ * Pairings in prose, each named once: around the Ingredient with the most, then the next, as in "garlic pairs
+ * with chicken and lemon, and parsley with butter". Ingredients that pair with the same ones are named
+ * together ("potato and parsley pair with onion and garlic"), and pairs that share nothing read "chicken and
+ * garlic pair well, as do lemon and parsley".
+ */
+function describePairs(used: Ingredient[], pairs: [Ingredient, Ingredient][]): string {
+  const names = (ingredients: Ingredient[]) => joinWithAnd(ingredients.map(inSentence));
+  const groups: { hubs: Ingredient[]; partners: Ingredient[] }[] = [];
+  let left = pairs;
+  while (left.length > 0) {
+    const partnersOf = (x: Ingredient) =>
+      used.filter((y) => left.some(([a, b]) => (a === x && b === y) || (a === y && b === x)));
+    const hub = used.reduce((most, x) => (partnersOf(x).length > partnersOf(most).length ? x : most));
+    const partners = partnersOf(hub);
+    const same = groups.find(
+      (group) => group.partners.length === partners.length && group.partners.every((p, i) => p === partners[i]),
+    );
+    if (same) same.hubs.push(hub);
+    else groups.push({ hubs: [hub], partners });
+    left = left.filter(([a, b]) => a !== hub && b !== hub);
+  }
+  const [first, ...rest] = groups;
+  if (first.hubs.length === 1 && first.partners.length === 1) {
+    // No Ingredient pairs with two others, so each group is one pair.
+    const pair = ({ hubs, partners }: (typeof groups)[number]) => names([...hubs, ...partners]);
+    return `${pair(first)} pair well` + (rest.length > 0 ? `, as do ${rest.map(pair).join(", and ")}` : "");
+  }
+  return (
+    `${names(first.hubs)} ${first.hubs.length === 1 ? "pairs" : "pair"} with ${names(first.partners)}` +
+    rest.map(({ hubs, partners }, i) => `, ${i === rest.length - 1 ? "and " : ""}${names(hubs)} with ${names(partners)}`).join("")
   );
 }
 

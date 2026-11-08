@@ -1164,6 +1164,48 @@ describe("loadKitchen", () => {
 
       expect(kitchen.suggestion("dish", kitchen.combination(fills).ingredients)!.rankReason).toBe(expected);
     });
+
+    it.each([
+      [
+        "groups the Pairings around the Ingredients with the most",
+        pairs(["garlic", "chicken"], ["garlic", "lemon"], ["garlic", "butter"], ["parsley", "lemon"], ["parsley", "butter"]),
+        ["chicken", "garlic", "lemon", "butter", "parsley"],
+        "Garlic pairs with chicken, lemon and butter, and parsley with lemon and butter.",
+      ],
+      [
+        "names together the Ingredients that pair with the same ones",
+        pairs(["potato", "onion"], ["potato", "garlic"], ["parsley", "onion"], ["parsley", "garlic"]),
+        ["potato", "onion", "garlic", "parsley"],
+        "Potato and parsley pair with onion and garlic.",
+      ],
+      [
+        "names separate pairs once each",
+        pairs(["chicken", "garlic"], ["lemon", "parsley"]),
+        ["chicken", "garlic", "lemon", "parsley", "chili"],
+        "Chicken and garlic pair well, as do lemon and parsley, but chili doesn't pair with the rest.",
+      ],
+      [
+        "names three separate pairs once each",
+        pairs(["chicken", "garlic"], ["lemon", "parsley"], ["butter", "chili"]),
+        ["chicken", "garlic", "lemon", "parsley", "butter", "chili"],
+        "Chicken and garlic pair well, as do lemon and parsley, and butter and chili.",
+      ],
+    ])("%s", async (_, pairings, fills, expected) => {
+      const kitchen = await expectKitchen(
+        writeContent({
+          ingredients: Object.fromEntries(
+            ["chicken", "garlic", "lemon", "butter", "parsley", "chili", "potato", "onion"].map((id) => [
+              id,
+              { name: id[0].toUpperCase() + id.slice(1), slotTypes: [id] },
+            ]),
+          ),
+          pairings,
+          formulas: [formula("dish", fills)],
+        }),
+      );
+
+      expect(kitchen.suggestion("dish", kitchen.combination(fills).ingredients)!.rankReason).toBe(expected);
+    });
   });
 
   describe("Recipes", () => {

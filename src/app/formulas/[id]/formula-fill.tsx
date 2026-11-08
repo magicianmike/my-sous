@@ -31,9 +31,7 @@ export const FormulaFill = withSearchParams(function FormulaFill({
   const { combination, add } = useCombination();
   // The part whose Ingredient was just added to the basket, so focus can return to it after the reset.
   const [added, setAdded] = useState<string>();
-  const suggestion = kitchen
-    .suggest(combination.ingredients)
-    .find(({ formula }) => formula.id === formulaId)!;
+  const suggestion = kitchen.suggestion(formulaId, combination.ingredients)!;
   // A new Combination starts a fresh history of changes.
   const combinationKey = combination.ingredients.map(({ id }) => id).join(",");
   return (

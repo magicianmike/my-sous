@@ -55,13 +55,46 @@ test("makeable Suggestions come first, each saying so, and Ready is explained by
   await expect(first).toContainText("Ready with your basket.");
 });
 
-test("with no Combination, What to make shows four open Slots and one way forward", async ({ page }) => {
+test("with no Combination, What to make shows six open Slots and one way forward", async ({ page }) => {
   await page.goto("/suggestions");
   const nothing = page.getByRole("region", { name: "Nothing to suggest yet" });
   await expect(nothing).toBeVisible();
   await expect(page.getByRole("list", { name: "Suggestions" })).toHaveCount(0);
   await nothing.getByRole("link", { name: "Find an Ingredient" }).click();
   await expect(page).toHaveURL(/\/$/);
+});
+
+test("What to make lists only the dishes the basket fits", async ({ page }) => {
+  // Chicken thigh and garlic cover at least half of what these three need, and too little of the rest.
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  await expect(page.getByRole("list", { name: "Suggestions" }).getByRole("heading", { level: 3 })).toHaveText([
+    "Pan sauce",
+    "Sheet-pan roast",
+    "Fried rice",
+  ]);
+});
+
+test("when no dish fits, What to make names the closest and what to add, and adding one brings a dish in", async ({
+  page,
+}) => {
+  await page.goto("/suggestions?with=lamb,mint");
+  const nothing = page.getByRole("region", { name: "No dish fits your basket yet" });
+  await expect(nothing).toBeVisible();
+  await expect(page.getByRole("list", { name: "Suggestions" })).toHaveCount(0);
+  const closest = nothing.getByRole("list", { name: "Closest dishes" }).getByRole("listitem");
+  await expect(closest.getByRole("heading", { level: 3 })).toHaveText(["Pan sauce", "Sheet-pan roast", "Fried rice"]);
+  const panSauce = closest.filter({ has: page.getByRole("heading", { name: "Pan sauce" }) });
+  await expect(panSauce).toContainText("Add one of these parts: an aromatic or an acid.");
+  await panSauce.getByRole("button", { name: "Add Garlic to your basket" }).click();
+  await expect(page).toHaveURL(/with=lamb%2Cmint%2Cgarlic|with=lamb,mint,garlic/);
+  await expect(card(page, "Pan sauce")).toBeVisible();
+  await expect(nothing).toHaveCount(0);
+});
+
+test("a dish opens for a basket it doesn't fit", async ({ page }) => {
+  await page.goto("/formulas/frittata?with=chicken-thigh,garlic");
+  await expect(page.getByRole("heading", { level: 1, name: "Frittata" })).toBeVisible();
+  await expect(slotItem(page, "eggs")).toBeVisible();
 });
 
 test("removing the last Ingredient on What to make moves focus to what replaces it", async ({ page }) => {
@@ -221,7 +254,7 @@ test("a suggested Ingredient on a dish can be added to the basket, and its part 
 
   await acid.getByRole("button", { name: "Add Lemon to your basket" }).click();
   await expect(page).toHaveURL(/with=chicken-thigh,garlic,lemon$/);
-  await expect(page.getByRole("status")).toHaveText("Lemon added to your basket, 3 of 4.");
+  await expect(page.getByRole("status")).toHaveText("Lemon added to your basket, 3 of 6.");
   await expect(acid.locator(".tag")).toHaveText(["Yours"]);
   await expect(acid.getByRole("button", { name: /^Add / })).toHaveCount(0);
   await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();

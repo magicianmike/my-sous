@@ -10,11 +10,13 @@ import { Readiness } from "@/components/Readiness";
 import { TrayView } from "@/components/TrayView";
 import {
   COMBINATION_LIMIT,
+  inSentence,
   isCooksOwn,
+  joinWithAnd,
   type Ingredient,
   type Suggestion,
 } from "@/kitchen/kitchen";
-import { CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
+import { AddToCombination, CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
 import { IngredientLink, IngredientMarkLink } from "../ingredient-link";
 import { ReadinessSentence } from "../readiness";
 
@@ -77,6 +79,14 @@ export const SuggestionList = withSearchParams(
     }
 
     const suggestions = kitchen.suggest(combination.ingredients);
+    if (suggestions.length === 0) {
+      return (
+        <>
+          {shown}
+          <NothingFits basket={combination.ingredients} />
+        </>
+      );
+    }
 
     return (
       <>
@@ -100,6 +110,60 @@ export const SuggestionList = withSearchParams(
   },
   () => <p>Finding Suggestions…</p>,
 );
+
+const or = new Intl.ListFormat("en", { type: "disjunction" });
+const COUNTS = ["no", "one", "two", "three"];
+
+/** For a basket no dish fits yet: the closest dishes, the parts each needs, and what to add for each. */
+function NothingFits({ basket }: { basket: Ingredient[] }) {
+  const { kitchen } = useKitchen();
+  return (
+    <section className="nothing-fits" aria-labelledby="nothing-fits-heading">
+      <h2 id="nothing-fits-heading">No dish fits your basket yet</h2>
+      <p className="muted">
+        A dish fits once your basket covers at least half the parts it needs. These are closest.
+      </p>
+      <ul className="stack" aria-label="Closest dishes">
+        {kitchen.closest(basket).map(({ formula, toFit, needs }) => {
+          // The parts nothing from the basket is in yet, each with the best-pairing Ingredient to add.
+          const open = needs.filter(({ fills }) => !fills.some(({ source }) => isCooksOwn(source)));
+          return (
+            <li key={formula.id} className="closest">
+              <h3>
+                <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
+              </h3>
+              <p>
+                Add {COUNTS[toFit] ?? toFit} of these parts: {or.format(open.map(({ slot }) => slot.role))}.
+              </p>
+              <ul className="stack">
+                {open.flatMap(({ slot, choices }) => {
+                  const best = choices.find(({ ingredient }) => !basket.includes(ingredient));
+                  if (!best) return [];
+                  const { ingredient, pairsWith } = best;
+                  return [
+                    <li key={slot.id}>
+                      <ListRow
+                        mark={<IngredientMarkLink ingredient={ingredient} size="md" />}
+                        title={<IngredientLink ingredient={ingredient} />}
+                        action={<AddToCombination ingredientId={ingredient.id} />}
+                      >
+                        <p>
+                          For {slot.role}.
+                          {pairsWith.length > 0 &&
+                            ` Pairs with ${joinWithAnd(pairsWith.map(inSentence))}.`}
+                        </p>
+                      </ListRow>
+                    </li>,
+                  ];
+                })}
+              </ul>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
 
 /** One Suggestion: whether it's ready, what fills it and from where, why it ranks here. */
 export function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {

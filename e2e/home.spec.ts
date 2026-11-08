@@ -7,7 +7,7 @@ test("Home says what MySous does, what the basket is for, and offers search and 
   const main = page.getByRole("main");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Find what goes with what, and why.");
   await expect(main).toContainText(
-    "Add up to four ingredients you want to cook around to your basket, from your fridge or not",
+    "Add up to six ingredients you want to cook around to your basket, from your fridge or not",
   );
   await expect(main.getByRole("heading", { level: 2 })).toHaveText(["Start from an ingredient", "Or browse"]);
   await expect(main.getByRole("combobox", { name: "Find an ingredient" })).toBeVisible();

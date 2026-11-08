@@ -41,7 +41,9 @@ export function TrayBar<T extends IngredientLook>({
           ))}
           {/* The places still free, as empty circles; the button's name already gives the count. */}
           {Array.from({ length: Math.max(limit - ingredients.length, 0) }, (_, place) => (
-            <EmptyMark key={place} />
+            <span key={`free-${place}`} className={styles.free}>
+              <EmptyMark />
+            </span>
           ))}
         </span>
       )}

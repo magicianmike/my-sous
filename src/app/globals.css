@@ -703,7 +703,7 @@ main:has(.case-study) {
   gap: var(--space-1);
 }
 
-/* What to make before there's a Combination: four open Slots and one way forward. */
+/* What to make before there's a Combination: six open Slots and one way forward. */
 .nothing-yet {
   display: grid;
   justify-items: start;
@@ -716,6 +716,32 @@ main:has(.case-study) {
 .nothing-yet h2,
 .nothing-yet p {
   margin: 0;
+}
+
+/* What to make when no dish fits: the closest dishes, each with what to add. */
+.nothing-fits {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.nothing-fits h2,
+.nothing-fits > p,
+.closest h3,
+.closest > p {
+  margin: 0;
+}
+
+.closest h3 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.closest {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+  border-top: var(--border-hairline) solid var(--line);
 }
 
 .nothing-yet-marks {

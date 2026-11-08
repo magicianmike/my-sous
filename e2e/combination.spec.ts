@@ -35,13 +35,13 @@ function suggestionList(page: Page) {
 async function expectCombination(page: Page, names: string[]) {
   if (inSheet(page)) {
     await expect(page.getByRole("button", { name: /^Your basket/ })).toHaveAccessibleName(
-      `Your basket ${names.length} of 4${names.length > 0 ? `: ${names.join(", ")}` : ""}`,
+      `Your basket ${names.length} of 6${names.length > 0 ? `: ${names.join(", ")}` : ""}`,
     );
     return;
   }
   const shown = await tray(page);
   await expect(shown.getByRole("listitem")).toHaveText(names.map((name) => new RegExp(`^${name}`)));
-  await expect(shown.getByRole("heading")).toContainText(`${names.length} of 4`);
+  await expect(shown.getByRole("heading")).toContainText(`${names.length} of 6`);
 }
 
 /** The names of the first few Suggestions, once they're drawn: the best-paired come first. */
@@ -103,12 +103,14 @@ test("Suggestions are ranked by how well their Ingredients pair, with a reason",
   await expect(suggestions.nth(2)).toContainText("Chicken thigh and garlic pair well.");
 });
 
-test("a Combination that doesn't pair still gets its closest Suggestions, each saying what doesn't pair", async ({
+test("a Combination where not everything pairs still gets the dishes it fits, each saying what doesn't pair", async ({
   page,
 }) => {
-  await page.goto("/suggestions?with=chicken-thigh,basil");
-  expect(await topSuggestions(page, 2)).toEqual(["Pan sauce", "Sheet-pan roast"]);
-  await expect(suggestionList(page).getByRole("listitem").first()).toContainText("Chicken thigh and basil don't have a Pairing in MySous yet.");
+  await page.goto("/suggestions?with=chicken-thigh,basil,ginger");
+  expect(await topSuggestions(page, 3)).toEqual(["Pan sauce", "Sheet-pan roast", "Fried rice"]);
+  await expect(suggestionList(page).getByRole("listitem").first()).toContainText(
+    "Chicken thigh and ginger pair well, but basil doesn't pair with the rest.",
+  );
   await expect(page.getByRole("heading", { name: "Not everything pairs yet" })).toHaveCount(0);
 });
 
@@ -198,13 +200,13 @@ test("unknown Ingredients in a link are dropped with a notice", async ({ page })
 });
 
 test("a full Combination says why nothing more can be added", async ({ page }) => {
-  await page.goto("/ingredients/garlic?with=lemon,lime,basil,tomato");
+  await page.goto("/ingredients/garlic?with=lemon,lime,basil,tomato,mint,sumac");
   await page.getByRole("button", { name: "Add Garlic to your basket" }).click();
   await expect(page.getByRole("status")).toHaveText(
-    "Your basket already holds 4 Ingredients, the most it can, so Suggestions stay focused. Remove one to add Garlic.",
+    "Your basket already holds 6 Ingredients, the most it can, so Suggestions stay focused. Remove one to add Garlic.",
   );
-  await expect(page.locator(".toast-spot")).toHaveText(/^Your basket already holds 4 Ingredients/);
-  await expectCombination(page, ["Lemon", "Lime", "Basil", "Tomato"]);
+  await expect(page.locator(".toast-spot")).toHaveText(/^Your basket already holds 6 Ingredients/);
+  await expectCombination(page, ["Lemon", "Lime", "Basil", "Tomato", "Mint", "Sumac"]);
 });
 
 test("removing an Ingredient updates the Combination and announces it", async ({ page }) => {
@@ -214,7 +216,7 @@ test("removing an Ingredient updates the Combination and announces it", async ({
   await expectCombination(page, ["Garlic"]);
   // On a phone the change is made in the open sheet, so it's announced from there.
   const live = test.info().project.use.isMobile ? shown.getByRole("status") : page.getByRole("status");
-  await expect(live).toHaveText("Lemon removed from your basket, 1 of 4.");
+  await expect(live).toHaveText("Lemon removed from your basket, 1 of 6.");
 });
 
 async function tabTo(page: Page, target: Locator) {
@@ -255,14 +257,14 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
 });
 
 test("What to make shows the Combination under its heading, in place of the tray", async ({ page }) => {
-  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  await page.goto("/suggestions?with=chicken-thigh,garlic,lemon");
   const shown = page.getByRole("main").getByRole("complementary", { name: /Your basket/ });
-  await expect(shown.getByRole("listitem")).toHaveText([/^Chicken thigh/, /^Garlic/]);
+  await expect(shown.getByRole("listitem")).toHaveText([/^Chicken thigh/, /^Garlic/, /^Lemon/]);
   await expect(page.getByRole("complementary")).toHaveCount(1);
   await expect(page.getByRole("button", { name: /^Your basket/ })).toHaveCount(0);
 
-  await shown.getByRole("button", { name: "Remove Garlic" }).click();
-  await expect(page.getByRole("status")).toHaveText("Garlic removed from your basket, 1 of 4.");
+  await shown.getByRole("button", { name: "Remove Lemon" }).click();
+  await expect(page.getByRole("status")).toHaveText("Lemon removed from your basket, 2 of 6.");
   await expect(shown.getByRole("heading", { name: /Your basket/ })).toBeFocused();
   await expect(suggestionList(page)).toBeVisible();
 });
@@ -271,7 +273,7 @@ test("a change shows as a toast, which fades after a few seconds", async ({ page
   await page.goto("/ingredients/lemon");
   await page.getByRole("button", { name: "Add Lemon to your basket" }).first().click();
   const toast = page.locator(".toast-spot");
-  await expect(toast).toHaveText("Lemon added to your basket, 1 of 4.");
+  await expect(toast).toHaveText("Lemon added to your basket, 1 of 6.");
   await expect(toast).toBeVisible();
   // It's for the eye only; the live region announces it.
   await expect(toast.getByRole("status")).toHaveCount(0);

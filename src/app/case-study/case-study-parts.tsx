@@ -33,9 +33,7 @@ export function LiveSuggestion({ basket, dish, caption }: {
   caption: React.ReactNode;
 }) {
   const { kitchen } = useKitchen();
-  const suggestion = kitchen
-    .suggest(kitchen.combination(basket).ingredients)
-    .find(({ formula }) => formula.id === dish);
+  const suggestion = kitchen.suggestion(dish, kitchen.combination(basket).ingredients);
   if (!suggestion) throw new Error(`The Case Study embeds an unknown dish, "${dish}".`);
   return (
     <figure className="live-embed">

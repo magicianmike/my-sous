@@ -543,6 +543,8 @@ describe("loadKitchen", () => {
         ["basil", ["chicken"], []],
         ["ginger", ["garlic"], []],
       ]);
+      // Thyme pairs with nothing here.
+      expect(couldAdd(kitchen, ["thyme"])).toEqual([]);
     });
 
     it("gives at most four, and none for a full basket", async () => {

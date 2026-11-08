@@ -15,6 +15,10 @@
   background: var(--wash);
 }
 
+.dashed {
+  border: var(--border-hairline) dashed var(--line);
+}
+
 .chip:has(> :first-child:not(.label)) {
   padding-left: var(--space-1);
 }

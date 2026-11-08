@@ -752,10 +752,7 @@ main:has(.case-study) {
   cursor: pointer;
 }
 
-.pairs-well button > span {
-  border: var(--border-hairline) dashed var(--line);
-}
-
+/* The chip's dashed edge darkens under the pointer. */
 .pairs-well button:hover > span {
   border-color: var(--ink-muted);
 }

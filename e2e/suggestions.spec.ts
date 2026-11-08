@@ -122,6 +122,12 @@ test("the basket on What to make offers what pairs with it, one tap to add, and 
   await expect(basket.getByRole("heading", { name: /Your basket/ })).toBeFocused();
 });
 
+test("the basket offers what pairs with it when no dish fits too", async ({ page }) => {
+  await page.goto("/suggestions?with=lamb,mint");
+  await expect(page.getByRole("region", { name: "No dish fits your basket yet" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Pairs well" }).getByRole("button")).toHaveCount(4);
+});
+
 test("a full basket offers nothing more to add", async ({ page }) => {
   await page.goto("/suggestions?with=chicken-thigh,garlic,lemon,basil,mint,sumac");
   await expect(page.getByRole("main").getByRole("complementary", { name: /Your basket/ })).toBeVisible();

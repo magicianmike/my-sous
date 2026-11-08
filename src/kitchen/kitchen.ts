@@ -140,7 +140,7 @@ export type Suggestion = {
 };
 
 /** An Ingredient that pairs with a Combination, and could be added to it. */
-export type CouldAdd = {
+export type Addition = {
   ingredient: Ingredient;
   /** The Combination's Ingredients it pairs with. */
   pairsWith: Ingredient[];
@@ -237,7 +237,7 @@ export type Kitchen = {
    * Up to `COULD_ADD_LIMIT` Ingredients that pair with a Combination with room for more: most
    * Pairings with it first, then most Formulas brought in, then by name.
    */
-  couldAdd(combination: Ingredient[]): CouldAdd[];
+  couldAdd(combination: Ingredient[]): Addition[];
   /** One Formula filled for a Combination as `suggest` fills it, whether it fits or not. */
   suggestion(formulaId: string, combination: Ingredient[]): Suggestion | undefined;
   /** The same Suggestion with the Cook's choice added to a Slot. */

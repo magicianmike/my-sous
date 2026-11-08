@@ -12,17 +12,17 @@ import { useCombination, useKitchen } from "../combination";
 export function PairsWell({ onAdd }: { onAdd: () => void }) {
   const { kitchen } = useKitchen();
   const { combination, add } = useCombination();
-  const ideas = kitchen.couldAdd(combination.ingredients);
-  if (ideas.length === 0) return null;
-  const bringing = ideas.filter(({ bringsIn }) => bringsIn.length > 0);
+  const additions = kitchen.couldAdd(combination.ingredients);
+  if (additions.length === 0) return null;
+  const bringing = additions.filter(({ bringsIn }) => bringsIn.length > 0);
   return (
     <section className="pairs-well" aria-labelledby="pairs-well-heading">
       <h3 id="pairs-well-heading">Pairs well</h3>
       <ul>
-        {ideas.map(({ ingredient }) => (
+        {additions.map(({ ingredient }) => (
           <li key={ingredient.id}>
-            <button type="button" onClick={() => added(ingredient)}>
-              <Chip colour={ingredient.colour} leading={<IngredientMark ingredient={ingredient} size="sm" />} trailing={<PlusIcon />}>
+            <button type="button" onClick={() => addAndRefocus(ingredient)}>
+              <Chip colour={ingredient.colour} dashed leading={<IngredientMark ingredient={ingredient} size="sm" />} trailing={<PlusIcon />}>
                 <span className="visually-hidden">Add </span>
                 {ingredient.name}
                 <span className="visually-hidden"> to your basket</span>
@@ -41,7 +41,7 @@ export function PairsWell({ onAdd }: { onAdd: () => void }) {
     </section>
   );
 
-  function added(ingredient: Ingredient) {
+  function addAndRefocus(ingredient: Ingredient) {
     add(ingredient);
     onAdd();
   }

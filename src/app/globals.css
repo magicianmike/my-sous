@@ -766,7 +766,7 @@ main:has(.case-study) {
 
 @media (prefers-reduced-motion: no-preference) {
   .pairs-well button:hover .pairs-well-icon {
-    transition: transform var(--motion-fast) var(--ease-out);
+    transition: transform var(--motion-slow) var(--ease-out);
   }
 }
 

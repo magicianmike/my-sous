@@ -26,7 +26,7 @@ export const metadata = {
 
 **The problem.** A home cook at 6pm stands at the open fridge with half a bunch of cilantro, some chicken thighs and a lime. They can follow a recipe, but they don't trust themselves to improvise. Recipe sites match keywords; chat assistants answer with confident text no one can check. Neither explains what goes with what, and why.
 
-**The hero interaction.** The Cook puts up to four Ingredients in a basket. MySous suggests dishes built around them, fills each part it can, and says in one line why each part holds what it does, or why it's still open. Any part can be changed, and every change can be undone.
+**The hero interaction.** The Cook puts up to six Ingredients in a basket. MySous suggests the dishes they fit, those the basket covers at least half of, fills each part it can, and says in one line why each part holds what it does, or why it's still open. Any part can be changed, and every change can be undone.
 
 **The key decisions.**
 
@@ -86,7 +86,7 @@ If a "you can cook this tonight" answer is missed later, the lightest step back 
   caption="A basket where not everything pairs: basil has no Pairing with chicken thigh or ginger, and the card says so."
 />
 
-Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows every dish for it, each saying what pairs and what doesn't. A dish's own changes stay on that screen for now, with their own undo; putting them in the address too is the obvious next step for sharing a dish exactly as changed.
+Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows the dishes it fits, each saying what pairs and what doesn't. A dish's own changes stay on that screen for now, with their own undo; putting them in the address too is the obvious next step for sharing a dish exactly as changed.
 
 </Chapter>
 
@@ -111,7 +111,7 @@ Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows every 
 **The UX decision: regional, hedged and sourced.** A Cuisine is named at the level people cook in: Sichuan, Oaxacan, Levantine, Punjabi, never "Asian" or "Mediterranean". Copy says "common in", never "authentic", hedges what varies by household ("many cooks", "usually"), and states food safety plainly. Where agencies differ, the stricter figure comes first: pork is 160°F / 71°C, with the FDA's 145°F / 63°C and a rest given too.
 
 <LiveSuggestion
-  basket={["lamb", "mint"]}
+  basket={["lamb", "mint", "pomegranate-molasses"]}
   dish="pan-sauce"
   caption="The rank reason names the Cuisines a Pairing is common in, at regional level."
 />
@@ -243,7 +243,7 @@ Every Kitchen test goes through `loadKitchen` with a small fixture content folde
 - **A Pantry.** Built and cut, as above (ADR 0004).
 - **A "Not everything pairs" box with fix buttons.** Built, then cut: each Suggestion's rank reason already says what doesn't pair, and the Cook doesn't need a separate task to resolve it.
 - **A client-side store for the basket.** It would break Back and Forward, shared links and this page's deep links.
-- **Prerendering every Suggestion.** With dozens of Ingredients and up to four in a basket, there are millions of baskets.
+- **Prerendering every Suggestion.** With dozens of Ingredients and up to six in a basket, there are millions of baskets.
 - **A disabled Add button at the limit.** A disabled button can't take focus or explain itself; Add stays active and says why nothing was added.
 
 </Chapter>

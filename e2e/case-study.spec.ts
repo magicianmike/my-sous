@@ -86,7 +86,7 @@ test("a deep link opens the app with that exact basket", async ({ page }) => {
   await embed(page, /not everything pairs/).getByRole("link", { name: "Open this basket in MySous" }).click();
   await expect(page).toHaveURL(new RegExp(`/suggestions\\?with=${tensionBasket}$`));
   await expect(page.getByRole("heading", { name: "Suggestions" })).toBeVisible();
-  const basket = page.locator(".suggestions-combination li");
+  const basket = page.getByRole("list", { name: "In your basket" }).getByRole("listitem");
   await expect(basket).toHaveText([/^Chicken thigh/, /^Basil/, /^Ginger/]);
 });
 
@@ -170,7 +170,7 @@ test("every link into the app from the prose opens the basket it names", async (
     await expect(page.getByRole("heading", { level: 1, name: "What to make" })).toBeVisible();
     // The basket lists those Ingredients, in that order, by name.
     const names = ids.map((id) => new RegExp(`^${id.replace(/-/g, " ")}`, "i"));
-    await expect(page.locator(".suggestions-combination li")).toHaveText(names);
+    await expect(page.getByRole("list", { name: "In your basket" }).getByRole("listitem")).toHaveText(names);
   }
 });
 

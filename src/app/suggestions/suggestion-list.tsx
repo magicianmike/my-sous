@@ -10,13 +10,16 @@ import { Readiness } from "@/components/Readiness";
 import { TrayView } from "@/components/TrayView";
 import {
   COMBINATION_LIMIT,
+  inSentence,
   isCooksOwn,
+  joinWithAnd,
   type Ingredient,
   type Suggestion,
 } from "@/kitchen/kitchen";
-import { CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
+import { AddToCombination, CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
 import { IngredientLink, IngredientMarkLink } from "../ingredient-link";
 import { ReadinessSentence } from "../readiness";
+import { PairsWell } from "./pairs-well";
 
 export const SuggestionList = withSearchParams(
   function SuggestionList() {
@@ -48,7 +51,9 @@ export const SuggestionList = withSearchParams(
           }}
           renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
           renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
-        />
+        >
+          <PairsWell onAdd={() => combinationHeading.current?.focus()} />
+        </TrayView>
       </div>
     );
     if (empty) {
@@ -77,6 +82,14 @@ export const SuggestionList = withSearchParams(
     }
 
     const suggestions = kitchen.suggest(combination.ingredients);
+    if (suggestions.length === 0) {
+      return (
+        <>
+          {shown}
+          <NothingFits basket={combination.ingredients} />
+        </>
+      );
+    }
 
     return (
       <>
@@ -100,6 +113,50 @@ export const SuggestionList = withSearchParams(
   },
   () => <p>Finding Suggestions…</p>,
 );
+
+const or = new Intl.ListFormat("en", { type: "disjunction" });
+/** How many parts to add, in words, as far as a dish can need. */
+const NUMBER_WORDS = ["no", "one", "two", "three", "four", "five", "six"];
+
+/** For a basket no dish fits yet: the closest dishes, the parts each needs, and what to add for each. */
+function NothingFits({ basket }: { basket: Ingredient[] }) {
+  const { kitchen } = useKitchen();
+  return (
+    <div className="nothing-fits">
+      {basket.length >= COMBINATION_LIMIT && (
+        <p className="muted">Your basket is full, so remove an Ingredient before you add one.</p>
+      )}
+      <ul className="stack" aria-label="Closest dishes">
+        {kitchen.closest(basket).map(({ suggestion: { formula, toFit }, toAdd }) => (
+          <li key={formula.id} className="closest">
+            <h3>
+              <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
+            </h3>
+            <p>
+              Add {NUMBER_WORDS[toFit] ?? toFit} of these parts: {or.format(toAdd.map(({ slot }) => slot.role))}.
+            </p>
+            <ul className="stack">
+              {toAdd.map(({ slot, ingredient, pairsWith }) => (
+                <li key={slot.id}>
+                  <ListRow
+                    mark={<IngredientMarkLink ingredient={ingredient} size="md" />}
+                    title={<IngredientLink ingredient={ingredient} />}
+                    action={<AddToCombination ingredientId={ingredient.id} />}
+                  >
+                    <p>
+                      For {slot.role}.
+                      {pairsWith.length > 0 && ` Pairs with ${joinWithAnd(pairsWith.map(inSentence))}.`}
+                    </p>
+                  </ListRow>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 /** One Suggestion: whether it's ready, what fills it and from where, why it ranks here. */
 export function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {

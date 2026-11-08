@@ -120,7 +120,12 @@
   }
 
   .marks > * + * {
-    margin-inline-start: calc(var(--space-3) * -1);
+    margin-inline-start: calc(var(--space-4) * -1);
     box-shadow: 0 0 0 var(--border-control) var(--floating);
+  }
+
+  /* On one row the count says what's free, so the empty circles give the title their room. */
+  .free {
+    display: none;
   }
 }

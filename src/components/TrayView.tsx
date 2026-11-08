@@ -24,6 +24,8 @@ type Props<T extends IngredientLook> = {
   renderMark?: (ingredient: T) => React.ReactNode;
   /** "See what to make", as a link the container provides. */
   action?: React.ReactNode;
+  /** More under the Ingredients, such as what pairs with them. */
+  children?: React.ReactNode;
   titleRef?: React.Ref<HTMLHeadingElement>;
 };
 
@@ -39,6 +41,7 @@ export function TrayView<T extends IngredientLook>({
   renderName = ({ name }) => name,
   renderMark = (ingredient) => <IngredientMark ingredient={ingredient} size="sm" />,
   action,
+  children,
   titleRef,
 }: Props<T>) {
   const arrivalClass = useArrivalClass(ingredients.map(({ id }) => id));
@@ -71,7 +74,7 @@ export function TrayView<T extends IngredientLook>({
         <p className={styles.empty}>Add an Ingredient to start a basket.</p>
       ) : (
         <>
-          <ul className={styles.items}>
+          <ul className={styles.items} aria-label="In your basket">
             {ingredients.map((ingredient) => (
               <li key={ingredient.id} className={arrivalClass(ingredient.id)}>
                 <Chip
@@ -89,6 +92,7 @@ export function TrayView<T extends IngredientLook>({
               </li>
             ))}
           </ul>
+          {children}
           {action}
         </>
       )}

@@ -60,7 +60,7 @@ describe("Images", () => {
       made: "ai-generated",
     });
     expect(kitchen.formula("dressing")!.image).toMatchObject({ file: "dressing.png", alt: "A jar of dressing." });
-    const [dressing] = kitchen.suggest([]);
+    const dressing = kitchen.suggestion("dressing", [])!;
     const written = kitchen.recipe(dressing)!;
     expect(written.image).toMatchObject({ file: "dressing-recipe.png", width: 1600 });
     expect(written.asWritten.map(({ id }) => id)).toEqual(["lemon"]);
@@ -77,8 +77,7 @@ describe("Images", () => {
           images: { "typical.png": await png(1600, 1067), "as-written.png": await png(1600, 1067) },
         }),
       );
-      const [suggestion] = kitchen.suggest([]);
-      return kitchen.dishImage(suggestion);
+      return kitchen.dishImage(kitchen.suggestion("dressing", [])!);
     }
 
     it("is its Recipe's, with what it's made with as written", async () => {

@@ -46,7 +46,7 @@ One of the six Cuisines MySous launches with: Southern Italian, Oaxacan, Levanti
 ### Dishes
 
 **Combination**:
-The one to four Ingredients the Cook wants to cook around, whether they're already in the fridge or something to shop for. It's the one concept the Cook builds, and Formula suggestions are always made for one. The Cook sees it called their **basket** ("Your basket", "Add to your basket"); "Combination" stays in code, content and docs. MySous keeps no record of what the Cook owns (ADR 0004), so the basket never means a pantry or an inventory.
+The one to six Ingredients the Cook wants to cook around, whether they're already in the fridge or something to shop for. It's the one concept the Cook builds, and Formula suggestions are always made for one. The Cook sees it called their **basket** ("Your basket", "Add to your basket"); "Combination" stays in code, content and docs. MySous keeps no record of what the Cook owns (ADR 0004), so the basket never means a pantry or an inventory.
 _Avoid_: Selection, cart, idea, pantry, inventory
 
 **Formula**:
@@ -58,8 +58,12 @@ A named role within a Formula, such as "an acid" or "a soft herb", that Ingredie
 _Avoid_: Placeholder, component
 
 **Suggestion**:
-A Formula recommended for a Combination, with its Slots filled and a stated reason for its rank. A Suggestion is **makeable** (shown as "Ready") when the Combination fills every required Slot.
+A Formula recommended for a Combination it fits, with its Slots filled and a stated reason for its rank. A Suggestion is **makeable** (shown as "Ready") when the Combination fills every required Slot.
 _Avoid_: Result, match, recommendation
+
+**Fit**:
+A Combination fits a Formula when its own Ingredients are in at least half of the Formula's required Slots. Only Formulas the Combination fits become Suggestions; when none does, the closest are offered with what to add.
+_Avoid_: Match, relevant
 
 **Recipe**:
 A Formula's quantities, timings and full method, shown on the dish's page. It's written for its own Ingredients (the recipe as written), which fill any part the Combination and its Pairings leave empty, and it follows every fill and change: each part's amount is given for particular Ingredients, with a general amount for the rest. A step whose safety depends on a part (poultry temperatures, say) shows the cited safety guidance of the Ingredient that fills it. The Cook sees it called a **recipe**.

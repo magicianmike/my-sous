@@ -397,6 +397,21 @@ main:has(.case-study) {
   height: var(--space-5);
 }
 
+/*
+ * A plus turns a quarter clockwise while the pointer is on its button. Only the turn on is animated: a quarter
+ * turn looks the same, so it snaps back unseen instead of turning anticlockwise. With reduced motion it isn't
+ * animated at all.
+ */
+button:hover .plus-icon {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  button:hover .plus-icon {
+    transition: transform var(--motion-slow) var(--ease-out);
+  }
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -703,7 +718,7 @@ main:has(.case-study) {
   gap: var(--space-1);
 }
 
-/* What to make before there's a Combination: four open Slots and one way forward. */
+/* What to make before there's a Combination: six open Slots and one way forward. */
 .nothing-yet {
   display: grid;
   justify-items: start;
@@ -716,6 +731,72 @@ main:has(.case-study) {
 .nothing-yet h2,
 .nothing-yet p {
   margin: 0;
+}
+
+/* What pairs with the basket, under its Ingredients on What to make: each chip one tap to add. */
+/* Set apart from the basket's own Ingredients by a dashed rule, as the chips are dashed: not in it yet. */
+.pairs-well {
+  display: grid;
+  gap: var(--space-2);
+  margin-block: var(--space-5) var(--space-2);
+  padding-top: var(--space-5);
+  border-top: var(--border-control) dashed var(--line);
+}
+
+.pairs-well ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pairs-well button {
+  display: flex;
+  align-items: center;
+  min-height: var(--target);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* The chip takes its Ingredient's wash under the pointer. */
+.pairs-well button:hover > span {
+  background: var(--wash);
+}
+
+.pairs-well p {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+/* What to make when no dish fits: the closest dishes, each with what to add. */
+.nothing-fits {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.nothing-fits > p,
+.closest h3,
+.closest > p {
+  margin: 0;
+}
+
+.closest {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+  border-top: var(--border-hairline) solid var(--line);
+}
+
+.closest h3 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
 }
 
 .nothing-yet-marks {

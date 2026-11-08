@@ -18,7 +18,7 @@ export default async function Home() {
       <p className="home-intro">
         <BasketIcon />
         <span>
-          Add up to four ingredients you want to cook around to your basket, from your fridge or not, and
+          Add up to six ingredients you want to cook around to your basket, from your fridge or not, and
           MySous suggests what to make.
         </span>
       </p>

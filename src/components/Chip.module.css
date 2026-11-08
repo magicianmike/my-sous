@@ -15,6 +15,16 @@
   background: var(--wash);
 }
 
+.dashed {
+  border: var(--border-control) dashed var(--line);
+  background: transparent;
+}
+
+/* Not in the basket yet: no wash, an edge in the colour of the drawing's circle. */
+.hued.dashed {
+  border-color: var(--wash);
+}
+
 .chip:has(> :first-child:not(.label)) {
   padding-left: var(--space-1);
 }

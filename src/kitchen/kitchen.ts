@@ -60,7 +60,13 @@ export type BlendComponent = { name: string; ingredient?: Ingredient };
 export const SLOT_REFERENCE = /\{([^}]+)\}/g;
 
 /** The most Ingredients a Combination holds, so Suggestions stay focused. */
-export const COMBINATION_LIMIT = 4;
+export const COMBINATION_LIMIT = 6;
+
+/** The most dishes offered as nearest when a Combination fits none. */
+const CLOSEST_LIMIT = 3;
+
+/** The most Ingredients offered to add to a Combination. */
+const COULD_ADD_LIMIT = 4;
 
 /** A Combination read from untrusted ids (such as a URL), with what had to be dropped. */
 export type Combination = {
@@ -125,6 +131,33 @@ export type Suggestion = {
   needs: FilledSlot[];
   /** Whether the Combination fills every required Slot (shown as "Ready"). */
   makeable: boolean;
+  /**
+   * How many more required Slots need an Ingredient from the Combination before the Formula fits it:
+   * it fits once the Combination covers at least half of them. 0 when it fits. It counts only the
+   * Combination, not the Cook's changes on the dish.
+   */
+  toFit: number;
+};
+
+/** An Ingredient that pairs with a Combination, and could be added to it. */
+export type Addition = {
+  ingredient: Ingredient;
+  /** The Combination's Ingredients it pairs with. */
+  pairsWith: Ingredient[];
+  /** The Formulas the Combination would fit with it added, and doesn't now. */
+  bringsIn: Formula[];
+};
+
+/** A Formula a Combination doesn't fit yet, and what to add to it to get there. */
+export type NearMiss = {
+  suggestion: Suggestion;
+  /** For each required Slot nothing from the Combination is in: the best-pairing Ingredient to add. */
+  toAdd: {
+    slot: Slot;
+    ingredient: Ingredient;
+    /** The Combination's Ingredients it pairs with, in the dish. */
+    pairsWith: Ingredient[];
+  }[];
 };
 
 /** A line of a Recipe's ingredient list, its name lower-case like the rest; `ingredient` is set when it fills a Slot. */
@@ -187,13 +220,26 @@ export type Kitchen = {
    */
   dishImage(suggestion: Suggestion): DishImage | undefined;
   /**
-   * Suggestions for a Combination, one per Formula. Slots fill from the Combination first (each
+   * Suggestions for a Combination, one per Formula it fits: those whose required Slots it covers
+   * at least half of (see `Suggestion.toFit`). Slots fill from the Combination first (each
    * Ingredient filling at most one Slot), then the Ingredient that pairs with most of the fill; a
    * Slot that no Pairing can justify stays empty. Ranked by fewest required Slots still needed (so
    * makeable first), then by coherence: the number of Pairings among the Ingredients the Cook
    * chose, not those suggested by Pairing. Ties keep content order. Deterministic.
    */
   suggest(combination: Ingredient[]): Suggestion[];
+  /**
+   * For a Combination no Formula fits yet, what's nearest: up to `CLOSEST_LIMIT` of the Formulas it
+   * doesn't fit, fewest required Slots short of fitting first, then ranked as `suggest` ranks.
+   */
+  closest(combination: Ingredient[]): NearMiss[];
+  /**
+   * Up to `COULD_ADD_LIMIT` Ingredients that pair with a Combination with room for more: most
+   * Pairings with it first, then most Formulas brought in, then by name.
+   */
+  couldAdd(combination: Ingredient[]): Addition[];
+  /** One Formula filled for a Combination as `suggest` fills it, whether it fits or not. */
+  suggestion(formulaId: string, combination: Ingredient[]): Suggestion | undefined;
   /** The same Suggestion with the Cook's choice added to a Slot. */
   addToSlot(suggestion: Suggestion, slotId: string, ingredientId: string): Suggestion;
   /** The same Suggestion with one Ingredient taken out of a Slot, which can leave it empty. */
@@ -254,7 +300,7 @@ function explainRank(
   pairs: [Ingredient, Ingredient][],
 ): string {
   const name = inSentence;
-  if (used.length === 0) return "None of your basket fits this dish yet.";
+  if (used.length === 0) return "Nothing from your basket is in this dish yet.";
   if (used.length === 1) return `Only ${name(used[0])} from your basket is used here.`;
   if (pairs.length === 0) {
     return used.length === 2
@@ -267,14 +313,46 @@ function explainRank(
   const hub = used.find((a) => used.every((b) => a === b || arePaired(a, b)));
   if (hub && used.length > 2) return `Everything here pairs with ${name(hub)}.`;
 
-  const [[a, b], ...more] = pairs;
   const alone = used.filter((x) => used.every((y) => x === y || !arePaired(x, y)));
   return capitalise(
-    `${name(a)} and ${name(b)} pair well` +
-      more.map(([c, d]) => `, and so do ${name(c)} and ${name(d)}`).join("") +
+    describePairs(used, pairs) +
       (alone.length === 0
         ? "."
         : `, but ${joinWithAnd(alone.map(name))} ${alone.length === 1 ? "doesn't" : "don't"} pair with the rest.`),
+  );
+}
+
+/**
+ * Pairings in prose, each named once: around the Ingredient with the most, then the next, as in "garlic pairs
+ * with chicken and lemon, and parsley with butter". Ingredients that pair with the same ones are named
+ * together ("potato and parsley pair with onion and garlic"), and pairs that share nothing read "chicken and
+ * garlic pair well, as do lemon and parsley".
+ */
+function describePairs(used: Ingredient[], pairs: [Ingredient, Ingredient][]): string {
+  const names = (ingredients: Ingredient[]) => joinWithAnd(ingredients.map(inSentence));
+  const groups: { hubs: Ingredient[]; partners: Ingredient[] }[] = [];
+  let left = pairs;
+  while (left.length > 0) {
+    const partnersOf = (x: Ingredient) =>
+      used.filter((y) => left.some(([a, b]) => (a === x && b === y) || (a === y && b === x)));
+    const hub = used.reduce((most, x) => (partnersOf(x).length > partnersOf(most).length ? x : most));
+    const partners = partnersOf(hub);
+    const same = groups.find(
+      (group) => group.partners.length === partners.length && group.partners.every((p, i) => p === partners[i]),
+    );
+    if (same) same.hubs.push(hub);
+    else groups.push({ hubs: [hub], partners });
+    left = left.filter(([a, b]) => a !== hub && b !== hub);
+  }
+  const [first, ...rest] = groups;
+  if (first.hubs.length === 1 && first.partners.length === 1) {
+    // No Ingredient pairs with two others, so each group is one pair.
+    const pair = ({ hubs, partners }: (typeof groups)[number]) => names([...hubs, ...partners]);
+    return `${pair(first)} pair well` + (rest.length > 0 ? `, as do ${rest.map(pair).join(", and ")}` : "");
+  }
+  return (
+    `${names(first.hubs)} ${first.hubs.length === 1 ? "pairs" : "pair"} with ${names(first.partners)}` +
+    rest.map(({ hubs, partners }, i) => `, ${i === rest.length - 1 ? "and " : ""}${names(hubs)} with ${names(partners)}`).join("")
   );
 }
 
@@ -409,8 +487,11 @@ export function createKitchen(content: KitchenContent): Kitchen {
     const needs = slots.filter(
       ({ slot, fills }) => slot.required && (fills.length === 0 || fills.some(({ source }) => !isCooksOwn(source))),
     );
+    const required = slots.filter(({ slot }) => slot.required);
+    const covered = required.filter(({ fills }) => fills.some(({ source }) => isCooksOwn(source))).length;
+    const toFit = Math.max(0, Math.ceil(required.length / 2) - covered);
     return {
-      suggestion: { formula, combination, slots, method, rankReason, needs, makeable: needs.length === 0 },
+      suggestion: { formula, combination, slots, method, rankReason, needs, makeable: needs.length === 0, toFit },
       coherence: pairs.length + (shared.length > 0 ? 0.5 : 0),
     };
   }
@@ -436,6 +517,64 @@ export function createKitchen(content: KitchenContent): Kitchen {
 
   const formula = (id: string) => content.formulas.find((formula) => formula.id === id);
   const recipes = new Map(content.recipes.map((recipe) => [recipe.formula, recipe]));
+
+  /** A Formula filled for a Combination: from the basket, then by Pairing, then from its Recipe. */
+  function fillFormula(formula: Formula, combination: Ingredient[]) {
+    const fills: Fill[][] = formula.slots.map(() => []);
+    const used = () => usedIn(fills);
+
+    // The basket first: one Ingredient per Slot, in Slot order, then what's left into the first Slot it fits.
+    const unused = [...combination];
+    const fromBasket = (slot: Slot, i: number, room: number) => {
+      while (fills[i].length < room) {
+        const index = unused.findIndex(fits(slot));
+        if (index === -1) return;
+        fills[i].push({ ingredient: unused.splice(index, 1)[0], source: "combination" });
+      }
+    };
+    formula.slots.forEach((slot, i) => fromBasket(slot, i, 1));
+    formula.slots.forEach((slot, i) => fromBasket(slot, i, Infinity));
+    // Repeat until nothing changes: a fill can give an earlier Slot its first Pairing. Pairings
+    // only fill empty Slots, with one Ingredient each.
+    const fillByPairing = () => {
+      for (let changed = true; changed; ) {
+        changed = false;
+        formula.slots.forEach((slot, i) => {
+          const [best] = fills[i].length > 0 ? [] : rankByPairing(slot, used());
+          if (best?.score > 0) {
+            fills[i].push({ ingredient: best.ingredient, source: "pairing" });
+            changed = true;
+          }
+        });
+      }
+    };
+    fillByPairing();
+    // Slots nothing pairs into take the Recipe's Ingredients, those not used already; those can
+    // then give other Slots a Pairing.
+    const written = recipes.get(formula.id)?.fills ?? {};
+    formula.slots.forEach((slot, i) => {
+      if (fills[i].length > 0) return;
+      for (const id of written[slot.id] ?? []) {
+        const ingredient = ingredients.get(id)!;
+        if (!used().includes(ingredient)) fills[i].push({ ingredient, source: "recipe" });
+      }
+    });
+    fillByPairing();
+
+    return deriveSuggestion(formula, combination, fills);
+  }
+
+  /** Every Formula filled for a Combination: nearest to fitting first, then as `suggest` ranks. */
+  function ranked(combination: Ingredient[]): Suggestion[] {
+    // A stable sort, so ties keep the order Formulas appear in the content.
+    return content.formulas
+      .map((formula) => fillFormula(formula, combination))
+      .sort(
+        ({ suggestion: a, coherence: x }, { suggestion: b, coherence: y }) =>
+          a.toFit - b.toFit || a.needs.length - b.needs.length || y - x,
+      )
+      .map(({ suggestion }) => suggestion);
+  }
 
   const kitchen: Kitchen = {
     content,
@@ -554,56 +693,50 @@ export function createKitchen(content: KitchenContent): Kitchen {
       return suggestion.formula.image && { image: suggestion.formula.image };
     },
 
-    suggest(combination) {
-      const suggestions = content.formulas.map((formula) => {
-        const fills: Fill[][] = formula.slots.map(() => []);
-        const used = () => usedIn(fills);
+    suggest: (combination) => ranked(combination).filter(({ toFit }) => toFit === 0),
 
-        // The basket first: one Ingredient per Slot, in Slot order, then what's left into the first Slot it fits.
-        const unused = [...combination];
-        const fromBasket = (slot: Slot, i: number, room: number) => {
-          while (fills[i].length < room) {
-            const index = unused.findIndex(fits(slot));
-            if (index === -1) return;
-            fills[i].push({ ingredient: unused.splice(index, 1)[0], source: "combination" });
-          }
-        };
-        formula.slots.forEach((slot, i) => fromBasket(slot, i, 1));
-        formula.slots.forEach((slot, i) => fromBasket(slot, i, Infinity));
-        // Repeat until nothing changes: a fill can give an earlier Slot its first Pairing. Pairings
-        // only fill empty Slots, with one Ingredient each.
-        const fillByPairing = () => {
-          for (let changed = true; changed; ) {
-            changed = false;
-            formula.slots.forEach((slot, i) => {
-              const [best] = fills[i].length > 0 ? [] : rankByPairing(slot, used());
-              if (best?.score > 0) {
-                fills[i].push({ ingredient: best.ingredient, source: "pairing" });
-                changed = true;
-              }
-            });
-          }
-        };
-        fillByPairing();
-        // Slots nothing pairs into take the Recipe's Ingredients, those not used already; those can
-        // then give other Slots a Pairing.
-        const written = recipes.get(formula.id)?.fills ?? {};
-        formula.slots.forEach((slot, i) => {
-          if (fills[i].length > 0) return;
-          for (const id of written[slot.id] ?? []) {
-            const ingredient = ingredients.get(id)!;
-            if (!used().includes(ingredient)) fills[i].push({ ingredient, source: "recipe" });
-          }
-        });
-        fillByPairing();
+    closest: (combination) =>
+      ranked(combination)
+        .filter(({ toFit }) => toFit > 0)
+        .slice(0, CLOSEST_LIMIT)
+        .map((suggestion) => ({
+          suggestion,
+          toAdd: suggestion.needs
+            .filter(({ fills }) => !fills.some(({ source }) => isCooksOwn(source)))
+            .flatMap(({ slot, choices }) => {
+              const best = choices.find(({ ingredient }) => !combination.includes(ingredient));
+              if (!best) return [];
+              const pairsWith = best.pairsWith.filter((other) => combination.includes(other));
+              return [{ slot, ingredient: best.ingredient, pairsWith }];
+            }),
+        })),
 
-        return deriveSuggestion(formula, combination, fills);
-      });
-      // A stable sort, so ties keep the order Formulas appear in the content.
-      const neededCount = ({ suggestion }: { suggestion: Suggestion }) => suggestion.needs.length;
-      return suggestions
-        .sort((a, b) => neededCount(a) - neededCount(b) || b.coherence - a.coherence)
-        .map(({ suggestion }) => suggestion);
+    couldAdd(combination) {
+      if (combination.length >= COMBINATION_LIMIT) return [];
+      const fitting = new Set(kitchen.suggest(combination).map(({ formula }) => formula));
+      return [...ingredients.values()]
+        .filter((ingredient) => !combination.includes(ingredient))
+        .map((ingredient) => ({ ingredient, pairsWith: combination.filter((other) => arePaired(ingredient, other)) }))
+        .filter(({ pairsWith }) => pairsWith.length > 0)
+        .map((candidate) => ({
+          ...candidate,
+          bringsIn: kitchen
+            .suggest([...combination, candidate.ingredient])
+            .map(({ formula }) => formula)
+            .filter((formula) => !fitting.has(formula)),
+        }))
+        .sort(
+          (a, b) =>
+            b.pairsWith.length - a.pairsWith.length ||
+            b.bringsIn.length - a.bringsIn.length ||
+            byName(a.ingredient, b.ingredient),
+        )
+        .slice(0, COULD_ADD_LIMIT);
+    },
+
+    suggestion(formulaId, combination) {
+      const found = formula(formulaId);
+      return found && fillFormula(found, combination).suggestion;
     },
 
     addToSlot(suggestion, slotId, ingredientId) {

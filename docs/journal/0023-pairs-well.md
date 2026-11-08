@@ -15,7 +15,7 @@ The author chose each of these from options.
 
 - **Which Ingredients:** the best-pairing ones, whether or not they bring in a new dish. Ranked by how many of the basket's Ingredients each pairs with, then how many dishes it would bring in, then by name. Ingredients already in the basket are left out.
 - **How they look:** up to four compact chips in a row under the basket's Ingredients. Each chip shows the drawing, the name and a plus sign. A line under the row says which dishes each would bring in.
-  - After a first look, the author asked for no wash and a dashed edge in each Ingredient's colour, and no visible "Pairs well" label. The row keeps "Pairs well" as its name for screen readers. Under the pointer a chip takes its wash.
+  - After a first look, the author asked for no wash and a dashed edge in the colour of each Ingredient's circle, and no visible "Pairs well" label. The row keeps "Pairs well" as its name for screen readers. Under the pointer a chip takes its wash.
 - **Tracking:** a separate ticket, built on the #50 branch, since it relies on the fit rule.
 
 Defaults, not asked:

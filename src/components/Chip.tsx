@@ -9,7 +9,7 @@ type Props = {
   leading?: React.ReactNode;
   /** An action after the label, such as a remove button. */
   trailing?: React.ReactNode;
-  /** A dashed edge, for something not in the basket yet. */
+  /** A dashed edge and no wash, for something not in the basket yet. */
   dashed?: boolean;
 };
 

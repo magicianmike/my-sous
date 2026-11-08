@@ -725,12 +725,6 @@ main:has(.case-study) {
   margin-bottom: var(--space-2);
 }
 
-.pairs-well h3 {
-  margin: 0;
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
-}
-
 .pairs-well ul {
   display: flex;
   flex-wrap: wrap;
@@ -752,9 +746,9 @@ main:has(.case-study) {
   cursor: pointer;
 }
 
-/* The chip's dashed edge darkens under the pointer. */
+/* The chip takes its Ingredient's wash under the pointer. */
 .pairs-well button:hover > span {
-  border-color: var(--ink-muted);
+  background: var(--wash);
 }
 
 .pairs-well-icon {

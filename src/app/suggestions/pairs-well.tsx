@@ -16,8 +16,7 @@ export function PairsWell({ onAdd }: { onAdd: () => void }) {
   if (additions.length === 0) return null;
   const bringing = additions.filter(({ bringsIn }) => bringsIn.length > 0);
   return (
-    <section className="pairs-well" aria-labelledby="pairs-well-heading">
-      <h3 id="pairs-well-heading">Pairs well</h3>
+    <section className="pairs-well" aria-label="Pairs well">
       <ul>
         {additions.map(({ ingredient }) => (
           <li key={ingredient.id}>

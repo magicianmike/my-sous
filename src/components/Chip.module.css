@@ -16,7 +16,13 @@
 }
 
 .dashed {
-  border: var(--border-hairline) dashed var(--line);
+  border: var(--border-control) dashed var(--line);
+  background: transparent;
+}
+
+/* Not in the basket yet: no wash, an edge in the Ingredient's own colour. */
+.hued.dashed {
+  border-color: var(--stroke);
 }
 
 .chip:has(> :first-child:not(.label)) {

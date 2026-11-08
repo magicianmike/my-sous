@@ -14,14 +14,14 @@ Ticket: #51 (part of #2, built on #50). On What to make, the basket card now sug
 The author chose each of these from options.
 
 - **Which Ingredients:** the best-pairing ones, whether or not they bring in a new dish. Ranked by how many of the basket's Ingredients each pairs with, then how many dishes it would bring in, then by name. Ingredients already in the basket are left out.
-- **How they look:** up to four compact chips in a "Pairs well" row under the basket's Ingredients. Each chip shows the drawing, the name and a plus sign. A line under the row says which dishes each would bring in.
+- **How they look:** up to four compact chips in a row under the basket's Ingredients. Each chip shows the drawing, the name and a plus sign. A line under the row says which dishes each would bring in.
+  - After a first look, the author asked for no wash and a dashed edge in each Ingredient's colour, and no visible "Pairs well" label. The row keeps "Pairs well" as its name for screen readers. Under the pointer a chip takes its wash.
 - **Tracking:** a separate ticket, built on the #50 branch, since it relies on the fit rule.
 
 Defaults, not asked:
 
 - The row is hidden when the basket is full or nothing pairs with it, and shown whether or not any dish fits.
 - After a tap, focus moves to the basket's heading, since the chip tapped leaves the row. The change is announced as any add is ("Yogurt added to your basket, 3 of 6.").
-- The chips have a dashed edge: they're not in the basket yet.
 
 ## Also in this change
 
@@ -66,4 +66,4 @@ Kept as they are:
 
 ## Waiting for the author
 
-- **The copy:** "Pairs well", and the "brings in" line.
+- **The copy:** the "brings in" line.

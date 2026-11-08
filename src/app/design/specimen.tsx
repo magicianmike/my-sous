@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AddToBasketButton } from "@/components/AddToBasketButton";
 import { Button, buttonClass } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { Combobox } from "@/components/Combobox";
@@ -69,7 +70,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
 
       <h2>Buttons</h2>
       <div className="actions">
-        <Button variant="primary">Add</Button>
+        <AddToBasketButton name="Garlic" />
         <Button>Remove</Button>
         <Button variant="quiet">Remove</Button>
         <Button aria-disabled="true">Undo swap</Button>
@@ -121,7 +122,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
       <ListRow
         mark={<IngredientMark ingredient={garlic} />}
         title={<a href="#list-row">Garlic</a>}
-        action={<Button variant="primary">Add<span className="visually-hidden"> Garlic</span></Button>}
+        action={<AddToBasketButton name="Garlic" />}
       >
         <p>Lemon&rsquo;s sharpness cuts through the richness of garlic cooked in oil or butter.</p>
         <Disclosure summary="More" hiddenSummary="about lemon and garlic">

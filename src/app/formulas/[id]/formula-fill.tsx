@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { BasketIcon } from "@/components/BasketIcon";
+import { AddToBasketButton } from "@/components/AddToBasketButton";
 import { Button } from "@/components/Button";
 import { DisclosureToggle } from "@/components/Disclosure";
 import { EmptyMark } from "@/components/EmptyMark";
@@ -284,10 +284,10 @@ function PartCard({
                 <p className="muted">{reason}</p>
                 {!isCooksOwn(source) && (
                   <div className="slot-actions">
-                    <Button variant="primary" onClick={() => actions.addToBasket(slot.id, ingredient)}>
-                      <BasketIcon className="button-icon" />
-                      Add<span className="visually-hidden"> {ingredient.name} to your basket</span>
-                    </Button>
+                    <AddToBasketButton
+                      name={ingredient.name}
+                      onClick={() => actions.addToBasket(slot.id, ingredient)}
+                    />
                   </div>
                 )}
               </div>

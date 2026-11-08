@@ -78,10 +78,11 @@ test("when no dish fits, What to make names the closest and what to add, and add
   page,
 }) => {
   await page.goto("/suggestions?with=lamb,mint");
-  const nothing = page.getByRole("region", { name: "No dish fits your basket yet" });
+  const nothing = page.getByRole("list", { name: "Closest dishes" });
   await expect(nothing).toBeVisible();
   await expect(page.getByRole("list", { name: "Suggestions" })).toHaveCount(0);
-  const closest = nothing.getByRole("list", { name: "Closest dishes" }).getByRole("listitem");
+  await expect(page.getByText(/at least half/)).toHaveCount(0);
+  const closest = nothing.getByRole("listitem").filter({ has: page.getByRole("heading", { level: 3 }) });
   await expect(closest.getByRole("heading", { level: 3 })).toHaveText(["Pan sauce", "Sheet-pan roast", "Fried rice"]);
   const panSauce = closest.filter({ has: page.getByRole("heading", { name: "Pan sauce" }) });
   await expect(panSauce).toContainText("Add one of these parts: an aromatic or an acid.");
@@ -94,9 +95,7 @@ test("when no dish fits, What to make names the closest and what to add, and add
 test("when no dish fits a full basket, What to make says to remove an Ingredient first", async ({ page }) => {
   // Soft herbs go only in optional parts, so six of them fit no dish.
   await page.goto("/suggestions?with=basil,mint,parsley,cilantro,shiso,epazote");
-  await expect(page.getByRole("region", { name: "No dish fits your basket yet" })).toContainText(
-    "Your basket is full, so remove an Ingredient before you add one.",
-  );
+  await expect(page.getByText("Your basket is full, so remove an Ingredient before you add one.")).toBeVisible();
 });
 
 test("the basket on What to make offers what pairs with it, one tap to add, and the dishes follow", async ({
@@ -124,7 +123,7 @@ test("the basket on What to make offers what pairs with it, one tap to add, and 
 
 test("the basket offers what pairs with it when no dish fits too", async ({ page }) => {
   await page.goto("/suggestions?with=lamb,mint");
-  await expect(page.getByRole("region", { name: "No dish fits your basket yet" })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Closest dishes" })).toBeVisible();
   await expect(page.getByRole("region", { name: "Pairs well" }).getByRole("button")).toHaveCount(4);
 });
 

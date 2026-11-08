@@ -2,6 +2,7 @@
 
 import { Chip } from "@/components/Chip";
 import { IngredientMark } from "@/components/IngredientMark";
+import { PlusIcon } from "@/components/PlusIcon";
 import { joinWithAnd, type Ingredient } from "@/kitchen/kitchen";
 import { useCombination, useKitchen } from "../combination";
 
@@ -21,7 +22,7 @@ export function PairsWell({ onAdd }: { onAdd: () => void }) {
         {additions.map(({ ingredient }) => (
           <li key={ingredient.id}>
             <button type="button" onClick={() => addAndRefocus(ingredient)}>
-              <Chip colour={ingredient.colour} dashed leading={<IngredientMark ingredient={ingredient} size="sm" />} trailing={<PlusIcon />}>
+              <Chip colour={ingredient.colour} dashed leading={<IngredientMark ingredient={ingredient} size="sm" />} trailing={<PlusIcon className="button-icon" />}>
                 <span className="visually-hidden">Add </span>
                 {ingredient.name}
                 <span className="visually-hidden"> to your basket</span>
@@ -46,11 +47,3 @@ export function PairsWell({ onAdd }: { onAdd: () => void }) {
   }
 }
 
-/** A plus, for adding; the button around it carries the words. */
-function PlusIcon() {
-  return (
-    <svg className="pairs-well-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}

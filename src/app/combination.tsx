@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BasketIcon } from "@/components/BasketIcon";
+import { AddToBasketButton } from "@/components/AddToBasketButton";
 import { Button } from "@/components/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, Suspense, useContext, useEffect, useMemo, useState } from "react";
@@ -143,18 +143,11 @@ export const AddToCombination = withSearchParams(function AddToCombination({
   const { combination, add, remove } = useCombination();
   const ingredient = kitchen.ingredient(ingredientId)!;
   const added = combination.ingredients.includes(ingredient);
-  // One button that changes its label, so keyboard focus stays on it after a press.
   return (
-    <Button
-      variant={added ? "secondary" : "primary"}
+    <AddToBasketButton
+      name={ingredient.name}
+      added={added}
       onClick={() => (added ? remove(ingredient) : add(ingredient))}
-    >
-      {!added && <BasketIcon className="button-icon" />}
-      {added ? "Remove" : "Add"}
-      <span className="visually-hidden">
-        {" "}
-        {ingredient.name} {added ? "from" : "to"} your basket
-      </span>
-    </Button>
+    />
   );
 });

@@ -122,12 +122,10 @@ const NUMBER_WORDS = ["no", "one", "two", "three", "four", "five", "six"];
 function NothingFits({ basket }: { basket: Ingredient[] }) {
   const { kitchen } = useKitchen();
   return (
-    <section className="nothing-fits" aria-labelledby="nothing-fits-heading">
-      <h2 id="nothing-fits-heading">No dish fits your basket yet</h2>
-      <p className="muted">
-        A dish fits once your basket covers at least half the parts it needs. These are closest.
-        {basket.length >= COMBINATION_LIMIT && " Your basket is full, so remove an Ingredient before you add one."}
-      </p>
+    <div className="nothing-fits">
+      {basket.length >= COMBINATION_LIMIT && (
+        <p className="muted">Your basket is full, so remove an Ingredient before you add one.</p>
+      )}
       <ul className="stack" aria-label="Closest dishes">
         {kitchen.closest(basket).map(({ suggestion: { formula, toFit }, toAdd }) => (
           <li key={formula.id} className="closest">
@@ -156,7 +154,7 @@ function NothingFits({ basket }: { basket: Ingredient[] }) {
           </li>
         ))}
       </ul>
-    </section>
+    </div>
   );
 }
 

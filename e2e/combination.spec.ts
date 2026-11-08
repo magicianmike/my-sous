@@ -288,3 +288,23 @@ test("a Cook opens an Ingredient from the tray and keeps the Combination", async
   await expect(page).toHaveURL(/\/ingredients\/garlic\?with=chicken-thigh,garlic$/);
   await expectCombination(page, ["Chicken thigh", "Garlic"]);
 });
+
+test("Add shows a basket and a plus, with its words in a tooltip on hover or focus", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover and Tab are for a pointer and a keyboard");
+  await page.goto("/ingredients/garlic");
+  const add = page.getByRole("button", { name: "Add Garlic to your basket" });
+  const tooltip = page.getByText("Add Garlic to your basket", { exact: true }).and(page.locator("[aria-hidden=true]"));
+  await expect(add).toHaveText("Add Garlic to your basket");
+  await expect(tooltip).toHaveCount(0);
+
+  await add.hover();
+  await expect(tooltip).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(tooltip).toHaveCount(0);
+  await page.mouse.move(0, 0);
+
+  await add.focus();
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Tab");
+  await expect(tooltip).toBeVisible();
+});

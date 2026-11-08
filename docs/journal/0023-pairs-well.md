@@ -67,3 +67,8 @@ Kept as they are:
 ## Waiting for the author
 
 - **The copy:** the "brings in" line.
+
+## Later
+
+- **Add buttons.** Every Add to the basket (on an Ingredient's page, the closest dishes, and a dish's parts) is now a basket and a plus. Its words stay in its name, and a tooltip shows them on hover or keyboard focus: "Add Garlic to your basket". The plus turns a quarter on hover, like the chips', from a shared `PlusIcon`. `AddToBasketButton` keeps one button between Add and Remove, so focus stays on it; `Tooltip` takes no label for Remove, which has its own words.
+- A Playwright test covers the tooltip on hover, Escape and focus. It was written after the button.

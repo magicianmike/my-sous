@@ -90,3 +90,7 @@ Kept as they are:
 ## Waiting for the author
 
 - **The copy** of the nothing-fits state and the Case Study's changed sentences.
+
+## Later
+
+- The author asked to drop the nothing-fits heading and the "at least half" explanation. The closest dishes stay, and so does the full-basket notice.

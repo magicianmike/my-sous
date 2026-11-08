@@ -136,8 +136,9 @@ test.describe("on desktop, the tray is the same bar, docked at the foot", () => 
       await page.goto(`${path}?with=lemon,garlic`);
       await expect(opener(page)).toHaveAccessibleName("Your basket 2 of 6: Lemon, Garlic");
       await expect(page.getByRole("complementary", { name: /Your basket/ })).toHaveCount(0);
+      // At the window's foot: the opener ends within the bar's own padding of the bottom edge.
       const [bar, viewport] = [await opener(page).boundingBox(), page.viewportSize()!];
-      expect(bar!.y + bar!.height).toBeGreaterThan(viewport.height - 80);
+      expect(bar!.y + bar!.height).toBeGreaterThan(viewport.height - 32);
 
       await opener(page).click();
       await expect(sheet(page).getByRole("listitem")).toHaveText([/^Lemon/, /^Garlic/]);

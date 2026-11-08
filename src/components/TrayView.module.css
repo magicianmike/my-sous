@@ -68,7 +68,7 @@
   }
 }
 
-/* A mouse needs less room than a finger, so two short names fit side by side in the side panel. */
+/* A mouse needs less room than a finger, so two short names fit side by side. */
 @media (pointer: fine) {
   .items .remove {
     min-width: var(--space-6);

@@ -17,7 +17,9 @@
   color: var(--ink);
   font-weight: var(--weight-bold);
   cursor: pointer;
-  transition: background-color var(--motion-fast) var(--ease-out);
+  transition:
+    background-color var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out);
 }
 
 /* A square segment, the target's size, with its icon centred. */
@@ -36,7 +38,7 @@
 
 /*
  * The chosen segment is raised out of the track: a pill on the floating colour, with a soft shadow and a
- * fine ring at full strength, so it stands apart by its edge as well as its fill.
+ * fine ring in muted ink, so it stands apart by its edge as well as its fill.
  */
 .segment:has(:checked) {
   background: var(--floating);

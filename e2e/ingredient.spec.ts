@@ -40,7 +40,7 @@ test("an Ingredient with one Pairing Reason has nothing to filter", async ({ pag
 });
 
 test.describe("on desktop", () => {
-  test.skip(({ isMobile }) => isMobile, "three columns are the desktop layout");
+  test.skip(({ isMobile }) => isMobile, "two columns are the desktop layout");
 
   test("the Ingredient sits beside its Pairings, with the first Pairings on the first screen", async ({
     page,
@@ -55,6 +55,7 @@ test.describe("on desktop", () => {
 });
 
 test("a selected Pairing filter is a raised white pill, not a solid one", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/ingredients/garlic");
   const all = page.locator("label").filter({ has: page.getByRole("radio", { name: "All", exact: true }) });
   // The surface colour, white in the light theme.

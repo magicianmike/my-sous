@@ -155,7 +155,7 @@ export function Specimen({ ingredients }: { ingredients: SpecimenIngredient[] })
       </div>
 
       <h2>Tray bar</h2>
-      <p className="muted">On a phone, the tray docks as this bar and opens as a sheet.</p>
+      <p className="muted">The tray docks as this bar at the foot of the screen and opens as a sheet.</p>
       <div className="specimen-tray">
         <TrayBar
           ingredients={tray}

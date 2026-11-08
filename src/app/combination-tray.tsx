@@ -76,25 +76,6 @@ function TrayDock() {
       root.style.removeProperty("--tray-sheet-height");
     };
   }, []);
-  const tray = (
-    <TrayView
-      status={status}
-      ingredients={combination.ingredients}
-      titleId="tray-sheet-heading"
-      limit={COMBINATION_LIMIT}
-      unknown={combination.unknown}
-      overLimit={combination.overLimit}
-      titleRef={sheetHeading}
-      onRemove={(ingredient: Ingredient) => {
-        remove(ingredient);
-        sheetHeading.current?.focus();
-      }}
-      renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
-      renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
-      action={seeWhatToMake}
-    />
-  );
-
   return (
     <div ref={dock} className="tray-dock">
       <div className="tray-bar">
@@ -114,7 +95,7 @@ function TrayDock() {
       <dialog
         ref={sheet}
         className="tray-sheet"
-        aria-labelledby="tray-sheet-heading"
+        aria-labelledby={SHEET_HEADING}
         onClose={() => {
           // Back to the bar, unless closing moved focus on already, as following a link does.
           if (focusWasInSheet()) {
@@ -125,7 +106,22 @@ function TrayDock() {
         onClick={(event) => event.target === sheet.current && close()}
         onKeyDown={containTab}
       >
-        {tray}
+        <TrayView
+          status={status}
+          ingredients={combination.ingredients}
+          titleId={SHEET_HEADING}
+          limit={COMBINATION_LIMIT}
+          unknown={combination.unknown}
+          overLimit={combination.overLimit}
+          titleRef={sheetHeading}
+          onRemove={(ingredient: Ingredient) => {
+            remove(ingredient);
+            sheetHeading.current?.focus();
+          }}
+          renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
+          renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
+          action={seeWhatToMake}
+        />
         <Button className="tray-close" onClick={close}>
           Close
         </Button>
@@ -138,6 +134,9 @@ function TrayDock() {
     </div>
   );
 }
+
+/** The sheet's heading, which names it. */
+const SHEET_HEADING = "tray-sheet-heading";
 
 /** What Tab can reach. */
 const FOCUSABLE = [

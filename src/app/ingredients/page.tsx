@@ -13,7 +13,7 @@ export default async function IngredientsPage() {
   return (
     <>
       <h1>Ingredients</h1>
-      <p className="lede">Open one to see what pairs with it, and why, or add it to your basket from here.</p>
+      <p className="lede">Open one to see what pairs with it, and why. Or add it to your basket from here.</p>
       <IngredientSearch />
       {kitchen.ingredientsByCategory().map(({ category, heading, ingredients }) => (
         <section key={category} className="ingredient-group" aria-labelledby={`category-${category}`}>

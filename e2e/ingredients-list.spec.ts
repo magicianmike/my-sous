@@ -51,3 +51,14 @@ test("an Ingredient in the basket shows a bin that takes it out", async ({ page 
   await expect(opener(page)).toHaveAccessibleName("Your basket 1 of 6: Garlic");
   await expect(page.getByRole("button", { name: "Add Basil to your basket" })).toBeFocused();
 });
+
+test("adding from the list to a full basket says why nothing was added", async ({ page }) => {
+  await page.goto("/ingredients?with=lemon,lime,garlic,tomato,mint,sumac");
+  await pill(page, "Basil").hover();
+  const add = page.getByRole("button", { name: "Add Basil to your basket" });
+  await add.click();
+
+  await expect(page.locator(".toast-spot")).toHaveText(/^Your basket already holds 6 Ingredients.*Remove one to add Basil\.$/);
+  await expect(opener(page)).toHaveAccessibleName(/^Your basket 6 of 6/);
+  await expect(add).toBeFocused();
+});

@@ -312,14 +312,6 @@ test("a suggested Ingredient on a dish can be added to the basket, and its part 
   await expect(acid.getByRole("heading", { name: "an acid" })).toBeFocused();
 });
 
-test("the basket's Ingredients sit side by side in the side panel too", async ({ page, isMobile }) => {
-  test.skip(isMobile, "the side panel is the wide layout");
-  await page.goto("/ingredients/lemon?with=lemon,garlic");
-  const items = page.locator(".tray-panel li");
-  const [first, second] = await Promise.all([items.nth(0).boundingBox(), items.nth(1).boundingBox()]);
-  expect(second!.y).toBe(first!.y);
-});
-
 test("a part's Options sit at the end of its top row, and open above what's in it", async ({ page }) => {
   await page.goto("/formulas/pan-sauce?with=chicken-thigh,garlic");
   const acid = slotItem(page, "an acid");

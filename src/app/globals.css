@@ -227,18 +227,14 @@ body:has(.case-study) .site-theme {
 }
 
 /*
- * The tray. On a phone, a bar in its own row at the foot of the screen, which opens the tray as a
- * sheet. On wider screens, a sticky side panel; the media query matches SIDE_PANEL in combination-tray.tsx.
+ * The tray: a bar at the foot of the screen, which opens the tray as a sheet. On a phone the bar has
+ * a row of its own; on wider screens it's fixed over the window's foot, the width of a line of text.
  */
 
 .tray-dock {
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-}
-
-.tray-panel {
-  display: none;
 }
 
 /* What to make shows the Combination under its heading, no wider than a line of text. */
@@ -315,51 +311,32 @@ html:has(.tray-sheet:modal) .page {
 }
 
 @media (min-width: 56rem) {
-  /* The window scrolls; the page and its tray sit side by side under the header. What to make has no tray. */
+  /* The window scrolls, ending with room for the bar fixed over its foot. */
   .shell {
-    grid-template-rows: none;
+    display: block;
     height: auto;
     max-width: var(--page-width);
     margin: 0 auto;
-    padding: 0 var(--space-4) var(--space-7);
+    padding: 0 var(--space-4) calc(var(--space-7) + var(--tray-dock-height));
   }
 
   .page {
     display: contents;
   }
 
-  .shell:has(.tray-dock) {
-    grid-template-columns: minmax(0, 1fr) var(--tray-width);
-    column-gap: var(--space-6);
-    align-items: start;
-  }
-
-  .site-header {
-    grid-column: 1 / -1;
-  }
-
-  .app {
-    grid-column: 1;
-    width: 100%;
-  }
-
   .tray-dock {
-    position: sticky;
-    top: var(--space-4);
-    grid-column: 2;
-    grid-row: 2;
-    gap: var(--space-2);
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    justify-content: center;
+    grid-template-columns: minmax(0, var(--measure));
+    padding-inline: var(--space-4);
   }
 
-  .tray-panel {
-    display: block;
-  }
-
-  .tray-bar,
   .tray-sheet {
-    display: none;
+    max-width: var(--measure);
+    margin-inline: auto;
   }
-
 }
 
 main {
@@ -568,12 +545,10 @@ button:hover .plus-icon {
 
 /* Ingredient */
 
-/*
- * The Ingredient stacks above its Pairings until the screen fits three columns: the Ingredient,
- * its Pairings, and the tray.
- */
+/* The Ingredient stacks above its Pairings until the screen fits both side by side, on a wider page. */
 
-@media (min-width: 72rem) {
+@media (min-width: 56rem) {
+  .shell:has(.ingredient),
   .app:has(.ingredient),
   body:has(.ingredient) .site-header {
     max-width: var(--page-width-wide);

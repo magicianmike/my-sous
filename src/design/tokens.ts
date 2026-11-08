@@ -150,9 +150,9 @@ const scales = {
   "space-8": "4rem",
   "measure": "40rem",
   "page-width": "66rem",
-  // The Ingredient page's three columns: the Ingredient, its Pairings, the tray.
+  // The Ingredient page's two columns: the Ingredient and its Pairings.
   "page-width-wide": "78rem",
-  "ingredient-column": "20rem",
+  "ingredient-column": "24rem",
   "tray-width": "20rem",
   // The Case Study's chapter list, beside its text on wide screens.
   "chapter-nav-width": "14rem",

@@ -53,3 +53,24 @@ test.describe("on desktop", () => {
     expect(firstPairing.y + firstPairing.height).toBeLessThan(page.viewportSize()!.height);
   });
 });
+
+test("a selected Pairing filter is a raised white pill, not a solid one", async ({ page }) => {
+  await page.goto("/ingredients/garlic");
+  const all = page.locator("label").filter({ has: page.getByRole("radio", { name: "All", exact: true }) });
+  // The surface colour, white in the light theme.
+  await expect(all).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(all).toHaveCSS("color", "rgb(31, 38, 32)");
+});
+
+test("at a laptop width, the Ingredient and its Pairings sit side by side, each with room", async ({ page, isMobile }) => {
+  test.skip(isMobile, "the laptop layout");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/ingredients/garlic");
+  const [hero, pairings] = await Promise.all([
+    page.locator(".ingredient > :first-child").boundingBox(),
+    page.locator(".ingredient-pairings").boundingBox(),
+  ]);
+  expect(pairings!.y).toBeCloseTo(hero!.y, -1);
+  expect(hero!.width).toBeGreaterThanOrEqual(360);
+  expect(pairings!.width).toBeGreaterThanOrEqual(560);
+});

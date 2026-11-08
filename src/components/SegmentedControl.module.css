@@ -34,9 +34,15 @@
   height: var(--space-5);
 }
 
+/*
+ * The chosen segment is raised out of the track: a pill on the floating colour, with a soft shadow and a
+ * fine ring at full strength, so it stands apart by its edge as well as its fill.
+ */
 .segment:has(:checked) {
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: var(--floating);
+  box-shadow:
+    0 0 0 var(--border-hairline) var(--ink-muted),
+    var(--shadow-raised);
 }
 
 /* The radio stays in the page for keyboards and assistive technology; the segment shows it. */

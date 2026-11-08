@@ -8,10 +8,10 @@ function animation(locator: Locator) {
   });
 }
 
-/** Where the Combination's Ingredients show: the tray's rows on desktop, the bar's drawings on a phone. */
-function trayItems(page: Page, isMobile: boolean) {
-  // On a phone, each drawing's wrapper, which carries the animation; empty slots have no drawing.
-  return isMobile ? page.locator(".tray-bar [class*=marks] > :has(svg)") : page.locator(".tray-panel li");
+/** Where the Combination's Ingredients show at a glance: the bar's drawings. */
+function trayItems(page: Page) {
+  // Each drawing's wrapper, which carries the animation; empty slots have no drawing.
+  return page.locator(".tray-bar [class*=marks] > :has(svg)");
 }
 
 for (const reduced of [false, true]) {
@@ -77,9 +77,9 @@ for (const reduced of [false, true]) {
       expect((await animation(rows.nth(0))).name).toBe("none");
     });
 
-    test("an added Ingredient grows into the tray; those already there don't", async ({ page, isMobile }) => {
+    test("an added Ingredient grows into the tray; those already there don't", async ({ page }) => {
       await page.goto("/ingredients/garlic?with=lemon");
-      const items = trayItems(page, isMobile);
+      const items = trayItems(page);
       await expect(items).toHaveCount(1);
       expect((await animation(items.first())).name).toBe("none");
 

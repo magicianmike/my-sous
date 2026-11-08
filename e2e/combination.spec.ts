@@ -1,18 +1,17 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-/** On a phone, the Combination sits in a sheet opened from the bar, except on What to make. */
+/** The Combination sits in a sheet opened from the bar, except on What to make, which shows it in the page. */
 function inSheet(page: Page) {
-  return test.info().project.use.isMobile && !new URL(page.url()).pathname.startsWith("/suggestions");
+  return !new URL(page.url()).pathname.startsWith("/suggestions");
 }
 
-/** The tray: the side panel on desktop, or on a phone the sheet, opened from its bar. */
+/** The tray: on What to make, the basket in the page; elsewhere the sheet, opened from its bar. */
 async function tray(page: Page) {
-  if (!inSheet(page)) return page.getByRole("complementary", { name: /Your basket/ });
+  if (!inSheet(page)) return page.getByRole("main").getByRole("complementary", { name: /Your basket/ });
   const sheet = page.getByRole("dialog", { name: /Your basket/ });
   if (!(await sheet.isVisible())) await page.getByRole("button", { name: /^Your basket/ }).click();
   return sheet;
 }
-
 
 /** A Formula's Slot, found by the heading that names its role. */
 function slotItem(page: Page, role: string) {
@@ -31,7 +30,7 @@ function suggestionList(page: Page) {
   return page.getByRole("list", { name: "Suggestions" });
 }
 
-/** Checks the Combination without moving focus: on a phone, from the bar's name. */
+/** Checks the Combination without moving focus: from the bar's name, or on What to make, its basket. */
 async function expectCombination(page: Page, names: string[]) {
   if (inSheet(page)) {
     await expect(page.getByRole("button", { name: /^Your basket/ })).toHaveAccessibleName(
@@ -214,9 +213,8 @@ test("removing an Ingredient updates the Combination and announces it", async ({
   const shown = await tray(page);
   await shown.getByRole("button", { name: "Remove Lemon" }).click();
   await expectCombination(page, ["Garlic"]);
-  // On a phone the change is made in the open sheet, so it's announced from there.
-  const live = test.info().project.use.isMobile ? shown.getByRole("status") : page.getByRole("status");
-  await expect(live).toHaveText("Lemon removed from your basket, 1 of 6.");
+  // The change is made in the open sheet, so it's announced from there.
+  await expect(shown.getByRole("status")).toHaveText("Lemon removed from your basket, 1 of 6.");
 });
 
 async function tabTo(page: Page, target: Locator) {

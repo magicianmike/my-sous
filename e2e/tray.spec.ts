@@ -145,6 +145,33 @@ test.describe("on desktop, the tray is the same bar, docked at the foot", () => 
     });
   }
 
+  test("in the open sheet, Close and See what to make share a row when they fit, Close on the left", async ({ page }) => {
+    const row = async () => {
+      await page.goto("/ingredients/lemon?with=lemon,garlic");
+      await opener(page).click();
+      return Promise.all([
+        sheet(page).getByRole("link", { name: "See what to make" }).boundingBox(),
+        sheet(page).getByRole("button", { name: "Close" }).boundingBox(),
+      ]);
+    };
+    const [action, close] = await row();
+    expect(close!.y).toBe(action!.y);
+    expect(close!.x).toBeLessThan(action!.x);
+
+    await page.setViewportSize({ width: 320, height: 640 });
+    const [narrowAction, narrowClose] = await row();
+    expect(narrowClose!.y).toBeGreaterThan(narrowAction!.y);
+  });
+
+  test("See what to make sits at the bar's right end", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon,garlic");
+    const [action, bar] = await Promise.all([
+      page.getByRole("link", { name: "See what to make" }).boundingBox(),
+      opener(page).boundingBox(),
+    ]);
+    expect(action!.x).toBeGreaterThan(bar!.x + bar!.width);
+  });
+
   test("See what to make is outlined, not filled", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
     const action = page.getByRole("link", { name: "See what to make" });

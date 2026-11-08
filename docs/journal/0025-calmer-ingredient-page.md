@@ -64,3 +64,9 @@ Kept as they are:
 ## Waiting for the author
 
 - The 40rem bar on wide screens, and the 56rem breakpoint for two columns.
+
+## Later
+
+- **See what to make** sits at the right end of the bar from 40rem. It stays first in the bar's order, so Tab reaches it first, as on a phone.
+- **In the open sheet, Close and See what to make share a row**, Close on the left, where both fit at 12rem or more. Where they don't, See what to make wraps above Close.
+- Both were tested red first.

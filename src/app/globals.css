@@ -294,10 +294,19 @@ html:has(.tray-sheet:modal) .toast-spot:not(.toast-spot-sheet) {
   border: 0;
 }
 
-.tray-close {
+/*
+ * Close, then See what to make, on one row where both fit, each at least 12rem. Where they don't, See what
+ * to make wraps above Close, nearer the basket it acts on.
+ */
+.tray-sheet-actions {
   display: flex;
-  width: calc(100% - 2 * var(--space-4));
-  margin-inline: auto;
+  flex-wrap: wrap-reverse;
+  gap: var(--space-2);
+  padding-inline: var(--space-4);
+}
+
+.tray-sheet-actions > * {
+  flex: 1 1 12rem;
 }
 
 html:has(.tray-sheet:modal) .page {

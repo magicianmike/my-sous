@@ -120,11 +120,11 @@ function TrayDock() {
           }}
           renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
           renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
-          action={seeWhatToMake}
         />
-        <Button className="tray-close" onClick={close}>
-          Close
-        </Button>
+        <div className="tray-sheet-actions">
+          <Button onClick={close}>Close</Button>
+          {combination.ingredients.length > 0 && seeWhatToMake}
+        </div>
         {status && statusKey > openedAt && (
           <div className="toast-spot toast-spot-sheet">
             <Toast key={statusKey} message={status} />

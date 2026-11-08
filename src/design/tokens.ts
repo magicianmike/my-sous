@@ -150,9 +150,9 @@ const scales = {
   "space-8": "4rem",
   "measure": "40rem",
   "page-width": "66rem",
-  // The Ingredient page's three columns: the Ingredient, its Pairings, the tray.
+  // The Ingredient page's two columns: the Ingredient and its Pairings.
   "page-width-wide": "78rem",
-  "ingredient-column": "20rem",
+  "ingredient-column": "24rem",
   "tray-width": "20rem",
   // The Case Study's chapter list, beside its text on wide screens.
   "chapter-nav-width": "14rem",
@@ -168,6 +168,8 @@ const scales = {
   "tile-min": "11rem",
   // Home's two browse cards sit side by side only when each has this much room.
   "door-min": "16rem",
+  // The open tray sheet's Close and See what to make share a row only when each is this wide.
+  "sheet-action-min": "12rem",
   // Borders: hairlines for decoration, a heavier line for controls.
   "border-hairline": "1px",
   "border-control": "2px",

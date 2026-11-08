@@ -3,6 +3,7 @@ import { IngredientMark } from "@/components/IngredientMark";
 import { IngredientLink } from "../ingredient-link";
 import { IngredientSearch } from "../ingredient-search";
 import { getKitchen } from "../kitchen";
+import { QuickAdd } from "./quick-add";
 
 export const metadata: Metadata = { title: "Ingredients" };
 
@@ -12,7 +13,7 @@ export default async function IngredientsPage() {
   return (
     <>
       <h1>Ingredients</h1>
-      <p className="lede">Open one to see what pairs with it, and why.</p>
+      <p className="lede">Open one to see what pairs with it, and why. Or add it to your basket from here.</p>
       <IngredientSearch />
       {kitchen.ingredientsByCategory().map(({ category, heading, ingredients }) => (
         <section key={category} className="ingredient-group" aria-labelledby={`category-${category}`}>
@@ -24,6 +25,9 @@ export default async function IngredientsPage() {
                   <IngredientMark ingredient={ingredient} size="sm" />
                   {ingredient.name}
                 </IngredientLink>
+                <span className="quick-add">
+                  <QuickAdd ingredientId={ingredient.id} />
+                </span>
               </li>
             ))}
           </ul>

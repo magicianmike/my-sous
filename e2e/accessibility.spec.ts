@@ -70,8 +70,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       await expectNoViolations(page);
     });
 
-    test("the open tray sheet on a phone has no axe violations", async ({ page, isMobile }) => {
-      test.skip(!isMobile, "the sheet is the phone layout");
+    test("the open tray sheet has no axe violations", async ({ page }) => {
       await page.goto("/ingredients/lemon?with=lemon,garlic");
       await page.getByRole("button", { name: /^Your basket/ }).click();
       await expect(page.getByRole("dialog", { name: /Your basket/ })).toBeVisible();

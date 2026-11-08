@@ -97,7 +97,10 @@
   font-weight: var(--weight-bold);
 }
 
-/* With room, one row, "See what to make" first: the bar takes less of a short screen, such as at 200% zoom. */
+/*
+ * With room, one row, "See what to make" at its end: the bar takes less of a short screen, such as at 200%
+ * zoom. The link stays first in the bar's order, so Tab reaches it first, as on a phone.
+ */
 @media (min-width: 40rem) {
   .bar {
     display: flex;
@@ -105,6 +108,7 @@
   }
 
   .bar > a {
+    order: 1;
     width: auto;
   }
 

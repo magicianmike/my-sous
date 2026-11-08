@@ -134,20 +134,20 @@ export const CombinationLink = withSearchParams(
   ({ href, ...props }: LinkProps) => <Link href={href} {...props} />,
 );
 
+/** An Ingredient, whether it's in the basket, and the press that adds it or takes it out. */
+export function useBasketToggle(ingredientId: string) {
+  const { kitchen } = useKitchen();
+  const { combination, add, remove } = useCombination();
+  const ingredient = kitchen.ingredient(ingredientId)!;
+  const added = combination.ingredients.includes(ingredient);
+  return { ingredient, added, toggle: () => (added ? remove(ingredient) : add(ingredient)) };
+}
+
 export const AddToCombination = withSearchParams(function AddToCombination({
   ingredientId,
 }: {
   ingredientId: string;
 }) {
-  const { kitchen } = useKitchen();
-  const { combination, add, remove } = useCombination();
-  const ingredient = kitchen.ingredient(ingredientId)!;
-  const added = combination.ingredients.includes(ingredient);
-  return (
-    <AddToBasketButton
-      name={ingredient.name}
-      added={added}
-      onClick={() => (added ? remove(ingredient) : add(ingredient))}
-    />
-  );
+  const { ingredient, added, toggle } = useBasketToggle(ingredientId);
+  return <AddToBasketButton name={ingredient.name} added={added} onClick={toggle} />;
 });

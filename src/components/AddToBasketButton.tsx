@@ -10,10 +10,15 @@ type Props = Omit<React.ComponentProps<typeof Button>, "children" | "variant"> &
   added?: boolean;
 };
 
+/** What adding or removing an Ingredient is called, for a button's name: "Add Garlic to your basket". */
+export function basketWords(name: string, added: boolean): string {
+  return added ? `Remove ${name} from your basket` : `Add ${name} to your basket`;
+}
+
 /** Add to the basket, shown as a basket and a plus, with its words in its name and, under the pointer, a tooltip. */
 export function AddToBasketButton({ name, added = false, ...props }: Props) {
   return (
-    <Tooltip label={added ? null : `Add ${name} to your basket`}>
+    <Tooltip label={added ? null : basketWords(name, false)}>
       <Button variant={added ? "secondary" : "primary"} {...props}>
         {added ? (
           <>
@@ -23,7 +28,7 @@ export function AddToBasketButton({ name, added = false, ...props }: Props) {
           <>
             <BasketIcon className="button-icon" />
             <PlusIcon className="button-icon" />
-            <span className="visually-hidden">Add {name} to your basket</span>
+            <span className="visually-hidden">{basketWords(name, false)}</span>
           </>
         )}
       </Button>

@@ -128,32 +128,59 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
   });
 });
 
-test.describe("on desktop, the tray is a side panel", () => {
-  test.skip(({ isMobile }) => isMobile, "the side panel is the desktop layout");
+test.describe("on desktop, the tray is the same bar, docked at the foot", () => {
+  test.skip(({ isMobile }) => isMobile, "the desktop layout");
 
-  test("it is always there and doesn't trap focus", async ({ page }) => {
+  for (const path of ["/ingredients/lemon", "/cuisines", "/formulas/pan-sauce", "/"]) {
+    test(`on ${path}, the bar opens the sheet, with no side panel`, async ({ page }) => {
+      await page.goto(`${path}?with=lemon,garlic`);
+      await expect(opener(page)).toHaveAccessibleName("Your basket 2 of 6: Lemon, Garlic");
+      await expect(page.getByRole("complementary", { name: /Your basket/ })).toHaveCount(0);
+      // At the window's foot: the opener ends within the bar's own padding of the bottom edge.
+      const [bar, viewport] = [await opener(page).boundingBox(), page.viewportSize()!];
+      expect(bar!.y + bar!.height).toBeGreaterThan(viewport.height - 32);
+
+      await opener(page).click();
+      await expect(sheet(page).getByRole("listitem")).toHaveText([/^Lemon/, /^Garlic/]);
+    });
+  }
+
+  test("in the open sheet, Close and See what to make share a row when they fit, Close on the left", async ({ page }) => {
+    const row = async () => {
+      await page.goto("/ingredients/lemon?with=lemon,garlic");
+      await opener(page).click();
+      return Promise.all([
+        sheet(page).getByRole("link", { name: "See what to make" }).boundingBox(),
+        sheet(page).getByRole("button", { name: "Close" }).boundingBox(),
+      ]);
+    };
+    const [action, close] = await row();
+    expect(close!.y).toBe(action!.y);
+    expect(close!.x).toBeLessThan(action!.x);
+
+    await page.setViewportSize({ width: 320, height: 640 });
+    const [narrowAction, narrowClose] = await row();
+    expect(narrowClose!.y).toBeGreaterThan(narrowAction!.y);
+  });
+
+  test("See what to make sits at the bar's right end", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
-    const tray = page.getByRole("complementary", { name: /Your basket/ });
-    await expect(tray.getByRole("listitem")).toHaveText([/^Lemon/, /^Garlic/]);
-    await expect(opener(page)).toBeHidden();
-    await expect(page.getByRole("dialog")).toHaveCount(0);
+    const [action, bar] = await Promise.all([
+      page.getByRole("link", { name: "See what to make" }).boundingBox(),
+      opener(page).boundingBox(),
+    ]);
+    expect(action!.x).toBeGreaterThan(bar!.x + bar!.width);
+  });
+
+  test("See what to make is outlined, not filled", async ({ page }) => {
+    await page.goto("/ingredients/lemon?with=lemon,garlic");
+    const action = page.getByRole("link", { name: "See what to make" });
+    await expect(action).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   });
 });
 
 test.describe("when the screen changes size", () => {
   test.skip(({ isMobile }) => isMobile, "each test sets its own viewport");
-
-  test("widening with the sheet open moves focus to the side panel", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/ingredients/lemon?with=lemon,garlic");
-    await opener(page).click();
-    await expect(sheet(page)).toBeVisible();
-
-    await page.setViewportSize({ width: 1280, height: 720 });
-    await expect(sheet(page)).toBeHidden();
-    const panel = page.getByRole("complementary", { name: /Your basket/ });
-    await expect(panel.getByRole("heading", { name: /Your basket/ })).toBeFocused();
-  });
 
   // 320px wide, and a 1280×720 screen at 200% zoom.
   for (const viewport of [

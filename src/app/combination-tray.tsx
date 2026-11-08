@@ -11,12 +11,9 @@ import { CombinationLink, useCombination, useKitchen, withSearchParams } from ".
 import { useIsCaseStudy } from "./site-chrome";
 import { IngredientLink, IngredientMarkLink } from "./ingredient-link";
 
-/** Where the tray is a side panel rather than a bar and sheet; matches `.tray-dock` in globals.css. */
-const SIDE_PANEL = "(min-width: 56rem)";
-
 /**
- * The tray, fed from the Combination in the URL: a side panel on wide screens, and on a phone a
- * bar that opens the same tray as a modal sheet. What to make shows the Combination itself, so it
+ * The tray, fed from the Combination in the URL: a bar docked at the foot of the screen, at every
+ * width, that opens the tray as a modal sheet. What to make shows the Combination itself, so it
  * has no tray. Every change is announced from a live region outside the tray, and shown as a toast.
  */
 export const CombinationTray = withSearchParams(function CombinationTray() {
@@ -40,8 +37,7 @@ export const CombinationTray = withSearchParams(function CombinationTray() {
 });
 
 /**
- * The side panel, or the bar and its sheet; CSS shows one for the screen size, so assistive
- * technology meets one tray. The open sheet has its own live region, since a modal makes the page
+ * The bar and its sheet. The open sheet has its own live region, since a modal makes the page
  * behind it, and its live region, inert.
  */
 function TrayDock() {
@@ -51,7 +47,6 @@ function TrayDock() {
   const [openedAt, setOpenedAt] = useState(Infinity);
   const { combination, remove } = useCombination();
   const pathname = usePathname();
-  const panelHeading = useRef<HTMLHeadingElement>(null);
   const sheetHeading = useRef<HTMLHeadingElement>(null);
   const sheet = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLButtonElement>(null);
@@ -70,8 +65,7 @@ function TrayDock() {
     const observer = new ResizeObserver((entries) => {
       for (const { target, borderBoxSize } of entries) {
         const property = target === sheet.current ? "--tray-sheet-height" : "--tray-dock-height";
-        const height = matchMedia(SIDE_PANEL).matches ? 0 : Math.ceil(borderBoxSize[0].blockSize);
-        root.style.setProperty(property, `${height}px`);
+        root.style.setProperty(property, `${Math.ceil(borderBoxSize[0].blockSize)}px`);
       }
     });
     observer.observe(dock.current!);
@@ -82,45 +76,8 @@ function TrayDock() {
       root.style.removeProperty("--tray-sheet-height");
     };
   }, []);
-  // Widening into the side panel closes the sheet; focus that was in it moves to the panel, since
-  // the bar it would return to is gone.
-  useEffect(() => {
-    const wide = matchMedia(SIDE_PANEL);
-    const widen = () => {
-      if (!wide.matches || !sheet.current?.open) return;
-      const hadFocus = focusWasInSheet();
-      close();
-      if (hadFocus) panelHeading.current?.focus();
-    };
-    wide.addEventListener("change", widen);
-    return () => wide.removeEventListener("change", widen);
-  }, []);
-
-  /** One tray; `announces` gives it its own live region, which only the modal sheet needs. */
-  const tray = ({ titleId, heading, announces }: TrayPlacement) => (
-    <TrayView
-      status={announces ? status : undefined}
-      ingredients={combination.ingredients}
-      titleId={titleId}
-      limit={COMBINATION_LIMIT}
-      unknown={combination.unknown}
-      overLimit={combination.overLimit}
-      titleRef={heading}
-      onRemove={(ingredient: Ingredient) => {
-        remove(ingredient);
-        heading.current?.focus();
-      }}
-      renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
-      renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
-      action={seeWhatToMake}
-    />
-  );
-
   return (
     <div ref={dock} className="tray-dock">
-      <div className="tray-panel">
-        {tray({ titleId: "tray-heading", heading: panelHeading, announces: false })}
-      </div>
       <div className="tray-bar">
         <TrayBar
           ingredients={combination.ingredients}
@@ -138,9 +95,9 @@ function TrayDock() {
       <dialog
         ref={sheet}
         className="tray-sheet"
-        aria-labelledby="tray-sheet-heading"
+        aria-labelledby={SHEET_HEADING}
         onClose={() => {
-          // Back to the bar, unless closing moved focus on already (as widening does).
+          // Back to the bar, unless closing moved focus on already, as following a link does.
           if (focusWasInSheet()) {
             opener.current?.focus();
           }
@@ -149,10 +106,25 @@ function TrayDock() {
         onClick={(event) => event.target === sheet.current && close()}
         onKeyDown={containTab}
       >
-        {tray({ titleId: "tray-sheet-heading", heading: sheetHeading, announces: true })}
-        <Button className="tray-close" onClick={close}>
-          Close
-        </Button>
+        <TrayView
+          status={status}
+          ingredients={combination.ingredients}
+          titleId={SHEET_HEADING}
+          limit={COMBINATION_LIMIT}
+          unknown={combination.unknown}
+          overLimit={combination.overLimit}
+          titleRef={sheetHeading}
+          onRemove={(ingredient: Ingredient) => {
+            remove(ingredient);
+            sheetHeading.current?.focus();
+          }}
+          renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
+          renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
+        />
+        <div className="tray-sheet-actions">
+          <Button onClick={close}>Close</Button>
+          {combination.ingredients.length > 0 && seeWhatToMake}
+        </div>
         {status && statusKey > openedAt && (
           <div className="toast-spot toast-spot-sheet">
             <Toast key={statusKey} message={status} />
@@ -163,11 +135,8 @@ function TrayDock() {
   );
 }
 
-type TrayPlacement = {
-  titleId: string;
-  heading: React.RefObject<HTMLHeadingElement | null>;
-  announces: boolean;
-};
+/** The sheet's heading, which names it. */
+const SHEET_HEADING = "tray-sheet-heading";
 
 /** What Tab can reach. */
 const FOCUSABLE = [
@@ -194,7 +163,7 @@ function containTab(event: React.KeyboardEvent<HTMLElement>) {
 }
 
 const seeWhatToMake = (
-  <CombinationLink href="/suggestions" className={buttonClass("primary")}>
+  <CombinationLink href="/suggestions" className={buttonClass()}>
     <PanIcon />
     See what to make
   </CombinationLink>

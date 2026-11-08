@@ -10,11 +10,13 @@ type Props = {
   onEnter?: () => void;
   /** What the filter shows now, announced as it changes: "2 ingredients match." */
   status: string;
+  /** A next step under the status, such as when nothing matches. */
+  hint?: React.ReactNode;
   disabled?: boolean;
 };
 
 /** A search field that narrows what's on the page below it, rather than offering a list of its own. */
-export function FilterField({ label, value, onChange, onEnter, status, disabled = false }: Props) {
+export function FilterField({ label, value, onChange, onEnter, status, hint, disabled = false }: Props) {
   const id = useId();
   return (
     <div className={styles.combobox}>
@@ -32,9 +34,11 @@ export function FilterField({ label, value, onChange, onEnter, status, disabled 
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={(event) => event.key === "Enter" && onEnter?.()}
       />
-      <p role="status" className={styles.status}>
+      {/* A polite live region rather than a second status, so the page keeps one status for the basket. */}
+      <p aria-live="polite" className={styles.status}>
         {status}
       </p>
+      {hint && <p className={styles.hint}>{hint}</p>}
     </div>
   );
 }

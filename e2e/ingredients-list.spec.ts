@@ -79,6 +79,7 @@ test("a name the Ingredients page doesn't have says so, and clearing shows every
   await page.goto("/ingredients");
   await filter(page).fill("mango");
   await expect(page.getByText("“mango” isn’t in MySous yet.")).toBeVisible();
+  await expect(page.getByText("Try another spelling, or clear the search to see every ingredient.")).toBeVisible();
   await expect(page.locator(".ingredient-links")).toHaveCount(0);
 
   await filter(page).fill("");

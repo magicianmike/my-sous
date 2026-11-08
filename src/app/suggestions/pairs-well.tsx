@@ -3,6 +3,7 @@
 import { Chip } from "@/components/Chip";
 import { IngredientMark } from "@/components/IngredientMark";
 import { PlusIcon } from "@/components/PlusIcon";
+import { Tooltip } from "@/components/Tooltip";
 import type { Ingredient } from "@/kitchen/kitchen";
 import { useCombination, useKitchen } from "../combination";
 
@@ -20,13 +21,15 @@ export function PairsWell({ onAdd }: { onAdd: () => void }) {
       <ul>
         {additions.map(({ ingredient }) => (
           <li key={ingredient.id}>
-            <button type="button" onClick={() => addAndRefocus(ingredient)}>
-              <Chip colour={ingredient.colour} dashed leading={<IngredientMark ingredient={ingredient} size="sm" />} trailing={<PlusIcon className="button-icon" />}>
-                <span className="visually-hidden">Add </span>
-                {ingredient.name}
-                <span className="visually-hidden"> to your basket</span>
-              </Chip>
-            </button>
+            <Tooltip label={`Add ${ingredient.name} to your basket`}>
+              <button type="button" onClick={() => addAndRefocus(ingredient)}>
+                <Chip colour={ingredient.colour} dashed leading={<IngredientMark ingredient={ingredient} size="sm" />} trailing={<PlusIcon className="button-icon" />}>
+                  <span className="visually-hidden">Add </span>
+                  {ingredient.name}
+                  <span className="visually-hidden"> to your basket</span>
+                </Chip>
+              </button>
+            </Tooltip>
           </li>
         ))}
       </ul>

@@ -73,3 +73,4 @@ Kept as they are:
 - **Add buttons.** Every Add to the basket (on an Ingredient's page, the closest dishes, and a dish's parts) is now a basket and a plus. Its words stay in its name, and a tooltip shows them on hover or keyboard focus: "Add Garlic to your basket". The plus turns a quarter on hover, like the chips', from a shared `PlusIcon`. `AddToBasketButton` keeps one button between Add and Remove, so focus stays on it; `Tooltip` takes no label for Remove, which has its own words.
 - A Playwright test covers the tooltip on hover, Escape and focus. It was written after the button.
 - The author replaced the "brings in" lines under the chips with one: "Add more Ingredients to see more dishes." The Kitchen still ranks the chips by the dishes each brings in.
+- The Pairs well chips have the same tooltip as Add: "Add Yogurt to your basket".

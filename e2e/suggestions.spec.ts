@@ -121,6 +121,16 @@ test("the basket on What to make offers what pairs with it, one tap to add, and 
   await expect(basket.getByRole("heading", { name: /Your basket/ })).toBeFocused();
 });
 
+test("each Pairs well chip gives its words in a tooltip on hover", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover is for a pointer");
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  const yogurt = page.getByRole("region", { name: "Pairs well" }).getByRole("button", { name: "Add Yogurt to your basket" });
+  const tooltip = page.locator("[aria-hidden=true]").getByText("Add Yogurt to your basket", { exact: true });
+  await expect(tooltip).toHaveCount(0);
+  await yogurt.hover();
+  await expect(tooltip).toBeVisible();
+});
+
 test("the basket offers what pairs with it when no dish fits too", async ({ page }) => {
   await page.goto("/suggestions?with=lamb,mint");
   await expect(page.getByRole("list", { name: "Closest dishes" })).toBeVisible();

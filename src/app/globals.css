@@ -756,13 +756,16 @@ main:has(.case-study) {
   height: var(--space-5);
 }
 
-/* The plus turns a quarter under the pointer; with reduced motion it turns without the animation. */
+/*
+ * The plus turns a quarter clockwise under the pointer. Only the turn on is animated: a quarter turn looks the
+ * same, so it snaps back unseen instead of turning anticlockwise. With reduced motion it isn't animated at all.
+ */
 .pairs-well button:hover .pairs-well-icon {
   transform: rotate(90deg);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .pairs-well-icon {
+  .pairs-well button:hover .pairs-well-icon {
     transition: transform var(--motion-fast) var(--ease-out);
   }
 }

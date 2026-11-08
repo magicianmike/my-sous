@@ -483,6 +483,81 @@ describe("loadKitchen", () => {
     });
   });
 
+  describe("what could be added to a basket", () => {
+    const pairs = (...ids: [string, string][]) =>
+      ids.map((ingredients) => ({ ingredients, reasons: [reason("A note.")] }));
+    const fixture = {
+      ingredients: {
+        chicken: { name: "Chicken", slotTypes: ["protein"] },
+        garlic: { name: "Garlic", slotTypes: ["aromatic"] },
+        ginger: { name: "Ginger", slotTypes: ["aromatic"] },
+        lemon: { name: "Lemon", slotTypes: ["acid"] },
+        basil: { name: "Basil", slotTypes: ["herb"] },
+        thyme: { name: "Thyme", slotTypes: ["herb"] },
+        parsley: { name: "Parsley", slotTypes: ["herb"] },
+      },
+      pairings: pairs(
+        ["chicken", "garlic"],
+        ["chicken", "lemon"],
+        ["chicken", "basil"],
+        ["garlic", "lemon"],
+        ["garlic", "ginger"],
+      ),
+      formulas: [
+        {
+          id: "pan-sauce",
+          name: "Pan sauce",
+          description: "A quick sauce from the pan.",
+          slots: [
+            { id: "protein", role: "something to sear", accepts: "protein" },
+            { id: "aromatic", role: "an aromatic", accepts: "aromatic" },
+            { id: "acid", role: "an acid", accepts: "acid" },
+            { id: "herb", role: "a herb", accepts: "herb", required: false },
+          ],
+          method: ["Sear {protein}, soften {aromatic}, add {acid}, finish with {herb}."],
+        },
+      ],
+    };
+    const couldAdd = (kitchen: Kitchen, ids: string[]) =>
+      kitchen
+        .couldAdd(kitchen.combination(ids).ingredients)
+        .map(({ ingredient, pairsWith, bringsIn }) => [
+          ingredient.id,
+          pairsWith.map(({ id }) => id),
+          bringsIn.map(({ id }) => id),
+        ]);
+
+    it("gives what pairs with the basket, most Pairings with it first, then most dishes brought in, then by name", async () => {
+      const kitchen = await expectKitchen(writeContent(fixture));
+
+      // Garlic or lemon would make a pan sauce fit; basil goes only in an optional part. Ginger
+      // pairs with nothing in the basket.
+      expect(couldAdd(kitchen, ["chicken"])).toEqual([
+        ["garlic", ["chicken"], ["pan-sauce"]],
+        ["lemon", ["chicken"], ["pan-sauce"]],
+        ["basil", ["chicken"], []],
+      ]);
+      // The pan sauce fits already, so nothing brings it in; lemon pairs with both.
+      expect(couldAdd(kitchen, ["chicken", "garlic"])).toEqual([
+        ["lemon", ["chicken", "garlic"], []],
+        ["basil", ["chicken"], []],
+        ["ginger", ["garlic"], []],
+      ]);
+    });
+
+    it("gives at most four, and none for a full basket", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({
+          ...fixture,
+          pairings: [...fixture.pairings, ...pairs(["chicken", "thyme"], ["chicken", "parsley"])],
+        }),
+      );
+
+      expect(couldAdd(kitchen, ["chicken"]).map(([id]) => id)).toEqual(["garlic", "lemon", "basil", "parsley"]);
+      expect(couldAdd(kitchen, ["chicken", "garlic", "ginger", "lemon", "basil", "thyme"])).toEqual([]);
+    });
+  });
+
   describe("which dishes fit", () => {
     const fixture = {
       ingredients: {

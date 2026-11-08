@@ -99,6 +99,35 @@ test("when no dish fits a full basket, What to make says to remove an Ingredient
   );
 });
 
+test("the basket on What to make offers what pairs with it, one tap to add, and the dishes follow", async ({
+  page,
+}) => {
+  await page.goto("/suggestions?with=chicken-thigh,garlic");
+  const basket = page.getByRole("main").getByRole("complementary", { name: /Your basket/ });
+  const pairsWell = basket.getByRole("region", { name: "Pairs well" });
+  // Each pairs with both; potato and tomato bring in the most dishes.
+  await expect(pairsWell.getByRole("button")).toHaveText([
+    "Add Potato to your basket",
+    "Add Tomato to your basket",
+    "Add Yogurt to your basket",
+    "Add Aleppo pepper to your basket",
+  ]);
+  await expect(pairsWell).toContainText("Yogurt brings in Grain bowl.");
+  await expect(page.getByRole("list", { name: "Suggestions" }).getByRole("heading", { name: "Grain bowl" })).toHaveCount(0);
+
+  await pairsWell.getByRole("button", { name: "Add Yogurt to your basket" }).click();
+  await expect(page).toHaveURL(/with=chicken-thigh,garlic,yogurt$/);
+  await expect(page.getByRole("status")).toHaveText("Yogurt added to your basket, 3 of 6.");
+  await expect(page.getByRole("list", { name: "Suggestions" }).getByRole("heading", { name: "Grain bowl" })).toBeVisible();
+  await expect(basket.getByRole("heading", { name: /Your basket/ })).toBeFocused();
+});
+
+test("a full basket offers nothing more to add", async ({ page }) => {
+  await page.goto("/suggestions?with=chicken-thigh,garlic,lemon,basil,mint,sumac");
+  await expect(page.getByRole("main").getByRole("complementary", { name: /Your basket/ })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Pairs well" })).toHaveCount(0);
+});
+
 test("a dish opens for a basket it doesn't fit", async ({ page }) => {
   await page.goto("/formulas/frittata?with=chicken-thigh,garlic");
   await expect(page.getByRole("heading", { level: 1, name: "Frittata" })).toBeVisible();
@@ -214,7 +243,7 @@ test("a drawing shown without its name gives the name in a tooltip, on hover or 
 
 test("What to make shows the Combination's Ingredients side by side, each as wide as its name", async ({ page }) => {
   await page.goto("/suggestions?with=chicken-thigh,garlic");
-  const items = page.locator(".suggestions-combination li");
+  const items = page.getByRole("list", { name: "In your basket" }).getByRole("listitem");
   const [first, second] = await Promise.all([items.nth(0).boundingBox(), items.nth(1).boundingBox()]);
   expect(second!.y).toBe(first!.y);
   expect(second!.x).toBeGreaterThan(first!.x + first!.width - 1);
@@ -233,7 +262,7 @@ test("with a mouse, an Ingredient's bin shows only under the pointer or on keybo
     return;
   }
   await expect.poll(opacity).toBe("0");
-  await page.locator(".suggestions-combination li").filter({ hasText: "Garlic" }).hover();
+  await page.getByRole("list", { name: "In your basket" }).getByRole("listitem").filter({ hasText: "Garlic" }).hover();
   await expect.poll(opacity).toBe("1");
   await page.mouse.move(0, 0);
   await expect.poll(opacity).toBe("0");

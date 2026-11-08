@@ -718,6 +718,58 @@ main:has(.case-study) {
   margin: 0;
 }
 
+/* What pairs with the basket, under its Ingredients on What to make: each chip one tap to add. */
+.pairs-well {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.pairs-well h3 {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.pairs-well ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pairs-well button {
+  display: flex;
+  align-items: center;
+  min-height: var(--target);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.pairs-well button > span {
+  border: var(--border-hairline) dashed var(--line);
+}
+
+.pairs-well button:hover > span {
+  border-color: var(--ink-muted);
+}
+
+.pairs-well-icon {
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
+.pairs-well p {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
 /* What to make when no dish fits: the closest dishes, each with what to add. */
 .nothing-fits {
   display: grid;

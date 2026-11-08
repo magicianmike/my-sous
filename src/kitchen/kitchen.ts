@@ -65,6 +65,9 @@ export const COMBINATION_LIMIT = 6;
 /** The most dishes offered as nearest when a Combination fits none. */
 const CLOSEST_LIMIT = 3;
 
+/** The most Ingredients offered to add to a Combination. */
+const COULD_ADD_LIMIT = 4;
+
 /** A Combination read from untrusted ids (such as a URL), with what had to be dropped. */
 export type Combination = {
   ingredients: Ingredient[];
@@ -134,6 +137,15 @@ export type Suggestion = {
    * Combination, not the Cook's changes on the dish.
    */
   toFit: number;
+};
+
+/** An Ingredient that pairs with a Combination, and could be added to it. */
+export type CouldAdd = {
+  ingredient: Ingredient;
+  /** The Combination's Ingredients it pairs with. */
+  pairsWith: Ingredient[];
+  /** The Formulas the Combination would fit with it added, and doesn't now. */
+  bringsIn: Formula[];
 };
 
 /** A Formula a Combination doesn't fit yet, and what to add to it to get there. */
@@ -221,6 +233,11 @@ export type Kitchen = {
    * doesn't fit, fewest required Slots short of fitting first, then ranked as `suggest` ranks.
    */
   closest(combination: Ingredient[]): NearMiss[];
+  /**
+   * Up to `COULD_ADD_LIMIT` Ingredients that pair with a Combination with room for more: most
+   * Pairings with it first, then most Formulas brought in, then by name.
+   */
+  couldAdd(combination: Ingredient[]): CouldAdd[];
   /** One Formula filled for a Combination as `suggest` fills it, whether it fits or not. */
   suggestion(formulaId: string, combination: Ingredient[]): Suggestion | undefined;
   /** The same Suggestion with the Cook's choice added to a Slot. */
@@ -661,6 +678,29 @@ export function createKitchen(content: KitchenContent): Kitchen {
               return [{ slot, ingredient: best.ingredient, pairsWith }];
             }),
         })),
+
+    couldAdd(combination) {
+      if (combination.length >= COMBINATION_LIMIT) return [];
+      const fitting = new Set(kitchen.suggest(combination).map(({ formula }) => formula));
+      return [...ingredients.values()]
+        .filter((ingredient) => !combination.includes(ingredient))
+        .map((ingredient) => ({ ingredient, pairsWith: combination.filter((other) => arePaired(ingredient, other)) }))
+        .filter(({ pairsWith }) => pairsWith.length > 0)
+        .map((candidate) => ({
+          ...candidate,
+          bringsIn: kitchen
+            .suggest([...combination, candidate.ingredient])
+            .map(({ formula }) => formula)
+            .filter((formula) => !fitting.has(formula)),
+        }))
+        .sort(
+          (a, b) =>
+            b.pairsWith.length - a.pairsWith.length ||
+            b.bringsIn.length - a.bringsIn.length ||
+            byName(a.ingredient, b.ingredient),
+        )
+        .slice(0, COULD_ADD_LIMIT);
+    },
 
     suggestion(formulaId, combination) {
       const found = formula(formulaId);

@@ -40,8 +40,8 @@ async function expectCombination(page: Page, names: string[]) {
     return;
   }
   const shown = await tray(page);
-  await expect(shown.getByRole("listitem")).toHaveText(names.map((name) => new RegExp(`^${name}`)));
-  await expect(shown.getByRole("heading")).toContainText(`${names.length} of 6`);
+  await expect(shown.getByRole("list", { name: "In your basket" }).getByRole("listitem")).toHaveText(names.map((name) => new RegExp(`^${name}`)));
+  await expect(shown.getByRole("heading", { name: /^Your basket/ })).toContainText(`${names.length} of 6`);
 }
 
 /** The names of the first few Suggestions, once they're drawn: the best-paired come first. */
@@ -259,7 +259,7 @@ test("the whole journey works with the keyboard alone", async ({ page }) => {
 test("What to make shows the Combination under its heading, in place of the tray", async ({ page }) => {
   await page.goto("/suggestions?with=chicken-thigh,garlic,lemon");
   const shown = page.getByRole("main").getByRole("complementary", { name: /Your basket/ });
-  await expect(shown.getByRole("listitem")).toHaveText([/^Chicken thigh/, /^Garlic/, /^Lemon/]);
+  await expect(shown.getByRole("list", { name: "In your basket" }).getByRole("listitem")).toHaveText([/^Chicken thigh/, /^Garlic/, /^Lemon/]);
   await expect(page.getByRole("complementary")).toHaveCount(1);
   await expect(page.getByRole("button", { name: /^Your basket/ })).toHaveCount(0);
 

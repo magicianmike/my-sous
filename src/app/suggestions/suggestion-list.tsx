@@ -19,6 +19,7 @@ import {
 import { AddToCombination, CombinationLink, useCombination, useKitchen, withSearchParams } from "../combination";
 import { IngredientLink, IngredientMarkLink } from "../ingredient-link";
 import { ReadinessSentence } from "../readiness";
+import { PairsWell } from "./pairs-well";
 
 export const SuggestionList = withSearchParams(
   function SuggestionList() {
@@ -50,7 +51,9 @@ export const SuggestionList = withSearchParams(
           }}
           renderName={(ingredient) => <IngredientLink ingredient={ingredient} />}
           renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} />}
-        />
+        >
+          <PairsWell onAdd={() => combinationHeading.current?.focus()} />
+        </TrayView>
       </div>
     );
     if (empty) {

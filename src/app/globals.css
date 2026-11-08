@@ -428,16 +428,50 @@ button:hover .plus-icon {
   gap: var(--space-2);
 }
 
+.ingredient-links li {
+  position: relative;
+}
+
 .ingredient-links a {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   min-height: var(--target);
-  padding: var(--space-2);
+  /* Room at the end for the add button, so a long name never runs under it. */
+  padding: var(--space-2) var(--target) var(--space-2) var(--space-2);
   border-radius: var(--radius-lg);
   background: var(--surface);
   font-weight: var(--weight-bold);
   text-decoration: none;
+}
+
+/* Add, or the bin once it's in the basket, at the pill's end, over the link's padding. */
+.quick-add {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+/* Red under the pointer: this one removes. */
+.quick-add .quick-remove:hover {
+  color: var(--danger);
+}
+
+/*
+ * With a mouse, the button shows only on the pill under the pointer, or on keyboard focus; it keeps its
+ * room, so nothing moves. On touch, where nothing hovers, it always shows.
+ */
+@media (hover: hover) {
+  .quick-add button {
+    opacity: 0;
+    transition: opacity var(--motion-fast) var(--ease-out);
+  }
+
+  .ingredient-links li:hover .quick-add button,
+  .quick-add button:focus-visible {
+    opacity: 1;
+  }
 }
 
 /* Home's two ways to browse, each a card that's one link. */

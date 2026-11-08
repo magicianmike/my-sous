@@ -91,6 +91,14 @@ test("when no dish fits, What to make names the closest and what to add, and add
   await expect(nothing).toHaveCount(0);
 });
 
+test("when no dish fits a full basket, What to make says to remove an Ingredient first", async ({ page }) => {
+  // Soft herbs go only in optional parts, so six of them fit no dish.
+  await page.goto("/suggestions?with=basil,mint,parsley,cilantro,shiso,epazote");
+  await expect(page.getByRole("region", { name: "No dish fits your basket yet" })).toContainText(
+    "Your basket is full, so remove an Ingredient before you add one.",
+  );
+});
+
 test("a dish opens for a basket it doesn't fit", async ({ page }) => {
   await page.goto("/formulas/frittata?with=chicken-thigh,garlic");
   await expect(page.getByRole("heading", { level: 1, name: "Frittata" })).toBeVisible();

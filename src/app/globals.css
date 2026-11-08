@@ -731,17 +731,17 @@ main:has(.case-study) {
   margin: 0;
 }
 
-.closest h3 a {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--target);
-}
-
 .closest {
   display: grid;
   gap: var(--space-2);
   padding-block: var(--space-3);
   border-top: var(--border-hairline) solid var(--line);
+}
+
+.closest h3 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
 }
 
 .nothing-yet-marks {

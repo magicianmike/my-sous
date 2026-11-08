@@ -63,7 +63,7 @@ export const SLOT_REFERENCE = /\{([^}]+)\}/g;
 export const COMBINATION_LIMIT = 6;
 
 /** The most dishes offered as nearest when a Combination fits none. */
-export const CLOSEST_LIMIT = 3;
+const CLOSEST_LIMIT = 3;
 
 /** A Combination read from untrusted ids (such as a URL), with what had to be dropped. */
 export type Combination = {
@@ -130,9 +130,22 @@ export type Suggestion = {
   makeable: boolean;
   /**
    * How many more required Slots need an Ingredient from the Combination before the Formula fits it:
-   * it fits once the Combination covers at least half of them. 0 when it fits.
+   * it fits once the Combination covers at least half of them. 0 when it fits. It counts only the
+   * Combination, not the Cook's changes on the dish.
    */
   toFit: number;
+};
+
+/** A Formula a Combination doesn't fit yet, and what to add to it to get there. */
+export type NearMiss = {
+  suggestion: Suggestion;
+  /** For each required Slot nothing from the Combination is in: the best-pairing Ingredient to add. */
+  toAdd: {
+    slot: Slot;
+    ingredient: Ingredient;
+    /** The Combination's Ingredients it pairs with, in the dish. */
+    pairsWith: Ingredient[];
+  }[];
 };
 
 /** A line of a Recipe's ingredient list, its name lower-case like the rest; `ingredient` is set when it fills a Slot. */
@@ -207,7 +220,7 @@ export type Kitchen = {
    * For a Combination no Formula fits yet, what's nearest: up to `CLOSEST_LIMIT` of the Formulas it
    * doesn't fit, fewest required Slots short of fitting first, then ranked as `suggest` ranks.
    */
-  closest(combination: Ingredient[]): Suggestion[];
+  closest(combination: Ingredient[]): NearMiss[];
   /** One Formula filled for a Combination as `suggest` fills it, whether it fits or not. */
   suggestion(formulaId: string, combination: Ingredient[]): Suggestion | undefined;
   /** The same Suggestion with the Cook's choice added to a Slot. */
@@ -270,7 +283,7 @@ function explainRank(
   pairs: [Ingredient, Ingredient][],
 ): string {
   const name = inSentence;
-  if (used.length === 0) return "None of your basket fits this dish yet.";
+  if (used.length === 0) return "Nothing from your basket is in this dish yet.";
   if (used.length === 1) return `Only ${name(used[0])} from your basket is used here.`;
   if (pairs.length === 0) {
     return used.length === 2
@@ -502,7 +515,6 @@ export function createKitchen(content: KitchenContent): Kitchen {
     return deriveSuggestion(formula, combination, fills);
   }
 
-
   /** Every Formula filled for a Combination: nearest to fitting first, then as `suggest` ranks. */
   function ranked(combination: Ingredient[]): Suggestion[] {
     // A stable sort, so ties keep the order Formulas appear in the content.
@@ -634,7 +646,21 @@ export function createKitchen(content: KitchenContent): Kitchen {
 
     suggest: (combination) => ranked(combination).filter(({ toFit }) => toFit === 0),
 
-    closest: (combination) => ranked(combination).filter(({ toFit }) => toFit > 0).slice(0, CLOSEST_LIMIT),
+    closest: (combination) =>
+      ranked(combination)
+        .filter(({ toFit }) => toFit > 0)
+        .slice(0, CLOSEST_LIMIT)
+        .map((suggestion) => ({
+          suggestion,
+          toAdd: suggestion.needs
+            .filter(({ fills }) => !fills.some(({ source }) => isCooksOwn(source)))
+            .flatMap(({ slot, choices }) => {
+              const best = choices.find(({ ingredient }) => !combination.includes(ingredient));
+              if (!best) return [];
+              const pairsWith = best.pairsWith.filter((other) => combination.includes(other));
+              return [{ slot, ingredient: best.ingredient, pairsWith }];
+            }),
+        })),
 
     suggestion(formulaId, combination) {
       const found = formula(formulaId);

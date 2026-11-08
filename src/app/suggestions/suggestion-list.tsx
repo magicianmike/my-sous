@@ -112,7 +112,8 @@ export const SuggestionList = withSearchParams(
 );
 
 const or = new Intl.ListFormat("en", { type: "disjunction" });
-const COUNTS = ["no", "one", "two", "three"];
+/** How many parts to add, in words, as far as a dish can need. */
+const NUMBER_WORDS = ["no", "one", "two", "three", "four", "five", "six"];
 
 /** For a basket no dish fits yet: the closest dishes, the parts each needs, and what to add for each. */
 function NothingFits({ basket }: { basket: Ingredient[] }) {
@@ -122,44 +123,35 @@ function NothingFits({ basket }: { basket: Ingredient[] }) {
       <h2 id="nothing-fits-heading">No dish fits your basket yet</h2>
       <p className="muted">
         A dish fits once your basket covers at least half the parts it needs. These are closest.
+        {basket.length >= COMBINATION_LIMIT && " Your basket is full, so remove an Ingredient before you add one."}
       </p>
       <ul className="stack" aria-label="Closest dishes">
-        {kitchen.closest(basket).map(({ formula, toFit, needs }) => {
-          // The parts nothing from the basket is in yet, each with the best-pairing Ingredient to add.
-          const open = needs.filter(({ fills }) => !fills.some(({ source }) => isCooksOwn(source)));
-          return (
-            <li key={formula.id} className="closest">
-              <h3>
-                <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
-              </h3>
-              <p>
-                Add {COUNTS[toFit] ?? toFit} of these parts: {or.format(open.map(({ slot }) => slot.role))}.
-              </p>
-              <ul className="stack">
-                {open.flatMap(({ slot, choices }) => {
-                  const best = choices.find(({ ingredient }) => !basket.includes(ingredient));
-                  if (!best) return [];
-                  const { ingredient, pairsWith } = best;
-                  return [
-                    <li key={slot.id}>
-                      <ListRow
-                        mark={<IngredientMarkLink ingredient={ingredient} size="md" />}
-                        title={<IngredientLink ingredient={ingredient} />}
-                        action={<AddToCombination ingredientId={ingredient.id} />}
-                      >
-                        <p>
-                          For {slot.role}.
-                          {pairsWith.length > 0 &&
-                            ` Pairs with ${joinWithAnd(pairsWith.map(inSentence))}.`}
-                        </p>
-                      </ListRow>
-                    </li>,
-                  ];
-                })}
-              </ul>
-            </li>
-          );
-        })}
+        {kitchen.closest(basket).map(({ suggestion: { formula, toFit }, toAdd }) => (
+          <li key={formula.id} className="closest">
+            <h3>
+              <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
+            </h3>
+            <p>
+              Add {NUMBER_WORDS[toFit] ?? toFit} of these parts: {or.format(toAdd.map(({ slot }) => slot.role))}.
+            </p>
+            <ul className="stack">
+              {toAdd.map(({ slot, ingredient, pairsWith }) => (
+                <li key={slot.id}>
+                  <ListRow
+                    mark={<IngredientMarkLink ingredient={ingredient} size="md" />}
+                    title={<IngredientLink ingredient={ingredient} />}
+                    action={<AddToCombination ingredientId={ingredient.id} />}
+                  >
+                    <p>
+                      For {slot.role}.
+                      {pairsWith.length > 0 && ` Pairs with ${joinWithAnd(pairsWith.map(inSentence))}.`}
+                    </p>
+                  </ListRow>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
       </ul>
     </section>
   );

@@ -59,11 +59,11 @@ _Avoid_: Placeholder, component
 
 **Suggestion**:
 A Formula recommended for a Combination it fits, with its Slots filled and a stated reason for its rank. A Suggestion is **makeable** (shown as "Ready") when the Combination fills every required Slot.
+_Avoid_: Result, match, recommendation
 
 **Fit**:
 A Combination fits a Formula when its own Ingredients are in at least half of the Formula's required Slots. Only Formulas the Combination fits become Suggestions; when none does, the closest are offered with what to add.
 _Avoid_: Match, relevant
-_Avoid_: Result, match, recommendation
 
 **Recipe**:
 A Formula's quantities, timings and full method, shown on the dish's page. It's written for its own Ingredients (the recipe as written), which fill any part the Combination and its Pairings leave empty, and it follows every fill and change: each part's amount is given for particular Ingredients, with a general amount for the rest. A step whose safety depends on a part (poultry temperatures, say) shows the cited safety guidance of the Ingredient that fills it. The Cook sees it called a **recipe**.

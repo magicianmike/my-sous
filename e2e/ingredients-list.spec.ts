@@ -62,3 +62,33 @@ test("adding from the list to a full basket says why nothing was added", async (
   await expect(opener(page)).toHaveAccessibleName(/^Your basket 6 of 6/);
   await expect(add).toBeFocused();
 });
+
+const filter = (page: Page) => page.getByRole("searchbox", { name: "Find an ingredient" });
+
+test("typing in the Ingredients page's search narrows the list below it, with a count", async ({ page }) => {
+  await page.goto("/ingredients");
+  await filter(page).fill("ba");
+  const main = page.getByRole("main");
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+  await expect(main.getByRole("heading", { level: 2 })).toHaveText(["Herbs", "Condiments"]);
+  await expect(main.locator(".ingredient-links").getByRole("link")).toHaveText(["Basil", "Doubanjiang"]);
+  await expect(page.getByText("2 ingredients match.")).toBeVisible();
+});
+
+test("a name the Ingredients page doesn't have says so, and clearing shows every Ingredient", async ({ page }) => {
+  await page.goto("/ingredients");
+  await filter(page).fill("mango");
+  await expect(page.getByText("“mango” isn’t in MySous yet.")).toBeVisible();
+  await expect(page.locator(".ingredient-links")).toHaveCount(0);
+
+  await filter(page).fill("");
+  await expect(page.getByRole("main").getByRole("region", { name: "Herbs" })).toBeVisible();
+});
+
+test("Enter opens the one Ingredient that matches", async ({ page }) => {
+  await page.goto("/ingredients?with=garlic");
+  await filter(page).fill("basi");
+  await filter(page).press("Enter");
+  await expect(page).toHaveURL(/\/ingredients\/basil\?with=garlic$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Basil" })).toBeVisible();
+});

@@ -141,13 +141,13 @@ The result is single-line drawings on a shared 48-unit grid, each Ingredient in 
 
 <Chapter id="stack">
 
-**A static site, on purpose.** MySous is a Next.js 16 app exported as static files (`output: "export"`) and served by Vercel. There's no server, database, account or analytics. The product doesn't need one: the content is curated and changes with a commit, and the Cook's only state is the basket, which lives in the address. With nothing running, there's nothing to keep up, nothing to pay for per visit, and nothing to leak. Every pull request gets its own preview deploy.
+**A static site, on purpose.** MySous is a Next.js 16 app exported as static files (`output: "export"`) and served by Vercel. There's no server, database, account or analytics. The product doesn't need one: the content is curated and changes with a commit, and the Cook's only state is the basket, which lives in the address. With nothing running, there's nothing to keep up, nothing to pay for per visit, and nothing to leak. Vercel builds a preview of every pull request.
 
 - **React 19 and TypeScript,** in strict mode. The domain's words are its types: `Ingredient`, `Pairing`, `Formula`, `Slot`, `Suggestion`.
-- **Content as files.** Ingredients are Markdown with front matter, and Pairings, Cuisines and Formulas are YAML, all in the repo. A Pairing's reasons and sources are reviewed in a pull request like code. Zod schemas parse every file, so a malformed one fails the build with its file and what's wrong, not a blank page.
+- **Content as files.** Ingredients and Recipes are Markdown with front matter, each Ingredient has an SVG drawing, and Pairings, Cuisines and Formulas are YAML, all in the repo. A Pairing's reasons and sources are reviewed in a pull request like code. Zod schemas parse every Markdown and YAML file, so a malformed one fails the build with its file and what's wrong, not a blank page.
 - **MDX for this page,** so a live dish card can sit in the middle of a paragraph (ADR 0002).
 - **Images made before the build.** Each Ingredient's and dish's image is made once, while writing content, and committed. Before every build, sharp turns each into AVIF and WebP files at several widths. Nothing is generated while the app runs (ADR 0005).
-- **Design tokens in code.** Colours, type, spacing and motion live in one TypeScript file that writes the CSS custom properties for both themes. Stylesheets may use only tokens, and a test fails on any raw colour or length.
+- **Design tokens in code.** Colours, type, spacing and motion live in one TypeScript file that writes the CSS custom properties for both themes. Stylesheets may use only tokens, and a test fails on any raw colour, or any length in px or rem.
 - **Few dependencies in the browser.** Floating UI places tooltips. The rest is the platform: a native dialog for the basket sheet, radio inputs for segmented controls, and the address for state.
 
 **No runtime model.** A model would have made Suggestions read more fluently, and every sentence would have been a claim no one checked. The rank reasons and fill reasons are built from the curated graph, so each is as true as its source (ADR 0003).
@@ -156,11 +156,11 @@ The result is single-line drawings on a shared 48-unit grid, each Ingredient in 
 
 <Chapter id="kitchen">
 
-The pages never touch files, YAML or schemas. They ask one deep module, the Kitchen, questions: an Ingredient's Pairings, grouped by reason; a Cuisine's Ingredients, the ones it leans on first; the dishes a basket fits; what could be added to it; a dish's Recipe. The site is static and the Cook can build any basket, so the same Kitchen code that renders pages at build time is rebuilt in the browser from the validated content.
+The pages never touch files, YAML or schemas. They ask one deep module, the Kitchen, questions: an Ingredient's Pairings, grouped by reason; a Cuisine's Ingredients, the ones it leans on first; the dishes a basket fits; what could be added to it; a dish's Recipe. The site is static, and the Cook can build any basket. So the Kitchen that renders pages at build time is rebuilt in the browser, from the same validated content.
 
 <ContentDiagram />
 
-**One module answers every question.** The rules (what fills a part, why, what's still needed, which dishes a basket fits, how they rank) live in the Kitchen, never in the screens. Ranking is by how many parts a dish still needs, then how well the Ingredients the Cook chose pair, with a Cuisine bonus that breaks ties but never outweighs a real Pairing. When a review found a screen working out what to add to a near-miss dish itself, that logic moved into the Kitchen, and two bugs went with it.
+**One module answers every question.** The rules (what fills a part, why, what's still needed, which dishes a basket fits, how they rank) live in the Kitchen, never in the screens. Dishes rank by how many parts they still need, then by how well the Ingredients the Cook chose pair. A shared Cuisine breaks ties, but never outweighs a real Pairing. Once, a review found a screen working out for itself what to add to a dish. That logic moved into the Kitchen, and two bugs went with it.
 
 <FillDiagram />
 
@@ -186,9 +186,9 @@ if (!result.ok) throw new Error(result.errors.map(({ file, message }) => `${file
 
 <Chapter id="testing">
 
-**Tests first, at seams agreed first.** Before a feature's first test, I agree where the tests go: the public seams where behaviour shows, such as `loadKitchen` or a journey in the browser. Each test is written and seen failing before the code that passes it. When a test comes after its code, the journal says so.
+**Tests first, at seams agreed first.** Before a feature's first test, I agree where the tests go: the public seams where behaviour shows, such as `loadKitchen` or a journey in the browser. Each test is written and seen failing before the code that passes it. When a test comes after its code, or never fails because the behaviour was already there, the journal says so.
 
-**The Kitchen, through its front door.** Every Kitchen test goes through `loadKitchen` with a small fixture content folder written for that rule, so the internals can change without breaking tests. The same suite loads the real content, so a Pairing without a source, or a launch Cuisine short of a part, fails the build.
+**The Kitchen, through its front door.** Every Kitchen test goes through `loadKitchen` with a small fixture content folder written for that rule, so the internals can change without breaking tests. The same suite loads the real content. A Pairing without a source fails the build, and a launch Cuisine short of a part fails the tests.
 
 **The site that ships.** Browser tests run against the exact static export, never the dev server, at a phone's size and a desktop's. They cover each journey by mouse and keyboard, and run axe on every screen in both themes.
 
@@ -201,9 +201,9 @@ if (!result.ok) throw new Error(result.errors.map(({ file, message }) => `${file
 - no copy says "authentic", in content or in code;
 - nothing scrolls sideways from 320px wide, or at 200% zoom, and every control on a phone is a full touch target.
 
-Two examples of the checks changing the design: axe caught the basket bar's name running its words together as "Your Combination0 of 4", and a reflow test caught a tile sitting under the docked bar on a phone, which is why the bar now has a row of its own.
+Two examples of the checks changing the design: axe caught the basket bar's name running its words together as "Your Combination0 of 4", and, as the content grew, a tile sitting under the docked bar on a phone, which is why the bar now has a row of its own.
 
-**Every change, in CI.** GitHub Actions runs the type check, the unit tests, the build, which loads the real content, and the browser tests on every pull request. I merge only when it's green. Once, one browser test failed only there: on a phone, with reduced motion, it saw none of the Pairing rows begin their zero-length entrance. It passed on my Mac, in Linux in Docker with the same browser, and with the CPU slowed twelve times. Rather than retry until green, the test now checks what it means, that no row is swapped as the page goes live, by watching what leaves the page. Forcing the rows to be swapped made it fail with all 37 rows reported, so the check still bites.
+**Every change, in CI.** GitHub Actions runs the type check, the unit tests, the build, which loads the real content, and the browser tests on every pull request. I merge only when it's green. One browser test failed twice there and nowhere else. On a phone, with reduced motion, it saw none of the Pairing rows begin their entrance, which under reduced motion takes no time. It passed on my Mac, in Linux in Docker with the same browser, and with the CPU slowed twelve times. So rather than retry until green, I changed what the test watches. It now checks what it means: no row is swapped as the page goes live. Forcing the rows to be swapped made it fail with all 37 rows reported, so the check still bites.
 
 </Chapter>
 
@@ -222,9 +222,9 @@ I built MySous with Claude Code. I make the product, design and content decision
 
 **What the reviews caught.** A screen working out what to add to a dish, which belonged in the Kitchen; moving it fixed a "Pairs with" that named an Ingredient the basket didn't have. A search with no match that offered no next step. A sentence that carried two ideas, against the voice guide. A word, "fits", used in two senses.
 
-**Pushing back.** The loop works because Claude raises conflicts rather than resolving them quietly. When I asked for country flags on the Cuisines page, it pointed out that flags undo the regional naming, and offered the drawings that shipped. When a test failed only in CI, it reproduced the run in Docker before asking whether to change the test.
+**Pushing back.** The loop works because Claude raises conflicts rather than resolving them quietly. When I asked for country flags on the Cuisines page, it pointed out that flags undo the regional naming, and offered the drawings that shipped. When a test failed only in CI, it re-ran it in Docker before asking whether to change the test.
 
-**Research with sources.** Pairing and cultural research ran as background research agents, reading primary sources: cooks and writers from each tradition, culinary institutions, official food-safety bodies. They could cite only pages they had fetched. Their notes are kept in the repo, and I check what goes into the content.
+**Research with sources.** Pairing and cultural research ran as background research agents, reading primary sources: cooks and writers from each tradition, culinary institutions, official food-safety bodies. They cited only pages they had fetched. Their notes are kept in the repo, and I check what goes into the content.
 
 **What stays mine.** Choosing between options, approving the copy, running each VoiceOver pass on an iPhone and a Mac, cooking each Recipe, and reviewing each generated image before the build will accept it.
 

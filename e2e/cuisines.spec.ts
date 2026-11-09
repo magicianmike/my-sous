@@ -49,3 +49,30 @@ test("an Ingredient's Cuisines lead to their pages", async ({ page }) => {
   await page.getByRole("list", { name: "Common in" }).getByRole("link", { name: "Southern Italian" }).click();
   await expect(page).toHaveURL(/\/cuisines\/southern-italian$/);
 });
+
+test("each Cuisine's row shows the drawings of the Ingredients it leans on, and how many it has", async ({ page }) => {
+  await page.goto("/cuisines");
+  const sichuan = page.getByRole("main").getByRole("listitem").filter({ has: page.getByRole("heading", { name: "Sichuan" }) });
+  await expect(sichuan.getByRole("img")).toHaveAccessibleName(
+    "Sichuan pepper, Black vinegar, Doubanjiang, Chicken breast and Dried chile",
+  );
+  await expect(sichuan.locator(".ingredient-mark")).toHaveCount(5);
+  await expect(sichuan).toContainText("19 common ingredients");
+  await sichuan.getByRole("link", { name: "Sichuan" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Sichuan" })).toBeVisible();
+});
+
+test("a Cuisine with fewer than five Ingredients shows them all", async ({ page }) => {
+  await page.goto("/cuisines");
+  const ligurian = page.getByRole("main").getByRole("listitem").filter({ has: page.getByRole("heading", { name: "Ligurian" }) });
+  await expect(ligurian.locator(".ingredient-mark")).toHaveCount(3);
+  await expect(ligurian).toContainText("3 common ingredients");
+});
+
+test("on a narrow screen, a Cuisine's drawings sit under its words", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto("/cuisines");
+  const sichuan = page.getByRole("main").getByRole("listitem").filter({ has: page.getByRole("heading", { name: "Sichuan" }) });
+  const [words, marks] = await Promise.all([sichuan.locator("div").first().boundingBox(), sichuan.getByRole("img").boundingBox()]);
+  expect(marks!.y).toBeGreaterThan(words!.y + words!.height - 1);
+});

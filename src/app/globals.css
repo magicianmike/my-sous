@@ -1542,6 +1542,25 @@ body:has(.case-study) .site-header {
   }
 }
 
+/* A link off the site keeps the fine underline of a link in a sentence, in a list item too. */
+.new-tab-link {
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-hairline);
+  text-decoration-color: var(--ink-muted);
+}
+
+.new-tab-link:hover {
+  text-decoration-color: currentColor;
+}
+
+/* After a link that opens in a new tab, a small box and arrow the size of its text. */
+.new-tab-icon {
+  width: 0.8em;
+  height: 0.8em;
+  margin-inline-start: 0.2em;
+  vertical-align: -0.05em;
+}
+
 /* Motion: only on first paint, or on the thing that changed. Durations are 0ms under reduced motion. */
 
 /* The Case Study's chapter links glide to their chapter, wherever the page scrolls; under reduced motion they jump. */

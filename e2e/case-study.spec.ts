@@ -270,3 +270,19 @@ test("each diagram fits its column, stacked on a phone, so none scrolls sideways
     expect(height > width).toBe(!!isMobile);
   }
 });
+
+test("links to the code on GitHub, the ADRs among them, open in a new tab and say so", async ({ page }) => {
+  await page.goto("/case-study");
+  const adr = page.getByRole("link", { name: "ADR 0004 (opens in a new tab)" }).first();
+  await expect(adr).toHaveAttribute("href", "https://github.com/magicianmike/my-sous/blob/main/docs/adr/0004-no-pantry.md");
+  await expect(adr).toHaveAttribute("target", "_blank");
+  const repo = page.getByRole("link", { name: "magicianmike/my-sous (opens in a new tab)" });
+  await expect(repo).toHaveAttribute("href", "https://github.com/magicianmike/my-sous");
+  // Every link off the site does the same.
+  for (const link of await page.locator("#case-study-content a[href^='http']").all()) {
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", /noopener/);
+    // A new-tab icon follows the words, hidden from screen readers, which hear the words instead.
+    await expect(link.locator("svg.new-tab-icon")).toHaveAttribute("aria-hidden", "true");
+  }
+});

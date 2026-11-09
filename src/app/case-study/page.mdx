@@ -44,6 +44,8 @@ export const metadata = {
 
 MySous launches with 62 Ingredients, 309 Pairings, 6 dishes, each with a Recipe, and 8 regional Cuisines.
 
+The code is public on GitHub, at [magicianmike/my-sous](https://github.com/magicianmike/my-sous), with every decision record, the [decision journal](https://github.com/magicianmike/my-sous/tree/main/docs/journal) and every ticket.
+
 </Chapter>
 
 <Chapter id="one-basket">
@@ -83,7 +85,7 @@ Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows the di
 
 **The basket stays at hand.** At every width it's a bar at the foot of the screen that opens as a sheet, so the page keeps its full width. On a phone the bar has a row of its own, so it never covers the control you're on. Ingredients go in from where the Cook is: an Ingredient's page, any Pairing, the Ingredients list, or what pairs with the basket.
 
-If a "you can cook this tonight" answer is missed later, the lightest step back is an "I have this" mark on basket Ingredients that lasts the visit, not a stored inventory (ADR 0004).
+If a "you can cook this tonight" answer is missed later, the lightest step back is an "I have this" mark on basket Ingredients that lasts the visit, not a stored inventory ([ADR 0004](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0004-no-pantry.md)).
 
 </Chapter>
 
@@ -117,7 +119,7 @@ If a "you can cook this tonight" answer is missed later, the lightest step back 
 
 The same rule shaped the Cuisines page. I first wanted a flag for each Cuisine. But Levantine spans four countries, one of them contested, and Punjab two, while Sichuan and Cantonese would both show China's flag. Each Cuisine shows the drawings of the Ingredients it leans on instead.
 
-**Sourced, by rule.** Every Pairing cites at least one source with a link, gathered by reading cooks and writers from each tradition, culinary institutions and official bodies: Japan's agriculture ministry, the Larousse dictionary of Mexican gastronomy, Regione Campania. Nothing comes from pairing books, which ADR 0001 rules out on copyright grounds, or from flavour-compound data, whose central claim held for Western cuisines and reversed in East Asian ones. Each Launch Cuisine has to offer three Ingredients for every part a dish can ask for, or record, with a source, that it seldom uses that kind of Ingredient. Six such exceptions remain, such as soft herbs in Sichuan cooking.
+**Sourced, by rule.** Every Pairing cites at least one source with a link, gathered by reading cooks and writers from each tradition, culinary institutions and official bodies: Japan's agriculture ministry, the Larousse dictionary of Mexican gastronomy, Regione Campania. Nothing comes from pairing books, which [ADR 0001](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0001-hand-curated-pairing-graph.md) rules out on copyright grounds, or from flavour-compound data, whose central claim held for Western cuisines and reversed in East Asian ones. Each Launch Cuisine has to offer three Ingredients for every part a dish can ask for, or record, with a source, that it seldom uses that kind of Ingredient. Six such exceptions remain, such as soft herbs in Sichuan cooking.
 
 Writing to that standard changed the content. Claims no source supported were cut, two Pairing Reasons that said more than any source were rewritten, and gremolata lost its only Pairing until I could source new ones. [The Kitchen](#kitchen) covers how the build holds the content to these rules.
 
@@ -145,12 +147,12 @@ The result is single-line drawings on a shared 48-unit grid, each Ingredient in 
 
 - **React 19 and TypeScript,** in strict mode. The domain's words are its types: `Ingredient`, `Pairing`, `Formula`, `Slot`, `Suggestion`.
 - **Content as files.** Ingredients and Recipes are Markdown with front matter, each Ingredient has an SVG drawing, and Pairings, Cuisines and Formulas are YAML, all in the repo. A Pairing's reasons and sources are reviewed in a pull request like code. Zod schemas parse every Markdown and YAML file, so a malformed one fails the build with its file and what's wrong, not a blank page.
-- **MDX for this page,** so a live dish card can sit in the middle of a paragraph (ADR 0002).
-- **Images made before the build.** Each Ingredient's and dish's image is made once, while writing content, and committed. Before every build, sharp turns each into AVIF and WebP files at several widths. Nothing is generated while the app runs (ADR 0005).
+- **MDX for this page,** so a live dish card can sit in the middle of a paragraph ([ADR 0002](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0002-case-study-in-app-codebase.md)).
+- **Images made before the build.** Each Ingredient's and dish's image is made once, while writing content, and committed. Before every build, sharp turns each into AVIF and WebP files at several widths. Nothing is generated while the app runs ([ADR 0005](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0005-ai-generated-imagery-at-authoring-time.md)).
 - **Design tokens in code.** Colours, type, spacing and motion live in one TypeScript file that writes the CSS custom properties for both themes. Stylesheets may use only tokens, and a test fails on any raw colour, or any length in px or rem.
 - **Few dependencies in the browser.** Floating UI places tooltips. The rest is the platform: a native dialog for the basket sheet, radio inputs for segmented controls, and the address for state.
 
-**No runtime model.** A model would have made Suggestions read more fluently, and every sentence would have been a claim no one checked. The rank reasons and fill reasons are built from the curated graph, so each is as true as its source (ADR 0003).
+**No runtime model.** A model would have made Suggestions read more fluently, and every sentence would have been a claim no one checked. The rank reasons and fill reasons are built from the curated graph, so each is as true as its source ([ADR 0003](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0003-no-llm-in-mvp.md)).
 
 </Chapter>
 
@@ -209,15 +211,15 @@ Two examples of the checks changing the design: axe caught the basket bar's name
 
 <Chapter id="building-with-claude">
 
-I built MySous with Claude Code. I make the product, design and content decisions; Claude writes the code and its tests, through a fixed loop of skills. The product itself has no model in it (ADR 0003).
+I built MySous with Claude Code. I make the product, design and content decisions; Claude writes the code and its tests, through a fixed loop of skills. The product itself has no model in it ([ADR 0003](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0003-no-llm-in-mvp.md)).
 
 **The loop.** Every change goes the same way:
 
-1. **Spec and ticket.** A change starts as a GitHub issue under the product spec, written in the glossary's words. A domain-modeling skill keeps `GLOSSARY.md` and the ADRs current as terms and decisions settle.
+1. **Spec and ticket.** A change starts as a GitHub issue under the product spec, written in the glossary's words. A domain-modeling skill keeps the [glossary](https://github.com/magicianmike/my-sous/blob/main/GLOSSARY.md) and the [ADRs](https://github.com/magicianmike/my-sous/tree/main/docs/adr) current as terms and decisions settle.
 2. **Decisions, as options.** Where a choice is mine, Claude asks with two to four options and a recommendation, and I pick. The journal records which choices were mine and which were defaults.
 3. **Seams, then tests.** We agree where the tests go before any are written. Then each test is written, seen failing, and passed.
 4. **Two reviews, apart.** Two agents review the change in parallel: one against the repo's written standards and a list of code smells, one against the spec. They report separately, so code that's tidy but wrong, or right but messy, can't hide behind the other.
-5. **A journal entry,** with before and after screenshots, what was decided, what the reviews found and what was kept.
+5. **A journal entry,** with before and after screenshots, what was decided, what the reviews found and what was kept. The [journal](https://github.com/magicianmike/my-sous/tree/main/docs/journal) and the [tickets](https://github.com/magicianmike/my-sous/issues?q=is%3Aissue) are public.
 6. **Ship on my word.** Nothing is pushed, opened as a pull request or merged until I say so.
 
 **What the reviews caught.** A screen working out what to add to a dish, which belonged in the Kitchen; moving it fixed a "Pairs with" that named an Ingredient the basket didn't have. A search with no match that offered no next step. A sentence that carried two ideas, against the voice guide. A word, "fits", used in two senses.
@@ -269,9 +271,9 @@ I built MySous with Claude Code. I make the product, design and content decision
 
 **Product and engineering.**
 
-- **A compound-based pairing dataset.** Large and free, but its central claim is contested and doesn't hold across cuisines (ADR 0001).
-- **An LLM in the MVP.** No blank chat box, no API keys or cost, and no generated culinary claim that can be wrong (ADR 0003).
-- **A Pantry.** Built and cut, as above (ADR 0004).
+- **A compound-based pairing dataset.** Large and free, but its central claim is contested and doesn't hold across cuisines ([ADR 0001](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0001-hand-curated-pairing-graph.md)).
+- **An LLM in the MVP.** No blank chat box, no API keys or cost, and no generated culinary claim that can be wrong ([ADR 0003](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0003-no-llm-in-mvp.md)).
+- **A Pantry.** Built and cut, as above ([ADR 0004](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0004-no-pantry.md)).
 - **A "Not everything pairs" box with fix buttons.** Built, then cut: each Suggestion's rank reason already says what doesn't pair, and the Cook doesn't need a separate task to resolve it.
 - **A client-side store for the basket.** It would break Back and Forward, shared links and this page's deep links.
 - **Prerendering every Suggestion.** With dozens of Ingredients and up to six in a basket, there are millions of baskets.
@@ -280,7 +282,7 @@ I built MySous with Claude Code. I make the product, design and content decision
 
 **What's next.**
 
-- **Rescue.** Guided help when something goes wrong mid-cook: a split sauce, too much salt, a missing ingredient. It's where an LLM might earn a place, because describing a problem in free text is valuable there. Following ADR 0003, it would come with constrained outputs drawn from the same curated graph, and a deterministic fallback that works with no model at all.
+- **Rescue.** Guided help when something goes wrong mid-cook: a split sauce, too much salt, a missing ingredient. It's where an LLM might earn a place, because describing a problem in free text is valuable there. Following [ADR 0003](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0003-no-llm-in-mvp.md), it would come with constrained outputs drawn from the same curated graph, and a deterministic fallback that works with no model at all.
 - **Content toward 100 Ingredients,** in sourced batches, with images generated and reviewed to the style guide, and each Recipe cooked before it ships.
 - **Shareable dishes,** by putting a dish's changes in its address as well as its basket.
 

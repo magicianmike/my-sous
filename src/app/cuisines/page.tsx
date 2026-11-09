@@ -25,11 +25,6 @@ export default async function CuisinesPage() {
           const glimpse = mostPaired.slice(0, GLIMPSE);
           return (
             <li key={id}>
-              <span className="cuisine-marks" role="img" aria-label={joinWithAnd(glimpse.map(({ name }) => name))}>
-                {glimpse.map((ingredient) => (
-                  <IngredientMark key={ingredient.id} ingredient={ingredient} size="sm" />
-                ))}
-              </span>
               <div>
                 <h2>
                   <CombinationLink href={`/cuisines/${id}`}>{name}</CombinationLink>
@@ -39,6 +34,11 @@ export default async function CuisinesPage() {
                   {ingredients.length} {ingredients.length === 1 ? "ingredient" : "ingredients"}
                 </p>
               </div>
+              <span className="cuisine-marks" role="img" aria-label={joinWithAnd(glimpse.map(({ name }) => name))}>
+                {glimpse.map((ingredient) => (
+                  <IngredientMark key={ingredient.id} ingredient={ingredient} size="sm" />
+                ))}
+              </span>
             </li>
           );
         })}

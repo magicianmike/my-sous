@@ -26,8 +26,8 @@ for (const reduced of [false, true]) {
       );
       expect(behaviours).toEqual(reduced ? ["auto", "auto"] : ["smooth", "smooth"]);
 
-      await page.getByRole("navigation", { name: "Chapters" }).getByRole("link", { name: "Architecture" }).click();
-      await expect(page.getByRole("heading", { level: 2, name: "Architecture" })).toBeInViewport();
+      await page.getByRole("navigation", { name: "Chapters" }).getByRole("link", { name: "The module" }).click();
+      await expect(page.getByRole("heading", { level: 2, name: "The module" })).toBeInViewport();
     });
 
     test("the Ingredient's drawing draws itself in", async ({ page }) => {

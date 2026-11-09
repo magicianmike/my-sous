@@ -115,7 +115,7 @@ test("the chapter navigation lists every chapter, in the order they're written",
   const written = await page.locator("#case-study-content .chapter > h2").allTextContents();
 
   expect(listed).toEqual(written);
-  expect(written).toEqual(expect.arrayContaining(["Architecture", "What I rejected", "Honest about culture"]));
+  expect(written).toEqual(expect.arrayContaining(["The module", "Testing approach", "Building with Claude", "Honest about culture"]));
 });
 
 test("every architecture diagram is an image with a name and a description in words", async ({ page }) => {
@@ -179,8 +179,8 @@ const chapters = (page: Page) => page.getByRole("navigation", { name: "Chapters"
 
 test("the title stays at the top while reading, without covering a chapter's heading", async ({ page }) => {
   await page.goto("/case-study");
-  await chapters(page).getByRole("link", { name: "Architecture" }).click();
-  const heading = page.getByRole("heading", { level: 2, name: "Architecture" });
+  await chapters(page).getByRole("link", { name: "The module" }).click();
+  const heading = page.getByRole("heading", { level: 2, name: "The module" });
   await expect(heading).toBeInViewport();
 
   const title = page.getByRole("heading", { level: 1, name: "How MySous was made: a Case Study" });
@@ -221,7 +221,7 @@ test("the chapter list marks the chapter being read, and only that one", async (
   const current = chapters(page).locator('a[aria-current="location"]');
   await expect(current).toHaveText("In 60 seconds");
 
-  for (const title of ["Architecture", "Honest about culture", "What’s next"]) {
+  for (const title of ["The module", "Honest about culture", "What I rejected, and what’s next"]) {
     await chapters(page).getByRole("link", { name: title, exact: true }).click();
     await expect(current).toHaveCount(1);
     await expect(current).toHaveText(title);
@@ -231,8 +231,8 @@ test("the chapter list marks the chapter being read, and only that one", async (
 test("Back to MySous stays in the window's top-left corner, clear of the title", async ({ page }) => {
   await page.goto("/case-study");
   const back = page.getByRole("link", { name: "Back to MySous" });
-  await chapters(page).getByRole("link", { name: "Architecture" }).click();
-  await expect(page.getByRole("heading", { level: 2, name: "Architecture" })).toBeInViewport();
+  await chapters(page).getByRole("link", { name: "The module" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "The module" })).toBeInViewport();
   await expect(back).toBeVisible();
   const corner = (await back.boundingBox())!;
   expect(corner.x).toBeLessThan(24);
@@ -269,4 +269,32 @@ test("each diagram fits its column, stacked on a phone, so none scrolls sideways
     const { width, height } = (await svg.boundingBox())!;
     expect(height > width).toBe(!!isMobile);
   }
+});
+
+test("links to the code on GitHub, the ADRs among them, open in a new tab and say so", async ({ page }) => {
+  await page.goto("/case-study");
+  const adr = page.getByRole("link", { name: "ADR 0004 (opens in a new tab)" }).first();
+  await expect(adr).toHaveAttribute("href", "https://github.com/magicianmike/my-sous/blob/main/docs/adr/0004-no-pantry.md");
+  await expect(adr).toHaveAttribute("target", "_blank");
+  const repo = page.getByRole("link", { name: "magicianmike/my-sous (opens in a new tab)" });
+  await expect(repo).toHaveAttribute("href", "https://github.com/magicianmike/my-sous");
+  // Every link off the site does the same.
+  for (const link of await page.locator("#case-study-content a[href^='http']").all()) {
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", /noopener/);
+    // A new-tab icon follows the words, hidden from screen readers, which hear the words instead.
+    await expect(link.locator("svg.new-tab-icon")).toHaveAttribute("aria-hidden", "true");
+  }
+});
+
+test("a link to the code sits beside the title, on the first screen and while reading", async ({ page }) => {
+  await page.goto("/case-study");
+  const code = page.locator(".case-study-title").getByRole("link", { name: "View the code on GitHub (opens in a new tab)" });
+  await expect(code).toHaveAttribute("href", "https://github.com/magicianmike/my-sous");
+  await expect(code).toHaveAttribute("target", "_blank");
+  await expect(code).toBeInViewport();
+
+  await chapters(page).getByRole("link", { name: "Testing approach" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "Testing approach" })).toBeInViewport();
+  await expect(code).toBeInViewport();
 });

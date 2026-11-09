@@ -42,9 +42,14 @@ test.describe("touch targets on a phone", () => {
           const { width, height } = el.getBoundingClientRect();
           if (visible(el) && (under(width, 44) || under(height, 44))) failures.push(`${describe(el)} ${width}×${height}`);
         }
-        // Links in running text are exempt (WCAG 2.5.8); standalone links aren't.
+        // Links in running text are exempt (WCAG 2.5.8): in a paragraph, or in a list item that's a sentence
+        // around them. Standalone links, such as a list item that's only a link, aren't.
+        const inSentence = (el: Element) => {
+          const item = el.closest("li");
+          return !!el.closest("p") || (!!item && item.textContent!.trim() !== el.textContent!.trim());
+        };
         for (const el of document.querySelectorAll("a")) {
-          if (el.closest("p, li > p")) continue;
+          if (inSentence(el)) continue;
           const { width, height } = el.getBoundingClientRect();
           if (visible(el) && (under(width, 24) || under(height, 44))) failures.push(`${describe(el)} ${width}×${height}`);
         }

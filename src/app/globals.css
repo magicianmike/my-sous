@@ -1301,6 +1301,13 @@ button:hover .plus-icon {
   font-size: var(--text-title);
 }
 
+/* On the button to the code, the new-tab sign is the size of the button's text, beside its code sign. */
+.case-study-title .new-tab-icon {
+  width: 1em;
+  height: 1em;
+  margin-inline-start: 0;
+}
+
 /* The Case Study keeps a top row for the corner links, which on a narrow screen sit on the title's band. */
 body:has(.case-study) .site-header {
   min-height: var(--case-study-top-row);

@@ -5,7 +5,7 @@ export const CHAPTERS = [
   { id: "defaults", title: "Defaults that explain themselves" },
   { id: "honest-about-culture", title: "Honest about culture" },
   { id: "look-and-feel", title: "Look and feel" },
-  { id: "stack", title: "The stack" },
+  { id: "stack", title: "The tech stack" },
   { id: "kitchen", title: "The Kitchen" },
   { id: "testing", title: "Testing" },
   { id: "building-with-claude", title: "Building with Claude" },

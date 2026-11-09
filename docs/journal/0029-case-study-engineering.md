@@ -8,9 +8,10 @@ The author chose each of these from options.
 
 - **The outline.**
   - Product and design: One basket ("One room" and the product half of "State you can link to"), Defaults that explain themselves ("Defaults, not forms" and "Interaction design"), Honest about culture, and Look and feel ("Visual direction" and the design half of "Accessible by construction").
-  - Engineering: The stack, The Kitchen ("Architecture", with URL state and content validation), Testing, and Building with Claude.
+  - Engineering: The tech stack, The Kitchen ("Architecture", with URL state and content validation), Testing, and Building with Claude.
   - "What I rejected" and "What's next" became one chapter.
 - **How "Building with Claude" frames the work:** the author directs and Claude builds, through a fixed loop of skills, with examples from the journal.
+- **A prominent way to the code.** An outlined "View the code on GitHub" button sits beside the title, which stays at the top while reading, so a reader scanning the page finds it at once.
 - **Links to the code.** Every ADR reference links to it on GitHub, and the summary links the repo, the journal and the tickets, so a reader can check the code. Links off the site open in a new tab, with an icon after the words and "(opens in a new tab)" for screen readers.
 
 Defaults, not asked:
@@ -34,7 +35,8 @@ It also found overclaims: "reproduced" for a run that didn't fail; that every te
 
 - **Playwright:**
   - the chapter tests follow the new chapters;
-  - links off the site, the ADRs among them, open in a new tab, say so, and carry the icon. Seen failing first.
+  - links off the site, the ADRs among them, open in a new tab, say so, and carry the icon. Seen failing first;
+  - the button to the code sits beside the title on the first screen, and stays in view while reading. Seen failing first.
 - The touch-target check on a phone now exempts a link in a list item that's a sentence around it, as it did a link in a paragraph (WCAG 2.5.8). A list item that's only a link is still held to the full size.
 - Totals: Vitest 217 passed. Playwright 565 passed, on phone and desktop.
 

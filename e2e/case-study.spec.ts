@@ -286,3 +286,15 @@ test("links to the code on GitHub, the ADRs among them, open in a new tab and sa
     await expect(link.locator("svg.new-tab-icon")).toHaveAttribute("aria-hidden", "true");
   }
 });
+
+test("a link to the code sits beside the title, on the first screen and while reading", async ({ page }) => {
+  await page.goto("/case-study");
+  const code = page.locator(".case-study-title").getByRole("link", { name: "View the code on GitHub (opens in a new tab)" });
+  await expect(code).toHaveAttribute("href", "https://github.com/magicianmike/my-sous");
+  await expect(code).toHaveAttribute("target", "_blank");
+  await expect(code).toBeInViewport();
+
+  await chapters(page).getByRole("link", { name: "Testing" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "Testing" })).toBeInViewport();
+  await expect(code).toBeInViewport();
+});

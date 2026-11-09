@@ -1289,7 +1289,8 @@ button:hover .plus-icon {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0 var(--space-4);
+  /* Room above the way to the code, where it wraps under the title. */
+  gap: var(--space-3) var(--space-4);
   padding-block: var(--space-5);
   border-bottom: var(--border-hairline) solid var(--line);
   background: var(--bg);

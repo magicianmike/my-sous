@@ -62,3 +62,46 @@ test("adding from the list to a full basket says why nothing was added", async (
   await expect(opener(page)).toHaveAccessibleName(/^Your basket 6 of 6/);
   await expect(add).toBeFocused();
 });
+
+const filter = (page: Page) => page.getByRole("searchbox", { name: "Find an ingredient" });
+
+test("typing in the Ingredients page's search narrows the list below it, with a count", async ({ page }) => {
+  await page.goto("/ingredients");
+  await filter(page).fill("ba");
+  const main = page.getByRole("main");
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+  await expect(main.getByRole("heading", { level: 2 })).toHaveText(["Herbs", "Condiments"]);
+  await expect(main.locator(".ingredient-links").getByRole("link")).toHaveText(["Basil", "Doubanjiang"]);
+  await expect(page.getByText("2 ingredients match.")).toBeVisible();
+});
+
+test("a name the Ingredients page doesn't have says so, and clearing shows every Ingredient", async ({ page }) => {
+  await page.goto("/ingredients");
+  await filter(page).fill("mango");
+  await expect(page.getByText("“mango” isn’t in MySous yet.")).toBeVisible();
+  await expect(page.getByText("Try another spelling, or clear the search to see every ingredient.")).toBeVisible();
+  await expect(page.locator(".ingredient-links")).toHaveCount(0);
+
+  await filter(page).fill("");
+  await expect(page.getByRole("main").getByRole("region", { name: "Herbs" })).toBeVisible();
+});
+
+test("Enter opens the one Ingredient that matches", async ({ page }) => {
+  await page.goto("/ingredients?with=garlic");
+  await filter(page).fill("basi");
+  await filter(page).press("Enter");
+  await expect(page).toHaveURL(/\/ingredients\/basil\?with=garlic$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Basil" })).toBeVisible();
+});
+
+test("an Ingredient in the basket has a solid border on the list", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/ingredients?with=basil");
+  const link = (name: string) => pill(page, name).getByRole("link");
+  // The ink colour, in the light theme.
+  await expect(link("Basil")).toHaveCSS("border-color", "rgb(31, 38, 32)");
+  await expect(link("Mint")).toHaveCSS("border-color", "rgba(0, 0, 0, 0)");
+  // Every pill keeps the border's room, so nothing moves when one is added.
+  const [basil, mint] = await Promise.all([link("Basil").boundingBox(), link("Mint").boundingBox()]);
+  expect(basil!.height).toBe(mint!.height);
+});

@@ -54,8 +54,12 @@ Kept as they are:
 
 ## VoiceOver pass
 
-**Status: to do.** Check that each pill reads as a link then a button ("Add Basil to your basket"), the announcement after a press, and that focus stays on the button as it becomes Remove.
+**Status: passed.** The author ran this pass on 2026-11-08, and everything sounded correct. It covered that each pill reads as a link then a button ("Add Basil to your basket"), the announcement after a press, and that focus stays on the button as it becomes Remove.
 
 ## Waiting for the author
 
 - The lede's new sentence.
+
+## Later
+
+- **An Ingredient in the basket has a solid border in ink on the list** (light ink in dark), asked for by the author. Every pill keeps a clear border of the same width, so nothing moves when one is added. Its button, now Remove, says the same to a screen reader. Tested red first.

@@ -55,9 +55,11 @@ Kept as they are:
 
 ## VoiceOver pass
 
-**Status: to do.** Check each row's heading and link, the cluster read as one image with its Ingredients' names, and the count.
+**Status: passed.** The author ran this pass on 2026-11-09, and everything sounded correct. It covered each row's heading and link, the cluster read as one image with its Ingredients' names, and the count.
 
-## Waiting for the author
+## The author's answers
 
-- Whether chicken thigh is common in Cantonese cooking. If so, it needs a source.
-- The count's wording, "19 common ingredients".
+Settled on 2026-11-09:
+
+- **The count's wording**, "19 common ingredients", is approved.
+- **Chicken thigh stays out of Cantonese.** The author asked to leave it out unless a source is ready to cite. The only Cantonese source in its Pairings, The Woks of Life's Cantonese poached chicken, uses a whole chicken and names the thigh only as where to test doneness. So it isn't marked common in Cantonese cooking, and the page is unchanged.

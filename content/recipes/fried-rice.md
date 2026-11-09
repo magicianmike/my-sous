@@ -5,10 +5,15 @@ serves: 2
 time: { prep: 15, cook: 15 }
 image:
   file: fried-rice.png
-  alt: A placeholder, the drawings of rice, pork, ginger and scallion in a row.
+  alt: Pork fried rice with scrambled egg and sliced scallions in a wok.
   provenance:
-    made: placeholder
-    date: "2026-11-06"
+    made: ai-generated
+    model: GPT-6 (OpenAI)
+    prompt: "A natural, editorial food photograph of pork fried rice for two in a plain carbon-steel wok, seen from about 45 degrees: long-grain rice with separate grains evenly tinted light brown by soy sauce, small browned cubes of pork, soft pieces of scrambled egg and flecks of minced ginger, scattered with thinly sliced scallions. No peas, carrots or other vegetables, on a matte stone surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, slightly imperfect, home-cooked. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it, the top corners left clear. Match the light, surface, colour and style of the two attached reference images, but don't copy their subjects."
+    date: "2026-11-09"
+    review:
+      date: "2026-11-09"
+      matches: true
 fills:
   rice: rice
   protein: pork

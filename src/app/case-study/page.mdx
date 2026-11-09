@@ -28,20 +28,25 @@ export const metadata = {
 
 **The hero interaction.** The Cook puts up to six Ingredients in a basket. MySous suggests the dishes they fit, those the basket covers at least half of, fills each part it can, and says in one line why each part holds what it does, or why it's still open. Any part can be changed, and every change can be undone.
 
-**The key decisions.**
+**The product and design decisions.**
 
 - A hand-curated graph of Ingredient Pairings, each with a plain-language reason and a cited source, and no LLM: every claim can be checked.
 - One way in and one concept to learn, the basket. I built a Pantry, used it, and cut it.
-- The basket lives in the address, so any basket can be linked to, including from this page.
 - Regional Cuisines, never "authentic", with a voice guide the build enforces.
 - Accessible by construction: WCAG 2.2 AA in both themes, checked on every change.
-- The Case Study lives inside the app, so its dish cards are the app's real components in fixed states, not screenshots.
+
+**The engineering decisions.**
+
+- A static site with no server, no database and no accounts. The basket lives in the address, so any basket can be linked to, including from this page.
+- One deep module, the Kitchen, answers every question the screens ask, and refuses content that breaks a rule.
+- Tests written first, at seams agreed before the code, and run against the exact site that ships.
+- Built with Claude Code through a fixed loop of skills: I make the calls, Claude writes the code, and nothing ships until I say so.
 
 MySous launches with 62 Ingredients, 309 Pairings, 6 dishes, each with a Recipe, and 8 regional Cuisines.
 
 </Chapter>
 
-<Chapter id="one-room">
+<Chapter id="one-basket">
 
 The spec began with two doors: "Start from an ingredient" and "Start from what you have", where what you have was a Pantry kept on the device. I built the Pantry in full, with its tests, and used the preview. Then I cut it.
 
@@ -58,9 +63,7 @@ The spec began with two doors: "Start from an ingredient" and "Start from what y
 />
 </div>
 
-**The UX decision: one concept, help before chores.** The basket and the Pantry were both "ingredients I care about", told apart only by intent. Every screen had to explain both, and "Ready" meant two things depending on whether the Pantry was empty. The Pantry also asked for work before it paid anything back: entering what you own, then keeping it current. A stale Pantry makes "Ready" wrong, which is worse than not claiming to know. Without it there's one thing to learn, and MySous stays focused on its purpose: what goes with what, and why. The Cook at the open fridge puts what's in front of them in the basket.
-
-**The engineering decision: nothing stored in the browser.** The Pantry was the only thing MySous stored. It brought every hard edge case with it: storage that's blocked or full, a first render that can't know its contents, other tabs changing it, and one device only. Without it, every screen's basket lives in its address, which made the next decision complete.
+**One concept, help before chores.** The basket and the Pantry were both "ingredients I care about", told apart only by intent. Every screen had to explain both, and "Ready" meant two things depending on whether the Pantry was empty. The Pantry also asked for work before it paid anything back: entering what you own, then keeping it current. A stale Pantry makes "Ready" wrong, which is worse than not claiming to know. Without it there's one thing to learn. The Cook at the open fridge puts what's in front of them in the basket.
 
 <LiveSuggestion
   basket={["chicken-thigh", "garlic", "lemon"]}
@@ -68,17 +71,7 @@ The spec began with two doors: "Start from an ingredient" and "Start from what y
   caption="Ready now means one thing: the basket fills every part the dish needs."
 />
 
-If a "you can cook this tonight" answer is missed later, the lightest step back is an "I have this" mark on basket Ingredients that lasts the visit, not a stored inventory (ADR 0004).
-
-</Chapter>
-
-<Chapter id="state-you-can-link-to">
-
-**The UX decision: any state is a link.** Back and Forward step through basket changes, a shared link reopens the same basket, and this page can open the app in exactly the state it describes.
-
-**The engineering decision: the address is the source of truth.** The basket lives in the address, as `?with=chicken-thigh,basil,ginger`, and nowhere else. There's no client-side store. Every link between screens carries it, and a Cuisine filter sits beside it (`&cuisine=levantine`) for the same reasons. The one thing MySous keeps in the browser is the theme you choose, a display preference rather than app state.
-
-<UrlDiagram />
+**Any state is a link.** Back and Forward step through basket changes, a shared link reopens the same basket, and this page can open the app in exactly the state it describes. How that works is in [The Kitchen](#kitchen).
 
 <LiveSuggestion
   basket={notPaired}
@@ -86,13 +79,17 @@ If a "you can cook this tonight" answer is missed later, the lightest step back 
   caption="A basket where not everything pairs: basil has no Pairing with chicken thigh or ginger, and the card says so."
 />
 
-Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows the dishes it fits, each saying what pairs and what doesn't. A dish's own changes stay on that screen for now, with their own undo; putting them in the address too is the obvious next step for sharing a dish exactly as changed.
+Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows the dishes it fits, each saying what pairs and what doesn't.
+
+**The basket stays at hand.** At every width it's a bar at the foot of the screen that opens as a sheet, so the page keeps its full width. On a phone the bar has a row of its own, so it never covers the control you're on. Ingredients go in from where the Cook is: an Ingredient's page, any Pairing, the Ingredients list, or what pairs with the basket.
+
+If a "you can cook this tonight" answer is missed later, the lightest step back is an "I have this" mark on basket Ingredients that lasts the visit, not a stored inventory (ADR 0004).
 
 </Chapter>
 
-<Chapter id="defaults-not-forms">
+<Chapter id="defaults">
 
-**The UX decision: a dish arrives filled in, and says why.** A dish is never a blank form. MySous fills each part from the basket first, then with the Ingredient that pairs best with the rest, then from the dish's Recipe, then from Pairings again, since the Recipe's Ingredients can give other parts a Pairing. Every fill carries one line saying why it's there. A part no Pairing can justify stays open and says so, rather than being filled with something that merely fits. The Cook changes what they'd rather change, sees the method follow, and can undo it.
+**A dish arrives filled in, and says why.** A dish is never a blank form. MySous fills each part from the basket first, then with the Ingredient that pairs best with the rest, then from the dish's Recipe, then from Pairings again, since the Recipe's Ingredients can give other parts a Pairing. Every fill carries one line saying why it's there. A part no Pairing can justify stays open and says so, rather than being filled with something that merely fits. The Cook changes what they'd rather change, sees the method follow, and can undo it.
 
 <LiveSuggestion
   basket={["chicken-thigh", "garlic"]}
@@ -100,15 +97,17 @@ Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows the di
   caption="Two Ingredients in the basket; MySous suggests lemon for the acid, and says why."
 />
 
-**The engineering decision: one deep module answers every question.** The rules (what fills a part, why, what's still needed, how dishes rank) live in one module, the Kitchen, never in the screens. Ranking is by whether the basket fills the dish, then how few parts it still needs, then how well the Ingredients the Cook chose pair, with a Cuisine bonus that breaks ties but never outweighs a real Pairing. Each Suggestion says why it ranked where it did in a sentence, never a score, because a number explains nothing about why.
-
-<FillDiagram />
+- **Words before colour.** A Suggestion leads with "Ready" or "Needs 1 more", and a line says what it needs and what would fill it: "Also needs an acid (lemon pairs best)." The badge's colour echoes the words but never stands in for them.
+- **A reason, never a score.** Each Suggestion says why it ranked where it did in a sentence, naming each Pairing once: "Ginger pairs with chicken thigh, garlic and soy sauce, and garlic with chicken thigh and basil." A number explains nothing about why.
+- **On screen, the Cook's words.** The glossary's Combination, Formula and Slot read "basket", "dish" and "part" on screen. I chose "basket" from fifteen candidates. Code and content keep the domain terms.
+- **Change anything, undo the last change.** Each part has Options: a checklist of what could go there, ranked against the rest of the dish. Only the latest change offers Undo, so it sits beside what changed, and focus moves to it.
+- **Never a dead end.** MySous suggests only the dishes a basket fits. When none fits yet, it names the closest and what to add to each, and the basket offers what pairs with it, one tap to add. Search says when an Ingredient isn't in MySous yet, and how to find another.
 
 </Chapter>
 
 <Chapter id="honest-about-culture">
 
-**The UX decision: regional, hedged and sourced.** A Cuisine is named at the level people cook in: Sichuan, Oaxacan, Levantine, Punjabi, never "Asian" or "Mediterranean". Copy says "common in", never "authentic", hedges what varies by household ("many cooks", "usually"), and states food safety plainly. Where agencies differ, the stricter figure comes first: pork is 160°F / 71°C, with the FDA's 145°F / 63°C and a rest given too.
+**Regional, hedged and sourced.** A Cuisine is named at the level people cook in: Sichuan, Oaxacan, Levantine, Punjabi, never "Asian" or "Mediterranean". Copy says "common in", never "authentic", hedges what varies by household ("many cooks", "usually"), and states food safety plainly. Where agencies differ, the stricter figure comes first: pork is 160°F / 71°C, with the FDA's 145°F / 63°C and a rest given too.
 
 <LiveSuggestion
   basket={["lamb", "mint", "pomegranate-molasses"]}
@@ -116,13 +115,15 @@ Opening <AppLink basket={notPaired}>this basket in MySous</AppLink> shows the di
   caption="The rank reason names the Cuisines a Pairing is common in, at regional level."
 />
 
-**The engineering decision: the build enforces it.** Every Pairing cites at least one source with a link, gathered by reading cooks and writers from each tradition, culinary institutions and official bodies: Japan's agriculture ministry, the Larousse dictionary of Mexican gastronomy, Regione Campania. Nothing comes from pairing books, which ADR 0001 rules out on copyright grounds, or from flavour-compound data, whose central claim held for Western cuisines and reversed in East Asian ones. The build fails on a Pairing without a linked source, a Cuisine named at continental level, and the voice guide's banned words: "easy", "easily", "simply", "just" and "authentic". Each Launch Cuisine has to offer three Ingredients for every part a dish can ask for, or record, with a source, that it seldom uses that kind of Ingredient. Six such exceptions remain, such as soft herbs in Sichuan cooking.
+The same rule shaped the Cuisines page. I first wanted a flag for each Cuisine. But Levantine spans four countries, one of them contested, and Punjab two, while Sichuan and Cantonese would both show China's flag. Each Cuisine shows the drawings of the Ingredients it leans on instead.
 
-Writing to that standard changed the content. Claims no source supported were cut, two Pairing Reasons that said more than any source were rewritten, and gremolata lost its only Pairing until I could source new ones.
+**Sourced, by rule.** Every Pairing cites at least one source with a link, gathered by reading cooks and writers from each tradition, culinary institutions and official bodies: Japan's agriculture ministry, the Larousse dictionary of Mexican gastronomy, Regione Campania. Nothing comes from pairing books, which ADR 0001 rules out on copyright grounds, or from flavour-compound data, whose central claim held for Western cuisines and reversed in East Asian ones. Each Launch Cuisine has to offer three Ingredients for every part a dish can ask for, or record, with a source, that it seldom uses that kind of Ingredient. Six such exceptions remain, such as soft herbs in Sichuan cooking.
+
+Writing to that standard changed the content. Claims no source supported were cut, two Pairing Reasons that said more than any source were rewritten, and gremolata lost its only Pairing until I could source new ones. [The Kitchen](#kitchen) covers how the build holds the content to these rules.
 
 </Chapter>
 
-<Chapter id="visual-direction">
+<Chapter id="look-and-feel">
 
 I settled the look by rendering the real Ingredient page in three prototype rounds, in light and dark at phone and desktop widths, and choosing from what I saw rather than from descriptions. Every variant also ran an in-page WCAG contrast audit, so none could win on looks alone.
 
@@ -132,70 +133,100 @@ I settled the look by rendering the real Ingredient page in three prototype roun
   caption="The final direction: botanical line drawings, each Ingredient in its own colour, a soft serif for headings."
 />
 
-The result is single-line drawings on a shared 48-unit grid, each Ingredient in its own colour pair for light and dark, a neutral interface so colour always identifies an Ingredient and never a state, Fraunces at its softest for headings ("the serif lends credibility and gives it an editorial authority") and rounded Nunito for everything else. Motion happens only on first paint or on the thing that changed, and none of it under reduced motion. The rejected variants are in [What I rejected](#rejected).
+The result is single-line drawings on a shared 48-unit grid, each Ingredient in its own colour pair for light and dark, a neutral interface so colour always identifies an Ingredient and never a state, Fraunces at its softest for headings ("the serif lends credibility and gives it an editorial authority") and rounded Nunito for everything else. Controls stay quiet so the Ingredients carry the colour: Add is the one solid button, and the rest are outlined. Motion happens only on first paint or on the thing that changed, and none of it under reduced motion. The rejected variants are in [What I rejected](#rejected).
+
+**Accessible by construction.** Every component is built to WCAG 2.2 AA in light and dark. Nothing is said by colour alone, every change the Cook makes is announced, and focus moves where it should after every action that moves it. Touch targets are 44px on a phone, and nothing scrolls sideways from 320px wide, or at 200% zoom. I check each screen by hand with VoiceOver on an iPhone and a Mac, this Case Study included. [Testing](#testing) covers the checks that run on every change.
 
 </Chapter>
 
-<Chapter id="interaction-design">
+<Chapter id="stack">
 
-- **Words before colour.** A Suggestion leads with "Ready" or "Needs 1 more", and a line says what it needs and what would fill it: "Also needs an acid (lemon pairs best)." The badge's colour echoes the words but never stands in for them.
-- **On screen, the Cook's words.** The glossary's Combination, Formula and Slot read "basket", "dish" and "part" on screen. I chose "basket" from fifteen candidates. Code and content keep the domain terms.
-- **Change anything, undo the last change.** Each part has Options: a checklist of what could go there, ranked against the rest of the dish. Only the latest change offers Undo, so it sits beside what changed, and focus moves to it.
-- **Never a dead end.** MySous suggests only the dishes a basket fits. When none fits yet, it names the closest and what to add to each, and the basket offers what pairs with it, one tap to add. Search says when an Ingredient isn't in MySous yet, and how to find another.
-- **The basket stays at hand.** At every width it's a bar at the foot of the screen that opens as a sheet, so the page keeps its full width. On a phone the bar has a row of its own, so it never covers the control you're on.
+**A static site, on purpose.** MySous is a Next.js 16 app exported as static files (`output: "export"`) and served by Vercel. There's no server, database, account or analytics. The product doesn't need one: the content is curated and changes with a commit, and the Cook's only state is the basket, which lives in the address. With nothing running, there's nothing to keep up, nothing to pay for per visit, and nothing to leak. Every pull request gets its own preview deploy.
 
-</Chapter>
+- **React 19 and TypeScript,** in strict mode. The domain's words are its types: `Ingredient`, `Pairing`, `Formula`, `Slot`, `Suggestion`.
+- **Content as files.** Ingredients are Markdown with front matter, and Pairings, Cuisines and Formulas are YAML, all in the repo. A Pairing's reasons and sources are reviewed in a pull request like code. Zod schemas parse every file, so a malformed one fails the build with its file and what's wrong, not a blank page.
+- **MDX for this page,** so a live dish card can sit in the middle of a paragraph (ADR 0002).
+- **Images made before the build.** Each Ingredient's and dish's image is made once, while writing content, and committed. Before every build, sharp turns each into AVIF and WebP files at several widths. Nothing is generated while the app runs (ADR 0005).
+- **Design tokens in code.** Colours, type, spacing and motion live in one TypeScript file that writes the CSS custom properties for both themes. Stylesheets may use only tokens, and a test fails on any raw colour or length.
+- **Few dependencies in the browser.** Floating UI places tooltips. The rest is the platform: a native dialog for the basket sheet, radio inputs for segmented controls, and the address for state.
 
-<Chapter id="accessible-by-construction">
-
-Every component is built to WCAG 2.2 AA in light and dark. These checks run on every change, against the static site that ships:
-
-- axe on every screen, in both themes, at phone and desktop widths;
-- no sideways scrolling from 320px to wide desktop, and at 200% zoom;
-- 44px touch targets on a phone;
-- one focus ring, checked on every focusable element;
-- focus that moves where it should after every action that moves it;
-- contrast as data: every text pairing in both themes, and every Ingredient's colours against its own wash.
-
-Nothing is said by colour alone, and every change the Cook makes is announced. I also check each screen by hand with VoiceOver on an iPhone and a Mac, this Case Study included.
-
-Two examples of the checks changing the design: axe caught the basket bar's name running its words together as "Your Combination0 of 4", and, as the content grew, a tile sitting under the docked bar on a phone, which is why the bar now has a row of its own.
+**No runtime model.** A model would have made Suggestions read more fluently, and every sentence would have been a claim no one checked. The rank reasons and fill reasons are built from the curated graph, so each is as true as its source (ADR 0003).
 
 </Chapter>
 
-<Chapter id="architecture">
+<Chapter id="kitchen">
 
-### The Kitchen
-
-The pages never touch files, YAML or schemas. They ask one deep module, the Kitchen, questions: an Ingredient's Pairings, grouped by reason; a Cuisine's Ingredients; the Suggestions for a basket; a dish's Recipe for what's in it. The site is a static export with no server, and the Cook can build any basket, so the same Kitchen code that renders pages at build time is rebuilt in the browser from the validated content.
+The pages never touch files, YAML or schemas. They ask one deep module, the Kitchen, questions: an Ingredient's Pairings, grouped by reason; a Cuisine's Ingredients, the ones it leans on first; the dishes a basket fits; what could be added to it; a dish's Recipe. The site is static and the Cook can build any basket, so the same Kitchen code that renders pages at build time is rebuilt in the browser from the validated content.
 
 <ContentDiagram />
 
-### Content validation
+**One module answers every question.** The rules (what fills a part, why, what's still needed, which dishes a basket fits, how they rank) live in the Kitchen, never in the screens. Ranking is by how many parts a dish still needs, then how well the Ingredients the Cook chose pair, with a Cuisine bonus that breaks ties but never outweighs a real Pairing. When a review found a screen working out what to add to a near-miss dish itself, that logic moved into the Kitchen, and two bugs went with it.
 
-`loadKitchen` returns a Kitchen or a list of errors, never a half-loaded Kitchen. It collects every problem before failing, so an author fixes a batch of content in one pass. It checks that:
+<FillDiagram />
+
+**Content that can't half-load.** `loadKitchen` returns a Kitchen or a list of errors, never a half-loaded Kitchen. It collects every problem before failing, so an author fixes a batch of content in one pass. It checks that:
 
 - every reference resolves, with no duplicates and no Ingredient paired with itself;
 - every part of every dish can be filled;
 - each Recipe fills its dish and gives every part an amount;
 - every Ingredient that could fill a safety-sensitive step carries cited guidance for it;
 - images carry alt text, provenance and a review;
-- the voice, sourcing and Cuisine rules above hold.
+- every Pairing has a linked source, every Cuisine is named regionally, and no copy uses the voice guide's banned words: "easy", "easily", "simply", "just" and "authentic".
 
 ```ts
 const result = await loadKitchen("content");
 if (!result.ok) throw new Error(result.errors.map(({ file, message }) => `${file}: ${message}`).join("\n"));
 ```
 
-### URL state
+**The address is the source of truth.** The basket lives in the address, as `?with=chicken-thigh,basil,ginger`, and nowhere else. There's no client-side store. Every link between screens carries it, and a Cuisine filter sits beside it (`&cuisine=levantine`) for the same reasons. The one thing MySous keeps in the browser is the theme you choose, a display preference rather than app state. Live embeds like the cards on this page read a fixed basket instead, through a small provider, so the same component renders from a given basket or from the address.
 
-The basket is read from the address on every screen and carried by every link, as the diagram in [State you can link to](#state-you-can-link-to) shows. Live embeds like the cards on this page read a fixed basket instead, through a small provider, so the same component renders from a given basket or from the address.
+<UrlDiagram />
 
-### Testing
+</Chapter>
 
-Every Kitchen test goes through `loadKitchen` with a small fixture content folder, so the internals can change without breaking tests. Browser tests run against the exact static export that ships, never the dev server.
+<Chapter id="testing">
+
+**Tests first, at seams agreed first.** Before a feature's first test, I agree where the tests go: the public seams where behaviour shows, such as `loadKitchen` or a journey in the browser. Each test is written and seen failing before the code that passes it. When a test comes after its code, the journal says so.
+
+**The Kitchen, through its front door.** Every Kitchen test goes through `loadKitchen` with a small fixture content folder written for that rule, so the internals can change without breaking tests. The same suite loads the real content, so a Pairing without a source, or a launch Cuisine short of a part, fails the build.
+
+**The site that ships.** Browser tests run against the exact static export, never the dev server, at a phone's size and a desktop's. They cover each journey by mouse and keyboard, and run axe on every screen in both themes.
 
 <TestingDiagram />
+
+**Rules as tests.** Some rules are cheaper to enforce than to remember:
+
+- every text colour pairing is checked for contrast in both themes, and so is every Ingredient's drawing against its own wash;
+- stylesheets use only tokens;
+- no copy says "authentic", in content or in code;
+- nothing scrolls sideways from 320px wide, or at 200% zoom, and every control on a phone is a full touch target.
+
+Two examples of the checks changing the design: axe caught the basket bar's name running its words together as "Your Combination0 of 4", and a reflow test caught a tile sitting under the docked bar on a phone, which is why the bar now has a row of its own.
+
+**Every change, in CI.** GitHub Actions runs the type check, the unit tests, the build, which loads the real content, and the browser tests on every pull request. I merge only when it's green. Once, one browser test failed only there: on a phone, with reduced motion, it saw none of the Pairing rows begin their zero-length entrance. It passed on my Mac, in Linux in Docker with the same browser, and with the CPU slowed twelve times. Rather than retry until green, the test now checks what it means, that no row is swapped as the page goes live, by watching what leaves the page. Forcing the rows to be swapped made it fail with all 37 rows reported, so the check still bites.
+
+</Chapter>
+
+<Chapter id="building-with-claude">
+
+I built MySous with Claude Code. I make the product, design and content decisions; Claude writes the code and its tests, through a fixed loop of skills. The product itself has no model in it (ADR 0003).
+
+**The loop.** Every change goes the same way:
+
+1. **Spec and ticket.** A change starts as a GitHub issue under the product spec, written in the glossary's words. A domain-modeling skill keeps `GLOSSARY.md` and the ADRs current as terms and decisions settle.
+2. **Decisions, as options.** Where a choice is mine, Claude asks with two to four options and a recommendation, and I pick. The journal records which choices were mine and which were defaults.
+3. **Seams, then tests.** We agree where the tests go before any are written. Then each test is written, seen failing, and passed, as in [Testing](#testing).
+4. **Two reviews, apart.** Two agents review the change in parallel: one against the repo's written standards and a list of code smells, one against the spec. They report separately, so code that's tidy but wrong, or right but messy, can't hide behind the other.
+5. **A journal entry,** with before and after screenshots, what was decided, what the reviews found and what was kept.
+6. **Ship on my word.** Nothing is pushed, opened as a pull request or merged until I say so.
+
+**What the reviews caught.** A screen working out what to add to a dish, which belonged in the Kitchen; moving it fixed a "Pairs with" that named an Ingredient the basket didn't have. A search with no match that offered no next step. A sentence that carried two ideas, against the voice guide. A word, "fits", used in two senses.
+
+**Pushing back.** The loop works because Claude raises conflicts rather than resolving them quietly. When I asked for country flags on the Cuisines page, it pointed out that flags undo the regional naming, and offered the drawings that shipped. When a test failed only in CI, it reproduced the run in Docker before asking whether to change the test.
+
+**Research with sources.** Pairing and cultural research ran as background research agents, reading primary sources: cooks and writers from each tradition, culinary institutions, official food-safety bodies. They could cite only pages they had fetched. Their notes are kept in the repo, and I check what goes into the content.
+
+**What stays mine.** Choosing between options, approving the copy, running each VoiceOver pass on an iPhone and a Mac, cooking each Recipe, and reviewing each generated image before the build will accept it.
 
 </Chapter>
 
@@ -245,15 +276,12 @@ Every Kitchen test goes through `loadKitchen` with a small fixture content folde
 - **A client-side store for the basket.** It would break Back and Forward, shared links and this page's deep links.
 - **Prerendering every Suggestion.** With dozens of Ingredients and up to six in a basket, there are millions of baskets.
 - **A disabled Add button at the limit.** A disabled button can't take focus or explain itself; Add stays active and says why nothing was added.
+- **A side panel for the basket on wide screens.** It took a column from every page; the bar at the foot works at every width.
 
-</Chapter>
+**What's next.**
 
-<Chapter id="whats-next">
-
-**Rescue.** Guided help when something goes wrong mid-cook: a split sauce, too much salt, a missing ingredient. It's where an LLM might earn a place, because describing a problem in free text is valuable there. Following ADR 0003, it would come with constrained outputs drawn from the same curated graph, and a deterministic fallback that works with no model at all.
-
-**Content toward 100 Ingredients,** in sourced batches, with images generated and reviewed to the style guide, and each Recipe cooked before it ships.
-
-**Shareable dishes,** by putting a dish's changes in its address as well as its basket.
+- **Rescue.** Guided help when something goes wrong mid-cook: a split sauce, too much salt, a missing ingredient. It's where an LLM might earn a place, because describing a problem in free text is valuable there. Following ADR 0003, it would come with constrained outputs drawn from the same curated graph, and a deterministic fallback that works with no model at all.
+- **Content toward 100 Ingredients,** in sourced batches, with images generated and reviewed to the style guide, and each Recipe cooked before it ships.
+- **Shareable dishes,** by putting a dish's changes in its address as well as its basket.
 
 </Chapter>

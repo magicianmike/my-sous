@@ -73,7 +73,7 @@ The spec began with two doors: "Start from an ingredient" and "Start from what y
   caption="Ready now means one thing: the basket fills every part the dish needs."
 />
 
-**Any state is a link.** Back and Forward step through basket changes, a shared link reopens the same basket, and this page can open the app in exactly the state it describes. How that works is in [The Module](#kitchen).
+**Any state is a link.** Back and Forward step through basket changes, a shared link reopens the same basket, and this page can open the app in exactly the state it describes. How that works is in [The module](#kitchen).
 
 <LiveSuggestion
   basket={notPaired}
@@ -121,7 +121,7 @@ The same rule shaped the Cuisines page. I first wanted a flag for each Cuisine. 
 
 **Sourced, by rule.** Every Pairing cites at least one source with a link, gathered by reading cooks and writers from each tradition, culinary institutions and official bodies: Japan's agriculture ministry, the Larousse dictionary of Mexican gastronomy, Regione Campania. Nothing comes from pairing books, which [ADR 0001](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0001-hand-curated-pairing-graph.md) rules out on copyright grounds, or from flavour-compound data, whose central claim held for Western cuisines and reversed in East Asian ones. Each Launch Cuisine has to offer three Ingredients for every part a dish can ask for, or record, with a source, that it seldom uses that kind of Ingredient. Six such exceptions remain, such as soft herbs in Sichuan cooking.
 
-Writing to that standard changed the content. Claims no source supported were cut, two Pairing Reasons that said more than any source were rewritten, and gremolata lost its only Pairing until I could source new ones. [The Module](#kitchen) covers how the build holds the content to these rules.
+Writing to that standard changed the content. Claims no source supported were cut, two Pairing Reasons that said more than any source were rewritten, and gremolata lost its only Pairing until I could source new ones. [The module](#kitchen) covers how the build holds the content to these rules.
 
 </Chapter>
 
@@ -160,7 +160,7 @@ The result is single-line drawings on a shared 48-unit grid, each Ingredient in 
 
 **Tests first, at seams agreed first.** Before a feature's first test, I agree where the tests go: the public seams where behaviour shows, such as `loadKitchen` or a journey in the browser. Each test is written and seen failing before the code that passes it. When a test comes after its code, or never fails because the behaviour was already there, the journal says so.
 
-**The Kitchen, through its front door.** The Kitchen is the module that holds every rule, described in [The Module](#kitchen). Every Kitchen test goes through `loadKitchen` with a small fixture content folder written for that rule, so the internals can change without breaking tests. The same suite loads the real content. A Pairing without a source fails the build, and a launch Cuisine short of a part fails the tests.
+**The Kitchen, through its front door.** The Kitchen is the module that holds every rule, described in [The module](#kitchen). Every Kitchen test goes through `loadKitchen` with a small fixture content folder written for that rule, so the internals can change without breaking tests. The same suite loads the real content. A Pairing without a source fails the build, and a launch Cuisine short of a part fails the tests.
 
 **The site that ships.** Browser tests run against the exact static export, never the dev server, at a phone's size and a desktop's. They cover each journey by mouse and keyboard, and run axe on every screen in both themes.
 

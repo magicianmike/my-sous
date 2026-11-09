@@ -173,7 +173,7 @@ describe("Images", () => {
 
     it("when an image is too small", async () => {
       expect(await expectErrors(await content(lemonImage, await small()))).toEqual([
-        "Ingredient lemon's image is 800×600; it needs at least 1024 pixels on its shorter side.",
+        "Ingredient lemon's image is 800×600; it needs at least 768 pixels on its shorter side.",
       ]);
     });
 
@@ -193,8 +193,8 @@ describe("Images", () => {
       });
 
       expect(await expectErrors(dir)).toEqual([
-        "Formula dressing's image is 800×600; it needs at least 1024 pixels on its shorter side.",
-        "Recipe dressing's image is 800×600; it needs at least 1024 pixels on its shorter side.",
+        "Formula dressing's image is 800×600; it needs at least 768 pixels on its shorter side.",
+        "Recipe dressing's image is 800×600; it needs at least 768 pixels on its shorter side.",
       ]);
     });
   });

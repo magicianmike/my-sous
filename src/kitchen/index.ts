@@ -38,7 +38,7 @@ type RawContent = Omit<KitchenContent, "ingredients" | "recipes"> & {
  * What an image must be to ship: big enough for the widest place it shows at twice the pixel density,
  * and light enough to process. The build makes the smaller files the Cook downloads.
  */
-export const IMAGE_BUDGET = { minShortSide: 1024, maxMegabytes: 5 };
+export const IMAGE_BUDGET = { minShortSide: 768, maxMegabytes: 5 };
 
 const SHAPE =
   /^<(path|circle|ellipse|line|polyline|rect)(\s+(d|cx|cy|r|rx|ry|x|y|x1|y1|x2|y2|width|height|points)="[-0-9.,\sa-zA-Z]*")*\s*\/>$/;

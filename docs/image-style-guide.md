@@ -24,7 +24,9 @@ How MySous's images look and how they're made, so they read as one set and stay 
 
 Start from this, then add the subject and anything the Recipe specifies:
 
-> A natural, editorial food photograph of {subject}, on a matte {linen | stone | worn wood} surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, slightly imperfect, home-cooked. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it.
+> A natural, editorial food photograph of {subject}, on a matte {linen | stone | worn wood} surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, {condition}. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it, the top corners left clear.
+
+{condition} is "slightly imperfect, home-cooked" for a dish. For an Ingredient, it's "fresh and in prime condition: unblemished, unbruised and at its best, as if just bought from a good market"; "imperfect" on an Ingredient comes out as blemished fruit.
 
 For a dish, {subject} is the Recipe as written, in plain words: "chicken thighs in a glossy lemon and garlic pan sauce, scattered with torn basil, two portions, in a plain steel skillet".
 
@@ -48,7 +50,7 @@ image:
 
 - **Alt text** describes what the image shows, for a Cook who can't see it, in a sentence. It doesn't start with "Image of". Where an image only repeats its heading (a Suggestion card), the page hides it from screen readers itself.
 - **Review.** Record it only after checking the image against this guide and against what it's for. For a Recipe, that means against the cooked dish. If it doesn't match, set `matches: false` and regenerate it; the build refuses it until then.
-- **Size budget.** At least 1024 pixels on the shorter side, and under 5 MB. The build makes the files the Cook downloads (AVIF and WebP, 480 to 1600 pixels wide) with `npm run images`, which runs before `npm run build` and `npm run dev`.
+- **Size budget.** At least 768 pixels on the shorter side (a free model's 1K output at 3:2 is about 1248×832), and under 5 MB. The build makes the files the Cook downloads (AVIF and WebP, 480 to 1600 pixels wide) with `npm run images`, which runs before `npm run build` and `npm run dev`.
 
 ## Placeholders
 

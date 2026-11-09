@@ -5,7 +5,7 @@ description: The image loop for #64, replacing placeholders with reviewed AI-gen
 
 # Next image prompt
 
-The author generates each image by hand in Google AI Studio; you hand them the prompt, then take the image back in. Each image is one sub-issue of #64, and its body holds the **prompt**, the reference images to attach, and the alt text. The rules are ADR 0005 and `docs/image-style-guide.md`.
+The author generates each image by hand with a free Gemini image model; you hand them the prompt, then take the image back in. Each image is one sub-issue of #64, and its body holds the **prompt**, the reference images to attach, and the alt text. The rules are ADR 0005 and `docs/image-style-guide.md`.
 
 All work happens on the `real-images` branch. Switch to it first; create it from `main` if it's missing.
 
@@ -30,7 +30,7 @@ Done when the user has a prompt they can paste unedited.
 
 The image belongs to the last prompt you gave. If you gave none this session, it belongs to the frontier; confirm that with the user before going on.
 
-1. **Measure** it: `sips -g pixelWidth -g pixelHeight -g format <file>` and its size on disk. It needs at least 1024 px on its shorter side and must be under 5 MB. If it fails, give the numbers and say how to fix it (in AI Studio, 2K resolution at 3:2), and stop.
+1. **Measure** it: `sips -g pixelWidth -g pixelHeight -g format <file>` and its size on disk. It needs at least 768 px on its shorter side and must be under 5 MB. If it fails, give the numbers and say how to fix it (ask for 3:2 at the model's largest size), and stop.
 2. **Look** at it with the Read tool, and check it against the style guide's look and its "Never show" list. For a Recipe, also check it against the Recipe as written: every filled Slot and fixed line, the garnish, the portion and the doneness, and nothing the Recipe doesn't list. List what you see as concerns, or say you see none.
 3. **Ask** the user whether it matches. The review is theirs (ADR 0005): your concerns inform it, and their answer decides it.
 
@@ -45,7 +45,7 @@ The image belongs to the last prompt you gave. If you gave none this session, it
      alt: <the issue's alt text, adjusted if the image shows something different>
      provenance:
        made: ai-generated
-       model: Nano Banana Pro (gemini-3-pro-image-preview), Google AI Studio, 3:2 at 2K
+       model: <the model and version, and where it ran, copied from the last image committed on this branch, or asked of the user for the first>
        prompt: <the prompt as sent, plus "Then: <follow-up>" for each edit asked of the model>
        date: "<today>"
        review:

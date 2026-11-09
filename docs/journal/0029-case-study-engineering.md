@@ -47,3 +47,7 @@ It also found overclaims: "reproduced" for a run that didn't fail; that every te
 ## Waiting for the author
 
 - The new chapters' copy.
+
+## Also in this change
+
+- **The README, aligned with the Case Study,** briefer and more technical, as the author asked: what MySous is, links to the live site, the Case Study and the spec, then the stack, architecture with a repo map, commands, testing, the content format, and how it's built. Its old opening, which promised cooking science and help when things go wrong (Rescue, out of scope), is gone.

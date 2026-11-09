@@ -526,15 +526,16 @@ button:hover .plus-icon {
   font-size: var(--text-lg);
 }
 
-/* Each Cuisine a row of its own, set apart by a hairline, with the drawings of what it leans on at its end. */
+/*
+ * Each Cuisine a row of its own, set apart by a hairline, with the drawings of what it leans on: under its
+ * words on a narrow screen, and at the row's end once there's room beside them.
+ */
 .cuisine-list {
   margin: 0;
 }
 
 .cuisine-list > li {
   display: grid;
-  /* The drawings' column, at the end, fits five, as the page shows at most, so every cluster ends at the same place. */
-  grid-template-columns: minmax(0, 1fr) calc(var(--mark-sm) * 5 - var(--space-3) * 4);
   gap: var(--space-2) var(--space-4);
   align-items: start;
   padding-block: var(--space-4);
@@ -548,8 +549,6 @@ button:hover .plus-icon {
 /* The drawings overlap a little, as a cluster, each ringed in the page's colour so they read apart. */
 .cuisine-marks {
   display: flex;
-  justify-content: flex-end;
-  padding-top: var(--space-2);
 }
 
 .cuisine-marks > * + * {
@@ -557,10 +556,22 @@ button:hover .plus-icon {
   box-shadow: 0 0 0 var(--border-control) var(--bg);
 }
 
-.cuisine-count {
+.cuisine-list .cuisine-count {
   margin-top: var(--space-1);
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
+}
+
+@media (min-width: 30rem) {
+  /* The drawings' column fits as many as the page shows at most, so every cluster ends at the same place. */
+  .cuisine-list > li {
+    grid-template-columns: minmax(0, 1fr) calc(var(--mark-sm) * var(--glimpse) - var(--space-3) * (var(--glimpse) - 1));
+  }
+
+  .cuisine-marks {
+    justify-content: flex-end;
+    padding-top: var(--space-2);
+  }
 }
 
 .cuisine-list h2 {

@@ -19,7 +19,7 @@ export default async function CuisinesPage() {
     <>
       <h1>Cuisines</h1>
       <p className="lede">What&rsquo;s common in a cooking tradition, and what pairs in it.</p>
-      <ul className="cuisine-list">
+      <ul className="cuisine-list" style={{ "--glimpse": GLIMPSE } as React.CSSProperties}>
         {kitchen.cuisines().map(({ id, name, description }) => {
           const { ingredients, mostPaired } = kitchen.cuisine(id)!;
           const glimpse = mostPaired.slice(0, GLIMPSE);
@@ -31,9 +31,10 @@ export default async function CuisinesPage() {
                 </h2>
                 <p className="muted">{description}</p>
                 <p className="cuisine-count">
-                  {ingredients.length} {ingredients.length === 1 ? "ingredient" : "ingredients"}
+                  {ingredients.length} common {ingredients.length === 1 ? "ingredient" : "ingredients"}
                 </p>
               </div>
+              {/* No name sits beside these drawings, so the cluster is one image named by its Ingredients. */}
               <span className="cuisine-marks" role="img" aria-label={joinWithAnd(glimpse.map(({ name }) => name))}>
                 {glimpse.map((ingredient) => (
                   <IngredientMark key={ingredient.id} ingredient={ingredient} size="sm" />

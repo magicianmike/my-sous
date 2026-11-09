@@ -30,17 +30,17 @@ test.describe("an Ingredient's page", () => {
   test("shows its image above its drawing, with alt text and a note saying what it is", async ({ page }) => {
     await page.goto("/ingredients/lemon");
     const hero = page.getByRole("region", { name: "Lemon" });
-    const image = hero.getByRole("img", { name: "A placeholder, the drawing of a lemon on its pale yellow." });
+    const image = hero.getByRole("img", { name: "Two whole lemons and a halved one, cut side up, on a linen cloth." });
 
     await expect(image).toBeVisible();
-    await expect(hero.getByText("Placeholder image", { exact: true })).toBeVisible();
+    await expect(hero.getByText("AI-generated image", { exact: true })).toBeVisible();
     // The drawing stays the Ingredient's mark.
     await expect(hero.locator(".hero-mark svg")).toBeVisible();
     // On the first screen, so it isn't left to load lazily.
     await expect(image).not.toHaveAttribute("loading", "lazy");
     expect(await sources(image)).toEqual({
-      avif: "/images/lemon-480.avif 480w, /images/lemon-800.avif 800w, /images/lemon-1200.avif 1200w, /images/lemon-1600.avif 1600w",
-      webp: "/images/lemon-480.webp 480w, /images/lemon-800.webp 800w, /images/lemon-1200.webp 1200w, /images/lemon-1600.webp 1600w",
+      avif: "/images/lemon-480.avif 480w, /images/lemon-800.avif 800w, /images/lemon-1200.avif 1200w, /images/lemon-1536.avif 1536w",
+      webp: "/images/lemon-480.webp 480w, /images/lemon-800.webp 800w, /images/lemon-1200.webp 1200w, /images/lemon-1536.webp 1536w",
       src: "/images/lemon-800.webp",
     });
   });
@@ -79,12 +79,12 @@ test.describe("a dish's page", () => {
     await page.goto("/formulas/pan-sauce?with=chicken-thigh,lime");
     const figure = page.getByRole("main").getByRole("figure");
     const image = figure.getByRole("img", {
-      name: "A placeholder, the drawings of chicken thigh, garlic, lemon and basil in a row.",
+      name: "Four golden chicken thighs in a glossy lemon and garlic pan sauce, scattered with basil, in a steel skillet.",
     });
 
     await expect(image).toBeVisible();
     await expect(figure).toContainText("As written: chicken thigh, garlic, lemon and basil.");
-    await expect(figure).toContainText("Placeholder image");
+    await expect(figure).toContainText("AI-generated image");
     await expect(image).not.toHaveAttribute("loading", "lazy");
     // The image takes the place of the drawings.
     await expect(page.locator(".recipe-image")).toHaveCount(0);
@@ -127,7 +127,7 @@ test.describe("a Suggestion card", () => {
     await expect(image).toBeVisible();
     await expect(image).toHaveAttribute("alt", "");
     await expect(image).toHaveAttribute("loading", "lazy");
-    await expect(panSauce.getByText("Placeholder image", { exact: true })).toBeVisible();
+    await expect(panSauce.getByText("AI-generated image", { exact: true })).toBeVisible();
     // The card's drawings stay.
     await expect(panSauce.getByRole("link", { name: "Garlic" }).first()).toBeVisible();
   });

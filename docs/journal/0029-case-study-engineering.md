@@ -42,7 +42,7 @@ It also found overclaims: "reproduced" for a run that didn't fail; that every te
 
 ## VoiceOver pass
 
-**Status: to do.** Check the chapter list, each new chapter's headings, and that a link to GitHub says it opens in a new tab.
+**Status: passed.** The author ran this pass on 2026-11-09, and everything sounded correct. It covered the chapter list, each new chapter's headings, the button to the code, and that a link to GitHub says it opens in a new tab.
 
 ## Waiting for the author
 

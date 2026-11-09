@@ -115,7 +115,7 @@ test("the chapter navigation lists every chapter, in the order they're written",
   const written = await page.locator("#case-study-content .chapter > h2").allTextContents();
 
   expect(listed).toEqual(written);
-  expect(written).toEqual(expect.arrayContaining(["The Kitchen", "Testing", "Building with Claude", "Honest about culture"]));
+  expect(written).toEqual(expect.arrayContaining(["The Kitchen", "Testing approach", "Building with Claude", "Honest about culture"]));
 });
 
 test("every architecture diagram is an image with a name and a description in words", async ({ page }) => {
@@ -294,7 +294,7 @@ test("a link to the code sits beside the title, on the first screen and while re
   await expect(code).toHaveAttribute("target", "_blank");
   await expect(code).toBeInViewport();
 
-  await chapters(page).getByRole("link", { name: "Testing" }).click();
-  await expect(page.getByRole("heading", { level: 2, name: "Testing" })).toBeInViewport();
+  await chapters(page).getByRole("link", { name: "Testing approach" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "Testing approach" })).toBeInViewport();
   await expect(code).toBeInViewport();
 });

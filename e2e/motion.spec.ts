@@ -42,14 +42,27 @@ for (const reduced of [false, true]) {
 
     test("Pairing rows settle in one after another, once", async ({ page }) => {
       // Note each row that starts to settle, from the page as first sent to the page once it's live.
+      // Note too any row or Pairing group taken out of the page, which would mean rows were swapped.
       await page.addInitScript(() => {
         const settled: Element[] = [];
-        Object.assign(window, { settled });
+        const swapped: Node[] = [];
+        Object.assign(window, { settled, swapped });
         document.addEventListener(
           "animationstart",
           (event) => event.animationName === "settle" && settled.push(event.target as Element),
           true,
         );
+        new MutationObserver((records) => {
+          for (const { target, removedNodes } of records) {
+            // A row is a list item of a group; what's inside a row, such as its links arriving, can change.
+            const fromList = target instanceof Element && target.matches(".pairing-group ul");
+            for (const node of removedNodes) {
+              if (node instanceof Element && ((fromList && node.matches("li")) || node.matches(".pairing-group") || node.querySelector(".pairing-group"))) {
+                swapped.push(node);
+              }
+            }
+          }
+        }).observe(document, { childList: true, subtree: true });
       });
       await page.goto("/ingredients/garlic");
       // The Cuisine control appears only once the page is live, so by then any swap would have happened.
@@ -61,9 +74,14 @@ for (const reduced of [false, true]) {
           const settled = (window as unknown as { settled: Element[] }).settled;
           return { live: settled.filter((row) => row.isConnected).length, replaced: settled.filter((row) => !row.isConnected).length };
         });
-      // Every row settles, and none is swapped for another that settles again as the page goes live.
-      await expect.poll(async () => (await settledRows()).live).toBe(count);
-      expect(await settledRows()).toEqual({ live: count, replaced: 0 });
+      // No row is swapped for another as the page goes live.
+      expect(await page.evaluate(() => (window as unknown as { swapped: Node[] }).swapped.length)).toBe(0);
+      // Every row settles, once. Under reduced motion nothing moves, and a browser may not report a
+      // settle that takes no time, so there it's enough that each row has the settle, at no length.
+      if (!reduced) {
+        await expect.poll(async () => (await settledRows()).live).toBe(count);
+        expect(await settledRows()).toEqual({ live: count, replaced: 0 });
+      }
       expect(await animation(rows.nth(0))).toEqual({
         name: "settle",
         duration: reduced ? "0s" : "0.4s",

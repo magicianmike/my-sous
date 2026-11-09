@@ -275,6 +275,22 @@ describe("loadKitchen", () => {
       expect(kitchen.cuisine("atlantis")).toBeUndefined();
     });
 
+    it("gives a Cuisine's Ingredients most paired in it first, then by name", async () => {
+      const kitchen = await expectKitchen(
+        writeContent({
+          ...fixture,
+          ingredients: { ...fixture.ingredients, cumin: { name: "Cumin", cuisines: ["levantine"] } },
+          pairings: [
+            ...fixture.pairings,
+            { ingredients: ["lemon", "thyme"], reasons: [reason("Bright and herbal.")], cuisines: ["levantine"] },
+          ],
+        }),
+      );
+
+      // Lemon is in both Levantine Pairings; garlic and thyme in one each, so by name; cumin in none.
+      expect(kitchen.cuisine("levantine")!.mostPaired.map(({ id }) => id)).toEqual(["lemon", "garlic", "thyme", "cumin"]);
+    });
+
     it("lists every Cuisine, in content order", async () => {
       const kitchen = await expectKitchen(writeContent(fixture));
 

@@ -49,6 +49,8 @@ export type CuisineView = {
   cuisine: Cuisine;
   /** In name order. */
   ingredients: Ingredient[];
+  /** The same, those in the most of the Cuisine's Pairings first, then in name order: the ones it leans on. */
+  mostPaired: Ingredient[];
   /** In content order, each with both its Ingredients. */
   pairings: { ingredients: [Ingredient, Ingredient]; reasons: PairingReason[] }[];
 };
@@ -627,15 +629,20 @@ export function createKitchen(content: KitchenContent): Kitchen {
     cuisine(id) {
       const cuisine = cuisines.get(id);
       if (!cuisine) return undefined;
+      const common = [...ingredients.values()].filter((i) => i.cuisines.includes(cuisine)).sort(byName);
+      const pairings = content.pairings
+        .filter(({ cuisines }) => cuisines.includes(id))
+        .map(({ ingredients: [a, b], reasons }) => ({
+          ingredients: [ingredients.get(a)!, ingredients.get(b)!] as [Ingredient, Ingredient],
+          reasons,
+        }));
+      const pairedIn = (ingredient: Ingredient) => pairings.filter(({ ingredients }) => ingredients.includes(ingredient)).length;
       return {
         cuisine,
-        ingredients: [...ingredients.values()].filter((i) => i.cuisines.includes(cuisine)).sort(byName),
-        pairings: content.pairings
-          .filter(({ cuisines }) => cuisines.includes(id))
-          .map(({ ingredients: [a, b], reasons }) => ({
-            ingredients: [ingredients.get(a)!, ingredients.get(b)!],
-            reasons,
-          })),
+        ingredients: common,
+        // Sorting is stable, so a tie keeps name order.
+        mostPaired: [...common].sort((a, b) => pairedIn(b) - pairedIn(a)),
+        pairings,
       };
     },
 

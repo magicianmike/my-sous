@@ -526,6 +526,42 @@ button:hover .plus-icon {
   font-size: var(--text-lg);
 }
 
+/* Each Cuisine a row of its own, set apart by a hairline, with the drawings of what it leans on beside its name. */
+.cuisine-list {
+  margin: 0;
+}
+
+.cuisine-list > li {
+  display: grid;
+  /* The drawings' column fits five, as the page shows at most, so every name starts at the same place. */
+  grid-template-columns: calc(var(--mark-sm) * 5 - var(--space-3) * 4) minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  align-items: start;
+  padding-block: var(--space-4);
+  border-top: var(--border-hairline) solid var(--line);
+}
+
+.cuisine-list > li:last-child {
+  border-bottom: var(--border-hairline) solid var(--line);
+}
+
+/* The drawings overlap a little, as a cluster, each ringed in the page's colour so they read apart. */
+.cuisine-marks {
+  display: flex;
+  padding-top: var(--space-2);
+}
+
+.cuisine-marks > * + * {
+  margin-inline-start: calc(var(--space-3) * -1);
+  box-shadow: 0 0 0 var(--border-control) var(--bg);
+}
+
+.cuisine-count {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
 .cuisine-list h2 {
   margin: 0;
 }

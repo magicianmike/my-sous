@@ -73,7 +73,7 @@ The spec began with two doors: "Start from an ingredient" and "Start from what y
   caption="Ready now means one thing: the basket fills every part the dish needs."
 />
 
-**Any state is a link.** Back and Forward step through basket changes, a shared link reopens the same basket, and this page can open the app in exactly the state it describes. How that works is in [The Kitchen](#kitchen).
+**Any state is a link.** Back and Forward step through basket changes, a shared link reopens the same basket, and this page can open the app in exactly the state it describes. How that works is in [The Module](#kitchen).
 
 <LiveSuggestion
   basket={notPaired}
@@ -121,7 +121,7 @@ The same rule shaped the Cuisines page. I first wanted a flag for each Cuisine. 
 
 **Sourced, by rule.** Every Pairing cites at least one source with a link, gathered by reading cooks and writers from each tradition, culinary institutions and official bodies: Japan's agriculture ministry, the Larousse dictionary of Mexican gastronomy, Regione Campania. Nothing comes from pairing books, which [ADR 0001](https://github.com/magicianmike/my-sous/blob/main/docs/adr/0001-hand-curated-pairing-graph.md) rules out on copyright grounds, or from flavour-compound data, whose central claim held for Western cuisines and reversed in East Asian ones. Each Launch Cuisine has to offer three Ingredients for every part a dish can ask for, or record, with a source, that it seldom uses that kind of Ingredient. Six such exceptions remain, such as soft herbs in Sichuan cooking.
 
-Writing to that standard changed the content. Claims no source supported were cut, two Pairing Reasons that said more than any source were rewritten, and gremolata lost its only Pairing until I could source new ones. [The Kitchen](#kitchen) covers how the build holds the content to these rules.
+Writing to that standard changed the content. Claims no source supported were cut, two Pairing Reasons that said more than any source were rewritten, and gremolata lost its only Pairing until I could source new ones. [The Module](#kitchen) covers how the build holds the content to these rules.
 
 </Chapter>
 
@@ -156,6 +156,29 @@ The result is single-line drawings on a shared 48-unit grid, each Ingredient in 
 
 </Chapter>
 
+<Chapter id="testing">
+
+**Tests first, at seams agreed first.** Before a feature's first test, I agree where the tests go: the public seams where behaviour shows, such as `loadKitchen` or a journey in the browser. Each test is written and seen failing before the code that passes it. When a test comes after its code, or never fails because the behaviour was already there, the journal says so.
+
+**The Kitchen, through its front door.** The Kitchen is the module that holds every rule, described in [The Module](#kitchen). Every Kitchen test goes through `loadKitchen` with a small fixture content folder written for that rule, so the internals can change without breaking tests. The same suite loads the real content. A Pairing without a source fails the build, and a launch Cuisine short of a part fails the tests.
+
+**The site that ships.** Browser tests run against the exact static export, never the dev server, at a phone's size and a desktop's. They cover each journey by mouse and keyboard, and run axe on every screen in both themes.
+
+<TestingDiagram />
+
+**Rules as tests.** Some rules are cheaper to enforce than to remember:
+
+- every text colour pairing is checked for contrast in both themes, and so is every Ingredient's drawing against its own wash;
+- stylesheets use only tokens;
+- no copy says "authentic", in content or in code;
+- nothing scrolls sideways from 320px wide, or at 200% zoom, and every control on a phone is a full touch target.
+
+Two examples of the checks changing the design: axe caught the basket bar's name running its words together as "Your Combination0 of 4", and, as the content grew, a tile sitting under the docked bar on a phone, which is why the bar now has a row of its own.
+
+**Every change, in CI.** GitHub Actions runs the type check, the unit tests, the build, which loads the real content, and the browser tests on every pull request. I merge only when it's green. One browser test failed twice there and nowhere else. On a phone, with reduced motion, it saw none of the Pairing rows begin their entrance, which under reduced motion takes no time. It passed on my Mac, in Linux in Docker with the same browser, and with the CPU slowed twelve times. So rather than retry until green, I changed what the test watches. It now checks what it means: no row is swapped as the page goes live. Forcing the rows to be swapped made it fail with all 37 rows reported, so the check still bites.
+
+</Chapter>
+
 <Chapter id="kitchen">
 
 The pages never touch files, YAML or schemas. They ask one deep module, the Kitchen, questions: an Ingredient's Pairings, grouped by reason; a Cuisine's Ingredients, the ones it leans on first; the dishes a basket fits; what could be added to it; a dish's Recipe. The site is static, and the Cook can build any basket. So the Kitchen that renders pages at build time is rebuilt in the browser, from the same validated content.
@@ -183,29 +206,6 @@ if (!result.ok) throw new Error(result.errors.map(({ file, message }) => `${file
 **The address is the source of truth.** The basket lives in the address, as `?with=chicken-thigh,basil,ginger`, and nowhere else. There's no client-side store. Every link between screens carries it, and a Cuisine filter sits beside it (`&cuisine=levantine`) for the same reasons. The one thing MySous keeps in the browser is the theme you choose, a display preference rather than app state. Live embeds like the cards on this page read a fixed basket instead, through a small provider, so the same component renders from a given basket or from the address.
 
 <UrlDiagram />
-
-</Chapter>
-
-<Chapter id="testing">
-
-**Tests first, at seams agreed first.** Before a feature's first test, I agree where the tests go: the public seams where behaviour shows, such as `loadKitchen` or a journey in the browser. Each test is written and seen failing before the code that passes it. When a test comes after its code, or never fails because the behaviour was already there, the journal says so.
-
-**The Kitchen, through its front door.** Every Kitchen test goes through `loadKitchen` with a small fixture content folder written for that rule, so the internals can change without breaking tests. The same suite loads the real content. A Pairing without a source fails the build, and a launch Cuisine short of a part fails the tests.
-
-**The site that ships.** Browser tests run against the exact static export, never the dev server, at a phone's size and a desktop's. They cover each journey by mouse and keyboard, and run axe on every screen in both themes.
-
-<TestingDiagram />
-
-**Rules as tests.** Some rules are cheaper to enforce than to remember:
-
-- every text colour pairing is checked for contrast in both themes, and so is every Ingredient's drawing against its own wash;
-- stylesheets use only tokens;
-- no copy says "authentic", in content or in code;
-- nothing scrolls sideways from 320px wide, or at 200% zoom, and every control on a phone is a full touch target.
-
-Two examples of the checks changing the design: axe caught the basket bar's name running its words together as "Your Combination0 of 4", and, as the content grew, a tile sitting under the docked bar on a phone, which is why the bar now has a row of its own.
-
-**Every change, in CI.** GitHub Actions runs the type check, the unit tests, the build, which loads the real content, and the browser tests on every pull request. I merge only when it's green. One browser test failed twice there and nowhere else. On a phone, with reduced motion, it saw none of the Pairing rows begin their entrance, which under reduced motion takes no time. It passed on my Mac, in Linux in Docker with the same browser, and with the CPU slowed twelve times. So rather than retry until green, I changed what the test watches. It now checks what it means: no row is swapped as the page goes live. Forcing the rows to be swapped made it fail with all 37 rows reported, so the check still bites.
 
 </Chapter>
 

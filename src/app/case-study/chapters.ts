@@ -6,8 +6,8 @@ export const CHAPTERS = [
   { id: "honest-about-culture", title: "Honest about culture" },
   { id: "look-and-feel", title: "Look and feel" },
   { id: "stack", title: "The tech stack" },
-  { id: "kitchen", title: "The Kitchen" },
   { id: "testing", title: "Testing approach" },
+  { id: "kitchen", title: "The Module" },
   { id: "building-with-claude", title: "Building with Claude" },
   { id: "rejected", title: "What I rejected, and what’s next" },
 ] as const;

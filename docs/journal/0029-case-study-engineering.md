@@ -8,7 +8,7 @@ The author chose each of these from options.
 
 - **The outline.**
   - Product and design: One basket ("One room" and the product half of "State you can link to"), Defaults that explain themselves ("Defaults, not forms" and "Interaction design"), Honest about culture, and Look and feel ("Visual direction" and the design half of "Accessible by construction").
-  - Engineering: The tech stack, The Kitchen ("Architecture", with URL state and content validation), Testing approach, and Building with Claude.
+  - Engineering: The tech stack, Testing approach, The Module ("Architecture", the Kitchen with URL state and content validation), and Building with Claude.
   - "What I rejected" and "What's next" became one chapter.
 - **How "Building with Claude" frames the work:** the author directs and Claude builds, through a fixed loop of skills, with examples from the journal.
 - **A prominent way to the code.** An outlined "View the code on GitHub" button sits beside the title, which stays at the top while reading, so a reader scanning the page finds it at once.

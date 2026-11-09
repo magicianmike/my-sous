@@ -9,13 +9,18 @@
 # carry its own cited `guidance` (a `note` and `citations`), for a staple such as cooked rice.
 serves: 2
 time: { prep: 10, cook: 30 }
-# The dish as written. A placeholder until the reviewed image arrives with the content (#19).
+# The dish as written.
 image:
   file: pan-sauce.png
-  alt: A placeholder, the drawings of chicken thigh, garlic, lemon and basil in a row.
+  alt: Four golden chicken thighs in a glossy lemon and garlic pan sauce, scattered with basil, in a steel skillet.
   provenance:
-    made: placeholder
-    date: "2026-11-05"
+    made: ai-generated
+    model: GPT-6 (OpenAI)
+    prompt: "A natural, editorial food photograph of four boneless, skin-on chicken thighs, the skin deep golden and crisp, in a glossy pale-gold lemon, garlic and butter pan sauce with thin slices of garlic, scattered with torn basil leaves and a few grinds of black pepper, two portions, in a plain steel skillet, seen from overhead, on a matte worn wood surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, slightly imperfect, home-cooked. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it, the top corners left clear."
+    date: "2026-11-09"
+    review:
+      date: "2026-11-09"
+      matches: true
 fills:
   protein: chicken-thigh
   aromatic: garlic

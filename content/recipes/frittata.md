@@ -5,10 +5,15 @@ serves: 2
 time: { prep: 10, cook: 25 }
 image:
   file: frittata.png
-  alt: A placeholder, the drawings of eggs, zucchini, garlic and mint in a row.
+  alt: A zucchini frittata cut into wedges on a board, scattered with mint leaves.
   provenance:
-    made: placeholder
-    date: "2026-11-06"
+    made: ai-generated
+    model: GPT-6 (OpenAI)
+    prompt: "A natural, editorial food photograph of a golden zucchini and mint frittata, browned side up, on a plain wooden board, cut into wedges with one wedge pulled slightly away: thin rounds of zucchini through the set egg, flecks of grated pecorino, and torn fresh mint leaves scattered on top, seen from overhead, on a matte linen surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, slightly imperfect, home-cooked. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it, the top corners left clear. Match the light, surface, colour and style of the two attached reference images, but don't copy their subjects."
+    date: "2026-11-11"
+    review:
+      date: "2026-11-11"
+      matches: true
 fills:
   eggs: eggs
   vegetable: zucchini

@@ -6,10 +6,15 @@ serves: 2
 time: { prep: 15, cook: 35 }
 image:
   file: grain-bowl.png
-  alt: A placeholder, the drawings of bulgur, lamb, eggplant, yogurt and mint in a row.
+  alt: Two bowls of bulgur topped with roasted eggplant, browned lamb, mint yogurt and mint leaves.
   provenance:
-    made: placeholder
-    date: "2026-11-06"
+    made: ai-generated
+    model: GPT-6 (OpenAI)
+    prompt: "A natural, editorial food photograph of two plain shallow bowls seen from overhead, each with fluffy coarse bulgur topped with deep golden roasted cubes of eggplant, browned crumbled ground lamb and a spoonful of thick yogurt sauce flecked with chopped mint, finished with torn mint leaves, on a matte stone surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, slightly imperfect, home-cooked. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it, the top corners left clear. Match the light, surface, colour and style of the two attached reference images, but don't copy their subjects."
+    date: "2026-11-11"
+    review:
+      date: "2026-11-11"
+      matches: true
 fills:
   grain: bulgur
   protein: lamb

@@ -5,10 +5,15 @@ serves: 6
 time: { prep: 10, cook: 5 }
 image:
   file: quick-pickle.png
-  alt: A placeholder, the drawings of onion, cider vinegar, garlic and dried chile in a row.
+  alt: A glass jar of pickled red onion with garlic, a bay leaf and dried red chiles, a fork beside it.
   provenance:
-    made: placeholder
-    date: "2026-11-06"
+    made: ai-generated
+    model: GPT-6 (OpenAI)
+    prompt: "A natural, editorial food photograph of a plain one-pint glass jar with no label, packed with quick-pickled red onion slices in a clear amber cider-vinegar brine, with halved garlic cloves, a bay leaf and a few strips of dark dried chile visible through the glass, a fork resting beside the jar, seen from about 45 degrees, on a matte worn wood surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, slightly imperfect, home-cooked. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it, the top corners left clear. Match the light, surface, colour and style of the two attached reference images, but don't copy their subjects."
+    date: "2026-11-11"
+    review:
+      date: "2026-11-11"
+      matches: true
 fills:
   vegetable: onion
   acid: cider-vinegar

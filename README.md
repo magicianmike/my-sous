@@ -15,6 +15,7 @@ A kitchen assistant for what goes with what, and why. A Cook puts up to six Ingr
 - **sharp** makes AVIF and WebP at several widths from `content/images/` before each build.
 - **Floating UI** for tooltips. Otherwise the platform: `<dialog>`, radio inputs, the URL.
 - **Vitest**, **Playwright** and **axe-core**; CI on GitHub Actions.
+- **Storybook** for components in isolation, each story also a component test.
 
 ## Architecture
 
@@ -29,6 +30,7 @@ src/app/        routes: /, /ingredients, /cuisines, /formulas, /suggestions, /ca
 src/components/ presentational components, props only
 src/design/     tokens, contrast, theme
 e2e/            Playwright specs
+.storybook/     Storybook config; stories sit beside their components as *.stories.tsx
 docs/           ADRs, decision journal, research notes, voice and image guides
 ```
 
@@ -38,7 +40,9 @@ docs/           ADRs, decision journal, research notes, voice and image guides
 npm install
 npm run dev          # local dev server
 npm run typecheck
-npm test             # Vitest
+npm test             # Vitest unit tests
+npm run storybook    # Storybook on localhost:6006
+npm run test:components  # every story as a component test, in Chromium
 npm run build        # static export to out/; fails on any content error
 npm run test:e2e     # Playwright + axe against out/ (build first)
 npm run images       # served images from content/images (runs before dev and build)
@@ -49,8 +53,9 @@ npm run placeholder  # a stand-in image from Ingredients' drawings, until a revi
 
 - **Vitest** tests the Kitchen only through `loadKitchen`, with a fixture content folder per rule, and loads the real content: sources, voice, regional Cuisine names, launch Cuisine coverage.
 - **Rules as tests:** contrast for every text pairing and every Ingredient's colours in both themes; tokens only in stylesheets; no banned words in content or code.
+- **Component tests** are the Storybook stories: Vitest runs each in real Chromium, and it passes when it renders, its play function's interactions and assertions hold, and axe finds nothing, in the light theme. They cover a component's own behaviour (a combobox's keys, a disclosure's state); journeys across pages stay in Playwright.
 - **Playwright** runs against the static export, never the dev server, as a phone (Pixel 7) and a desktop: journeys by mouse and keyboard, axe on every screen in both themes, reflow from 320px and at 200% zoom, 44px touch targets, focus and motion.
-- **CI** runs typecheck, Vitest, the build and Playwright on every pull request.
+- **CI** runs typecheck, Vitest, the build, the component tests and Playwright on every pull request.
 - VoiceOver passes by hand, recorded in the journal.
 
 ## Content

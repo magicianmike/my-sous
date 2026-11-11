@@ -43,7 +43,7 @@ npm run typecheck
 npm test             # Vitest unit tests
 npm run storybook    # Storybook on localhost:6006
 npm run test:components  # every story as a component test, in Chromium
-npm run build        # static export to out/; fails on any content error
+npm run build        # static export to out/, with Storybook at /storybook; fails on any content error
 npm run test:e2e     # Playwright + axe against out/ (build first)
 npm run images       # served images from content/images (runs before dev and build)
 npm run placeholder  # a stand-in image from Ingredients' drawings, until a reviewed one arrives

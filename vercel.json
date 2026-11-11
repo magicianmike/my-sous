@@ -19,11 +19,10 @@
       ]
     }
   ],
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/storybook",
-      "destination": "/storybook/",
-      "permanent": true
+      "source": "/storybook/iframe.html",
+      "destination": "/storybook/iframe"
     }
   ]
 }

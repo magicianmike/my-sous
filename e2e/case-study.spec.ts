@@ -287,6 +287,14 @@ test("links to the code on GitHub, the ADRs among them, open in a new tab and sa
   }
 });
 
+test("the link to Storybook opens in a new tab and says so, since Storybook has no way back", async ({ page }) => {
+  await page.goto("/case-study");
+  const storybook = page.getByRole("link", { name: "/storybook (opens in a new tab)" });
+  await expect(storybook).toHaveAttribute("href", "/storybook");
+  await expect(storybook).toHaveAttribute("target", "_blank");
+  await expect(storybook.locator("svg.new-tab-icon")).toHaveAttribute("aria-hidden", "true");
+});
+
 test("a link to the code sits beside the title, on the first screen and while reading", async ({ page }) => {
   await page.goto("/case-study");
   const code = page.locator(".case-study-title").getByRole("link", { name: "View the code on GitHub (opens in a new tab)" });

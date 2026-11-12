@@ -1,10 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect } from "storybook/test";
 import { Chip } from "./Chip";
+import { lemon } from "../../.storybook/fixtures";
 import { PlusIcon } from "./PlusIcon";
-
-// Lemon's colours, from content/ingredients/lemon.md.
-const lemon = { wash: "#f6ecb8", washDark: "#36311a", stroke: "#6b5a0c", strokeDark: "#eadb8a" };
 
 const meta = {
   component: Chip,
@@ -18,11 +16,11 @@ export const Plain: Story = {};
 
 /** On an Ingredient's wash, which the theme swaps for its dark pair. */
 export const OnItsWash: Story = {
-  args: { colour: lemon },
+  args: { colour: lemon.colour },
   play: async ({ canvas }) => {
     const chip = canvas.getByText("Lemon").parentElement!;
     await expect(chip).toHaveClass("hue");
-    await expect(chip.style.getPropertyValue("--wash-light")).toBe(lemon.wash);
+    await expect(chip.style.getPropertyValue("--wash-light")).toBe(lemon.colour.wash);
   },
 };
 
@@ -34,7 +32,7 @@ export const Dashed: Story = {
 /** An offer to add, as Suggestions shows one: the whole chip is the button. */
 export const AnOfferToAdd: Story = {
   args: {
-    colour: lemon,
+    colour: lemon.colour,
     dashed: true,
     trailing: <PlusIcon className="button-icon" />,
     children: (

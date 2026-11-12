@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/nextjs-vite";
 import type { Plugin } from "vite";
 
@@ -25,11 +26,12 @@ const config: StorybookConfig = {
   stories: ["../src/**/*.stories.tsx"],
   addons: ["@storybook/addon-vitest", "@storybook/addon-a11y"],
   framework: "@storybook/nextjs-vite",
-  viteFinal: (config) => ({
+  viteFinal: (config, { configType }) => ({
     ...config,
-    // Not the site's public/, which Vite copies in by default: Storybook is built into it, at
-    // /storybook, and its stories need none of it.
-    publicDir: false,
+    // The site's public/ is served while working, for content images at /images. It's not copied into
+    // the build, which Vite does by default: Storybook is built into public/, at /storybook, and there
+    // the site itself serves /images.
+    publicDir: configType === "PRODUCTION" ? false : fileURLToPath(new URL("../public", import.meta.url)),
     plugins: [rawSvg, ...(config.plugins ?? [])],
   }),
 };

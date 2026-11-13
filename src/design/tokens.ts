@@ -202,6 +202,8 @@ const scales = {
   "scrim-blur": "6px",
   // Touch targets: the smallest a tappable control may be.
   "target": "2.75rem",
+  // A denser row for a precise pointer, where many links stack, such as the Ingredients page's kinds.
+  "target-dense": "2rem",
   "chip-height": "2rem",
   // The box a checkbox draws; the whole row around it is the target.
   "check-size": "1.25rem",

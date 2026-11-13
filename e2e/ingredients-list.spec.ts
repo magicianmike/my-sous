@@ -111,3 +111,32 @@ test("on a wide screen, the search and the kinds stay in view beside the drawing
   await expect(filter(page)).toBeInViewport();
   await expect(page.getByRole("navigation", { name: "Kinds of ingredient" })).toBeInViewport();
 });
+
+test("in a short window, the kinds scroll on their own above the basket bar, keeping the one being read marked and in view", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "a phone shows the kinds as a row above the drawings");
+  await page.setViewportSize({ width: 1280, height: 600 });
+  await page.goto("/ingredients?with=basil");
+  const index = page.getByRole("navigation", { name: "Kinds of ingredient" });
+  const list = index.getByRole("list");
+  const bar = page.getByRole("button", { name: /^Your basket/ });
+  const listEndsAboveBar = async () => {
+    const [listBox, barBox] = await Promise.all([list.boundingBox(), bar.boundingBox()]);
+    return listBox!.y + listBox!.height <= barBox!.y;
+  };
+
+  expect(await listEndsAboveBar()).toBe(true);
+  await expect(list).toHaveAttribute("data-more-below");
+  await expect(index.getByRole("link", { name: /^Herbs/ })).toHaveAttribute("aria-current", "location");
+
+  // To the end of the page, where the last kind is the one being read, however short it is.
+  await page.keyboard.press("End");
+  const blends = index.getByRole("link", { name: /^Blends/ });
+  await expect(blends).toHaveAttribute("aria-current", "location");
+  await expect(blends).toBeInViewport();
+  await expect(index.locator("[aria-current]")).toHaveCount(1);
+  await expect(list).toHaveAttribute("data-more-above");
+  expect(await listEndsAboveBar()).toBe(true);
+});

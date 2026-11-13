@@ -544,19 +544,51 @@ main:has(.ingredient-finder) {
     align-items: start;
   }
 
-  /* In view as the drawings scroll, and scrolling itself when the window is shorter than it, above the basket bar. */
+  /*
+   * In view as the drawings scroll, no taller than the window above the basket bar. The search stays put and the
+   * kinds take the room that's left, scrolling on their own when there are more than fit.
+   */
   .ingredient-sidebar {
     position: sticky;
     top: var(--space-4);
+    display: flex;
+    flex-direction: column;
     max-height: calc(100dvh - var(--space-4) * 2 - var(--tray-dock-height));
-    overflow-y: auto;
+  }
+
+  .ingredient-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   /* Beside the drawings, the kinds are a column, each count at the row's end. */
   .kind-index {
-    display: grid;
-    gap: 0;
-    overflow: visible;
+    position: relative;
+    display: block;
+    min-height: 0;
+    padding-bottom: 0;
+    overflow: hidden auto;
+    scrollbar-width: thin;
+  }
+
+  /* Faded at an edge where more kinds are hidden, so it's plain the list goes on. */
+  .kind-index[data-more-below] {
+    mask-image: linear-gradient(to bottom, black calc(100% - var(--space-7)), transparent);
+  }
+
+  .kind-index[data-more-above] {
+    mask-image: linear-gradient(to top, black calc(100% - var(--space-7)), transparent);
+  }
+
+  .kind-index[data-more-above][data-more-below] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black var(--space-7),
+      black calc(100% - var(--space-7)),
+      transparent
+    );
   }
 
   .kind-index a {
@@ -569,6 +601,18 @@ main:has(.ingredient-finder) {
 
   .kind-index a:hover {
     background: var(--sunk);
+  }
+
+  /* The kind being read, as the drawings scroll. */
+  .kind-index a[aria-current] {
+    background: var(--surface);
+  }
+
+  /* With a precise pointer, the rows need less height, so more kinds fit before the list scrolls. */
+  @media (pointer: fine) {
+    .kind-index a {
+      min-height: var(--target-dense);
+    }
   }
 
   /* The first kind's heading lines up with the top of the search. */
@@ -1741,10 +1785,16 @@ body:has(.case-study) .site-header {
 
 /* Motion: only on first paint, or on the thing that changed. Durations are 0ms under reduced motion. */
 
-/* The Case Study's chapter links glide to their chapter, wherever the page scrolls; under reduced motion they jump. */
+/*
+ * The Case Study's chapter links glide to their chapter, and the Ingredients page's kinds to their kind, wherever
+ * the page scrolls; the kinds list glides too, keeping the one being read in view. Under reduced motion they jump.
+ */
 @media (prefers-reduced-motion: no-preference) {
   html:has(.case-study),
-  .page:has(.case-study) {
+  .page:has(.case-study),
+  html:has(.ingredient-finder),
+  .page:has(.ingredient-finder),
+  .kind-index {
     scroll-behavior: smooth;
   }
 }

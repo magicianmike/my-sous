@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FilterField } from "@/components/FilterField";
 import { IngredientMark } from "@/components/IngredientMark";
@@ -84,16 +84,33 @@ function FinderLayout({ field, ...groups }: GroupsProps & { field: React.ReactNo
   );
 }
 
-/** A link to each kind on the page, with how many it holds: a column beside the drawings, or a row above them on a phone. */
+/**
+ * A link to each kind on the page, with how many it holds: a column beside the drawings, or a row above them on a
+ * phone. Beside the drawings it marks the kind being read and keeps it in view, scrolling on its own when there are
+ * more kinds than the window has room for, faded at the edge where more are hidden.
+ */
 function KindIndex({ matching }: GroupsProps) {
   const groups = useGroups(matching);
+  const categories = groups.map(({ category }) => category);
+  const current = useKindInView(categories);
+  const list = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    const ul = list.current;
+    const link = ul?.querySelector<HTMLElement>("[aria-current]");
+    // Only when the list scrolls up and down, beside the drawings; never the window.
+    if (!ul || !link || ul.scrollHeight <= ul.clientHeight) return;
+    if (link.offsetTop < ul.scrollTop) ul.scrollTop = link.offsetTop;
+    else if (link.offsetTop + link.offsetHeight > ul.scrollTop + ul.clientHeight)
+      ul.scrollTop = link.offsetTop + link.offsetHeight - ul.clientHeight;
+  }, [current]);
+  useFitToWindow(list, categories.join());
   if (groups.length === 0) return null;
   return (
     <nav aria-label="Kinds of ingredient">
-      <ul className="kind-index">
+      <ul className="kind-index" ref={list}>
         {groups.map(({ category, heading, ingredients }) => (
           <li key={category}>
-            <a href={`#category-${category}`}>
+            <a href={`#category-${category}`} aria-current={category === current ? "location" : undefined}>
               {heading} <span className="kind-count">{ingredients.length}</span>
             </a>
           </li>
@@ -101,6 +118,75 @@ function KindIndex({ matching }: GroupsProps) {
       </ul>
     </nav>
   );
+}
+
+/** The kind whose section is at the top of the window, or the first: the one being read. */
+function useKindInView(categories: string[]): string | undefined {
+  const [current, setCurrent] = useState<string>();
+  const key = categories.join();
+  useEffect(() => {
+    const sections = categories.flatMap(
+      (category) => document.getElementById(`category-${category}`)?.parentElement ?? [],
+    );
+    const inBand = new Set<Element>();
+    // A kind is being read while its section crosses the window's top third.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const { target, isIntersecting } of entries) isIntersecting ? inBand.add(target) : inBand.delete(target);
+        const first = sections.find((section) => inBand.has(section));
+        if (first) setCurrent(first.querySelector("h2")!.id.replace("category-", ""));
+      },
+      { rootMargin: "0px 0px -66% 0px" },
+    );
+    sections.forEach((section) => observer.observe(section));
+    // The last kind may be too short to reach the top third, so at the very end of the page it's the one being read.
+    const atEnd = ({ target }: Event) => {
+      const scroller = target === document ? document.scrollingElement : (target as Element);
+      const last = sections.at(-1);
+      if (scroller?.contains(last ?? null) && scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 1)
+        setCurrent(categories.at(-1));
+    };
+    addEventListener("scroll", atEnd, { capture: true, passive: true });
+    return () => {
+      observer.disconnect();
+      removeEventListener("scroll", atEnd, { capture: true });
+    };
+    // `key` stands for the categories, so the observer is rebuilt only when they change.
+  }, [key]);
+  return current && categories.includes(current) ? current : categories[0];
+}
+
+/**
+ * Fits a list that scrolls up and down to the window: as tall as the room between its top and the basket bar, which
+ * grows as the page scrolls and the sidebar rises to its place. And marks where more of it is hidden, above or
+ * below, so its edge there can fade.
+ */
+function useFitToWindow(list: React.RefObject<HTMLElement | null>, contents: string) {
+  useEffect(() => {
+    const element = list.current;
+    if (!element) return;
+    const fit = () => {
+      // Only beside the drawings; on a phone the list is a row that scrolls sideways.
+      if (getComputedStyle(element).overflowY !== "auto") return element.style.removeProperty("max-height");
+      const root = getComputedStyle(document.documentElement);
+      const below = parseFloat(root.getPropertyValue("--tray-dock-height")) + parseFloat(root.fontSize);
+      element.style.maxHeight = `${Math.max(innerHeight - element.getBoundingClientRect().top - below, 0)}px`;
+      element.toggleAttribute("data-more-above", element.scrollTop > 0);
+      element.toggleAttribute("data-more-below", element.scrollTop + element.clientHeight < element.scrollHeight - 1);
+    };
+    fit();
+    // Heard while capturing, so any scroll counts: the window's, the page column's a little narrower, and the list's.
+    addEventListener("scroll", fit, { capture: true, passive: true });
+    addEventListener("resize", fit);
+    // The basket bar sets its height on the page's root once it has measured itself, and again as it changes.
+    const bar = new MutationObserver(fit);
+    bar.observe(document.documentElement, { attributes: true, attributeFilter: ["style"] });
+    return () => {
+      removeEventListener("scroll", fit, { capture: true });
+      removeEventListener("resize", fit);
+      bar.disconnect();
+    };
+  }, [list, contents]);
 }
 
 /**

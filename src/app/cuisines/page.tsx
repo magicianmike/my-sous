@@ -10,40 +10,59 @@ export const metadata: Metadata = { title: "Cuisines" };
 const GLIMPSE = 5;
 
 /**
- * Every Cuisine, named regionally: a second way into the same Ingredients and Pairings. Each is told apart
- * by the Ingredients it leans on, drawn, rather than by a flag, since a regional Cuisine isn't a country's.
+ * Every Cuisine, named regionally: a second way into the same Ingredients and Pairings, as an index to
+ * compare at a glance. Each is told apart by the Ingredients it leans on, drawn, rather than by a flag,
+ * since a regional Cuisine isn't a country's. On a phone, the index keeps each name and its counts.
  */
 export default async function CuisinesPage() {
   const kitchen = await getKitchen();
   return (
     <>
-      <h1>Cuisines</h1>
+      <h1 id="cuisines">Cuisines</h1>
       <p className="lede">What&rsquo;s common in a cooking tradition, and what pairs in it.</p>
-      <ul className="cuisine-list" style={{ "--glimpse": GLIMPSE } as React.CSSProperties}>
-        {kitchen.cuisines().map(({ id, name, description }) => {
-          const { ingredients, mostPaired } = kitchen.cuisine(id)!;
-          const glimpse = mostPaired.slice(0, GLIMPSE);
-          return (
-            <li key={id}>
-              <div>
-                <h2>
+      <table className="cuisine-table" aria-labelledby="cuisines">
+        <thead>
+          <tr>
+            <th scope="col">Cuisine</th>
+            <th scope="col" className="wide-only">
+              Where
+            </th>
+            <th scope="col" className="count">
+              Ingredients
+            </th>
+            <th scope="col" className="count">
+              Pairings
+            </th>
+            <th scope="col" className="wide-only">
+              Leans on
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {kitchen.cuisines().map(({ id, name, description }) => {
+            const { ingredients, mostPaired, pairings } = kitchen.cuisine(id)!;
+            const glimpse = mostPaired.slice(0, GLIMPSE);
+            return (
+              <tr key={id}>
+                <th scope="row">
                   <CombinationLink href={`/cuisines/${id}`}>{name}</CombinationLink>
-                </h2>
-                <p className="muted">{description}</p>
-                <p className="cuisine-count">
-                  {ingredients.length} common {ingredients.length === 1 ? "ingredient" : "ingredients"}
-                </p>
-              </div>
-              {/* No name sits beside these drawings, so the cluster is one image named by its Ingredients. */}
-              <span className="cuisine-marks" role="img" aria-label={joinWithAnd(glimpse.map(({ name }) => name))}>
-                {glimpse.map((ingredient) => (
-                  <IngredientMark key={ingredient.id} ingredient={ingredient} size="sm" />
-                ))}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
+                </th>
+                <td className="wide-only muted">{description}</td>
+                <td className="count">{ingredients.length}</td>
+                <td className="count">{pairings.length}</td>
+                <td className="wide-only">
+                  {/* No name sits beside these drawings, so the cluster is one image named by its Ingredients. */}
+                  <span className="cuisine-marks" role="img" aria-label={joinWithAnd(glimpse.map(({ name }) => name))}>
+                    {glimpse.map((ingredient) => (
+                      <IngredientMark key={ingredient.id} ingredient={ingredient} size="sm" />
+                    ))}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </>
   );
 }

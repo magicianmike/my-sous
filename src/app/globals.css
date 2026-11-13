@@ -583,24 +583,70 @@ main:has(.dish-grid) {
   font-size: var(--text-lg);
 }
 
-/*
- * Each Cuisine a row of its own, set apart by a hairline, with the drawings of what it leans on: under its
- * words on a narrow screen, and at the row's end once there's room beside them.
- */
-.cuisine-list {
-  margin: 0;
+/* An index of every Cuisine, to compare at a glance; it takes the page's full width, out of the measure. */
+main:has(.cuisine-table) {
+  max-width: none;
 }
 
-.cuisine-list > li {
-  display: grid;
-  gap: var(--space-2) var(--space-4);
-  align-items: start;
-  padding-block: var(--space-4);
-  border-top: var(--border-hairline) solid var(--line);
+.cuisine-table {
+  width: 100%;
+  margin-top: var(--space-5);
+  border-collapse: collapse;
 }
 
-.cuisine-list > li:last-child {
+.cuisine-table :is(th, td) {
+  padding: var(--space-3) var(--space-3) var(--space-3) 0;
   border-bottom: var(--border-hairline) solid var(--line);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.cuisine-table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.cuisine-table thead th {
+  border-bottom: var(--border-control) solid var(--ink);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.cuisine-table tbody th {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+}
+
+.cuisine-table tbody th a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.cuisine-table td {
+  font-size: var(--text-sm);
+}
+
+.cuisine-table .count {
+  text-align: end;
+  font-size: var(--text-base);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-bold);
+}
+
+/* On a phone, each name and its counts; what the Cuisine is and leans on is a tap away, on its own page. */
+@media (max-width: 40rem) {
+  .cuisine-table .wide-only {
+    display: none;
+  }
+}
+
+/* Once there's room, a name keeps to one line. */
+@media (min-width: 40rem) {
+  .cuisine-table tbody th {
+    white-space: nowrap;
+  }
 }
 
 /* The drawings overlap a little, as a cluster, each ringed in the page's colour so they read apart. */
@@ -611,38 +657,6 @@ main:has(.dish-grid) {
 .cuisine-marks > * + * {
   margin-inline-start: calc(var(--space-3) * -1);
   box-shadow: 0 0 0 var(--border-control) var(--bg);
-}
-
-.cuisine-list .cuisine-count {
-  margin-top: var(--space-1);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-bold);
-}
-
-@media (min-width: 30rem) {
-  /* The drawings' column fits as many as the page shows at most, so every cluster ends at the same place. */
-  .cuisine-list > li {
-    grid-template-columns: minmax(0, 1fr) calc(var(--mark-sm) * var(--glimpse) - var(--space-3) * (var(--glimpse) - 1));
-  }
-
-  .cuisine-marks {
-    justify-content: flex-end;
-    padding-top: var(--space-2);
-  }
-}
-
-.cuisine-list h2 {
-  margin: 0;
-}
-
-.cuisine-list h2 a {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--target);
-}
-
-.cuisine-list p {
-  margin: 0;
 }
 
 .cuisine-pairings p {

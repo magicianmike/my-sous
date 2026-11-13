@@ -5,10 +5,15 @@ serves: 2
 time: { prep: 15, cook: 30 }
 image:
   file: sheet-pan-roast.png
-  alt: A placeholder, the drawings of chicken thigh, cauliflower, cumin and lemon in a row.
+  alt: Spiced chicken thighs and golden cauliflower on a sheet pan, scattered with cilantro, with lemon wedges.
   provenance:
-    made: placeholder
-    date: "2026-11-06"
+    made: ai-generated
+    model: GPT-6 (OpenAI)
+    prompt: "A natural, editorial food photograph of a plain matte sheet pan seen from overhead: four boneless, skinless chicken thighs with a browned orange-red yogurt and spice crust, turmeric-golden cauliflower florets browned at the edges and dotted with cumin seeds, scattered with chopped cilantro, with two lemon wedges on the pan, on a matte worn wood surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, slightly imperfect, home-cooked. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it, the top corners left clear. Match the light, surface, colour and style of the two attached reference images, but don't copy their subjects."
+    date: "2026-11-12"
+    review:
+      date: "2026-11-12"
+      matches: true
 fills:
   protein: chicken-thigh
   vegetable: cauliflower

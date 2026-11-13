@@ -452,36 +452,6 @@ button:hover .plus-icon {
   border-color: var(--ink);
 }
 
-/* Add, or the bin once it's in the basket, at the pill's end, over the link's padding. */
-.quick-add {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-}
-
-/* Red under the pointer: this one removes. */
-.quick-add .quick-remove:hover {
-  color: var(--danger);
-}
-
-/*
- * With a mouse, the button shows only on the pill under the pointer, or on keyboard focus; it keeps its
- * room, so nothing moves. On touch, where nothing hovers, it always shows.
- */
-@media (hover: hover) {
-  .quick-add button {
-    opacity: 0;
-    transition: opacity var(--motion-fast) var(--ease-out);
-  }
-
-  .ingredient-links li:hover .quick-add button,
-  .ingredient-gallery li:hover .quick-add button,
-  .quick-add button:focus-visible {
-    opacity: 1;
-  }
-}
-
 /* Home's three ways to browse, each a card that's one link. */
 .browse-doors {
   display: grid;
@@ -607,7 +577,7 @@ main:has(.ingredient-finder) {
   }
 }
 
-/* Each Ingredient a tile, its drawing large over its name; the add button in the top corner. */
+/* Each Ingredient a tile, its drawing large over its name, and Add to the basket at its foot. */
 .ingredient-gallery {
   display: grid;
   /* At least two across, even on a phone. */
@@ -626,7 +596,8 @@ main:has(.ingredient-finder) {
   align-content: start;
   gap: var(--space-2);
   height: 100%;
-  padding: var(--space-4) var(--space-3);
+  /* Room at the foot for the add button, which sits over the link rather than in it. */
+  padding: var(--space-4) var(--space-3) calc(var(--target) + var(--space-3) * 2);
   /* Every tile keeps the border's room, so nothing moves when one is added to the basket. */
   border: var(--border-control) solid transparent;
   border-radius: var(--radius-lg);
@@ -640,10 +611,11 @@ main:has(.ingredient-finder) {
   border-color: var(--ink);
 }
 
-.ingredient-gallery .quick-add {
-  top: var(--space-1);
-  right: var(--space-1);
-  transform: none;
+.tile-add {
+  position: absolute;
+  bottom: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Dishes */

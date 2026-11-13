@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 import { FilterField } from "@/components/FilterField";
 import { IngredientMark } from "@/components/IngredientMark";
 import type { Ingredient } from "@/kitchen/kitchen";
-import { useCombination, useKitchen, withSearchParams } from "../combination";
+import { AddToCombination, useCombination, useKitchen, withSearchParams } from "../combination";
 import { IngredientLink } from "../ingredient-link";
 import { FIND_AN_INGREDIENT, notInMySous } from "../ingredient-search";
-import { QuickAdd } from "./quick-add";
 
 /**
  * Every Ingredient, by kind, with a search that narrows the list in place: the list is the result, so
@@ -106,7 +105,8 @@ function KindIndex({ matching }: GroupsProps) {
 
 /**
  * The Ingredients by kind, or only those `matching` when given, leaving out kinds with none of them. Each is a
- * tile with its drawing large; those `inBasket` are marked as chosen.
+ * tile with its drawing large and an outlined Add, quieter than an Ingredient's page's own, since there are dozens;
+ * those `inBasket` are marked as chosen.
  */
 function IngredientGroups({ matching, inBasket = [] }: GroupsProps) {
   return useGroups(matching).map(({ category, heading, ingredients }) => (
@@ -119,8 +119,8 @@ function IngredientGroups({ matching, inBasket = [] }: GroupsProps) {
               <IngredientMark ingredient={ingredient} size="md" />
               {ingredient.name}
             </IngredientLink>
-            <span className="quick-add">
-              <QuickAdd ingredientId={ingredient.id} />
+            <span className="tile-add">
+              <AddToCombination ingredientId={ingredient.id} emphasis="secondary" />
             </span>
           </li>
         ))}

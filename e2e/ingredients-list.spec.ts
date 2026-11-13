@@ -9,32 +9,18 @@ function tile(page: Page, name: string) {
 
 const opener = (page: Page) => page.getByRole("button", { name: /^Your basket/ });
 
-test("with a mouse, an Ingredient's plus shows only under the pointer or on keyboard focus", async ({
+test("every tile has an outlined add button, always showing, quieter than an Ingredient page's solid one", async ({
   page,
-  isMobile,
 }) => {
   await page.goto("/ingredients");
-  const add = page.getByRole("button", { name: "Add Basil to your basket" });
-  const opacity = () => add.evaluate((el) => getComputedStyle(el).opacity);
-  if (isMobile) {
-    // Nothing hovers on touch, so it always shows.
-    expect(await opacity()).toBe("1");
-    return;
-  }
-  await expect.poll(opacity).toBe("0");
-  await tile(page, "Basil").hover();
-  await expect.poll(opacity).toBe("1");
-  await page.mouse.move(0, 0);
-  await expect.poll(opacity).toBe("0");
-  await add.focus();
-  await page.keyboard.press("Shift+Tab");
-  await page.keyboard.press("Tab");
-  await expect.poll(opacity).toBe("1");
+  const add = tile(page, "Basil").getByRole("button", { name: "Add Basil to your basket" });
+  await expect(add).toBeVisible();
+  await expect(add).toHaveCSS("opacity", "1");
+  await expect(add).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
 });
 
 test("one click adds an Ingredient from the list, and the Cook stays on it", async ({ page }) => {
   await page.goto("/ingredients?with=garlic");
-  await tile(page, "Basil").hover();
   await page.getByRole("button", { name: "Add Basil to your basket" }).click();
 
   await expect(page).toHaveURL(/\/ingredients\?with=garlic,basil$/);
@@ -43,9 +29,8 @@ test("one click adds an Ingredient from the list, and the Cook stays on it", asy
   await expect(page.getByRole("button", { name: "Remove Basil from your basket" })).toBeFocused();
 });
 
-test("an Ingredient in the basket shows a bin that takes it out", async ({ page }) => {
+test("an Ingredient in the basket shows Remove, which takes it out", async ({ page }) => {
   await page.goto("/ingredients?with=garlic,basil");
-  await tile(page, "Basil").hover();
   await page.getByRole("button", { name: "Remove Basil from your basket" }).click();
 
   await expect(opener(page)).toHaveAccessibleName("Your basket 1 of 6: Garlic");
@@ -54,7 +39,6 @@ test("an Ingredient in the basket shows a bin that takes it out", async ({ page 
 
 test("adding from the list to a full basket says why nothing was added", async ({ page }) => {
   await page.goto("/ingredients?with=lemon,lime,garlic,tomato,mint,sumac");
-  await tile(page, "Basil").hover();
   const add = page.getByRole("button", { name: "Add Basil to your basket" });
   await add.click();
 

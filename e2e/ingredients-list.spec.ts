@@ -107,6 +107,8 @@ test("the kinds index links to each kind on the page, with its count, and narrow
 test("on a wide screen, the search and the kinds stay in view beside the drawings", async ({ page, isMobile }) => {
   test.skip(isMobile, "a phone shows them above the drawings");
   await page.goto("/ingredients");
+  // The search is enabled once the page is live, so what's measured isn't the version shown before it.
+  await expect(filter(page)).toBeEnabled();
   await page.getByRole("heading", { level: 2, name: "Blends" }).scrollIntoViewIfNeeded();
   await expect(filter(page)).toBeInViewport();
   await expect(page.getByRole("navigation", { name: "Kinds of ingredient" })).toBeInViewport();
@@ -119,6 +121,8 @@ test("in a short window, the kinds scroll on their own above the basket bar, kee
   test.skip(isMobile, "a phone shows the kinds as a row above the drawings");
   await page.setViewportSize({ width: 1280, height: 600 });
   await page.goto("/ingredients?with=basil");
+  // The search is enabled once the page is live, so what's measured isn't the version shown before it.
+  await expect(filter(page)).toBeEnabled();
   const index = page.getByRole("navigation", { name: "Kinds of ingredient" });
   const list = index.getByRole("list");
   const bar = page.getByRole("button", { name: /^Your basket/ });

@@ -5,7 +5,7 @@ description: The image loop for #64, replacing placeholders with reviewed AI-gen
 
 # Next image prompt
 
-The author generates each image by hand with a free Gemini image model; you hand them the prompt, then take the image back in. Each image is one sub-issue of #64, and its body holds the **prompt**, the reference images to attach, and the alt text. The rules are ADR 0005 and `docs/image-style-guide.md`.
+The author generates each image by hand with GPT-6, in ChatGPT; you hand them the prompt, then take the image back in. The model is always GPT-6: never ask which one made an image. The sub-issues' settings lines still name a free Gemini model, from before the switch; ignore that part. Each image is one sub-issue of #64, and its body holds the **prompt**, the reference images to attach, and the alt text. The rules are ADR 0005 and `docs/image-style-guide.md`.
 
 All work happens on the `real-images` branch. Switch to it first; create it from `main` if it's missing.
 
@@ -21,7 +21,7 @@ All work happens on the `real-images` branch. Switch to it first; create it from
    No number back means either every sub-issue is closed (say so, and offer the PR below) or the rest are blocked by an open anchor (name it).
 2. Read its body and reply with exactly this, and nothing more:
    - the issue number and title;
-   - the settings line, and which files to attach, as absolute paths so they can be dragged in;
+   - the settings, as "GPT-6, aspect ratio 3:2, at its largest size", and which files to attach, as absolute paths so they can be dragged in;
    - the prompt, verbatim, in its own fenced `text` block, so it copies in one go.
 
 Done when the user has a prompt they can paste unedited.
@@ -45,7 +45,7 @@ The image belongs to the last prompt you gave. If you gave none this session, it
      alt: <the issue's alt text, adjusted if the image shows something different>
      provenance:
        made: ai-generated
-       model: <the model and version, and where it ran, copied from the last image committed on this branch, or asked of the user for the first>
+       model: GPT-6 (OpenAI)
        prompt: <the prompt as sent, plus "Then: <follow-up>" for each edit asked of the model>
        date: "<today>"
        review:
@@ -61,7 +61,7 @@ Done when the issue is closed and the tests pass. Then offer the next prompt.
 ### It doesn't match
 
 Leave the placeholder in place. Comment on the issue with what was wrong. Then give the user a fix in a fenced `text` block, as one of these:
-- a follow-up to send in the same AI Studio chat, for a local fix ("Remove the parsley; keep everything else the same.");
+- a follow-up to send in the same ChatGPT chat, for a local fix ("Remove the parsley; keep everything else the same.");
 - a revised prompt, for a wrong composition.
 
 Whatever they send becomes the prompt as sent, so carry it into the provenance when the image matches.

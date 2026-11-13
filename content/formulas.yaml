@@ -174,3 +174,119 @@
     - Bring {acid}, a little water (never more water than vinegar), salt and a little sugar to a simmer, stirring until they dissolve.
     - Pour the hot brine over so it covers everything, and let it cool.
     - Lid the jar and refrigerate it. It's ready in a few hours and better after a day; keep it in the fridge and eat it within 2 weeks.
+
+- id: stir-fry
+  name: Stir-fry
+  description: Small pieces cooked fast in a very hot pan, then tossed with a sauce that clings, and served over rice.
+  slots:
+    - id: protein
+      role: something to stir-fry
+      accepts: protein
+    - id: vegetable
+      role: a vegetable
+      accepts: vegetable
+    - id: aromatic
+      role: an aromatic
+      accepts: aromatic
+    - id: sauce
+      role: a sauce to glaze it
+      accepts: sauce
+    - id: heat
+      role: some heat
+      accepts: heat
+      required: false
+    - id: garnish
+      role: something fresh to finish
+      accepts: garnish
+      required: false
+  method:
+    - Cut {protein} and {vegetable} into small, even pieces, so everything cooks in the same time.
+    - Heat a wok or large skillet until it barely smokes, add oil, and stir-fry {protein} until browned and cooked through (poultry to 165°F / 74°C; pork to 160°F / 71°C; beef steak and fish to 145°F / 63°C). Set it aside on a clean plate.
+    - Stir-fry {vegetable} until bright and tender at the edges, then add {aromatic} and {heat} for about 30 seconds, until fragrant.
+    - Return {protein}, add {sauce} with a splash of water, and toss until it glazes everything.
+    - Finish with {garnish} and serve it straight away, over rice.
+
+- id: seared-with-sauce
+  name: Seared, with a sauce
+  description: Something seared hard in a hot pan, served with a sauce made separately and a vegetable cooked alongside.
+  slots:
+    - id: protein
+      role: something to sear
+      accepts: protein
+    - id: sauce
+      role: a sauce to serve with it
+      accepts: sauce
+    - id: vegetable
+      role: a vegetable alongside
+      accepts: vegetable
+    - id: acid
+      role: an acid to finish
+      accepts: acid
+      required: false
+    - id: herb
+      role: a soft herb
+      accepts: soft herb
+      required: false
+  method:
+    - Make or loosen {sauce} first, so it's ready when {protein} is.
+    - Cook {vegetable} in a hot pan or oven until tender and charred in places, and keep it warm.
+    - Season {protein} with salt and sear it in a little oil over medium-high heat, turning once, until browned and cooked through (at the thickest point, poultry to 165°F / 74°C; pork to 160°F / 71°C; beef and lamb steaks and chops, and fish, to 145°F / 63°C). Rest it for a few minutes.
+    - Serve {protein} with {vegetable}, spoon {sauce} over or alongside, and finish with {acid} and {herb}.
+
+- id: roasted-vegetables
+  name: Roasted vegetables
+  description: A vegetable roasted hot until it browns at the edges, then dressed while warm so it takes in the sauce.
+  slots:
+    - id: vegetable
+      role: a vegetable to roast
+      accepts: vegetable
+    - id: sauce
+      role: a sauce to spoon over
+      accepts: sauce
+    - id: acid
+      role: an acid
+      accepts: acid
+    - id: herb
+      role: a soft herb
+      accepts: soft herb
+      required: false
+    - id: garnish
+      role: something to scatter
+      accepts: garnish
+      required: false
+  method:
+    - Heat the oven to 425°F / 220°C. Cut {vegetable} into even pieces, toss it with oil and salt, and spread it on a sheet pan with room between the pieces, so it browns rather than steams.
+    - Roast it, turning once, until tender and deep golden at the edges, usually 25 to 40 minutes.
+    - Loosen {sauce} with {acid} and a little water until it pours.
+    - Spoon {sauce} over {vegetable} while it's warm, and finish with {herb} and {garnish}.
+
+- id: braise
+  name: Braise
+  description: Something browned, then cooked slowly and covered in a little liquid with an aromatic and a vegetable until it's tender.
+  slots:
+    - id: protein
+      role: something to braise
+      accepts: protein
+    - id: aromatic
+      role: an aromatic
+      accepts: aromatic
+    - id: vegetable
+      role: a vegetable
+      accepts: vegetable
+    - id: acid
+      role: an acid to brighten it
+      accepts: acid
+      required: false
+    - id: herb
+      role: a soft herb
+      accepts: soft herb
+      required: false
+    - id: heat
+      role: some heat
+      accepts: heat
+      required: false
+  method:
+    - Season {protein} with salt and brown it well in a little oil in a heavy pot, in batches so it isn't crowded, then set it aside.
+    - Lower the heat and cook {aromatic} in the fat until soft and fragrant.
+    - Return {protein} with {vegetable}, {heat} and enough water or stock to come a third of the way up. Bring it to a simmer, cover, and cook gently until {protein} is tender and cooked through (poultry to 165°F / 74°C; pork to 160°F / 71°C; beef and lamb to at least 145°F / 63°C, though tough cuts need much longer to turn tender).
+    - Taste for salt, brighten it with {acid}, and finish with {herb}.

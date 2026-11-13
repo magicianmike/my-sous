@@ -14,6 +14,7 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   ["/formulas/pan-sauce", (page) => page.getByRole("heading", { name: "Ingredients" })],
   ["/formulas/fried-rice", (page) => page.getByRole("heading", { name: "Ingredients" })],
   ["/formulas/quick-pickle", (page) => page.getByRole("heading", { name: "Ingredients" })],
+  ["/formulas/braise", (page) => page.getByRole("heading", { name: "Ingredients" })],
   ["/ingredients/gremolata", (page) => page.getByRole("heading", { name: "Typically includes" })],
   ["/design", (page) => page.getByRole("heading", { name: "Combination tray" })],
   ["/case-study", (page) => page.getByRole("figure").first()],

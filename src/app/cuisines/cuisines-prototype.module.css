@@ -1,0 +1,234 @@
+/* PROTOTYPE: throwaway. Layouts for ./cuisines-prototype.tsx. Tokens only, like every stylesheet. */
+
+/* Shared */
+
+:global(main):has(.wide) {
+  max-width: none;
+}
+
+.meta {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.cluster {
+  display: flex;
+}
+
+.cluster > * + * {
+  margin-inline-start: calc(var(--space-3) * -1);
+  box-shadow: 0 0 0 var(--border-control) var(--bg);
+}
+
+.clusterMd > * + * {
+  margin-inline-start: calc(var(--space-4) * -1);
+  box-shadow: 0 0 0 var(--border-control) var(--sunk);
+}
+
+/* The whole card is the link's target. */
+.stretched::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.pushDown {
+  margin-top: auto !important;
+  padding-top: var(--space-3);
+}
+
+/* B: card grid */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--dish-card-min), 100%), 1fr));
+  gap: var(--space-5);
+  margin: var(--space-5) 0 0;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.band {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 2;
+  background: var(--sunk);
+}
+
+.cardBody {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+}
+
+.cardBody p {
+  margin: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+
+/* C: pantry shelves */
+
+.shelves {
+  display: grid;
+  gap: var(--space-7);
+  margin: var(--space-5) 0 0;
+}
+
+.shelf p {
+  margin: 0 0 var(--space-3);
+}
+
+.shelfHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-1);
+  border-bottom: var(--border-control) solid var(--ink);
+  margin-bottom: var(--space-2);
+}
+
+.shelfTitle {
+  margin: 0;
+  font-size: var(--text-title);
+}
+
+.seeAll {
+  white-space: nowrap;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-weight: var(--weight-bold);
+}
+
+/* D: signature pairing */
+
+.pairGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--door-min), 100%), 1fr));
+  gap: var(--space-4);
+  margin: var(--space-5) 0 0;
+}
+
+.pairCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-5) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-align: center;
+}
+
+.pairCard p {
+  margin: 0;
+}
+
+.pairCuisine {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-xl);
+}
+
+.pair {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.plus {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--ink-muted);
+}
+
+.pairNames {
+  margin-top: var(--space-3) !important;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-style: italic;
+  font-weight: var(--weight-display);
+}
+
+.pairNote {
+  margin-top: var(--space-2) !important;
+  font-size: var(--text-sm);
+}
+
+/* E: index table */
+
+.table {
+  width: 100%;
+  margin-top: var(--space-5);
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: var(--space-3) var(--space-3) var(--space-3) 0;
+  border-bottom: var(--border-hairline) solid var(--line);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.table thead th {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  border-bottom: var(--border-control) solid var(--ink);
+}
+
+.tableName {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+  white-space: nowrap;
+}
+
+.where {
+  font-size: var(--text-sm);
+}
+
+.num {
+  text-align: end !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-bold);
+}
+
+@media (max-width: 40rem) {
+  .hideNarrow {
+    display: none;
+  }
+}
+
+.pairWhere {
+  font-size: var(--text-sm);
+  border-top: var(--border-hairline) solid var(--line);
+  margin-top: var(--space-4) !important;
+  padding-top: var(--space-3);
+}

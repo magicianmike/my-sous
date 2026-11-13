@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { IngredientMark } from "@/components/IngredientMark";
-import { joinWithAnd } from "@/kitchen/kitchen";
-import { CombinationLink } from "../combination";
+import { Suspense } from "react";
 import { getKitchen } from "../kitchen";
+import { VariantSwitch } from "../prototype-switcher";
+import { VARIANTS, VariantA, VariantB, VariantC, VariantD, VariantE } from "./cuisines-prototype";
 
 export const metadata: Metadata = { title: "Cuisines" };
 
-/** How many of a Cuisine's Ingredients its row draws: enough to tell it apart, few enough to glance at. */
-const GLIMPSE = 5;
+// PROTOTYPE: five layouts of the Cuisines page on the existing /cuisines route, switchable via `?variant=A`–`E`.
 
 /**
  * Every Cuisine, named regionally: a second way into the same Ingredients and Pairings. Each is told apart
@@ -15,35 +14,17 @@ const GLIMPSE = 5;
  */
 export default async function CuisinesPage() {
   const kitchen = await getKitchen();
+  const views = kitchen.cuisines().map(({ id }) => kitchen.cuisine(id)!);
+  const variants = {
+    A: <VariantA views={views} />,
+    B: <VariantB views={views} />,
+    C: <VariantC views={views} />,
+    D: <VariantD views={views} />,
+    E: <VariantE views={views} />,
+  };
   return (
-    <>
-      <h1>Cuisines</h1>
-      <p className="lede">What&rsquo;s common in a cooking tradition, and what pairs in it.</p>
-      <ul className="cuisine-list" style={{ "--glimpse": GLIMPSE } as React.CSSProperties}>
-        {kitchen.cuisines().map(({ id, name, description }) => {
-          const { ingredients, mostPaired } = kitchen.cuisine(id)!;
-          const glimpse = mostPaired.slice(0, GLIMPSE);
-          return (
-            <li key={id}>
-              <div>
-                <h2>
-                  <CombinationLink href={`/cuisines/${id}`}>{name}</CombinationLink>
-                </h2>
-                <p className="muted">{description}</p>
-                <p className="cuisine-count">
-                  {ingredients.length} common {ingredients.length === 1 ? "ingredient" : "ingredients"}
-                </p>
-              </div>
-              {/* No name sits beside these drawings, so the cluster is one image named by its Ingredients. */}
-              <span className="cuisine-marks" role="img" aria-label={joinWithAnd(glimpse.map(({ name }) => name))}>
-                {glimpse.map((ingredient) => (
-                  <IngredientMark key={ingredient.id} ingredient={ingredient} size="sm" />
-                ))}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-    </>
+    <Suspense fallback={variants.A}>
+      <VariantSwitch variants={VARIANTS} views={variants} />
+    </Suspense>
   );
 }

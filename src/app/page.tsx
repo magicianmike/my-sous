@@ -11,6 +11,7 @@ export default async function Home() {
   const kitchen = await getKitchen();
   const ingredients = kitchen.ingredients();
   const cuisines = kitchen.cuisines();
+  const formulas = kitchen.formulas();
   return (
     <>
       <h1>Find what goes with what, and why.</h1>
@@ -41,6 +42,12 @@ export default async function Home() {
           <CombinationLink href="/cuisines" className="door">
             <span className="door-title">Browse cuisines</span>
             <span className="door-detail">{cuisines.map(({ name }) => name).join(" · ")}</span>
+          </CombinationLink>
+        </li>
+        <li>
+          <CombinationLink href="/dishes" className="door">
+            <span className="door-title">Browse dishes</span>
+            <span className="door-detail">{formulas.map(({ name }) => name).join(" · ")}</span>
           </CombinationLink>
         </li>
       </ul>

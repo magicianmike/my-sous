@@ -22,6 +22,7 @@ const screens = [
   "/suggestions?with=chicken-thigh,basil,ginger",
   "/formulas/sheet-pan-roast?with=ginger",
   "/formulas/pan-sauce",
+  "/dishes",
   "/case-study",
   "/cuisines",
   "/ingredients",

@@ -168,6 +168,10 @@ const scales = {
   "tile-min": "11rem",
   // Home's two browse cards sit side by side only when each has this much room.
   "door-min": "16rem",
+  // The Dishes page's cards: as many columns as fit at this width, three on a wide screen.
+  "dish-card-min": "18rem",
+  // The Ingredients page's sidebar: the search and the kinds, beside the drawings.
+  "ingredient-sidebar-width": "16rem",
   // The open tray sheet's Close and See what to make share a row only when each is this wide.
   "sheet-action-min": "12rem",
   // Borders: hairlines for decoration, a heavier line for controls.
@@ -198,6 +202,8 @@ const scales = {
   "scrim-blur": "6px",
   // Touch targets: the smallest a tappable control may be.
   "target": "2.75rem",
+  // A denser row for a precise pointer, where many links stack, such as the Ingredients page's kinds.
+  "target-dense": "2rem",
   "chip-height": "2rem",
   // The box a checkbox draws; the whole row around it is the target.
   "check-size": "1.25rem",

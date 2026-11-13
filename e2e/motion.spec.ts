@@ -30,6 +30,21 @@ for (const reduced of [false, true]) {
       await expect(page.getByRole("heading", { level: 2, name: "The module" })).toBeInViewport();
     });
 
+    test("the Ingredients page's kinds glide to their kind", async ({ page, isMobile }) => {
+      await page.goto("/ingredients");
+      const behaviours = await page.evaluate(() =>
+        [document.documentElement, document.querySelector(".page")!].map((el) => getComputedStyle(el).scrollBehavior),
+      );
+      expect(behaviours).toEqual(reduced ? ["auto", "auto"] : ["smooth", "smooth"]);
+
+      const index = page.getByRole("navigation", { name: "Kinds of ingredient" });
+      // On a phone the row of kinds scrolls sideways, so the last may be out of sight until it's scrolled to.
+      const condiments = index.getByRole("link", { name: /^Condiments/ });
+      if (isMobile) await condiments.scrollIntoViewIfNeeded();
+      await condiments.click();
+      await expect(page.getByRole("heading", { level: 2, name: "Condiments" })).toBeInViewport();
+    });
+
     test("the Ingredient's drawing draws itself in", async ({ page }) => {
       await page.goto("/ingredients/lemon");
       const stroke = page.locator(".hero svg > *").first();

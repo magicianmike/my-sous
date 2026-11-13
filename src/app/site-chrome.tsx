@@ -41,23 +41,28 @@ export function SkipLinks() {
 }
 
 /**
- * The two ways to browse, on every app screen; the current section is marked, in words and with an
+ * The three ways to browse, on every app screen; the current section is marked, in words and with an
  * underline. The Case Study is a document about MySous, so it keeps a quiet header without it.
  */
 export function SiteNav() {
   const pathname = usePathname();
   const isCaseStudy = useIsCaseStudy();
   if (isCaseStudy) return null;
+  // A dish's own page is under /formulas, so it marks Dishes as current too.
   const sections = [
-    { href: "/ingredients", label: "Ingredients" },
-    { href: "/cuisines", label: "Cuisines" },
+    { href: "/ingredients", label: "Ingredients", within: ["/ingredients"] },
+    { href: "/cuisines", label: "Cuisines", within: ["/cuisines"] },
+    { href: "/dishes", label: "Dishes", within: ["/dishes", "/formulas"] },
   ];
   return (
     <nav aria-label="Main" className="site-nav">
       <ul>
-        {sections.map(({ href, label }) => (
+        {sections.map(({ href, label, within }) => (
           <li key={href}>
-            <CombinationLink href={href} aria-current={pathname.startsWith(href) ? "page" : undefined}>
+            <CombinationLink
+              href={href}
+              aria-current={within.some((prefix) => pathname.startsWith(prefix)) ? "page" : undefined}
+            >
               {label}
             </CombinationLink>
           </li>

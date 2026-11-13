@@ -50,29 +50,37 @@ test("an Ingredient's Cuisines lead to their pages", async ({ page }) => {
   await expect(page).toHaveURL(/\/cuisines\/southern-italian$/);
 });
 
-test("each Cuisine's row shows the drawings of the Ingredients it leans on, and how many it has", async ({ page }) => {
+test("the Cuisines index gives each Cuisine a row: where it is, its counts, and the drawings of what it leans on", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
   await page.goto("/cuisines");
-  const sichuan = page.getByRole("main").getByRole("listitem").filter({ has: page.getByRole("heading", { name: "Sichuan" }) });
+  const table = page.getByRole("table", { name: "Cuisines" });
+  await expect(table.getByRole("columnheader")).toHaveText(["Cuisine", "Where", "Ingredients", "Pairings", "Leans on"]);
+  const sichuan = table.getByRole("row").filter({ has: page.getByRole("rowheader", { name: "Sichuan" }) });
+  await expect(sichuan.getByRole("cell")).toHaveText([/^The cooking of Sichuan province/, "19", /^\d+$/, ""]);
   await expect(sichuan.getByRole("img")).toHaveAccessibleName(
     "Sichuan pepper, Black vinegar, Doubanjiang, Chicken breast and Dried chile",
   );
   await expect(sichuan.locator(".ingredient-mark")).toHaveCount(5);
-  await expect(sichuan).toContainText("19 common ingredients");
   await sichuan.getByRole("link", { name: "Sichuan" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Sichuan" })).toBeVisible();
 });
 
 test("a Cuisine with fewer than five Ingredients shows them all", async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
   await page.goto("/cuisines");
-  const ligurian = page.getByRole("main").getByRole("listitem").filter({ has: page.getByRole("heading", { name: "Ligurian" }) });
+  const ligurian = page.getByRole("row").filter({ has: page.getByRole("rowheader", { name: "Ligurian" }) });
   await expect(ligurian.locator(".ingredient-mark")).toHaveCount(3);
-  await expect(ligurian).toContainText("3 common ingredients");
+  await expect(ligurian.getByRole("cell").nth(1)).toHaveText("3");
 });
 
-test("on a narrow screen, a Cuisine's drawings sit under its words", async ({ page }) => {
+test("on a narrow screen, the Cuisines index keeps each name and its counts", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto("/cuisines");
-  const sichuan = page.getByRole("main").getByRole("listitem").filter({ has: page.getByRole("heading", { name: "Sichuan" }) });
-  const [words, marks] = await Promise.all([sichuan.locator("div").first().boundingBox(), sichuan.getByRole("img").boundingBox()]);
-  expect(marks!.y).toBeGreaterThan(words!.y + words!.height - 1);
+  const table = page.getByRole("table", { name: "Cuisines" });
+  await expect(table.getByRole("columnheader")).toHaveText(["Cuisine", "Ingredients", "Pairings"]);
+  const sichuan = table.getByRole("row").filter({ has: page.getByRole("rowheader", { name: "Sichuan" }) });
+  await expect(sichuan.getByRole("cell")).toHaveText(["19", /^\d+$/]);
+  await expect(sichuan.getByRole("img")).toBeHidden();
 });

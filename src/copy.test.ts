@@ -104,7 +104,7 @@ it("links every Blend component that's an Ingredient in MySous", async () => {
   expect(unlinked).toEqual([]);
 });
 
-it("has six Formulas, each with a Recipe", async () => {
+it("has ten Formulas, each with a Recipe", async () => {
   const kitchen = await realKitchen();
 
   // With an empty basket, every Formula is suggested, and its Recipe fills it.
@@ -112,7 +112,7 @@ it("has six Formulas, each with a Recipe", async () => {
     .suggest([])
     .filter((suggestion) => !kitchen.recipe(suggestion))
     .map(({ formula }) => formula.name);
-  expect(kitchen.formulas()).toHaveLength(6);
+  expect(kitchen.formulas()).toHaveLength(10);
   expect(withoutRecipe).toEqual([]);
 });
 

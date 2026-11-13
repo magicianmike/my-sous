@@ -162,6 +162,8 @@ The result is single-line drawings on a shared 48-unit grid, each Ingredient in 
 
 **The Kitchen, through its front door.** The Kitchen is the module that holds every rule, described in [The module](#kitchen). Every Kitchen test goes through `loadKitchen` with a small fixture content folder written for that rule, so the internals can change without breaking tests. The same suite loads the real content. A Pairing without a source fails the build, and a launch Cuisine short of a part fails the tests.
 
+**Components, one at a time.** Every component has stories in Storybook: each of its states, with real Ingredients' names, colours and drawings, and real images, read from the content. Each story is also a test. Vitest runs it in Chromium, plays what a Cook would do, such as arrowing through the combobox's matches or removing an Ingredient from the basket, and fails it on any axe violation. These tests cover what a component does on its own; journeys across pages stay with the browser tests. The stories are published with the site, at [/storybook](/storybook).
+
 **The site that ships.** Browser tests run against the exact static export, never the dev server, at a phone's size and a desktop's. They cover each journey by mouse and keyboard, and run axe on every screen in both themes.
 
 <TestingDiagram />
@@ -175,7 +177,7 @@ The result is single-line drawings on a shared 48-unit grid, each Ingredient in 
 
 Two examples of the checks changing the design: axe caught the basket bar's name running its words together as "Your Combination0 of 4", and, as the content grew, a tile sitting under the docked bar on a phone, which is why the bar now has a row of its own.
 
-**Every change, in CI.** GitHub Actions runs the type check, the unit tests, the build, which loads the real content, and the browser tests on every pull request. I merge only when it's green. One browser test failed twice there and nowhere else. On a phone, with reduced motion, it saw none of the Pairing rows begin their entrance, which under reduced motion takes no time. It passed on my Mac, in Linux in Docker with the same browser, and with the CPU slowed twelve times. So rather than retry until green, I changed what the test watches. It now checks what it means: no row is swapped as the page goes live. Forcing the rows to be swapped made it fail with all 37 rows reported, so the check still bites.
+**Every change, in CI.** GitHub Actions runs the type check, the unit tests, the build, which loads the real content, the component tests and the browser tests on every pull request. I merge only when it's green. One browser test failed twice there and nowhere else. On a phone, with reduced motion, it saw none of the Pairing rows begin their entrance, which under reduced motion takes no time. It passed on my Mac, in Linux in Docker with the same browser, and with the CPU slowed twelve times. So rather than retry until green, I changed what the test watches. It now checks what it means: no row is swapped as the page goes live. Forcing the rows to be swapped made it fail with all 37 rows reported, so the check still bites.
 
 </Chapter>
 

@@ -20,6 +20,8 @@ jobs:
       # The build loads the real content, so any ContentError fails it.
       - run: npm run build
       - run: npx playwright install --with-deps chromium
+      # Every Storybook story, run as a component test in Chromium.
+      - run: npm run test:components
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()

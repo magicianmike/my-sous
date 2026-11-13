@@ -227,26 +227,28 @@ export function TestingDiagram() {
   return (
     <Diagram
       title="What runs on every change"
-      description="Three layers of checks. Vitest tests the Kitchen through loadKitchen with small fixture content folders, and checks the real content: every rule, every Pairing's source, the voice guide's banned words, and every launch Cuisine's coverage. Playwright runs against the exact static export that ships: journeys by mouse and keyboard, axe in light and dark at phone and desktop widths, no sideways scrolling from 320 pixels to wide desktop and at 200 percent zoom, touch targets, focus rings and motion. VoiceOver checks the core journey by hand on an iPhone and a Mac."
+      description="Four layers of checks. Vitest tests the Kitchen through loadKitchen with small fixture content folders, and checks the real content: every rule, every Pairing's source, the voice guide's banned words, and every launch Cuisine's coverage. Every Storybook story runs as a component test in Chromium: it renders, its interactions by mouse and keyboard hold, and axe finds nothing. Playwright runs against the exact static export that ships: journeys by mouse and keyboard, axe in light and dark at phone and desktop widths, no sideways scrolling from 320 pixels to wide desktop and at 200 percent zoom, touch targets, focus rings and motion. VoiceOver checks the core journey by hand on an iPhone and a Mac."
       wide={{
         width: 640,
-        height: 260,
+        height: 345,
         children: (
           <>
             <Box x={10} y={10} width={620} height={70} lines={["Vitest, through loadKitchen", "fixture content for each rule, and the real content: sources, voice, coverage"]} emphasis />
-            <Box x={10} y={95} width={620} height={70} lines={["Playwright, on the static export", "journeys, axe in both themes at two widths, reflow, touch targets, focus, motion"]} />
-            <Box x={10} y={180} width={620} height={70} lines={["VoiceOver, by hand", "the core journey, on an iPhone and a Mac"]} />
+            <Box x={10} y={95} width={620} height={70} lines={["Storybook, every story a test", "each component on its own in Chromium: its interactions, and axe"]} />
+            <Box x={10} y={180} width={620} height={70} lines={["Playwright, on the static export", "journeys, axe in both themes at two widths, reflow, touch targets, focus, motion"]} />
+            <Box x={10} y={265} width={620} height={70} lines={["VoiceOver, by hand", "the core journey, on an iPhone and a Mac"]} />
           </>
         ),
       }}
       stacked={{
         width: 340,
-        height: 345,
+        height: 445,
         children: (
           <>
             <Box x={10} y={10} width={320} height={110} lines={["Vitest, through loadKitchen", "fixture content for each rule,", "and the real content:", "sources, voice, coverage"]} emphasis />
-            <Box x={10} y={130} width={320} height={110} lines={["Playwright, on the static export", "journeys, axe in both themes", "at two widths, reflow,", "touch targets, focus, motion"]} />
-            <Box x={10} y={250} width={320} height={85} lines={["VoiceOver, by hand", "the core journey,", "on an iPhone and a Mac"]} />
+            <Box x={10} y={130} width={320} height={90} lines={["Storybook, every story a test", "each component on its own", "in Chromium: interactions, axe"]} />
+            <Box x={10} y={230} width={320} height={110} lines={["Playwright, on the static export", "journeys, axe in both themes", "at two widths, reflow,", "touch targets, focus, motion"]} />
+            <Box x={10} y={350} width={320} height={85} lines={["VoiceOver, by hand", "the core journey,", "on an iPhone and a Mac"]} />
           </>
         ),
       }}

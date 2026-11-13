@@ -8,3 +8,8 @@ playwright-report/
 .vercel
 # Made from content/images by `npm run images`.
 public/images/
+# Made by `npm run build-storybook`.
+storybook-static/
+*storybook.log
+# Storybook, built into the site at /storybook by `npm run build`.
+public/storybook/

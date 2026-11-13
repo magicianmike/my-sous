@@ -1,0 +1,234 @@
+/* PROTOTYPE: throwaway. Layouts for ./dishes-prototype.tsx. Tokens only, like every stylesheet. */
+
+/* Shared bits */
+
+.small {
+  font-size: var(--text-sm);
+}
+
+/* The wide variants break out of the reading measure to the page's full width. */
+:global(main):has(.wide) {
+  max-width: none;
+}
+
+/* B: card grid */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--space-8) * 4.5)), 1fr));
+  gap: var(--space-5);
+  margin: var(--space-5) 0 0;
+}
+
+.gridCard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.gridImage img {
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+}
+
+.gridBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+}
+
+.gridBody p {
+  margin: 0;
+}
+
+.gridTitle {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+
+.clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pushDown {
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+
+/* C: editorial rows */
+
+.editorialIntro {
+  padding-bottom: var(--space-5);
+}
+
+.editorial {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: var(--border-hairline) solid var(--line);
+}
+
+.editorialRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) calc(var(--space-8) * 1.75);
+  gap: var(--space-4);
+  align-items: start;
+  padding-block: var(--space-6);
+  border-top: var(--border-hairline) solid var(--line);
+}
+
+@media (min-width: 40rem) {
+  .editorialRow {
+    grid-template-columns: auto minmax(0, 1fr) calc(var(--space-8) * 2.75);
+    gap: var(--space-5);
+  }
+}
+
+.number {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-style: italic;
+  color: var(--ink-muted);
+  line-height: var(--leading-tight);
+}
+
+.editorialText > :is(p, div) {
+  margin: 0 0 var(--space-3);
+}
+
+.editorialTitle {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-title);
+}
+
+.thumb img {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+}
+
+/* D: feature + tiles */
+
+.feature {
+  display: grid;
+  gap: var(--space-5);
+  align-items: center;
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+@media (min-width: 48rem) {
+  .feature {
+    grid-template-columns: 3fr 2fr;
+    padding: var(--space-5);
+  }
+}
+
+.featureImage img {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+}
+
+.featureText > * {
+  margin: 0 0 var(--space-3);
+}
+
+.eyebrow {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-heavy);
+  text-transform: uppercase;
+}
+
+.featureTitle {
+  font-size: var(--text-display);
+}
+
+.sectionTitle {
+  margin-top: var(--space-7);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(45%, calc(var(--space-8) * 3)), 1fr));
+  gap: var(--space-5) var(--space-4);
+  margin: 0;
+}
+
+.tile {
+  position: relative;
+}
+
+.tile p {
+  margin: 0;
+}
+
+.tileImage img {
+  aspect-ratio: 1;
+}
+
+.tileTitle {
+  margin: var(--space-2) 0 var(--space-1);
+  font-size: var(--text-lg);
+}
+
+/* The whole tile is the link's target. */
+.stretched::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* E: menu */
+
+.menu {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-5);
+  border: var(--border-control) solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.menuIntro {
+  text-align: center;
+  padding-bottom: var(--space-5);
+  border-bottom: var(--border-hairline) solid var(--line);
+}
+
+.menuIntro h1 {
+  font-style: italic;
+}
+
+.menuList {
+  display: grid;
+  gap: var(--space-6);
+  margin: var(--space-6) 0 0;
+}
+
+.menuTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-xl);
+}
+
+.leader {
+  flex: 1;
+  border-bottom: var(--border-control) dotted var(--line);
+}
+
+.menuDescription {
+  margin: var(--space-1) 0 var(--space-2);
+  color: var(--ink-muted);
+  font-style: italic;
+}

@@ -1,22 +1,12 @@
 import type { Metadata } from "next";
-import { ContentImage } from "@/components/ContentImage";
-import { ListRow } from "@/components/ListRow";
-import { MarkGroup } from "@/components/MarkGroup";
-import { joinWithAnd, type Formula } from "@/kitchen/kitchen";
-import { CombinationLink } from "../combination";
-import { IngredientMarkLink } from "../ingredient-link";
+import { Suspense } from "react";
+import { VariantSwitch } from "../prototype-switcher";
 import { getKitchen } from "../kitchen";
+import { VARIANTS, VariantA, VariantB, VariantC, VariantD, VariantE, type Dish } from "./dishes-prototype";
 
 export const metadata: Metadata = { title: "Dishes" };
 
-/** A dish's parts in a sentence: the ones it needs, then the ones it can do without. */
-function partsSentence({ slots }: Formula): string {
-  const required = slots.filter(({ required }) => required).map(({ role }) => role);
-  const optional = slots.filter(({ required }) => !required).map(({ role }) => role);
-  return optional.length === 0
-    ? `Parts: ${joinWithAnd(required)}.`
-    : `Parts: ${required.join(", ")}, and optionally ${joinWithAnd(optional)}.`;
-}
+// PROTOTYPE: five layouts of the Dishes page on the existing /dishes route, switchable via `?variant=A`–`E`.
 
 /**
  * Every dish, the third way in: what it is, the parts the Cook's Ingredients fill, and what it's made
@@ -24,47 +14,25 @@ function partsSentence({ slots }: Formula): string {
  */
 export default async function DishesPage() {
   const kitchen = await getKitchen();
+  const dishes: Dish[] = kitchen.formulas().map((formula) => {
+    // The dish as written: filled from its Recipe alone, with no basket.
+    const asWritten = kitchen.suggestion(formula.id, [])!;
+    return {
+      formula,
+      image: kitchen.dishImage(asWritten)?.image,
+      ingredients: kitchen.recipe(asWritten)?.asWritten ?? [],
+    };
+  });
+  const views = {
+    A: <VariantA dishes={dishes} />,
+    B: <VariantB dishes={dishes} />,
+    C: <VariantC dishes={dishes} />,
+    D: <VariantD dishes={dishes} />,
+    E: <VariantE dishes={dishes} />,
+  };
   return (
-    <>
-      <h1>Dishes</h1>
-      <p className="lede">Each dish has parts, such as an acid or a soft herb, and your ingredients fill them.</p>
-      <ul className="stack" aria-label="Dishes">
-        {kitchen.formulas().map((formula) => {
-          // The dish as written: filled from its Recipe alone, with no basket.
-          const asWritten = kitchen.suggestion(formula.id, [])!;
-          const image = kitchen.dishImage(asWritten)?.image;
-          const ingredients = kitchen.recipe(asWritten)?.asWritten ?? [];
-          return (
-            <li key={formula.id}>
-              <ListRow
-                media={
-                  image && (
-                    // The heading names the dish, so its image is decorative.
-                    <ContentImage image={image} sizes="(min-width: 50rem) 40rem, 100vw" decorative noteOnImage className="card-image" />
-                  )
-                }
-                title={
-                  <h2>
-                    <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
-                  </h2>
-                }
-              >
-                <p>{formula.description}</p>
-                <p className="muted">{partsSentence(formula)}</p>
-                {ingredients.length > 0 && (
-                  <div className="mark-groups">
-                    <MarkGroup
-                      label="As written"
-                      ingredients={ingredients}
-                      renderMark={(ingredient) => <IngredientMarkLink ingredient={ingredient} named alone />}
-                    />
-                  </div>
-                )}
-              </ListRow>
-            </li>
-          );
-        })}
-      </ul>
-    </>
+    <Suspense fallback={views.A}>
+      <VariantSwitch variants={VARIANTS} views={views} />
+    </Suspense>
   );
 }

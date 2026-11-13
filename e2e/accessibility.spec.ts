@@ -18,6 +18,7 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
   ["/design", (page) => page.getByRole("heading", { name: "Combination tray" })],
   ["/case-study", (page) => page.getByRole("figure").first()],
   ["/cuisines", (page) => page.getByRole("heading", { level: 1, name: "Cuisines" })],
+  ["/dishes", (page) => page.getByRole("heading", { level: 1, name: "Dishes" })],
   ["/ingredients", (page) => page.getByRole("heading", { level: 2, name: "Herbs" })],
   ["/cuisines/southern-italian", (page) => page.getByRole("heading", { name: "Pairings" })],
   [

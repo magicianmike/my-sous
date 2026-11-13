@@ -170,6 +170,8 @@ const scales = {
   "door-min": "16rem",
   // The Dishes page's cards: as many columns as fit at this width, three on a wide screen.
   "dish-card-min": "18rem",
+  // The Ingredients page's sidebar: the search and the kinds, beside the drawings.
+  "ingredient-sidebar-width": "16rem",
   // The open tray sheet's Close and See what to make share a row only when each is this wide.
   "sheet-action-min": "12rem",
   // Borders: hairlines for decoration, a heavier line for controls.

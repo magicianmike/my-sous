@@ -476,6 +476,7 @@ button:hover .plus-icon {
   }
 
   .ingredient-links li:hover .quick-add button,
+  .ingredient-gallery li:hover .quick-add button,
   .quick-add button:focus-visible {
     opacity: 1;
   }
@@ -517,6 +518,132 @@ button:hover .plus-icon {
 
 .ingredient-group h2 {
   margin-top: var(--space-6);
+  /* A kind jumped to from the index lands with room above its heading. */
+  scroll-margin-top: var(--space-4);
+}
+
+/*
+ * The Ingredients page: the search and an index of the kinds above the drawings on a phone, and in a
+ * sidebar that stays in view beside them once there's room. The page takes its full width, out of the measure.
+ */
+main:has(.ingredient-finder) {
+  max-width: none;
+}
+
+.ingredient-finder {
+  display: grid;
+  /* No wider than the screen, however long the row of kinds, which scrolls within it. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+/* On a phone, the kinds are one row of links that scrolls sideways, so the drawings start on the first screen. */
+.kind-index {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding-bottom: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.kind-index li {
+  flex: none;
+}
+
+.kind-index a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-weight: var(--weight-bold);
+}
+
+.kind-count {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 48rem) {
+  .ingredient-finder {
+    grid-template-columns: var(--ingredient-sidebar-width) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  /* In view as the drawings scroll, and scrolling itself when the window is shorter than it, above the basket bar. */
+  .ingredient-sidebar {
+    position: sticky;
+    top: var(--space-4);
+    max-height: calc(100dvh - var(--space-4) * 2 - var(--tray-dock-height));
+    overflow-y: auto;
+  }
+
+  /* Beside the drawings, the kinds are a column, each count at the row's end. */
+  .kind-index {
+    display: grid;
+    gap: 0;
+    overflow: visible;
+  }
+
+  .kind-index a {
+    display: flex;
+    justify-content: space-between;
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-sm);
+    background: none;
+  }
+
+  .kind-index a:hover {
+    background: var(--sunk);
+  }
+
+  /* The first kind's heading lines up with the top of the search. */
+  .ingredient-finder .ingredient-group:first-child h2 {
+    margin-top: 0;
+  }
+}
+
+/* Each Ingredient a tile, its drawing large over its name; the add button in the top corner. */
+.ingredient-gallery {
+  display: grid;
+  /* At least two across, even on a phone. */
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--tile-min), calc(50% - var(--space-3) / 2)), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.ingredient-gallery li {
+  position: relative;
+}
+
+.ingredient-gallery a {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-4) var(--space-3);
+  /* Every tile keeps the border's room, so nothing moves when one is added to the basket. */
+  border: var(--border-control) solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  font-weight: var(--weight-bold);
+  text-align: center;
+}
+
+/* In the basket: a solid edge in ink. Its button says Remove, for those who don't see the edge. */
+.ingredient-gallery .in-basket a {
+  border-color: var(--ink);
+}
+
+.ingredient-gallery .quick-add {
+  top: var(--space-1);
+  right: var(--space-1);
+  transform: none;
 }
 
 /* Dishes */

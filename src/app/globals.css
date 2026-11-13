@@ -481,7 +481,7 @@ button:hover .plus-icon {
   }
 }
 
-/* Home's two ways to browse, each a card that's one link. */
+/* Home's three ways to browse, each a card that's one link. */
 .browse-doors {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(var(--door-min), 100%), 1fr));

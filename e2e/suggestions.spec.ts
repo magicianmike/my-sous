@@ -65,12 +65,14 @@ test("with no Combination, What to make shows six open Slots and one way forward
 });
 
 test("What to make lists only the dishes the basket fits", async ({ page }) => {
-  // Chicken thigh and garlic cover at least half of what these three need, and too little of the rest.
+  // Chicken thigh and garlic cover at least half of what these five need, and too little of the rest.
   await page.goto("/suggestions?with=chicken-thigh,garlic");
   await expect(page.getByRole("list", { name: "Suggestions" }).getByRole("heading", { level: 3 })).toHaveText([
     "Pan sauce",
     "Sheet-pan roast",
     "Fried rice",
+    "Braise",
+    "Stir-fry",
   ]);
 });
 
@@ -83,7 +85,7 @@ test("when no dish fits, What to make names the closest and what to add, and add
   await expect(page.getByRole("list", { name: "Suggestions" })).toHaveCount(0);
   await expect(page.getByText(/at least half/)).toHaveCount(0);
   const closest = nothing.getByRole("listitem").filter({ has: page.getByRole("heading", { level: 3 }) });
-  await expect(closest.getByRole("heading", { level: 3 })).toHaveText(["Pan sauce", "Sheet-pan roast", "Fried rice"]);
+  await expect(closest.getByRole("heading", { level: 3 })).toHaveText(["Pan sauce", "Sheet-pan roast", "Seared, with a sauce"]);
   const panSauce = closest.filter({ has: page.getByRole("heading", { name: "Pan sauce" }) });
   await expect(panSauce).toContainText("Add one of these parts: an aromatic or an acid.");
   await panSauce.getByRole("button", { name: "Add Garlic to your basket" }).click();

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("Home says what MySous does, what the basket is for, and offers search and two ways to browse", async ({
+test("Home says what MySous does, what the basket is for, and offers search and three ways to browse", async ({
   page,
 }) => {
   await page.goto("/");
@@ -13,6 +13,7 @@ test("Home says what MySous does, what the basket is for, and offers search and 
   await expect(main.getByRole("combobox", { name: "Find an ingredient" })).toBeVisible();
   await expect(main.getByRole("link", { name: /^Browse ingredients/ })).toHaveAttribute("href", "/ingredients");
   await expect(main.getByRole("link", { name: /^Browse cuisines/ })).toHaveAttribute("href", "/cuisines");
+  await expect(main.getByRole("link", { name: /^Browse dishes/ })).toHaveAttribute("href", "/dishes");
 });
 
 test("from Home, a Cook browses ingredients, fills the basket and sees what to make", async ({ page }) => {
@@ -38,13 +39,13 @@ test("the Ingredients page lists every Ingredient by kind", async ({ page }) => 
   await expect(herbs.getByRole("link")).toHaveText(["Basil", "Cilantro", "Epazote", "Mint", "Parsley", "Shiso"]);
 });
 
-test("the top nav reaches Ingredients and Cuisines on app screens, marks the current one, keeps the basket", async ({
+test("the top nav reaches Ingredients, Cuisines and Dishes on app screens, marks the current one, keeps the basket", async ({
   page,
 }) => {
   for (const path of ["/", "/ingredients/lemon?with=garlic", "/suggestions?with=garlic", "/formulas/pan-sauce"]) {
     await page.goto(path);
     const nav = page.getByRole("navigation", { name: "Main" });
-    await expect(nav.getByRole("link")).toHaveText(["Ingredients", "Cuisines"]);
+    await expect(nav.getByRole("link")).toHaveText(["Ingredients", "Cuisines", "Dishes"]);
   }
   // The Case Study keeps a quiet header: the wordmark and its label.
   await page.goto("/case-study");

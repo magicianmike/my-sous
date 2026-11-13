@@ -8,6 +8,11 @@ type Props = Omit<React.ComponentProps<typeof Button>, "children" | "variant"> &
   name: string;
   /** Once it's in the basket, the same button says Remove, so keyboard focus stays on it after a press. */
   added?: boolean;
+  /**
+   * How strongly Add calls: solid where it's the screen's one action, such as an Ingredient's page, or
+   * outlined where many sit together, such as the Ingredients list.
+   */
+  emphasis?: "primary" | "secondary";
 };
 
 /** What adding or removing an Ingredient is called, for a button's name: "Add Garlic to your basket". */
@@ -16,10 +21,10 @@ export function basketWords(name: string, added: boolean): string {
 }
 
 /** Add to the basket, shown as a basket and a plus, with its words in its name and, under the pointer, a tooltip. */
-export function AddToBasketButton({ name, added = false, ...props }: Props) {
+export function AddToBasketButton({ name, added = false, emphasis = "primary", ...props }: Props) {
   return (
     <Tooltip label={added ? null : basketWords(name, false)}>
-      <Button variant={added ? "secondary" : "primary"} {...props}>
+      <Button variant={added ? "secondary" : emphasis} {...props}>
         {added ? (
           <>
             Remove<span className="visually-hidden"> {name} from your basket</span>

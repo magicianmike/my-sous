@@ -145,9 +145,11 @@ export function useBasketToggle(ingredientId: string) {
 
 export const AddToCombination = withSearchParams(function AddToCombination({
   ingredientId,
+  emphasis,
 }: {
   ingredientId: string;
+  emphasis?: React.ComponentProps<typeof AddToBasketButton>["emphasis"];
 }) {
   const { ingredient, added, toggle } = useBasketToggle(ingredientId);
-  return <AddToBasketButton name={ingredient.name} added={added} onClick={toggle} />;
+  return <AddToBasketButton name={ingredient.name} added={added} emphasis={emphasis} onClick={toggle} />;
 });

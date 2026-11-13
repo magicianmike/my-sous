@@ -19,6 +19,15 @@ export const Add: Story = {
   },
 };
 
+/** Outlined, for where many sit together, such as the Ingredients list. */
+export const Secondary: Story = {
+  args: { emphasis: "secondary" },
+  play: async ({ canvas }) => {
+    const button = canvas.getByRole("button", { name: "Add Garlic to your basket" });
+    await expect(getComputedStyle(button).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+  },
+};
+
 export const Added: Story = {
   args: { added: true },
   play: async ({ canvas }) => {

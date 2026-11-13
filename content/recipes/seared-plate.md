@@ -3,7 +3,7 @@ serves: 2
 time: { prep: 10, cook: 20 }
 # A placeholder until the reviewed image arrives.
 image:
-  file: seared-with-sauce.png
+  file: seared-plate.png
   alt: A placeholder, the drawings of beef, pasilla salsa, onion and lime in a row.
   provenance:
     made: placeholder

@@ -452,35 +452,6 @@ button:hover .plus-icon {
   border-color: var(--ink);
 }
 
-/* Add, or the bin once it's in the basket, at the pill's end, over the link's padding. */
-.quick-add {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-}
-
-/* Red under the pointer: this one removes. */
-.quick-add .quick-remove:hover {
-  color: var(--danger);
-}
-
-/*
- * With a mouse, the button shows only on the pill under the pointer, or on keyboard focus; it keeps its
- * room, so nothing moves. On touch, where nothing hovers, it always shows.
- */
-@media (hover: hover) {
-  .quick-add button {
-    opacity: 0;
-    transition: opacity var(--motion-fast) var(--ease-out);
-  }
-
-  .ingredient-links li:hover .quick-add button,
-  .quick-add button:focus-visible {
-    opacity: 1;
-  }
-}
-
 /* Home's three ways to browse, each a card that's one link. */
 .browse-doors {
   display: grid;
@@ -517,6 +488,235 @@ button:hover .plus-icon {
 
 .ingredient-group h2 {
   margin-top: var(--space-6);
+  /* A kind jumped to from the index lands with room above its heading. */
+  scroll-margin-top: var(--space-4);
+}
+
+/*
+ * The Ingredients page: the search and an index of the kinds above the drawings on a phone, and in a
+ * sidebar that stays in view beside them once there's room. The page takes its full width, out of the measure.
+ */
+main:has(.ingredient-finder) {
+  max-width: none;
+}
+
+.ingredient-finder {
+  display: grid;
+  /* No wider than the screen, however long the row of kinds, which scrolls within it. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+/* On a phone, the kinds are one row of links that scrolls sideways, so the drawings start on the first screen. */
+.kind-index {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding-bottom: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.kind-index li {
+  flex: none;
+}
+
+.kind-index a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-weight: var(--weight-bold);
+}
+
+.kind-count {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 48rem) {
+  .ingredient-finder {
+    grid-template-columns: var(--ingredient-sidebar-width) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  /*
+   * In view as the drawings scroll, no taller than the window above the basket bar. The search stays put and the
+   * kinds take the room that's left, scrolling on their own when there are more than fit.
+   */
+  .ingredient-sidebar {
+    position: sticky;
+    top: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100dvh - var(--space-4) * 2 - var(--tray-dock-height));
+  }
+
+  .ingredient-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* Beside the drawings, the kinds are a column, each count at the row's end. */
+  .kind-index {
+    position: relative;
+    display: block;
+    min-height: 0;
+    padding-bottom: 0;
+    overflow: hidden auto;
+    scrollbar-width: thin;
+  }
+
+  /* Faded at an edge where more kinds are hidden, so it's plain the list goes on. */
+  .kind-index[data-more-below] {
+    mask-image: linear-gradient(to bottom, black calc(100% - var(--space-7)), transparent);
+  }
+
+  .kind-index[data-more-above] {
+    mask-image: linear-gradient(to top, black calc(100% - var(--space-7)), transparent);
+  }
+
+  .kind-index[data-more-above][data-more-below] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black var(--space-7),
+      black calc(100% - var(--space-7)),
+      transparent
+    );
+  }
+
+  .kind-index a {
+    display: flex;
+    justify-content: space-between;
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-sm);
+    background: none;
+  }
+
+  .kind-index a:hover {
+    background: var(--sunk);
+  }
+
+  /* The kind being read, as the drawings scroll. */
+  .kind-index a[aria-current] {
+    background: var(--surface);
+  }
+
+  /* With a precise pointer, the rows need less height, so more kinds fit before the list scrolls. */
+  @media (pointer: fine) {
+    .kind-index a {
+      min-height: var(--target-dense);
+    }
+  }
+
+  /* The first kind's heading lines up with the top of the search. */
+  .ingredient-finder .ingredient-group:first-child h2 {
+    margin-top: 0;
+  }
+}
+
+/* Each Ingredient a tile, its drawing large over its name, and Add to the basket at its foot. */
+.ingredient-gallery {
+  display: grid;
+  /* At least two across, even on a phone. */
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--tile-min), calc(50% - var(--space-3) / 2)), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.ingredient-gallery li {
+  position: relative;
+}
+
+.ingredient-gallery a {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--space-2);
+  height: 100%;
+  /* Room at the foot for the add button, which sits over the link rather than in it. */
+  padding: var(--space-4) var(--space-3) calc(var(--target) + var(--space-3) * 2);
+  /* Every tile keeps the border's room, so nothing moves when one is added to the basket. */
+  border: var(--border-control) solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  font-weight: var(--weight-bold);
+  text-align: center;
+}
+
+/* In the basket: a solid edge in ink. Its button says Remove, for those who don't see the edge. */
+.ingredient-gallery .in-basket a {
+  border-color: var(--ink);
+}
+
+.tile-add {
+  position: absolute;
+  bottom: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Dishes */
+
+/* The cards take the page's full width, out of the measure; the lede above them keeps it. */
+main:has(.dish-grid) {
+  max-width: none;
+}
+
+.dish-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--dish-card-min), 100%), 1fr));
+  gap: var(--space-5);
+  margin: var(--space-5) 0 0;
+}
+
+/* The picture leads, edge to edge; what the dish is made with sits at the card's foot, level across a row. */
+.dish-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.dish-card-image img {
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+}
+
+.dish-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+}
+
+.dish-card-body h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+
+.dish-card-body h2 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.dish-card-body p {
+  margin: 0;
+}
+
+.dish-card-made-with {
+  margin-top: auto;
+  padding-top: var(--space-3);
 }
 
 /* Cuisines */
@@ -526,24 +726,70 @@ button:hover .plus-icon {
   font-size: var(--text-lg);
 }
 
-/*
- * Each Cuisine a row of its own, set apart by a hairline, with the drawings of what it leans on: under its
- * words on a narrow screen, and at the row's end once there's room beside them.
- */
-.cuisine-list {
-  margin: 0;
+/* An index of every Cuisine, to compare at a glance; it takes the page's full width, out of the measure. */
+main:has(.cuisine-table) {
+  max-width: none;
 }
 
-.cuisine-list > li {
-  display: grid;
-  gap: var(--space-2) var(--space-4);
-  align-items: start;
-  padding-block: var(--space-4);
-  border-top: var(--border-hairline) solid var(--line);
+.cuisine-table {
+  width: 100%;
+  margin-top: var(--space-5);
+  border-collapse: collapse;
 }
 
-.cuisine-list > li:last-child {
+.cuisine-table :is(th, td) {
+  padding: var(--space-3) var(--space-3) var(--space-3) 0;
   border-bottom: var(--border-hairline) solid var(--line);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.cuisine-table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.cuisine-table thead th {
+  border-bottom: var(--border-control) solid var(--ink);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.cuisine-table tbody th {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+}
+
+.cuisine-table tbody th a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.cuisine-table td {
+  font-size: var(--text-sm);
+}
+
+.cuisine-table .count {
+  text-align: end;
+  font-size: var(--text-base);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-bold);
+}
+
+/* On a phone, each name and its counts; what the Cuisine is and leans on is a tap away, on its own page. */
+@media (max-width: 40rem) {
+  .cuisine-table .wide-only {
+    display: none;
+  }
+}
+
+/* Once there's room, a name keeps to one line. */
+@media (min-width: 40rem) {
+  .cuisine-table tbody th {
+    white-space: nowrap;
+  }
 }
 
 /* The drawings overlap a little, as a cluster, each ringed in the page's colour so they read apart. */
@@ -554,38 +800,6 @@ button:hover .plus-icon {
 .cuisine-marks > * + * {
   margin-inline-start: calc(var(--space-3) * -1);
   box-shadow: 0 0 0 var(--border-control) var(--bg);
-}
-
-.cuisine-list .cuisine-count {
-  margin-top: var(--space-1);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-bold);
-}
-
-@media (min-width: 30rem) {
-  /* The drawings' column fits as many as the page shows at most, so every cluster ends at the same place. */
-  .cuisine-list > li {
-    grid-template-columns: minmax(0, 1fr) calc(var(--mark-sm) * var(--glimpse) - var(--space-3) * (var(--glimpse) - 1));
-  }
-
-  .cuisine-marks {
-    justify-content: flex-end;
-    padding-top: var(--space-2);
-  }
-}
-
-.cuisine-list h2 {
-  margin: 0;
-}
-
-.cuisine-list h2 a {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--target);
-}
-
-.cuisine-list p {
-  margin: 0;
 }
 
 .cuisine-pairings p {
@@ -1571,10 +1785,16 @@ body:has(.case-study) .site-header {
 
 /* Motion: only on first paint, or on the thing that changed. Durations are 0ms under reduced motion. */
 
-/* The Case Study's chapter links glide to their chapter, wherever the page scrolls; under reduced motion they jump. */
+/*
+ * The Case Study's chapter links glide to their chapter, and the Ingredients page's kinds to their kind, wherever
+ * the page scrolls; the kinds list glides too, keeping the one being read in view. Under reduced motion they jump.
+ */
 @media (prefers-reduced-motion: no-preference) {
   html:has(.case-study),
-  .page:has(.case-study) {
+  .page:has(.case-study),
+  html:has(.ingredient-finder),
+  .page:has(.ingredient-finder),
+  .kind-index {
     scroll-behavior: smooth;
   }
 }

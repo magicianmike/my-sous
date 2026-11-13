@@ -206,8 +206,8 @@
     - Return {protein}, add {sauce} with a splash of water, and toss until it glazes everything.
     - Finish with {garnish} and serve it straight away, over rice.
 
-- id: seared-with-sauce
-  name: Seared, with a sauce
+- id: seared-plate
+  name: Seared plate
   description: Something seared hard in a hot pan, served with a sauce made separately and a vegetable cooked alongside.
   slots:
     - id: protein
@@ -260,8 +260,8 @@
     - Loosen {sauce} with {acid} and a little water until it pours.
     - Spoon {sauce} over {vegetable} while it's warm, and finish with {herb} and {garnish}.
 
-- id: braise
-  name: Braise
+- id: one-pot-braise
+  name: One-pot braise
   description: Something browned, then cooked slowly and covered in a little liquid with an aromatic and a vegetable until it's tender.
   slots:
     - id: protein

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ContentImage } from "@/components/ContentImage";
-import { ListRow } from "@/components/ListRow";
 import { MarkGroup } from "@/components/MarkGroup";
 import { joinWithAnd, type Formula } from "@/kitchen/kitchen";
 import { CombinationLink } from "../combination";
@@ -19,8 +18,8 @@ function partsSentence({ slots }: Formula): string {
 }
 
 /**
- * Every dish, the third way in: what it is, the parts the Cook's Ingredients fill, and what it's made
- * with as written. Each opens the dish, filled from the basket.
+ * Every dish, the third way in, as a grid of cards: its picture, what it is, the parts the Cook's
+ * Ingredients fill, and what it's made with as written. Each opens the dish, filled from the basket.
  */
 export default async function DishesPage() {
   const kitchen = await getKitchen();
@@ -28,31 +27,32 @@ export default async function DishesPage() {
     <>
       <h1>Dishes</h1>
       <p className="lede">Each dish has parts, such as an acid or a soft herb, and your ingredients fill them.</p>
-      <ul className="stack" aria-label="Dishes">
+      <ul className="dish-grid" aria-label="Dishes">
         {kitchen.formulas().map((formula) => {
           // The dish as written: filled from its Recipe alone, with no basket.
           const asWritten = kitchen.suggestion(formula.id, [])!;
           const image = kitchen.dishImage(asWritten)?.image;
           const ingredients = kitchen.recipe(asWritten)?.asWritten ?? [];
           return (
-            <li key={formula.id}>
-              <ListRow
-                media={
-                  image && (
-                    // The heading names the dish, so its image is decorative.
-                    <ContentImage image={image} sizes="(min-width: 50rem) 40rem, 100vw" decorative noteOnImage className="card-image" />
-                  )
-                }
-                title={
-                  <h2>
-                    <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
-                  </h2>
-                }
-              >
+            <li key={formula.id} className="dish-card">
+              {image && (
+                // The heading names the dish, so its image is decorative.
+                <ContentImage
+                  image={image}
+                  sizes="(min-width: 56rem) 22rem, (min-width: 38rem) 50vw, 100vw"
+                  decorative
+                  noteOnImage
+                  className="dish-card-image"
+                />
+              )}
+              <div className="dish-card-body">
+                <h2>
+                  <CombinationLink href={`/formulas/${formula.id}`}>{formula.name}</CombinationLink>
+                </h2>
                 <p>{formula.description}</p>
                 <p className="muted">{partsSentence(formula)}</p>
                 {ingredients.length > 0 && (
-                  <div className="mark-groups">
+                  <div className="dish-card-made-with">
                     <MarkGroup
                       label="As written"
                       ingredients={ingredients}
@@ -60,7 +60,7 @@ export default async function DishesPage() {
                     />
                   </div>
                 )}
-              </ListRow>
+              </div>
             </li>
           );
         })}

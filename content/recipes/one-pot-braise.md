@@ -3,7 +3,7 @@ serves: 4
 time: { prep: 15, cook: 120 }
 # A placeholder until the reviewed image arrives.
 image:
-  file: braise.png
+  file: one-pot-braise.png
   alt: A placeholder, the drawings of lamb, onion, tomato and parsley in a row.
   provenance:
     made: placeholder

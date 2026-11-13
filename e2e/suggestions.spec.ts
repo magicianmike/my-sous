@@ -71,7 +71,7 @@ test("What to make lists only the dishes the basket fits", async ({ page }) => {
     "Pan sauce",
     "Sheet-pan roast",
     "Fried rice",
-    "Braise",
+    "One-pot braise",
     "Stir-fry",
   ]);
 });
@@ -85,7 +85,7 @@ test("when no dish fits, What to make names the closest and what to add, and add
   await expect(page.getByRole("list", { name: "Suggestions" })).toHaveCount(0);
   await expect(page.getByText(/at least half/)).toHaveCount(0);
   const closest = nothing.getByRole("listitem").filter({ has: page.getByRole("heading", { level: 3 }) });
-  await expect(closest.getByRole("heading", { level: 3 })).toHaveText(["Pan sauce", "Sheet-pan roast", "Seared, with a sauce"]);
+  await expect(closest.getByRole("heading", { level: 3 })).toHaveText(["Pan sauce", "Sheet-pan roast", "Seared plate"]);
   const panSauce = closest.filter({ has: page.getByRole("heading", { name: "Pan sauce" }) });
   await expect(panSauce).toContainText("Add one of these parts: an aromatic or an acid.");
   await panSauce.getByRole("button", { name: "Add Garlic to your basket" }).click();

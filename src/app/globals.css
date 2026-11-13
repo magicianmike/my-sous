@@ -519,6 +519,63 @@ button:hover .plus-icon {
   margin-top: var(--space-6);
 }
 
+/* Dishes */
+
+/* The cards take the page's full width, out of the measure; the lede above them keeps it. */
+main:has(.dish-grid) {
+  max-width: none;
+}
+
+.dish-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--dish-card-min), 100%), 1fr));
+  gap: var(--space-5);
+  margin: var(--space-5) 0 0;
+}
+
+/* The picture leads, edge to edge; what the dish is made with sits at the card's foot, level across a row. */
+.dish-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.dish-card-image img {
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+}
+
+.dish-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+}
+
+.dish-card-body h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+
+.dish-card-body h2 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.dish-card-body p {
+  margin: 0;
+}
+
+.dish-card-made-with {
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+
 /* Cuisines */
 
 .lede {

@@ -406,20 +406,196 @@ button:hover .plus-icon {
 
 /* Home */
 
-/* What the basket is for, with its sign, at the measure of a line of text. */
-.home-intro {
-  display: flex;
-  gap: var(--space-3);
-  align-items: flex-start;
-  max-width: var(--measure);
-  font-size: var(--text-lg);
+/* The steps and cards take the page's full width, out of the measure. */
+main:has(.home) {
+  max-width: none;
 }
 
-.home-intro svg {
-  flex: none;
+.home h1 {
+  text-align: center;
+}
+
+/* The one idea, taught in three steps side by side, or stacked on a phone. */
+.home-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--door-min), 100%), 1fr));
+  gap: var(--space-4);
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-steps > li {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.home-steps h2 {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xl);
+}
+
+.home-steps p {
+  margin: 0;
+}
+
+.step-number {
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-display);
+}
+
+.step-basket {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+
+.step-basket svg:first-child {
   width: var(--space-5);
   height: var(--space-5);
-  margin-top: var(--space-1);
+  margin-inline-end: var(--space-2);
+}
+
+.step-dish {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.step-dish-name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+}
+
+.step-dish img {
+  aspect-ratio: 3;
+  border-radius: var(--radius-md);
+}
+
+/* A second way in, set apart by a rule with its heading sitting on it. */
+.browse-by {
+  margin-top: calc(var(--space-7) * 1.5);
+  border-top: var(--border-hairline) solid var(--line);
+}
+
+/* The heading cuts the rule with the page's own background. */
+.browse-by h2 {
+  width: fit-content;
+  margin: 0 auto var(--space-5);
+  padding-inline: var(--space-4);
+  background: var(--bg);
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.browse-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--door-min), 100%), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+}
+
+/* Each card is one link: a band of art, then what's behind it. */
+.browse-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+  text-decoration: none;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out);
+}
+
+/* The whole card lifts under the pointer, so it reads as one thing to open. */
+.browse-card:hover {
+  color: inherit;
+  transform: translateY(calc(var(--space-1) * -1));
+  box-shadow: var(--shadow-floating);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .browse-card:hover {
+    transform: none;
+  }
+}
+
+.browse-art {
+  display: grid;
+  flex: none;
+  order: -1;
+  aspect-ratio: 16 / 9;
+  background: var(--sunk);
+}
+
+.browse-marks {
+  grid-template-columns: repeat(3, auto);
+  place-content: center;
+  gap: var(--space-2);
+}
+
+.browse-names {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 0 var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-style: italic;
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+  text-align: center;
+}
+
+/* Every other name quieter, so the names have a rhythm. */
+.browse-names > :nth-child(even) {
+  color: var(--ink-muted);
+}
+
+.browse-dish img {
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
+}
+
+.browse-body {
+  display: grid;
+  flex: 1;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+}
+
+.browse-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-tight);
+}
+
+.browse-cue {
+  margin-top: var(--space-2);
+  font-weight: var(--weight-heavy);
 }
 
 .ingredient-links {
@@ -450,40 +626,6 @@ button:hover .plus-icon {
 /* In the basket: a solid edge in ink. Its button says Remove, for those who don't see the edge. */
 .ingredient-links .in-basket a {
   border-color: var(--ink);
-}
-
-/* Home's three ways to browse, each a card that's one link. */
-.browse-doors {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--door-min), 100%), 1fr));
-  gap: var(--space-3);
-  margin: 0;
-}
-
-.door {
-  display: grid;
-  gap: var(--space-2);
-  height: 100%;
-  padding: var(--space-4);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-}
-
-.door-title {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: var(--weight-display);
-}
-
-.door-marks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-}
-
-.door-detail {
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
 }
 
 .ingredient-group h2 {

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("from Home, a Cook browses dishes and opens one, keeping the basket", async ({ page }) => {
   await page.goto("/?with=garlic");
-  await page.getByRole("link", { name: /^Browse dishes/ }).click();
+  await page.getByRole("link", { name: /^Dishes.*Browse dishes/ }).click();
   await expect(page).toHaveURL(/\/dishes\?with=garlic$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Dishes");
 

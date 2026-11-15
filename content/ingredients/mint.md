@@ -10,12 +10,16 @@ colour:
   washDark: "#173528"
   stroke: "#1b5c40"
   strokeDark: "#9fe0c2"
-# A placeholder until the reviewed image arrives.
 image:
   file: mint.png
-  alt: A placeholder, the drawing of a sprig of mint on its pale mint green.
+  alt: A bunch of fresh mint.
   provenance:
-    made: placeholder
-    date: "2026-11-06"
+    made: ai-generated
+    model: GPT-6 (OpenAI)
+    prompt: "A natural, editorial food photograph of a bunch of fresh spearmint with bright green, textured leaves, seen from about 45 degrees, on a matte linen surface, soft daylight from the left, shallow depth of field, muted natural colours, true to life, fresh and in prime condition: unblemished, unbruised and at its best, as if just bought from a good market. No people, no hands, no text, no packaging, no brand names. 3:2 landscape, subject centred with space around it, the top corners left clear. Match the light, surface, colour and style of the two attached reference images, but don't copy their subjects."
+    date: "2026-11-14"
+    review:
+      date: "2026-11-14"
+      matches: true
 ---
 Mint is cool, sweet and sharp, and it lifts rich, fatty and smoky food. It pairs naturally with yogurt and with lamb, and heat dulls it quickly, so fresh mint usually goes in raw at the end.

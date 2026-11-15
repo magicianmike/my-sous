@@ -774,20 +774,30 @@ main:has(.ingredient-finder) {
 
 .ingredient-gallery li {
   position: relative;
+  /* The foot of each tile, where the add button sits. */
+  --tile-foot: calc(var(--target) + var(--space-3) * 2);
 }
 
+/*
+ * Every tile is one shape, its drawing and name at the foot, so they line up across a row. Above them is the
+ * Ingredient's photo (see .tile-photo) or, until it has one, its own wash; either gives way to the tile's
+ * ground, where the name and the add button sit, so they read whatever is behind them.
+ */
 .ingredient-gallery a {
   display: grid;
   justify-items: center;
-  align-content: start;
+  align-content: end;
   gap: var(--space-2);
-  height: 100%;
+  aspect-ratio: 1;
   /* Room at the foot for the add button, which sits over the link rather than in it. */
-  padding: var(--space-4) var(--space-3) calc(var(--target) + var(--space-3) * 2);
+  padding: var(--space-4) var(--space-3) var(--tile-foot);
   /* Every tile keeps the border's room, so nothing moves when one is added to the basket. */
   border: var(--border-control) solid transparent;
   border-radius: var(--radius-lg);
-  background: var(--surface);
+  /* The Ingredient's colour falls from the top and clears before the drawing, so its circle stands out. */
+  background:
+    linear-gradient(to bottom, var(--wash), transparent 55%) border-box,
+    var(--surface);
   font-weight: var(--weight-bold);
   text-align: center;
 }
@@ -795,6 +805,42 @@ main:has(.ingredient-finder) {
 /* In the basket: a solid edge in ink. Its button says Remove, for those who don't see the edge. */
 .ingredient-gallery .in-basket a {
   border-color: var(--ink);
+}
+
+/* It stops above the add button, so the photo shows near its own shape and the subject stays whole. */
+.ingredient-gallery .tile-photo {
+  position: absolute;
+  inset: 0 0 var(--tile-foot);
+}
+
+.tile-photo picture,
+.tile-photo img {
+  height: 100%;
+}
+
+.tile-photo img {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* The sparkle sits over the link, so the pointer can reach it for its tooltip. */
+.tile-photo figcaption {
+  z-index: 1;
+}
+
+/*
+ * Over a photo, the Ingredient's own colour, translucent, falls from the top and clears to nothing; the
+ * tile's ground rises behind the name, so it reads whatever the photo shows.
+ */
+.ingredient-gallery .has-photo a {
+  position: relative;
+  background:
+    linear-gradient(
+        to top,
+        var(--surface) calc(var(--tile-foot) + var(--space-4)),
+        transparent calc(var(--tile-foot) + var(--space-7))
+      )
+      border-box,
+    linear-gradient(to bottom, color-mix(in srgb, var(--wash) 85%, transparent), transparent 70%) border-box;
 }
 
 .tile-add {

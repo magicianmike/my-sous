@@ -7,7 +7,7 @@ How MySous's images look and how they're made, so they read as one set and stay 
 - **Light.** Soft daylight from one side, as from a window. No flash, no hard shadows, no dramatic spotlight. Highlights stay soft, so nothing blows out to white.
 - **Angle.** Ingredients from about 45 degrees, close enough to read their texture. Dishes from overhead, or from 45 degrees when height matters (a stack, a glossy sauce).
 - **Surface.** Matte, natural and muted: linen, unglazed ceramic, worn wood, stone. Never a pure white or pure black background. The images sit on light and dark pages, and a white ground glares in the dark theme. Pans and plates are plain, with no pattern.
-- **Framing.** The subject in the middle third, with room around it. Pages crop to a wide banner on a phone and to a low strip on a card. Leave the top corners clear, because the "AI-generated image" note sits there on banners and cards.
+- **Framing.** The subject in the middle third, with room around it. Pages crop to a wide banner on a phone and to a low strip on a card. Leave the top corners clear, because the note saying it's AI-generated, a sparkle, sits there on banners and cards.
 - **Food.** Real, cooked by hand, slightly imperfect: crumbs, a drip of sauce, uneven cuts. Not glossy advertising food. A dish shows exactly what its Recipe says, as written: the same Ingredients, garnish, portion and doneness.
 - **Colour.** True to the food. No heavy grading or filters, no added saturation.
 

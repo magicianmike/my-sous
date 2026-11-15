@@ -19,6 +19,24 @@ test("every tile has an outlined add button, always showing, quieter than an Ing
   await expect(add).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
 });
 
+test("every tile has its photo behind it, saying what it is, and its link is named by the Ingredient alone", async ({
+  page,
+}) => {
+  await page.goto("/ingredients");
+  const basil = tile(page, "Basil");
+  const photo = basil.locator("img");
+  await expect(photo).toBeVisible();
+  await expect(photo).toHaveAttribute("alt", "");
+  await expect(basil.getByText("AI-generated image")).toBeVisible();
+  await expect(basil.getByRole("link")).toHaveAccessibleName("Basil");
+  // The photo fills the tile from its top, behind the name, and stops above the add button.
+  const tileBox = (await basil.boundingBox())!;
+  const photoBox = (await photo.boundingBox())!;
+  const addBox = (await basil.getByRole("button", { name: "Add Basil to your basket" }).boundingBox())!;
+  expect(Math.abs(photoBox.y - tileBox.y)).toBeLessThan(1);
+  expect(photoBox.y + photoBox.height).toBeLessThanOrEqual(addBox.y);
+});
+
 test("one click adds an Ingredient from the list, and the Cook stays on it", async ({ page }) => {
   await page.goto("/ingredients?with=garlic");
   await page.getByRole("button", { name: "Add Basil to your basket" }).click();
@@ -104,7 +122,7 @@ test("the kinds index links to each kind on the page, with its count, and narrow
   await expect(index).toHaveCount(0);
 });
 
-test("on a wide screen, the search and the kinds stay in view beside the drawings", async ({ page, isMobile }) => {
+test("on a wide screen, the search and the kinds stay in view beside the tiles", async ({ page, isMobile }) => {
   test.skip(isMobile, "a phone shows them above the drawings");
   await page.goto("/ingredients");
   // The search is enabled once the page is live, so what's measured isn't the version shown before it.

@@ -70,7 +70,7 @@ A Formula's quantities, timings and full method, shown on the dish's page. It's 
 _Avoid_: Showcase Recipe (its earlier name, in the original spec), worked example
 
 **Image**:
-A picture of an Ingredient, a Formula's typical result, or a Recipe's dish as written, shown where there's room; the line drawings stay the mark everywhere else. Each is made while writing content (AI-generated and reviewed by the author, or a placeholder rendered from the drawings) and carries alt text and its provenance (ADR 0005). The Cook sees it labelled by how it was made: an **AI-generated image** or a **placeholder image**.
+A picture of an Ingredient, a Formula's typical result, or a Recipe's dish as written, shown where there's room; the line drawings stay the mark everywhere else. Each is made while writing content (AI-generated and reviewed by the author, or a placeholder rendered from the drawings) and carries alt text and its provenance (ADR 0005). The Cook sees it labelled by how it was made: an **AI-generated image**, marked with a sparkle, or a **placeholder image**.
 _Avoid_: Photo, photograph (they aren't), picture, illustration (that's the drawing)
 
 ### Later

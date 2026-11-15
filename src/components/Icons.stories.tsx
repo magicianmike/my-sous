@@ -3,6 +3,7 @@ import { expect } from "storybook/test";
 import { BasketIcon } from "./BasketIcon";
 import { NewTabIcon } from "./NewTabIcon";
 import { PlusIcon } from "./PlusIcon";
+import { SparkleIcon } from "./SparkleIcon";
 import { MoonIcon, SunIcon } from "./ThemeIcons";
 import { TrashIcon } from "./TrashIcon";
 
@@ -18,6 +19,7 @@ const meta = {
         ["New tab", <NewTabIcon key="new-tab" />],
         ["Sun", <SunIcon key="sun" />],
         ["Moon", <MoonIcon key="moon" />],
+        ["Sparkle", <SparkleIcon key="sparkle" />],
       ].map(([name, icon]) => (
         <li key={name as string} style={{ display: "grid", justifyItems: "center", gap: "var(--space-2)", width: "4rem" }}>
           <span style={{ width: "1.5rem", height: "1.5rem", display: "grid" }}>{icon}</span>
@@ -33,7 +35,7 @@ export default meta;
 export const All: StoryObj<typeof meta> = {
   play: async ({ canvasElement }) => {
     const icons = canvasElement.querySelectorAll("svg");
-    await expect(icons).toHaveLength(6);
+    await expect(icons).toHaveLength(7);
     for (const icon of icons) await expect(icon).toHaveAttribute("aria-hidden", "true");
   },
 };

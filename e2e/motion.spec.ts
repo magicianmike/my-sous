@@ -47,7 +47,7 @@ for (const reduced of [false, true]) {
 
     test("the Ingredient's drawing draws itself in", async ({ page }) => {
       await page.goto("/ingredients/lemon");
-      const stroke = page.locator(".hero svg > *").first();
+      const stroke = page.locator(".hero-mark svg > *").first();
       expect(await animation(stroke)).toMatchObject({
         // CSS modules prefix the name.
         name: expect.stringMatching(/draw-in$/),

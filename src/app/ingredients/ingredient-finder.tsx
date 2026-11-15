@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ContentImage } from "@/components/ContentImage";
 import { FilterField } from "@/components/FilterField";
 import { IngredientMark } from "@/components/IngredientMark";
 import type { Ingredient } from "@/kitchen/kitchen";
@@ -12,7 +13,7 @@ import { FIND_AN_INGREDIENT, notInMySous } from "../ingredient-search";
 /**
  * Every Ingredient, by kind, with a search that narrows the list in place: the list is the result, so
  * there's no dropdown. Enter opens the one Ingredient that matches. On a wide screen the search and the
- * kinds stay in a sidebar beside the drawings.
+ * kinds stay in a sidebar beside the tiles.
  */
 export const IngredientFinder = withSearchParams(
   function IngredientFinder() {
@@ -55,6 +56,9 @@ export const IngredientFinder = withSearchParams(
   },
 );
 
+/** A tile's width, as an `<img sizes>`: two across on a phone, and a sixth of the gallery or less on a wide screen. */
+const TILE_SIZES = "(min-width: 40rem) 16rem, 50vw";
+
 type GroupsProps = { matching?: Ingredient[]; inBasket?: Ingredient[] };
 
 /** The kinds with any Ingredients `matching`, when given, each with only those; or every kind. */
@@ -69,7 +73,7 @@ function useGroups(matching?: Ingredient[]) {
     .filter(({ ingredients }) => ingredients.length > 0);
 }
 
-/** The search and an index of the kinds, in a sidebar that stays in view; the drawings beside it. */
+/** The search and an index of the kinds, in a sidebar that stays in view; the tiles beside it. */
 function FinderLayout({ field, ...groups }: GroupsProps & { field: React.ReactNode }) {
   return (
     <div className="ingredient-finder">
@@ -85,8 +89,8 @@ function FinderLayout({ field, ...groups }: GroupsProps & { field: React.ReactNo
 }
 
 /**
- * A link to each kind on the page, with how many it holds: a column beside the drawings, or a row above them on a
- * phone. Beside the drawings it marks the kind being read and keeps it in view, scrolling on its own when there are
+ * A link to each kind on the page, with how many it holds: a column beside the tiles, or a row above them on a
+ * phone. Beside the tiles it marks the kind being read and keeps it in view, scrolling on its own when there are
  * more kinds than the window has room for, faded at the edge where more are hidden.
  */
 function KindIndex({ matching }: GroupsProps) {
@@ -97,7 +101,7 @@ function KindIndex({ matching }: GroupsProps) {
   useEffect(() => {
     const ul = list.current;
     const link = ul?.querySelector<HTMLElement>("[aria-current]");
-    // Only when the list scrolls up and down, beside the drawings; never the window.
+    // Only when the list scrolls up and down, beside the tiles; never the window.
     if (!ul || !link || ul.scrollHeight <= ul.clientHeight) return;
     if (link.offsetTop < ul.scrollTop) ul.scrollTop = link.offsetTop;
     else if (link.offsetTop + link.offsetHeight > ul.scrollTop + ul.clientHeight)
@@ -166,7 +170,7 @@ function useFitToWindow(list: React.RefObject<HTMLElement | null>, contents: str
     const element = list.current;
     if (!element) return;
     const fit = () => {
-      // Only beside the drawings; on a phone the list is a row that scrolls sideways.
+      // Only beside the tiles; on a phone the list is a row that scrolls sideways.
       if (getComputedStyle(element).overflowY !== "auto") return element.style.removeProperty("max-height");
       const root = getComputedStyle(document.documentElement);
       const below = parseFloat(root.getPropertyValue("--tray-dock-height")) + parseFloat(root.fontSize);
@@ -191,16 +195,33 @@ function useFitToWindow(list: React.RefObject<HTMLElement | null>, contents: str
 
 /**
  * The Ingredients by kind, or only those `matching` when given, leaving out kinds with none of them. Each is a
- * tile with its drawing large and an outlined Add, quieter than an Ingredient's page's own, since there are dozens;
- * those `inBasket` are marked as chosen.
+ * tile with its drawing, over its photo once it has one, and an outlined Add, quieter than an Ingredient's
+ * page's own, since there are dozens; those `inBasket` are marked as chosen.
  */
 function IngredientGroups({ matching, inBasket = [] }: GroupsProps) {
+  // A placeholder is the drawing itself, so it would only repeat the drawing over it.
+  const photo = ({ image }: Ingredient) => (image?.made === "ai-generated" ? image : undefined);
   return useGroups(matching).map(({ category, heading, ingredients }) => (
     <section key={category} className="ingredient-group" aria-labelledby={`category-${category}`}>
       <h2 id={`category-${category}`}>{heading}</h2>
       <ul className="ingredient-gallery">
         {ingredients.map((ingredient) => (
-          <li key={ingredient.id} className={inBasket.includes(ingredient) ? "in-basket" : undefined}>
+          <li
+            key={ingredient.id}
+            className={[inBasket.includes(ingredient) && "in-basket", photo(ingredient) && "has-photo"]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {/* Beside the link, not in it, so the photo's note isn't read as part of the Ingredient's name. */}
+            {photo(ingredient) && (
+              <ContentImage
+                image={photo(ingredient)!}
+                sizes={TILE_SIZES}
+                decorative
+                noteOnImage
+                className="tile-photo"
+              />
+            )}
             <IngredientLink ingredient={ingredient}>
               <IngredientMark ingredient={ingredient} size="md" />
               {ingredient.name}

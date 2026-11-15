@@ -32,6 +32,8 @@ for (const reduced of [false, true]) {
 
     test("the Ingredients page's kinds glide to their kind", async ({ page, isMobile }) => {
       await page.goto("/ingredients");
+      // Once the page is live, so the kinds aren't swapped out from under the click.
+      await expect(page.getByRole("searchbox", { name: "Find an ingredient" })).toBeEnabled();
       const behaviours = await page.evaluate(() =>
         [document.documentElement, document.querySelector(".page")!].map((el) => getComputedStyle(el).scrollBehavior),
       );

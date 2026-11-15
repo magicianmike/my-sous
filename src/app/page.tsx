@@ -1,56 +1,32 @@
-import { BasketIcon } from "@/components/BasketIcon";
-import { IngredientMark } from "@/components/IngredientMark";
-import { CombinationLink } from "./combination";
-import { IngredientSearch } from "./ingredient-search";
+import { Suspense } from "react";
+import { VARIANTS, VariantA, VariantB, VariantC, VariantD, VariantE, type HomeData } from "./home-prototype";
 import { getKitchen } from "./kitchen";
+import { VariantSwitch } from "./prototype-switcher";
 
-/** How many drawings the Ingredients door shows, as a glimpse rather than a list. */
-const GLIMPSE = 5;
+// PROTOTYPE: five layouts of Home on the existing / route, switchable via `?variant=A`–`E`.
 
 export default async function Home() {
   const kitchen = await getKitchen();
-  const ingredients = kitchen.ingredients();
-  const cuisines = kitchen.cuisines();
   const formulas = kitchen.formulas();
+  const data: HomeData = {
+    ingredients: kitchen.ingredients(),
+    cuisines: kitchen.cuisines(),
+    formulas,
+    dishes: formulas
+      .map((formula) => ({ formula, image: kitchen.dishImage(kitchen.suggestion(formula.id, [])!)?.image }))
+      // Real pictures first, so the doors and collages lead with them.
+      .toSorted((a, b) => Number(b.image?.made === "ai-generated") - Number(a.image?.made === "ai-generated")),
+  };
+  const views = {
+    A: <VariantA {...data} />,
+    B: <VariantB {...data} />,
+    C: <VariantC {...data} />,
+    D: <VariantD {...data} />,
+    E: <VariantE {...data} />,
+  };
   return (
-    <>
-      <h1>Find what goes with what, and why.</h1>
-      {/* The one concept to learn, said once, up front. */}
-      <p className="home-intro">
-        <BasketIcon />
-        <span>
-          Add up to six ingredients you want to cook around to your basket, from your fridge or not, and
-          MySous suggests what to make.
-        </span>
-      </p>
-      <h2>Start from an ingredient</h2>
-      <IngredientSearch />
-      <h2>Or browse</h2>
-      <ul className="browse-doors">
-        <li>
-          <CombinationLink href="/ingredients" className="door">
-            <span className="door-title">Browse ingredients</span>
-            <span className="door-marks" aria-hidden="true">
-              {ingredients.slice(0, GLIMPSE).map((ingredient) => (
-                <IngredientMark key={ingredient.id} ingredient={ingredient} size="sm" />
-              ))}
-            </span>
-            <span className="door-detail">{ingredients.length} ingredients, by kind</span>
-          </CombinationLink>
-        </li>
-        <li>
-          <CombinationLink href="/cuisines" className="door">
-            <span className="door-title">Browse cuisines</span>
-            <span className="door-detail">{cuisines.map(({ name }) => name).join(" · ")}</span>
-          </CombinationLink>
-        </li>
-        <li>
-          <CombinationLink href="/dishes" className="door">
-            <span className="door-title">Browse dishes</span>
-            <span className="door-detail">{formulas.map(({ name }) => name).join(" · ")}</span>
-          </CombinationLink>
-        </li>
-      </ul>
-    </>
+    <Suspense fallback={views.A}>
+      <VariantSwitch variants={VARIANTS} views={views} />
+    </Suspense>
   );
 }

@@ -6,6 +6,8 @@ next-env.d.ts
 test-results/
 playwright-report/
 .vercel
+# Made from content by `npm run kitchen-content`.
+src/generated/
 # Made from content/images by `npm run images`.
 public/images/
 # Made by `npm run build-storybook`.

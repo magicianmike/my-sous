@@ -187,6 +187,8 @@ The pages never touch files, YAML or schemas. They ask one deep module, the Kitc
 
 <ContentDiagram />
 
+**The content, sent once.** At first the layout handed the content to the browser's Kitchen as a prop, which wrote all of it into every page's HTML. Now the build validates it and writes it to one JSON file, bundled into the app's script, so a visitor downloads it once and the browser caches it. It's about 280 KB, 63 KB gzipped, and every page loads all of it. If it grows much larger, or some pages turn out not to need the Kitchen, the next step is to load it lazily, or send each page only what it uses.
+
 **One module answers every question.** The rules (what fills a part, why, what's still needed, which dishes a basket fits, how they rank) live in the Kitchen, never in the screens. Dishes rank by how many parts they still need, then by how well the Ingredients the Cook chose pair. A shared Cuisine breaks ties, but never outweighs a real Pairing. Once, a review found a screen working out for itself what to add to a dish. That logic moved into the Kitchen, and two bugs went with it.
 
 <FillDiagram />

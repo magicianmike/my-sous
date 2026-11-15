@@ -4,7 +4,8 @@ import Link from "next/link";
 import { AddToBasketButton } from "@/components/AddToBasketButton";
 import { Button } from "@/components/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createContext, Suspense, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, Suspense, useContext, useEffect, useState } from "react";
+import content from "@/generated/kitchen-content.json";
 import {
   COMBINATION_LIMIT,
   createKitchen,
@@ -29,15 +30,19 @@ type KitchenState = { kitchen: Kitchen; status: string; statusKey: number; annou
 
 const KitchenContext = createContext<KitchenState | null>(null);
 
-/** Rebuilds the Kitchen in the browser from content validated at build time. */
-export function KitchenProvider({
-  content,
-  children,
-}: {
-  content: KitchenContent;
-  children: React.ReactNode;
-}) {
-  const kitchen = useMemo(() => createKitchen(content), [content]);
+/**
+ * The Kitchen in the browser, rebuilt from content validated at build time (see
+ * scripts/build-kitchen-content.ts). It's part of the app's script, fetched once and cached, rather than
+ * passed down from the layout, which would write it into every page.
+ *
+ * Every page pays for all of it, in its script: about 280 KB, 63 KB gzipped, in November 2026. Reconsider if
+ * it grows much larger, or if some pages turn out not to need the Kitchen: load it lazily, or send each page
+ * only what it uses.
+ */
+// Validated as it was written; read back from JSON, its types are looser than the schema's (strings, not tuples).
+const kitchen = createKitchen(content as unknown as KitchenContent);
+
+export function KitchenProvider({ children }: { children: React.ReactNode }) {
   const [{ status, statusKey }, setStatus] = useState({ status: "", statusKey: 0 });
   const announce = (message: string) => setStatus(({ statusKey }) => ({ status: message, statusKey: statusKey + 1 }));
   const pathname = usePathname();

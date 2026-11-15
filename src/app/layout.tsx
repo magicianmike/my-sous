@@ -5,7 +5,6 @@ import { themeCss } from "@/design/tokens";
 import { KitchenProvider } from "./combination";
 import { CombinationTray } from "./combination-tray";
 import "./globals.css";
-import { getKitchen } from "./kitchen";
 import { CaseStudyLink, SiteNav, SkipLinks, Wordmark } from "./site-chrome";
 import { ThemeSwitch } from "./theme-switch";
 
@@ -29,8 +28,7 @@ export const metadata: Metadata = {
   description: "Find what goes with what, and why.",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const kitchen = await getKitchen();
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     // The theme script sets data-theme before React takes over, so the attribute differs by design.
     <html lang="en" className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
@@ -39,7 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <style dangerouslySetInnerHTML={{ __html: themeCss() }} />
       </head>
       <body>
-        <KitchenProvider content={kitchen.content}>
+        <KitchenProvider>
           <SkipLinks />
           {/* On a phone, the page scrolls above the basket bar, which keeps a row of its own. */}
           <div className="shell">

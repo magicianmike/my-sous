@@ -36,6 +36,18 @@ test("on a wide screen, Home's three steps sit side by side, and the browse head
   expect(heading.y + heading.height).toBeGreaterThan(section.y);
 });
 
+test("in Home's basket step, each drawing sits in the middle of its circle", async ({ page }) => {
+  await page.goto("/");
+  const marks = page.locator(".step-basket > .ingredient-mark");
+  await expect(marks).toHaveCount(3);
+  for (const mark of await marks.all()) {
+    const circle = (await mark.boundingBox())!;
+    const drawing = (await mark.locator("svg").boundingBox())!;
+    expect(Math.abs(drawing.x + drawing.width / 2 - (circle.x + circle.width / 2))).toBeLessThan(1);
+    expect(Math.abs(drawing.y + drawing.height / 2 - (circle.y + circle.height / 2))).toBeLessThan(1);
+  }
+});
+
 test("from Home, a Cook browses ingredients, fills the basket and sees what to make", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: /^Ingredients.*Browse ingredients/ }).click();

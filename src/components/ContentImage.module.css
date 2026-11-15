@@ -48,10 +48,14 @@
 .sparkle {
   display: inline-grid;
   place-items: center;
-  vertical-align: middle;
+}
+
+/* After a caption, on the text's line: its tooltip's anchor would otherwise sit it on the baseline, above. */
+.caption > :has(.sparkle) {
+  vertical-align: text-bottom;
 }
 
 .sparkle svg {
-  width: var(--space-4);
-  height: var(--space-4);
+  width: calc(var(--space-4) * 1.25);
+  height: calc(var(--space-4) * 1.25);
 }

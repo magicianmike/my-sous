@@ -52,8 +52,9 @@ export const OnACard: Story = {
     await expect(image).toHaveAttribute("alt", "");
     await expect(image).toHaveAttribute("loading", "lazy");
     await expect(canvas.queryByRole("img")).toBeNull();
-    // The note is still in words beside it.
-    await expect(canvas.getByText("AI-generated image")).toBeVisible();
+    // The note is still there: a sparkle, named for a screen reader.
+    await expect(canvasElement.querySelector("figcaption svg")).not.toBeNull();
+    await expect(canvas.getByText("AI-generated image")).toHaveClass("visually-hidden");
     await loaded(image);
   },
 };

@@ -33,7 +33,9 @@ test.describe("an Ingredient's page", () => {
     const image = hero.getByRole("img", { name: "Two whole lemons and a halved one, cut side up, on a linen cloth." });
 
     await expect(image).toBeVisible();
-    await expect(hero.getByText("AI-generated image", { exact: true })).toBeVisible();
+    // The note is a sparkle, named for a screen reader.
+    await expect(hero.locator("figcaption svg")).toBeVisible();
+    await expect(hero.getByText("AI-generated image", { exact: true })).toHaveClass(/visually-hidden/);
     // The drawing stays the Ingredient's mark.
     await expect(hero.locator(".hero-mark svg")).toBeVisible();
     // On the first screen, so it isn't left to load lazily.
@@ -45,6 +47,18 @@ test.describe("an Ingredient's page", () => {
     });
   });
 
+
+  test("its image's sparkle says in a tooltip that the image is AI-generated", async ({ page, isMobile }) => {
+    test.skip(isMobile, "hover is for a pointer");
+    await page.goto("/ingredients/lemon");
+    const sparkle = page.getByRole("region", { name: "Lemon" }).locator("figcaption svg");
+    const tooltip = page.getByText("AI-generated image", { exact: true }).and(page.locator("[aria-hidden=true]"));
+    await expect(tooltip).toHaveCount(0);
+    await sparkle.hover();
+    await expect(tooltip).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(tooltip).toHaveCount(0);
+  });
   test("keeps its image's space before the file arrives, so nothing shifts", async ({ page }) => {
     const release = await holdImages(page);
     // Not waiting for the page's load, which waits for the images.

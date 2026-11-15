@@ -1,6 +1,8 @@
 import { IMAGE_FORMATS, variantName, variantWidths } from "@/images/variants";
 import type { Image } from "@/kitchen/kitchen";
 import styles from "./ContentImage.module.css";
+import { SparkleIcon } from "./SparkleIcon";
+import { Tooltip } from "./Tooltip";
 
 type Props = {
   image: Image;
@@ -20,11 +22,21 @@ type Props = {
 /** A banner across the page's column: an Ingredient's, or a dish's header. */
 export const BANNER_SIZES = "(min-width: 50rem) 50rem, 100vw";
 
-/** Says what an image is, always in words beside it: made by AI, or standing in until one is. */
-const NOTE: Record<Image["made"], string> = {
-  "ai-generated": "AI-generated image",
-  placeholder: "Placeholder image",
-};
+/**
+ * Says what an image is: made by AI, as a sparkle, named for a screen reader and in a tooltip under the pointer;
+ * or standing in until one is, in words.
+ */
+function Note({ made }: { made: Image["made"] }) {
+  if (made === "placeholder") return <span className={styles.note}>Placeholder image</span>;
+  return (
+    <Tooltip label="AI-generated image">
+      <span className={styles.sparkle}>
+        <SparkleIcon />
+        <span className="visually-hidden">AI-generated image</span>
+      </span>
+    </Tooltip>
+  );
+}
 
 /**
  * One of content's images, in modern formats at the widths the build made. Its width and height are
@@ -63,7 +75,7 @@ export function ContentImage({
       </picture>
       <figcaption className={`${styles.caption} ${noteOnImage ? styles.onImage : ""}`}>
         {caption && <span>{caption} </span>}
-        <span className={styles.note}>{NOTE[image.made]}</span>
+        <Note made={image.made} />
       </figcaption>
     </figure>
   );

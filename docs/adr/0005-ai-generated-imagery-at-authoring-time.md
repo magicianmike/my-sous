@@ -6,7 +6,7 @@ Photographing every Ingredient and cooking every dish for the camera would hold 
 
 Generated images can mislead, so there are three honesty rules, which the build enforces where it can:
 
-- **Labelled.** Every image says what it is in a visible note beside it ("AI-generated image", or "Placeholder image" for the stand-ins rendered from the drawings). Its provenance (how it was made, the model, the prompt and the date) is recorded in the content.
+- **Labelled.** Every image says what it is in a visible note on or beside it. An AI-generated image's note is a sparkle, named "AI-generated image" for a screen reader and in a tooltip under the pointer; the stand-ins rendered from the drawings say "Placeholder image" in words. Its provenance (how it was made, the model, the prompt and the date) is recorded in the content.
 - **Reviewed.** The author checks each AI-generated image against what it's for, and records the review. The build refuses an AI-generated image that hasn't been reviewed, or whose review found it doesn't match. It also refuses a placeholder marked as reviewed, so a stand-in can't pass as the real thing.
 - **True to the dish.** A Recipe's image shows the dish as written: the fill, the garnish, the portion, the doneness. The page captions it "As written: …", since the Cook's own dish may differ. Each Recipe is still kitchen-tested, and the author regenerates any image that misrepresents the cooked dish.
 

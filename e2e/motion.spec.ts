@@ -32,6 +32,8 @@ for (const reduced of [false, true]) {
 
     test("the Ingredients page's kinds glide to their kind", async ({ page, isMobile }) => {
       await page.goto("/ingredients");
+      // Once the page is live, so the kinds aren't swapped out from under the click.
+      await expect(page.getByRole("searchbox", { name: "Find an ingredient" })).toBeEnabled();
       const behaviours = await page.evaluate(() =>
         [document.documentElement, document.querySelector(".page")!].map((el) => getComputedStyle(el).scrollBehavior),
       );
@@ -47,7 +49,7 @@ for (const reduced of [false, true]) {
 
     test("the Ingredient's drawing draws itself in", async ({ page }) => {
       await page.goto("/ingredients/lemon");
-      const stroke = page.locator(".hero svg > *").first();
+      const stroke = page.locator(".hero-mark svg > *").first();
       expect(await animation(stroke)).toMatchObject({
         // CSS modules prefix the name.
         name: expect.stringMatching(/draw-in$/),

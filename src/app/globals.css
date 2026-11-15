@@ -464,7 +464,8 @@ main:has(.home) {
   margin-top: var(--space-3);
 }
 
-.step-basket svg:first-child {
+/* The basket's own sign only, not the drawings in the circles beside it. */
+.step-basket > svg {
   width: var(--space-5);
   height: var(--space-5);
   margin-inline-end: var(--space-2);

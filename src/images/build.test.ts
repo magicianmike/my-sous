@@ -1,4 +1,4 @@
-import { mkdtempSync, utimesSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -20,7 +20,7 @@ describe("buildImages", () => {
 
     await buildImages(source, out);
 
-    expect((await readdir(out)).sort()).toEqual([
+    expect((await readdir(out)).filter((name) => !name.startsWith(".")).sort()).toEqual([
       "dish-1100.avif",
       "dish-1100.webp",
       "dish-480.avif",
@@ -46,8 +46,24 @@ describe("buildImages", () => {
 
     expect(await buildImages(source, out)).toEqual([]);
 
+    writeFileSync(join(source, "lemon.png"), await png(1200, 800));
+    expect(await buildImages(source, out)).toEqual(["lemon.png"]);
+  });
+
+  it("goes by what's in an image, not when its file changed, as a fresh checkout or a restored cache has it", async () => {
+    const { source, out } = await folders({ "lemon.png": await png(1600, 1067) });
+    await buildImages(source, out);
+
     const later = new Date(Date.now() + 60_000);
     utimesSync(join(source, "lemon.png"), later, later);
+    expect(await buildImages(source, out)).toEqual([]);
+  });
+
+  it("makes an image again when any of its files is missing", async () => {
+    const { source, out } = await folders({ "lemon.png": await png(1600, 1067) });
+    await buildImages(source, out);
+
+    rmSync(join(out, "lemon-800.webp"));
     expect(await buildImages(source, out)).toEqual(["lemon.png"]);
   });
 

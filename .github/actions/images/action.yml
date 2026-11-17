@@ -1,0 +1,15 @@
+name: Content images
+description: Restores the images made from content, and what they were made from, from the last run, so `npm run images` makes only what changed.
+
+runs:
+  using: composite
+  steps:
+    # An exact match skips nothing by itself: buildImages checks every image by its content either way.
+    # The fallback restores the latest run's images, so a change to one image makes only that one again.
+    - uses: actions/cache@v4
+      with:
+        path: |
+          public/images
+          node_modules/.cache/images
+        key: images-${{ hashFiles('content/images/**', 'src/images/**', 'package-lock.json') }}
+        restore-keys: images-

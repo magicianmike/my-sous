@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { trayShown } from "./tray";
+import { animationsSettled, trayShown } from "./tray";
 
 const combination = "?with=chicken-thigh,garlic";
 
@@ -35,7 +35,7 @@ const screens: [string, (page: Page) => ReturnType<Page["getByRole"]>][] = [
 
 async function expectNoViolations(page: Page) {
   // Contrast is judged on what settles, not on rows caught halfway through fading in.
-  await page.evaluate(() => Promise.all(document.getAnimations().map(({ finished }) => finished)));
+  await animationsSettled(page);
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();

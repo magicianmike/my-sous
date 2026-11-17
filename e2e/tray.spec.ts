@@ -1,7 +1,13 @@
 import { expect, test, type Page } from "@playwright/test";
+import { animationsSettled } from "./tray";
 
 const sheet = (page: Page) => page.getByRole("dialog", { name: /Your basket/ });
 const opener = (page: Page) => page.getByRole("button", { name: /^Your basket/ });
+// Opens the sheet and waits for it to finish sliding in, for tests that measure it.
+const openSettled = async (page: Page) => {
+  await opener(page).click();
+  await animationsSettled(page);
+};
 
 test.describe("on a phone, the tray is a bar that opens a sheet", () => {
   test.skip(({ isMobile }) => !isMobile, "the sheet is the phone layout");
@@ -65,10 +71,10 @@ test.describe("on a phone, the tray is a bar that opens a sheet", () => {
 
   test("every control in the sheet is big enough to tap", async ({ page }) => {
     await page.goto("/ingredients/lemon?with=lemon,garlic");
-    await opener(page).click();
+    await openSettled(page);
     for (const control of await sheet(page).locator("a, button").all()) {
       const box = (await control.boundingBox())!;
-      // Rounded: the sliding sheet can leave a control a sub-pixel short of its 44px.
+      // Rounded: a control can still sit a sub-pixel short of its 44px.
       expect(Math.round(box.height), (await control.textContent()) ?? "").toBeGreaterThanOrEqual(44);
     }
     const bar = (await opener(page).boundingBox())!;
@@ -148,7 +154,7 @@ test.describe("on desktop, the tray is the same bar, docked at the foot", () => 
   test("in the open sheet, Close and See what to make share a row when they fit, Close on the left", async ({ page }) => {
     const row = async () => {
       await page.goto("/ingredients/lemon?with=lemon,garlic");
-      await opener(page).click();
+      await openSettled(page);
       return Promise.all([
         sheet(page).getByRole("link", { name: "See what to make" }).boundingBox(),
         sheet(page).getByRole("button", { name: "Close" }).boundingBox(),

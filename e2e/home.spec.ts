@@ -56,6 +56,7 @@ test("from Home, a Cook browses ingredients, fills the basket and sees what to m
   await expect(page.getByRole("heading", { level: 1, name: "Lemon" })).toBeVisible();
 
   await page.getByRole("button", { name: "Add Lemon to your basket" }).click();
+  await expect(page).toHaveURL(/with=lemon$/);
   await page.getByRole("button", { name: "Add Garlic to your basket" }).first().click();
   await page.getByRole("link", { name: "See what to make" }).first().click();
 

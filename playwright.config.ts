@@ -6,6 +6,9 @@ const port = 4173;
 export default defineConfig({
   testDir: "e2e",
   forbidOnly: !!process.env.CI,
+  // Tests run in parallel within a file too, so CI's shards split evenly; CI's runners have four cores.
+  fullyParallel: true,
+  workers: process.env.CI ? 4 : undefined,
   reporter: process.env.CI ? "github" : "list",
   use: { baseURL: `http://localhost:${port}` },
   projects: [

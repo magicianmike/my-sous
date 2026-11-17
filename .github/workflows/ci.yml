@@ -6,7 +6,8 @@ on:
     branches: [main]
 
 jobs:
-  check:
+  # Everything that doesn't need the built site, beside the build.
+  unit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,14 +18,59 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
-      # The build loads the real content, so any ContentError fails it.
-      - run: npm run build
-      - run: npx playwright install --with-deps chromium
+      - uses: ./.github/actions/playwright
       # Every Storybook story, run as a component test in Chromium.
       - run: npm run test:components
-      - run: npm run test:e2e
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # The build loads the real content, so any ContentError fails it.
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: out/
+          retention-days: 1
+
+  # The browser tests, against the exact static export, split across machines.
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: out/
+      - uses: ./.github/actions/playwright
+      - run: npm run test:e2e -- --shard=${{ matrix.shard }}/3
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}
           path: playwright-report/
+
+  # The one check main's branch protection requires: green only when every job above is.
+  check:
+    needs: [unit, build, e2e]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
+        run: exit 1

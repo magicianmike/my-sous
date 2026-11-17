@@ -1,0 +1,21 @@
+name: Playwright's Chromium
+description: Installs Chromium for Playwright, from a cache keyed on Playwright's version when it can.
+
+runs:
+  using: composite
+  steps:
+    - id: version
+      shell: bash
+      run: echo "version=$(npx playwright --version | cut -d' ' -f2)" >> "$GITHUB_OUTPUT"
+    - id: cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-chromium-${{ runner.os }}-${{ steps.version.outputs.version }}
+    - if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: npx playwright install --with-deps chromium
+    # The cache holds the browser, not the system libraries it needs.
+    - if: steps.cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: npx playwright install-deps chromium

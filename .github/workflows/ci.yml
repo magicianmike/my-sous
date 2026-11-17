@@ -18,6 +18,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+      - uses: ./.github/actions/images
       - uses: ./.github/actions/playwright
       # Every Storybook story, run as a component test in Chromium.
       - run: npm run test:components
@@ -31,6 +32,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - uses: ./.github/actions/images
       # The build loads the real content, so any ContentError fails it.
       - run: npm run build
       - uses: actions/upload-artifact@v4
@@ -46,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -59,7 +61,7 @@ jobs:
           name: site
           path: out/
       - uses: ./.github/actions/playwright
-      - run: npm run test:e2e -- --shard=${{ matrix.shard }}/3
+      - run: npm run test:e2e -- --shard=${{ matrix.shard }}/4
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

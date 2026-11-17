@@ -14,7 +14,7 @@
     "pretypecheck": "npm run kitchen-content",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit",
-    "pretest:components": "npm run kitchen-content",
+    "pretest:components": "npm run images && npm run kitchen-content",
     "test:components": "vitest run --project components",
     "test:e2e": "playwright test",
     "storybook": "storybook dev -p 6006",

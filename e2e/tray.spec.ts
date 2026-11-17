@@ -1,11 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
+import { animationsSettled } from "./tray";
 
 const sheet = (page: Page) => page.getByRole("dialog", { name: /Your basket/ });
 const opener = (page: Page) => page.getByRole("button", { name: /^Your basket/ });
 // Opens the sheet and waits for it to finish sliding in, for tests that measure it.
 const openSettled = async (page: Page) => {
   await opener(page).click();
-  await sheet(page).evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map(({ finished }) => finished)));
+  await animationsSettled(page);
 };
 
 test.describe("on a phone, the tray is a bar that opens a sheet", () => {
